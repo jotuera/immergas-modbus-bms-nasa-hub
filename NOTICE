@@ -1,0 +1,32 @@
+immergas-modbus-bms-nasa-hub
+Required Notice: Copyright (c) 2026 JoTu (https://github.com/jotuera)
+Licensed under the PolyForm Noncommercial License 1.0.0 (see LICENSE): free for personal and other
+noncommercial use. Commercial use (installers, resellers, companies) needs a separate license from the author.
+
+The `f1f2_nasa` ESPHome component was written from scratch. Protocol facts (frame
+layout, CRC, message types, enums, the FR-control registers and their encoding, read/response behaviour,
+message meanings and scaling) were cross-checked against the following MIT-licensed projects, which are
+gratefully acknowledged:
+
+- SamsungNASA - Copyright (c) 2025 Németh Bálint (Aranyalma2) - MIT
+  https://github.com/Aranyalma2/SamsungNASA
+- pysamsungnasa - pantherale0 - MIT
+  https://github.com/pantherale0/pysamsungnasa
+  (enum values for 0x4001 / 0x4066 / 0x8001 / 0x8003 / 0x8061, indoor error code list)
+- esphome_samsung_hvac_bus - Copyright (c) 2024 Ömer Faruk ARAN and contributors - MIT
+  https://github.com/omerfaruk-aran/esphome_samsung_hvac_bus
+  (idea: transmit only after a quiet period on the bus)
+- samsung-nasa-mqtt - MIT
+  https://github.com/ervance/samsung-nasa-mqtt
+  (cross-check of the FR-control registers 0x40A7 / 0x42F1, used by f1f2_nasa control)
+
+No code from projects without a license or under GPL was used.
+
+Boiler fault descriptions (tools/fault_texts.json, 11 languages) are written for this project in our own words;
+the fault codes and their meaning are facts read from the boiler. Outdoor-unit error descriptions are written in our own words based on the Samsung EHS service
+documentation. Values, scaling and meanings specific to the Immergas Magis Combo / Audax Pro V2 come
+from the author's own live captures of the F1/F2 bus, cross-checked against the Immergas D+/D- and
+T-/T+ (BMS) buses.
+
+Samsung and Immergas are trademarks of their respective owners. This project is not affiliated
+with or endorsed by Samsung Electronics or Immergas S.p.A.

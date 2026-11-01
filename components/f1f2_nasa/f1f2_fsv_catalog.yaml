@@ -1,0 +1,98 @@
+# FSV installer settings (Samsung EHS indoor unit). Never broadcast - read with READ requests (poll).
+# code: {pdu, dec, mul, unit}. Scaling checked against real responses of an Audax Pro 9 V2 / MIM-B19N.
+# dec enum = option number (see PDU_MAP.md for the meaning of each option).
+fsv:
+  1011: {pdu: 0x424A, dec: temp, unit: "°C"}
+  1012: {pdu: 0x424B, dec: temp, unit: "°C"}
+  1021: {pdu: 0x424C, dec: temp, unit: "°C"}
+  1022: {pdu: 0x424D, dec: temp, unit: "°C"}
+  1031: {pdu: 0x424E, dec: temp, unit: "°C"}
+  1032: {pdu: 0x424F, dec: temp, unit: "°C"}
+  1041: {pdu: 0x4250, dec: temp, unit: "°C"}
+  1042: {pdu: 0x4251, dec: temp, unit: "°C"}
+  1051: {pdu: 0x4252, dec: temp, unit: "°C"}
+  1052: {pdu: 0x4253, dec: temp, unit: "°C"}
+  2011: {pdu: 0x4254, dec: temp, unit: "°C"}
+  2012: {pdu: 0x4255, dec: temp, unit: "°C"}
+  2021: {pdu: 0x4256, dec: temp, unit: "°C"}
+  2022: {pdu: 0x4257, dec: temp, unit: "°C"}
+  2031: {pdu: 0x4258, dec: temp, unit: "°C"}
+  2032: {pdu: 0x4259, dec: temp, unit: "°C"}
+  2041: {pdu: 0x4093, dec: enum}
+  2051: {pdu: 0x425A, dec: temp, unit: "°C"}
+  2052: {pdu: 0x425B, dec: temp, unit: "°C"}
+  2061: {pdu: 0x425C, dec: temp, unit: "°C"}
+  2062: {pdu: 0x425D, dec: temp, unit: "°C"}
+  2071: {pdu: 0x425E, dec: temp, unit: "°C"}
+  2072: {pdu: 0x425F, dec: temp, unit: "°C"}
+  2081: {pdu: 0x4094, dec: enum}
+  2091: {pdu: 0x4095, dec: enum}
+  2092: {pdu: 0x4096, dec: enum}
+  2093: {pdu: 0x4127, dec: enum}
+  3011: {pdu: 0x4097, dec: enum}
+  3021: {pdu: 0x4260, dec: temp, unit: "°C"}
+  3022: {pdu: 0x4261, dec: temp, unit: "°C"}
+  3023: {pdu: 0x4262, dec: temp, unit: "°C"}
+  3024: {pdu: 0x4263, dec: raw, unit: "min"}
+  3025: {pdu: 0x4264, dec: raw, unit: "min"}
+  3026: {pdu: 0x4265, dec: raw, mul: 0.016666667, unit: "h"}
+  3031: {pdu: 0x4098, dec: enum}
+  3032: {pdu: 0x4266, dec: raw, unit: "min"}
+  3033: {pdu: 0x4267, dec: temp, unit: "°C"}
+  3041: {pdu: 0x4099, dec: enum}
+  3042: {pdu: 0x409A, dec: enum}
+  3043: {pdu: 0x4269, dec: raw, unit: "h"}
+  3044: {pdu: 0x426A, dec: temp, unit: "°C"}
+  3045: {pdu: 0x426B, dec: raw, unit: "min"}
+  3046: {pdu: 0x42CE, dec: raw, unit: "h"}
+  3051: {pdu: 0x409B, dec: enum}
+  3052: {pdu: 0x426C, dec: raw, mul: 10, unit: "min"}
+  3061: {pdu: 0x409C, dec: enum}
+  3071: {pdu: 0x409D, dec: enum}
+  3081: {pdu: 0x42ED, dec: raw, unit: "kW"}
+  3082: {pdu: 0x42EE, dec: raw, unit: "kW"}
+  3083: {pdu: 0x42EF, dec: raw, unit: "kW"}
+  4011: {pdu: 0x409E, dec: enum}
+  4012: {pdu: 0x426D, dec: temp, unit: "°C"}
+  4013: {pdu: 0x426E, dec: temp, unit: "°C"}
+  4021: {pdu: 0x409F, dec: enum}
+  4022: {pdu: 0x40A0, dec: enum}
+  4023: {pdu: 0x40A1, dec: enum}
+  4024: {pdu: 0x4270, dec: temp, unit: "°C"}
+  4025: {pdu: 0x4271, dec: temp, unit: "°C"}
+  4031: {pdu: 0x40A2, dec: enum}
+  4032: {pdu: 0x40A3, dec: enum}
+  4033: {pdu: 0x4272, dec: temp, unit: "°C"}
+  4041: {pdu: 0x40C0, dec: enum}
+  4042: {pdu: 0x4286, dec: temp, unit: "°C"}
+  4043: {pdu: 0x4287, dec: temp, unit: "°C"}
+  4044: {pdu: 0x40C1, dec: enum}
+  4045: {pdu: 0x4288, dec: raw, unit: "min"}
+  4046: {pdu: 0x4289, dec: raw, mul: 10, unit: "s"}
+  4051: {pdu: 0x40C2, dec: enum}
+  4052: {pdu: 0x428A, dec: temp, unit: "°C"}
+  4053: {pdu: 0x40C3, dec: enum}
+  4061: {pdu: 0x411A, dec: enum}
+  5011: {pdu: 0x4273, dec: temp, unit: "°C"}
+  5012: {pdu: 0x4274, dec: temp, unit: "°C"}
+  5013: {pdu: 0x4275, dec: temp, unit: "°C"}
+  5014: {pdu: 0x4276, dec: temp, unit: "°C"}
+  5015: {pdu: 0x4277, dec: temp, unit: "°C"}
+  5016: {pdu: 0x4278, dec: temp, unit: "°C"}
+  5017: {pdu: 0x4279, dec: temp, unit: "°C"}
+  5018: {pdu: 0x427A, dec: temp, unit: "°C"}
+  5019: {pdu: 0x427B, dec: temp, unit: "°C"}
+  5021: {pdu: 0x427C, dec: temp, unit: "°C"}
+  5022: {pdu: 0x4128, dec: enum}
+  5023: {pdu: 0x42F0, dec: raw}
+  5041: {pdu: 0x40A4, dec: enum}
+  5042: {pdu: 0x40A5, dec: enum}
+  5043: {pdu: 0x40A6, dec: enum}
+  5051: {pdu: 0x40A7, dec: enum}
+  5081: {pdu: 0x411B, dec: enum}
+  5082: {pdu: 0x42DB, dec: raw}
+  5083: {pdu: 0x42DC, dec: raw}
+  5091: {pdu: 0x411C, dec: enum}
+  5092: {pdu: 0x42DD, dec: raw}
+  5093: {pdu: 0x42DE, dec: raw}
+  5094: {pdu: 0x411D, dec: enum}

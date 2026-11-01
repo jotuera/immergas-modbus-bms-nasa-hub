@@ -1,0 +1,371 @@
+# Polski. Brakujące klucze są brane z f1f2_en.yaml.
+language: Polski
+
+sensors:
+  flow_temp_out: Temperatura zasilania
+  flow_temp_return: Temperatura powrotu
+  water_outlet_target: Zadana temperatura wody (aktywna)
+  dhw_temperature: Temperatura CWU
+  dhw_target: Zadana temperatura CWU
+  zone1_room_temp: Temperatura pokojowa strefy 1
+  zone1_target: Zadana temperatura strefy 1
+  zone2_room_temp: Temperatura pokojowa strefy 2
+  zone2_target: Zadana temperatura strefy 2
+  eva_in_temp: Temperatura czynnika na wejściu wymiennika
+  water_out_tw2: Temperatura wody wyjściowej TW2 (4204)
+  outdoor_temp_copy: Temperatura zewnętrzna (kopia jednostki wewn.)
+  heater_out_temp: Temperatura za grzałką
+  mixing_valve_temp: Temperatura zaworu mieszającego
+  flow_rate: Przepływ wody
+  capacity_request: Żądana moc jednostki wewnętrznej
+  capacity_absolute: Moc znamionowa jednostki wewnętrznej
+  power_produced: Moc grzewcza (ostatnia minuta)
+  energy_produced_total: Wyprodukowana energia (łącznie)
+  indoor_eev: Zawór EEV jednostki wewnętrznej
+  two_way_valve: Zawór 2-drogowy
+  three_way_valve: Zawór 3-drogowy
+  operation_mode: Tryb pracy jednostki wewnętrznej (4=grzanie)
+  control_reference: Regulacja wg (1=temperatura wody)
+  status_bits_440e: Bity statusu jednostki wewnętrznej (440E)
+  raw_0402: NASA PDU wewn. 0402 LONG RAW
+  raw_0411: NASA PDU wewn. 0411 LONG RAW
+  raw_0412: NASA PDU wewn. 0412 LONG RAW
+  raw_0413: NASA PDU wewn. 0413 LONG RAW
+  raw_0414: NASA PDU wewn. 0414 LONG RAW
+  raw_0415: NASA PDU wewn. 0415 LONG RAW
+  raw_4006: NASA PDU wewn. 4006 RAW
+  raw_440a: NASA PDU wewn. 440A LONG RAW
+  outdoor_temperature: Temperatura zewnętrzna
+  compressor_frequency: Częstotliwość sprężarki
+  order_frequency: Częstotliwość zlecona sprężarki
+  target_frequency: Częstotliwość docelowa sprężarki
+  frequency_limit: Limit częstotliwości sprężarki
+  fan_speed_target: Obroty wentylatora (zadane)
+  fan_speed_actual: Obroty wentylatora (rzeczywiste)
+  power_consumed: Pobór mocy (ostatnia minuta)
+  outdoor_power: Pobór mocy jednostki zewnętrznej
+  energy_consumed_total: Pobrana energia (łącznie)
+  outdoor_current: Prąd jednostki zewnętrznej
+  heat_pump_voltage: Napięcie pompy ciepła
+  mains_voltage: Napięcie sieci
+  dc_link_voltage: Napięcie szyny DC
+  unit_capacity: Moc znamionowa jednostki zewnętrznej
+  discharge_temp: Temperatura tłoczenia (820A)
+  target_discharge_temp: Zadana temperatura tłoczenia
+  comp_top_temp: Temperatura głowicy sprężarki (8280)
+  cond_out_temp: Temperatura wymiennika zewnętrznego (8218)
+  ipm_temp: Temperatura modułu IPM (8254)
+  main_eev: Pozycja zaworu EEV
+  start_sequence: Etap startu sprężarki
+  restart_inhibit: Blokada ponownego startu sprężarki
+  error_code: Kod błędu
+  linked_indoor_units: Liczba jednostek wewnętrznych
+  raw_041b: NASA PDU zewn. 041B LONG RAW
+  raw_8201: NASA PDU zewn. 8201 RAW
+  raw_8239: NASA PDU zewn. 8239 RAW
+  raw_823f: NASA PDU zewn. 823F RAW
+  raw_8243: NASA PDU zewn. 8243 RAW
+  raw_824b: NASA PDU zewn. 824B RAW
+  raw_824c: NASA PDU zewn. 824C RAW
+  raw_82e1: NASA PDU zewn. 82E1 RAW
+  raw_840f: NASA PDU zewn. 840F LONG RAW
+  raw_8417: NASA PDU zewn. 8417 LONG RAW
+  rx_frames: NASA odebrane ramki
+  bad_frames: NASA błędne ramki
+  tx_frames: NASA wysłane ramki
+  timeouts: NASA brak odpowiedzi
+
+binary_sensors:
+  water_pump: Pompa obiegowa
+  backup_heater: Grzałka wspomagająca
+  booster_heater: Grzałka zasobnika CWU
+  defrost: Odszranianie
+  dhw_power: CWU włączona
+  zone1_power: Strefa 1 włączona
+  zone2_power: Strefa 2 włączona
+  pv_control: Sterowanie PV
+  smart_grid: Smart Grid
+  compressor: Sprężarka pracuje
+  four_way_valve: Zawór 4-drogowy
+  hot_gas_valve: Zawór gorącego gazu
+  base_heater: Grzałka tacy ociekowej
+  night_limit: Limit nocny sprężarki (U11)
+  night_mode: Funkcja nocna U11 (aktywna)
+
+text_sensors:
+  outdoor_driving_mode: Tryb pracy jednostki zewnętrznej
+  outdoor_operation_state: Stan jednostki zewnętrznej
+  outdoor_fan_state: Stan wentylatora
+  defrost_stage: Etap odszraniania
+  system_error: Błąd systemu
+  dhw_mode: Tryb CWU
+  operation_mode_text: Tryb pracy jednostki wewnętrznej
+  three_way_valve_text: Położenie zaworu 3-drogowego
+  firmware_outdoor: Firmware jednostki zewnętrznej
+  firmware_outdoor_eeprom: EEPROM jednostki zewnętrznej
+  firmware_inverter: Firmware falownika
+  firmware_indoor: Firmware jednostki wewnętrznej (MIM)
+  raw_4604: NASA PDU wewn. 4604 RAW
+  last_frame: NASA ostatnia ramka
+  last_change: NASA ostatnia zmiana
+  devices: NASA urządzenia na magistrali
+
+device_classes:
+  0x10: jednostka zewnętrzna
+  0x11: moduł hydro (HTU)
+  0x20: jednostka wewnętrzna
+  0x50: sterownik przewodowy
+  0x58: moduł PIM
+  0x59: moduł SIM
+  0x62: moduł Wi-Fi
+  0x63: moduł MIM
+  0x65: sterownik centralny
+  0x6A: DMS
+  0x80: narzędzie serwisowe
+
+switches:
+  sniffer: Sniffer NASA
+
+buttons:
+  poll: Odczytaj FSV teraz
+
+texts:
+  unknown: "Nieznany ({value})"
+  no_error: Brak błędów
+  error: "E{code}"
+  error_with_text: "E{code}: {text}"
+
+fsv_format: "FSV {code} - {name}"
+fsv:
+  1011: Maks. temp. wody (chłodzenie)
+  1012: Min. temp. wody (chłodzenie)
+  1021: Maks. temp. pokojowa (chłodzenie)
+  1022: Min. temp. pokojowa (chłodzenie)
+  1031: Maks. temp. wody (grzanie)
+  1032: Min. temp. wody (grzanie)
+  1041: Maks. temp. pokojowa (grzanie)
+  1042: Min. temp. pokojowa (grzanie)
+  1051: Maks. temp. zasobnika CWU
+  1052: Min. temp. zasobnika CWU
+  2011: Krzywa grzewcza - temp. zewn. punkt 1
+  2012: Krzywa grzewcza - temp. zewn. punkt 2
+  2021: Krzywa grzewcza WL1 - temp. wody punkt 1
+  2022: Krzywa grzewcza WL1 - temp. wody punkt 2
+  2031: Krzywa grzewcza WL2 - temp. wody punkt 1
+  2032: Krzywa grzewcza WL2 - temp. wody punkt 2
+  2041: Typ krzywej grzewczej
+  2051: Krzywa chłodzenia - temp. zewn. punkt 1
+  2052: Krzywa chłodzenia - temp. zewn. punkt 2
+  2061: Krzywa chłodzenia WL1 - temp. wody punkt 1
+  2062: Krzywa chłodzenia WL1 - temp. wody punkt 2
+  2071: Krzywa chłodzenia WL2 - temp. wody punkt 1
+  2072: Krzywa chłodzenia WL2 - temp. wody punkt 2
+  2081: Typ krzywej chłodzenia
+  2091: Termostat pokojowy zewnętrzny (podłogówka)
+  2092: Termostat pokojowy zewnętrzny (klimakonwektory)
+  2093: Regulacja temp. pokojowej ze sterownika
+  3011: Zasobnik CWU
+  3021: Maks. temp. CWU z pompy ciepła
+  3022: Histereza wyłączenia CWU
+  3023: Histereza włączenia CWU
+  3024: Min. czas grzania CO
+  3025: Maks. czas grzania CWU
+  3026: Maks. czas grzania CO
+  3031: Grzałka zasobnika
+  3032: Opóźnienie grzałki zasobnika
+  3033: Przegrzanie grzałki zasobnika
+  3041: Dezynfekcja (antylegionella)
+  3042: Dezynfekcja - dzień
+  3043: Dezynfekcja - godzina startu
+  3044: Dezynfekcja - temp. docelowa
+  3045: Dezynfekcja - czas trwania
+  3046: Dezynfekcja - czas maks.
+  3051: Wymuszone CWU - timer
+  3052: Wymuszone CWU - czas
+  3061: Solar lub termostat CWU
+  3071: Kierunek zaworu 3-drogowego
+  3081: Moc grzałki - stopień 1
+  3082: Moc grzałki - stopień 2
+  3083: Moc grzałki zasobnika (BSH)
+  4011: Priorytet CO lub CWU
+  4012: Temp. zewn. dla priorytetu
+  4013: Temp. zewn. wyłączenia CO
+  4021: Grzałka wspomagająca
+  4022: Priorytet grzałek
+  4023: Kompensacja przy mrozie
+  4024: Próg temp. grzałki wspomagającej
+  4025: Temp. wspomagania przy odszranianiu
+  4031: Kocioł wspomagający
+  4032: Priorytet kotła wspomagającego
+  4033: Próg temp. kotła wspomagającego
+  4041: Zawór mieszający
+  4042: Zawór mieszający - delta T (grzanie)
+  4043: Zawór mieszający - delta T (chłodzenie)
+  4044: Zawór mieszający - współczynnik
+  4045: Zawór mieszający - interwał
+  4046: Zawór mieszający - czas pracy
+  4051: Sterowanie pompą inwerterową
+  4052: Pompa inwerterowa - delta T
+  4053: Pompa inwerterowa - współczynnik
+  4061: Sterowanie strefami
+  5011: Tryb wyjazdowy - woda chłodzenie
+  5012: Tryb wyjazdowy - pokój chłodzenie
+  5013: Tryb wyjazdowy - woda grzanie
+  5014: Tryb wyjazdowy - pokój grzanie
+  5015: Tryb wyjazdowy - auto chłodzenie WL1
+  5016: Tryb wyjazdowy - auto chłodzenie WL2
+  5017: Tryb wyjazdowy - auto grzanie WL1
+  5018: Tryb wyjazdowy - auto grzanie WL2
+  5019: Tryb wyjazdowy - zasobnik CWU
+  5021: Oszczędzanie CWU - różnica temp.
+  5022: Tryb oszczędzania CWU
+  5023: Oszczędzanie CWU - różnica wyłączenia
+  5041: Ograniczanie szczytu mocy
+  5042: Szczyt mocy - wyłączane elementy
+  5043: Szczyt mocy - napięcie wejścia
+  5051: Sterowanie współczynnikiem częstotliwości
+  5081: Sterowanie PV
+  5082: PV - przesunięcie chłodzenia
+  5083: PV - przesunięcie grzania
+  5091: Sterowanie Smart Grid
+  5092: Smart Grid - przesunięcie grzania
+  5093: Smart Grid - przesunięcie CWU
+  5094: Smart Grid - tryb CWU
+
+maps:
+  driving_mode:
+    0: Postój
+    1: Tryb bezpieczny
+    2: Normalna praca
+    3: Wyrównywanie
+    4: Odzysk oleju
+    5: Odszranianie
+    6: Wyłączanie sprężarki
+    7: Praca zablokowana
+    8: Test linii (jig)
+    9: Test płyty (jig)
+    10: Test
+    11: Napełnianie czynnikiem
+    12: Odsysanie czynnika
+    13: Wypompowanie
+    14: Próżnia
+    15: Test kalorymetryczny
+    16: Koniec odsysania
+    17: Zatrzymanie pomocnicze
+    18: Kontrola instalacji
+    19: Kontrola ilości czynnika
+    20: Test FPT (jig)
+    21: Zmiana grzanie/chłodzenie (bez postoju)
+    22: Autodiagnostyka
+    23: Rozładowanie elektryczne
+    24: Odszranianie dzielone
+    25: Kontrola falownika
+    26: Odszranianie (bez postoju)
+    27: Test zdalny
+    28: Pomiar znamionowy
+    29: Test PC
+    30: Odsysanie (termostat wył.)
+    31: Test 3 faz
+    32: Test instalacji Smart
+    33: Test odszraniania
+    34: Kontrola płyty wentylatora
+    35: Automatyczne parowanie
+    36: Automatyczne napełnianie
+  heat_cool:
+    0: Nieokreślony
+    1: Chłodzenie
+    2: Grzanie
+    3: Chłodzenie (główne)
+    4: Grzanie (główne)
+  fan_state:
+    0: Zatrzymany
+    1: Pracuje
+  defrost_stage:
+    0: Brak odszraniania
+    1: Etap 1
+    2: Etap 2
+    3: Etap 3
+    7: Etap końcowy
+    255: Brak odszraniania
+  dhw_mode:
+    0: Eko
+    1: Standard
+    2: Moc
+    3: Wymuszony
+  operation_mode:
+    0: Auto
+    1: Chłodzenie
+    2: Osuszanie
+    3: Wentylator
+    4: Grzanie
+    21: Akumulacja chłodu
+    24: CWU
+  three_way_valve:
+    0: Ogrzewanie
+    1: Zasobnik CWU
+
+errors:
+  101: Błąd komunikacji jednostka wewn. - zewn.
+  120: Błąd czujnika pokojowego strefy 2
+  121: Błąd czujnika pokojowego strefy 1
+  122: Błąd czujnika wejścia wymiennika
+  123: Błąd czujnika wyjścia wymiennika
+  162: Błąd EEPROM
+  198: Błąd bezpiecznika termicznego
+  201: Niezgodna liczba jednostek wewn./zewn.
+  202: Brak komunikacji jednostki wewn. z zewn.
+  203: Przekroczony czas komunikacji płyta główna - falownik
+  221: Błąd czujnika temperatury zewnętrznej
+  231: Błąd czujnika temperatury skraplacza
+  251: Błąd czujnika temperatury tłoczenia
+  320: Błąd czujnika przeciążenia sprężarki (OLP)
+  403: Zamarzanie jednostki zewn. (sprężarka zatrzymana)
+  404: Ochrona przed przeciążeniem (sprężarka zatrzymana)
+  416: Za wysoka temperatura tłoczenia sprężarki
+  419: Błąd otwarcia zaworu EEV
+  425: Błąd podłączenia zasilania 3-fazowego
+  439: Wyciek czynnika (postój)
+  440: Grzanie zablokowane - za wysoka temp. zewnętrzna
+  441: Chłodzenie zablokowane - za niska temp. zewnętrzna
+  443: Wyciek czynnika (przed startem)
+  458: Błąd wentylatora 1
+  461: Błąd startu sprężarki
+  462: Wyłączenie prądowe (zasilanie)
+  463: Przetężenie / przetężenie PFC
+  464: Przetężenie modułu IPM
+  465: Przeciążenie sprężarki
+  466: Za niskie / za wysokie napięcie szyny DC
+  467: Błąd okablowania sprężarki
+  468: Błąd czujnika prądu
+  469: Błąd czujnika napięcia szyny DC
+  470: Błąd odczytu / zapisu EEPROM
+  471: Błąd EEPROM jednostki zewnętrznej
+  474: Błąd czujnika temperatury IPM / PFC
+  475: Błąd wentylatora 2
+  484: Przeciążenie PFC
+  485: Błąd czujnika prądu wejściowego
+  500: Przegrzanie modułu IPM
+  554: Wyciek czynnika
+  604: Błąd komunikacji ze sterownikiem przewodowym
+  653: Błąd czujnika temperatury sterownika
+  654: Błąd EEPROM sterownika
+  899: Błąd czujnika wody wyjściowej strefy 1
+  900: Błąd czujnika wody wyjściowej strefy 2
+  901: Błąd czujnika temperatury wody wejściowej
+  903: Błąd czujnika temperatury wody wyjściowej
+  904: Błąd czujnika temperatury zasobnika CWU
+  906: Błąd czujnika temperatury czynnika na wejściu
+  907: Ochrona przed rozerwaniem wymiennika
+  908: Ochrona przed zamarzaniem (do skasowania)
+  909: Ochrona przed zamarzaniem (blokada)
+  910: Odłączony czujnik wody wyjściowej
+  911: Błąd przepływomierza
+  912: Za mały przepływ wody
+  913: Błąd przepływomierza (blokada)
+  914: Błąd podłączenia termostatu
+  915: Błąd wentylatora DC
+  916: Błąd czujnika zaworu mieszającego
+  917: Błąd konfiguracji zasobnika
+  919: Nie osiągnięto temperatury dezynfekcji
+  920: Błąd FSV / karty SD
+  973: Błąd czujnika ciśnienia wody

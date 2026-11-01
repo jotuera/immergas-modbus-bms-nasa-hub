@@ -1,0 +1,130 @@
+# Entity catalog for the f1f2_nasa component.
+# Each key can be used as `key:` on the sensor / binary_sensor / text_sensor platforms; the name comes
+# from translations/f1f2_<language>.yaml, everything else (message id, source, decoding, unit...) from here.
+#
+# Fields:
+#   pdu      NASA message id
+#   src      indoor | outdoor   (address of the unit that broadcasts the value)
+#   dec      temp  = signed int16 x0.1, 65535/65036 -> unknown   (default for temperatures)
+#            raw   = value as received
+#   mul      extra multiplier (applied after sign handling)
+#   signed   treat as signed (int8/int16/int32 by message size)
+#   hi       use the high 16 bits of a 4-byte value
+#   nan      raw values that mean "not available" (in addition to the dec preset)
+#   unit / dc (device_class) / sc (state_class) / acc (accuracy_decimals) / icon / cat (entity_category)
+#   poll     true = value is not broadcast, read it with READ requests (needs transmit: true)
+#   status   observed | candidate | unknown   (documentation only)
+
+sensors:
+  # ---------------------------------------------------------------- indoor unit (hydro / MIM), 20.00.01
+  flow_temp_out:          {pdu: 0x4238, src: indoor, dec: temp, unit: "°C", dc: temperature, sc: measurement, acc: 1}
+  flow_temp_return:       {pdu: 0x4236, src: indoor, dec: temp, unit: "°C", dc: temperature, sc: measurement, acc: 1}
+  water_outlet_target:    {pdu: 0x4247, src: indoor, dec: temp, nan: [50], unit: "°C", dc: temperature, sc: measurement, acc: 1}
+  dhw_temperature:        {pdu: 0x4237, src: indoor, dec: temp, unit: "°C", dc: temperature, sc: measurement, acc: 1}
+  dhw_target:             {pdu: 0x4235, src: indoor, dec: temp, unit: "°C", dc: temperature, sc: measurement, acc: 1}
+  zone1_room_temp:        {pdu: 0x4203, src: indoor, dec: temp, unit: "°C", dc: temperature, sc: measurement, acc: 1}
+  zone1_target:           {pdu: 0x4201, src: indoor, dec: temp, unit: "°C", dc: temperature, sc: measurement, acc: 1}
+  zone2_room_temp:        {pdu: 0x42D4, src: indoor, dec: temp, unit: "°C", dc: temperature, sc: measurement, acc: 1}
+  zone2_target:           {pdu: 0x42D6, src: indoor, dec: temp, unit: "°C", dc: temperature, sc: measurement, acc: 1}
+  eva_in_temp:            {pdu: 0x4205, src: indoor, dec: temp, unit: "°C", dc: temperature, sc: measurement, acc: 1}
+  water_out_tw2:          {pdu: 0x4204, src: indoor, dec: temp, unit: "°C", dc: temperature, sc: measurement, acc: 1}
+  outdoor_temp_copy:      {pdu: 0x420C, src: indoor, dec: temp, unit: "°C", dc: temperature, sc: measurement, acc: 1}
+  heater_out_temp:        {pdu: 0x4239, src: indoor, dec: temp, unit: "°C", dc: temperature, sc: measurement, acc: 1}
+  mixing_valve_temp:      {pdu: 0x428C, src: indoor, dec: temp, unit: "°C", dc: temperature, sc: measurement, acc: 1}
+  flow_rate:              {pdu: 0x42E9, src: indoor, dec: raw, mul: 0.1, unit: "L/min", dc: volume_flow_rate, sc: measurement, acc: 1}
+  capacity_request:       {pdu: 0x4211, src: indoor, dec: raw, mul: 0.11627907, unit: "kW", dc: power, sc: measurement, acc: 2}
+  capacity_absolute:      {pdu: 0x4212, src: indoor, dec: raw, mul: 0.11627907, unit: "kW", dc: power, sc: measurement, acc: 2}
+  power_produced:         {pdu: 0x4426, src: indoor, dec: raw, signed: true, nan: [0xFFFFFFFF], unit: "W", dc: power, sc: measurement, acc: 0}
+  energy_produced_total:  {pdu: 0x4427, src: indoor, dec: raw, mul: 0.001, nan: [0xFFFFFFFF], unit: "kWh", dc: energy, sc: total_increasing, acc: 3}
+  indoor_eev:             {pdu: 0x4217, src: indoor, dec: raw, acc: 0}
+  two_way_valve:          {pdu: 0x408A, src: indoor, dec: raw, acc: 0}
+  three_way_valve:        {pdu: 0x4067, src: indoor, dec: raw, acc: 0}
+  operation_mode:         {pdu: 0x4001, src: indoor, dec: raw, acc: 0}
+  control_reference:      {pdu: 0x406F, src: indoor, dec: raw, acc: 0}
+  status_bits_440e:       {pdu: 0x440E, src: indoor, dec: raw, acc: 0, status: candidate}
+  # unknown / raw (diagnostic) - help welcome, see PDU_MAP.md
+  raw_0402:               {pdu: 0x0402, src: indoor, dec: raw, acc: 0, cat: diagnostic, status: unknown}
+  raw_0411:               {pdu: 0x0411, src: indoor, dec: raw, acc: 0, cat: diagnostic, status: unknown}
+  raw_0412:               {pdu: 0x0412, src: indoor, dec: raw, acc: 0, cat: diagnostic, status: unknown}
+  raw_0413:               {pdu: 0x0413, src: indoor, dec: raw, acc: 0, cat: diagnostic, status: unknown}
+  raw_0414:               {pdu: 0x0414, src: indoor, dec: raw, acc: 0, cat: diagnostic, status: unknown}
+  raw_0415:               {pdu: 0x0415, src: indoor, dec: raw, acc: 0, cat: diagnostic, status: unknown}
+  raw_4006:               {pdu: 0x4006, src: indoor, dec: raw, acc: 0, cat: diagnostic, status: unknown}
+  raw_440a:               {pdu: 0x440A, src: indoor, dec: raw, acc: 0, cat: diagnostic, status: unknown}
+
+  # ---------------------------------------------------------------- outdoor unit, 10.00.00
+  outdoor_temperature:    {pdu: 0x8204, src: outdoor, dec: temp, unit: "°C", dc: temperature, sc: measurement, acc: 1}
+  compressor_frequency:   {pdu: 0x8238, src: outdoor, dec: raw, unit: "Hz", dc: frequency, sc: measurement, acc: 0}
+  order_frequency:        {pdu: 0x8236, src: outdoor, dec: raw, unit: "Hz", dc: frequency, sc: measurement, acc: 0}
+  target_frequency:       {pdu: 0x8237, src: outdoor, dec: raw, unit: "Hz", dc: frequency, sc: measurement, acc: 0}
+  # 0x8239 = upper compressor frequency limit: 95 stopped / start, ~64 in Normal mode, 19 during the Immergas
+  # night function (U11: boiler writes 30 % to the MIM -> 30 % x 64 Hz). Confirmed live 2026-10-13.
+  frequency_limit:        {pdu: 0x8239, src: outdoor, dec: raw, unit: "Hz", dc: frequency, sc: measurement, acc: 0, icon: "mdi:speedometer"}
+  fan_speed_target:       {pdu: 0x823D, src: outdoor, dec: raw, unit: "RPM", sc: measurement, acc: 0, icon: "mdi:fan"}
+  fan_speed_actual:       {pdu: 0x82D9, src: outdoor, dec: raw, unit: "RPM", sc: measurement, acc: 0, icon: "mdi:fan"}
+  power_consumed:         {pdu: 0x8413, src: outdoor, dec: raw, nan: [0xFFFFFFFF], unit: "W", dc: power, sc: measurement, acc: 0}
+  outdoor_power:          {pdu: 0x8411, src: outdoor, dec: raw, nan: [0xFFFFFFFF], unit: "W", dc: power, sc: measurement, acc: 0}
+  energy_consumed_total:  {pdu: 0x8414, src: outdoor, dec: raw, mul: 0.001, nan: [0xFFFFFFFF], unit: "kWh", dc: energy, sc: total_increasing, acc: 3}
+  outdoor_current:        {pdu: 0x8217, src: outdoor, dec: raw, mul: 0.1, unit: "A", dc: current, sc: measurement, acc: 1}
+  heat_pump_voltage:      {pdu: 0x24FC, src: outdoor, dec: raw, nan: [0xFFFFFFFF], unit: "V", dc: voltage, sc: measurement, acc: 0}
+  mains_voltage:          {pdu: 0x82ED, src: outdoor, dec: raw, unit: "V", dc: voltage, sc: measurement, acc: 0}
+  dc_link_voltage:        {pdu: 0x823B, src: outdoor, dec: raw, mul: 2, unit: "V", dc: voltage, sc: measurement, acc: 0}
+  unit_capacity:          {pdu: 0x82E3, src: outdoor, dec: raw, mul: 0.1, unit: "kW", acc: 1, icon: "mdi:information-outline"}
+  discharge_temp:         {pdu: 0x820A, src: outdoor, dec: temp, unit: "°C", dc: temperature, sc: measurement, acc: 1}
+  target_discharge_temp:  {pdu: 0x8223, src: outdoor, dec: temp, unit: "°C", dc: temperature, sc: measurement, acc: 1}
+  comp_top_temp:          {pdu: 0x8280, src: outdoor, dec: temp, unit: "°C", dc: temperature, sc: measurement, acc: 1}
+  cond_out_temp:          {pdu: 0x8218, src: outdoor, dec: temp, unit: "°C", dc: temperature, sc: measurement, acc: 1}
+  ipm_temp:               {pdu: 0x8254, src: outdoor, dec: temp, unit: "°C", dc: temperature, sc: measurement, acc: 1}
+  main_eev:               {pdu: 0x8229, src: outdoor, dec: raw, unit: "step", sc: measurement, acc: 0, icon: "mdi:valve"}
+  start_sequence:         {pdu: 0x8248, src: outdoor, dec: raw, acc: 0, status: observed}
+  restart_inhibit:        {pdu: 0x8249, src: outdoor, dec: raw, acc: 0, status: observed}
+  error_code:             {pdu: 0x8235, src: outdoor, dec: raw, acc: 0, icon: "mdi:alert"}
+  linked_indoor_units:    {pdu: 0x0207, src: outdoor, dec: raw, acc: 0}
+  # unknown / raw (diagnostic)
+  raw_041b:               {pdu: 0x041B, src: outdoor, dec: raw, acc: 0, cat: diagnostic, status: unknown}
+  raw_8201:               {pdu: 0x8201, src: outdoor, dec: raw, acc: 0, cat: diagnostic, status: unknown}
+  raw_8239:               {pdu: 0x8239, src: outdoor, dec: raw, acc: 0, cat: diagnostic, status: deprecated}   # use frequency_limit
+  raw_823f:               {pdu: 0x823F, src: outdoor, dec: raw, acc: 0, cat: diagnostic, status: unknown}
+  raw_8243:               {pdu: 0x8243, src: outdoor, dec: raw, acc: 0, cat: diagnostic, status: unknown}
+  raw_824b:               {pdu: 0x824B, src: outdoor, dec: raw, acc: 0, cat: diagnostic, status: unknown}
+  raw_824c:               {pdu: 0x824C, src: outdoor, dec: raw, acc: 0, cat: diagnostic, status: unknown}
+  raw_82e1:               {pdu: 0x82E1, src: outdoor, dec: raw, acc: 0, cat: diagnostic, status: unknown}
+  raw_840f:               {pdu: 0x840F, src: outdoor, dec: raw, acc: 0, cat: diagnostic, status: unknown}
+  raw_8417:               {pdu: 0x8417, src: outdoor, dec: raw, acc: 0, cat: diagnostic, status: unknown}
+
+binary_sensors:
+  water_pump:             {pdu: 0x4089, src: indoor, dc: running}
+  backup_heater:          {pdu: 0x406C, src: indoor, dc: heat}
+  booster_heater:         {pdu: 0x4087, src: indoor, dc: heat}
+  defrost:                {pdu: 0x402E, src: indoor}
+  dhw_power:              {pdu: 0x4065, src: indoor, dc: power}
+  zone1_power:            {pdu: 0x4000, src: indoor, dc: power}
+  zone2_power:            {pdu: 0x411E, src: indoor, dc: power}
+  pv_control:             {pdu: 0x4123, src: indoor}
+  smart_grid:             {pdu: 0x4124, src: indoor}
+  # 0x428D != 0 while the Immergas night function U11 is active (the MIM broadcasts 0x011E = 30 % capacity
+  # request; the % itself is the low byte - exposed as the "night capacity limit" template sensor).
+  night_mode:             {pdu: 0x428D, src: indoor, icon: "mdi:weather-night"}
+  compressor:             {pdu: 0x8010, src: outdoor, dc: running}
+  four_way_valve:         {pdu: 0x801A, src: outdoor}
+  hot_gas_valve:          {pdu: 0x8017, src: outdoor}
+  base_heater:            {pdu: 0x80AF, src: outdoor, dc: heat}
+  # 0x80B1 = 1 while the compressor runs under the Immergas night-function (U11) frequency limit (read-only
+  # ODU flag; the limit itself is driven by Immergas via 0x428D -> 0x8239).
+  night_limit:            {pdu: 0x80B1, src: outdoor, icon: "mdi:weather-night"}
+
+text_sensors:
+  # mode: map (translations maps.<map>), error (translations errors), firmware (structure), hex (structure)
+  outdoor_driving_mode:     {pdu: 0x8001, src: outdoor, mode: map, map: driving_mode}
+  outdoor_operation_state:  {pdu: 0x8003, src: outdoor, mode: map, map: heat_cool}
+  outdoor_fan_state:        {pdu: 0x800D, src: outdoor, mode: map, map: fan_state}
+  defrost_stage:            {pdu: 0x8061, src: outdoor, mode: map, map: defrost_stage}
+  system_error:             {pdu: 0x8235, src: outdoor, mode: error}
+  dhw_mode:                 {pdu: 0x4066, src: indoor, mode: map, map: dhw_mode}
+  operation_mode_text:      {pdu: 0x4001, src: indoor, mode: map, map: operation_mode}
+  three_way_valve_text:     {pdu: 0x4067, src: indoor, mode: map, map: three_way_valve}
+  firmware_outdoor:         {pdu: 0x0608, src: outdoor, mode: firmware, icon: "mdi:chip"}
+  firmware_outdoor_eeprom:  {pdu: 0x060C, src: outdoor, mode: firmware, icon: "mdi:chip"}
+  firmware_inverter:        {pdu: 0x8601, src: outdoor, mode: firmware, icon: "mdi:chip"}
+  firmware_indoor:          {pdu: 0x0608, src: indoor, mode: firmware, poll: true, icon: "mdi:chip"}
+  raw_4604:                 {pdu: 0x4604, src: indoor, mode: hex, cat: diagnostic, status: unknown}

@@ -1,0 +1,374 @@
+# Nederlands. Ontbrekende sleutels worden overgenomen uit f1f2_en.yaml.
+language: Nederlands
+
+sensors:
+  flow_temp_out: Aanvoertemperatuur
+  flow_temp_return: Retourtemperatuur
+  water_outlet_target: Gewenste watertemperatuur (actief)
+  dhw_temperature: SWW-temperatuur
+  dhw_target: Gewenste SWW-temperatuur
+  zone1_room_temp: Kamertemperatuur zone 1
+  zone1_target: Gewenste temperatuur zone 1
+  zone2_room_temp: Kamertemperatuur zone 2
+  zone2_target: Gewenste temperatuur zone 2
+  eva_in_temp: Temperatuur koudemiddel ingang verdamper (binnen)
+  water_out_tw2: Uitgaande watertemperatuur TW2 (4204)
+  outdoor_temp_copy: Buitentemperatuur (kopie binnenunit)
+  heater_out_temp: Temperatuur na elektrisch element
+  mixing_valve_temp: Temperatuur mengklep
+  flow_rate: Waterdebiet
+  capacity_request: Gevraagd vermogen binnenunit
+  capacity_absolute: Nominaal vermogen binnenunit
+  power_produced: Geleverd vermogen (laatste minuut)
+  energy_produced_total: Geproduceerde energie (totaal)
+  indoor_eev: Expansieventiel EEV binnenunit
+  two_way_valve: 2-wegklep
+  three_way_valve: 3-wegklep
+  operation_mode: Bedrijfsmodus binnenunit (4=verwarmen)
+  control_reference: Regeling op basis van (1=wateruitlaat)
+  status_bits_440e: Statusbits binnenunit (440E)
+  raw_0402: NASA PDU binnen 0402 LONG RAW
+  raw_0411: NASA PDU binnen 0411 LONG RAW
+  raw_0412: NASA PDU binnen 0412 LONG RAW
+  raw_0413: NASA PDU binnen 0413 LONG RAW
+  raw_0414: NASA PDU binnen 0414 LONG RAW
+  raw_0415: NASA PDU binnen 0415 LONG RAW
+  raw_4006: NASA PDU binnen 4006 RAW
+  raw_440a: NASA PDU binnen 440A LONG RAW
+  outdoor_temperature: Buitentemperatuur
+  compressor_frequency: Compressorfrequentie
+  order_frequency: Opgegeven compressorfrequentie
+  target_frequency: Doelfrequentie compressor
+  frequency_limit: Frequentielimiet compressor
+  fan_speed_target: Toerental ventilator (gewenst)
+  fan_speed_actual: Toerental ventilator (actueel)
+  power_consumed: Opgenomen vermogen (laatste minuut)
+  outdoor_power: Opgenomen vermogen buitenunit
+  energy_consumed_total: Verbruikte energie (totaal)
+  outdoor_current: Stroom buitenunit
+  heat_pump_voltage: Spanning warmtepomp
+  mains_voltage: Netspanning
+  dc_link_voltage: DC-link-spanning
+  unit_capacity: Nominaal vermogen buitenunit
+  discharge_temp: Persgastemperatuur (820A)
+  target_discharge_temp: Gewenste persgastemperatuur
+  comp_top_temp: Temperatuur bovenzijde compressor (8280)
+  cond_out_temp: Temperatuur uitgang condensor (8218)
+  ipm_temp: Temperatuur IPM-module (8254)
+  main_eev: Positie expansieventiel EEV
+  start_sequence: Startfase compressor
+  restart_inhibit: Herstartblokkade compressor
+  error_code: Foutcode
+  linked_indoor_units: Aantal gekoppelde binnenunits
+  raw_041b: NASA PDU buiten 041B LONG RAW
+  raw_8201: NASA PDU buiten 8201 RAW
+  raw_8239: NASA PDU buiten 8239 RAW
+  raw_823f: NASA PDU buiten 823F RAW
+  raw_8243: NASA PDU buiten 8243 RAW
+  raw_824b: NASA PDU buiten 824B RAW
+  raw_824c: NASA PDU buiten 824C RAW
+  raw_82e1: NASA PDU buiten 82E1 RAW
+  raw_840f: NASA PDU buiten 840F LONG RAW
+  raw_8417: NASA PDU buiten 8417 LONG RAW
+  # hub-statistieken (type:)
+  rx_frames: NASA ontvangen frames
+  bad_frames: NASA foutieve frames
+  tx_frames: NASA verzonden frames
+  timeouts: NASA time-outs bij lezen
+
+binary_sensors:
+  water_pump: Circulatiepomp
+  backup_heater: Back-upverwarming
+  booster_heater: Bijverwarming boiler
+  defrost: Ontdooien
+  dhw_power: SWW ingeschakeld
+  zone1_power: Zone 1 ingeschakeld
+  zone2_power: Zone 2 ingeschakeld
+  pv_control: PV-regeling
+  smart_grid: Smart Grid
+  compressor: Compressor actief
+  four_way_valve: 4-wegklep
+  hot_gas_valve: Heetgasklep
+  base_heater: Bodemverwarming
+  night_limit: Nachtlimiet compressor (U11)
+  night_mode: Nachtfunctie U11 actief
+
+text_sensors:
+  outdoor_driving_mode: Bedrijfsmodus buitenunit
+  outdoor_operation_state: Status buitenunit
+  outdoor_fan_state: Status ventilator
+  defrost_stage: Ontdooifase
+  system_error: Systeemfout
+  dhw_mode: SWW-modus
+  operation_mode_text: Bedrijfsmodus binnenunit
+  three_way_valve_text: Stand 3-wegklep
+  firmware_outdoor: Firmware buitenunit
+  firmware_outdoor_eeprom: EEPROM buitenunit
+  firmware_inverter: Firmware inverter
+  firmware_indoor: Firmware binnenunit (MIM)
+  raw_4604: NASA PDU binnen 4604 RAW
+  # hub-sniffer (type:)
+  last_frame: NASA laatste frame
+  last_change: NASA laatste wijziging
+  devices: NASA apparaten op de bus
+
+# Labels voor apparaatklassen in de lijst "NASA apparaten"
+device_classes:
+  0x10: buitenunit
+  0x11: hydrobox (HTU)
+  0x20: binnenunit
+  0x50: bedrade afstandsbediening
+  0x58: PIM-module
+  0x59: SIM-module
+  0x62: Wi-Fi-kit
+  0x63: MIM-module
+  0x65: centrale regelaar
+  0x6A: DMS
+  0x80: servicetool
+
+switches:
+  sniffer: NASA-sniffer
+
+buttons:
+  poll: FSV nu uitlezen
+
+texts:
+  unknown: "Onbekend ({value})"
+  no_error: Geen fout
+  error: "E{code}"
+  error_with_text: "E{code}: {text}"
+
+fsv_format: "FSV {code} - {name}"
+fsv:
+  1011: Max. watertemp. (koelen)
+  1012: Min. watertemp. (koelen)
+  1021: Max. kamertemp. (koelen)
+  1022: Min. kamertemp. (koelen)
+  1031: Max. watertemp. (verwarmen)
+  1032: Min. watertemp. (verwarmen)
+  1041: Max. kamertemp. (verwarmen)
+  1042: Min. kamertemp. (verwarmen)
+  1051: Max. temp. SWW-boiler
+  1052: Min. temp. SWW-boiler
+  2011: Stooklijn verwarmen - buitentemp. punt 1
+  2012: Stooklijn verwarmen - buitentemp. punt 2
+  2021: Stooklijn verwarmen WL1 - watertemp. punt 1
+  2022: Stooklijn verwarmen WL1 - watertemp. punt 2
+  2031: Stooklijn verwarmen WL2 - watertemp. punt 1
+  2032: Stooklijn verwarmen WL2 - watertemp. punt 2
+  2041: Type stooklijn verwarmen
+  2051: Stooklijn koelen - buitentemp. punt 1
+  2052: Stooklijn koelen - buitentemp. punt 2
+  2061: Stooklijn koelen WL1 - watertemp. punt 1
+  2062: Stooklijn koelen WL1 - watertemp. punt 2
+  2071: Stooklijn koelen WL2 - watertemp. punt 1
+  2072: Stooklijn koelen WL2 - watertemp. punt 2
+  2081: Type stooklijn koelen
+  2091: Externe kamerthermostaat (vloerverwarming)
+  2092: Externe kamerthermostaat (ventilatorconvectoren)
+  2093: Kamertemperatuurregeling via afstandsbediening
+  3011: SWW-boiler
+  3021: Max. SWW-temp. via warmtepomp
+  3022: SWW-hysterese uitschakelen
+  3023: SWW-hysterese inschakelen
+  3024: Min. tijd ruimteverwarming
+  3025: Max. SWW-tijd
+  3026: Max. tijd ruimteverwarming
+  3031: Bijverwarming boiler
+  3032: Vertraging bijverwarming boiler
+  3033: Overschrijding bijverwarming boiler
+  3041: Desinfectie (anti-legionella)
+  3042: Desinfectie - dag
+  3043: Desinfectie - starttijd
+  3044: Desinfectie - doeltemp.
+  3045: Desinfectie - duur
+  3046: Desinfectie - max. tijd
+  3051: Geforceerd SWW - timer
+  3052: Geforceerd SWW - duur
+  3061: Zonnepaneel of SWW-thermostaat
+  3071: Richting 3-wegklep
+  3081: Vermogen bijverwarming - stap 1
+  3082: Vermogen bijverwarming - stap 2
+  3083: Vermogen bijverwarming boiler (BSH)
+  4011: Prioriteit verwarming of SWW
+  4012: Buitentemp. voor prioriteit
+  4013: Buitentemp. verwarming uit
+  4021: Back-upverwarming
+  4022: Prioriteit back-up- of bijverwarming
+  4023: Compensatie bij koud weer
+  4024: Drempeltemp. back-upverwarming
+  4025: Back-uptemp. bij ontdooien
+  4031: Back-upketel
+  4032: Prioriteit back-upketel
+  4033: Drempeltemp. back-upketel
+  4041: Mengklep
+  4042: Mengklep - delta T (verwarmen)
+  4043: Mengklep - delta T (koelen)
+  4044: Mengklep - regelfactor
+  4045: Mengklep - regelinterval
+  4046: Mengklep - looptijd
+  4051: Regeling inverterpomp
+  4052: Inverterpomp - delta T
+  4053: Inverterpomp - regelfactor
+  4061: Zoneregeling
+  5011: Afwezigheidsmodus - watertemp. koelen
+  5012: Afwezigheidsmodus - kamertemp. koelen
+  5013: Afwezigheidsmodus - watertemp. verwarmen
+  5014: Afwezigheidsmodus - kamertemp. verwarmen
+  5015: Afwezigheidsmodus - auto koelen WL1
+  5016: Afwezigheidsmodus - auto koelen WL2
+  5017: Afwezigheidsmodus - auto verwarmen WL1
+  5018: Afwezigheidsmodus - auto verwarmen WL2
+  5019: Afwezigheidsmodus - doeltemp. SWW-boiler
+  5021: SWW-besparing - temperatuurverschil
+  5022: SWW-besparingsmodus
+  5023: SWW-besparing - verschil thermostaat uit
+  5041: Piekvermogenbegrenzing
+  5042: Piekvermogen - geforceerd uitgeschakelde onderdelen
+  5043: Piekvermogen - ingangsspanning
+  5051: Regeling frequentieverhouding
+  5081: PV-regeling
+  5082: PV-regeling - verschuiving koelen
+  5083: PV-regeling - verschuiving verwarmen
+  5091: Smart Grid-regeling
+  5092: Smart Grid - verschuiving verwarmen
+  5093: Smart Grid - verschuiving SWW
+  5094: Smart Grid - SWW-modus
+
+maps:
+  driving_mode:
+    0: Stop
+    1: Veiligheid
+    2: Normaal
+    3: Balans
+    4: Herstel
+    5: Ontdooien
+    6: Compressor uitschakelen
+    7: Geblokkeerd
+    8: Lijntest (jig)
+    9: Printplaattest (jig)
+    10: Test
+    11: Koudemiddel bijvullen
+    12: Leegzuigen (pump down)
+    13: Leegpompen (pump out)
+    14: Vacuüm
+    15: Calorimetertest
+    16: Leegzuigen gestopt
+    17: Hulpstop
+    18: Leidingcontrole
+    19: Koudemiddelcontrole
+    20: FPT-test (jig)
+    21: Omschakeling verwarmen/koelen (zonder stop)
+    22: Automatische inspectie
+    23: Elektrische ontlading
+    24: Gesplitst ontdooien
+    25: Invertercontrole
+    26: Ontdooien (zonder stop)
+    27: Test op afstand
+    28: Nominale meting
+    29: PC-test
+    30: Leegzuigen (thermostaat uit)
+    31: 3-fasentest
+    32: Smart-installatietest
+    33: Ontdooiprestatietest
+    34: Controle ventilatorprint inverter
+    35: Automatische leidingkoppeling
+    36: Automatisch vullen
+  heat_cool:
+    0: Niet gedefinieerd
+    1: Koelen
+    2: Verwarmen
+    3: Koelen (hoofd)
+    4: Verwarmen (hoofd)
+  fan_state:
+    0: Gestopt
+    1: Draait
+  defrost_stage:
+    0: Geen ontdooiing
+    1: Fase 1
+    2: Fase 2
+    3: Fase 3
+    7: Eindfase
+    255: Geen ontdooiing
+  dhw_mode:
+    0: Eco
+    1: Standaard
+    2: Vermogen
+    3: Geforceerd
+  operation_mode:
+    0: Auto
+    1: Koelen
+    2: Ontvochtigen
+    3: Ventilator
+    4: Verwarmen
+    21: Koudeopslag
+    24: Warm tapwater
+  three_way_valve:
+    0: Ruimteverwarming
+    1: SWW-boiler
+
+errors:
+  101: Communicatiefout binnenunit - buitenunit
+  120: Fout kamersensor zone 2
+  121: Fout kamersensor zone 1
+  122: Fout sensor ingang verdamper
+  123: Fout sensor uitgang verdamper
+  162: EEPROM-fout
+  198: Fout thermische zekering
+  201: Aantal binnen-/buitenunits komt niet overeen
+  202: Geen communicatie tussen binnen- en buitenunit
+  203: Communicatie-timeout hoofdprint - inverterprint
+  221: Fout buitentemperatuursensor
+  231: Fout temperatuursensor condensor
+  251: Fout persgastemperatuursensor
+  320: Fout overbelastingssensor compressor (OLP)
+  403: Bevriezing buitenunit gedetecteerd (compressor gestopt)
+  404: Overbelastingsbeveiliging buitenunit (compressor gestopt)
+  416: Persgastemperatuur compressor te hoog
+  419: Fout openen expansieventiel EEV buitenunit
+  425: Bedradingsfout 3-fasenvoeding
+  439: Koudemiddellek (unit gestopt)
+  440: Verwarmen geblokkeerd - buitentemperatuur te hoog
+  441: Koelen geblokkeerd - buitentemperatuur te laag
+  443: Koudemiddellek (voor start)
+  458: Fout ventilator 1 buitenunit
+  461: Startfout compressor
+  462: Primaire stroomuitschakeling
+  463: Overstroom / PFC-overstroom
+  464: IPM-overstroom
+  465: Overbelasting compressor
+  466: DC-link-spanning te laag / te hoog
+  467: Bedradingsfout compressor
+  468: Fout stroomsensor
+  469: Fout DC-link-spanningssensor
+  470: EEPROM lees-/schrijffout
+  471: EEPROM-fout buitenunit
+  474: Fout temperatuursensor IPM / PFC
+  475: Fout ventilator 2 buitenunit
+  484: PFC-overbelasting
+  485: Fout ingangsstroomsensor
+  500: IPM oververhit
+  554: Koudemiddellek
+  604: Communicatiefout binnenunit - bedrade afstandsbediening
+  653: Fout temperatuursensor bedrade afstandsbediening
+  654: EEPROM-fout bedrade afstandsbediening
+  899: Fout wateruitlaatsensor zone 1
+  900: Fout wateruitlaatsensor zone 2
+  901: Fout temperatuursensor waterinlaat
+  903: Fout temperatuursensor wateruitlaat
+  904: Fout temperatuursensor SWW-boiler
+  906: Fout temperatuursensor koudemiddelingang
+  907: Beveiliging tegen leidingbreuk
+  908: Vorstbeveiliging (herstelbaar)
+  909: Vorstbeveiliging (vergrendeld)
+  910: Wateruitlaatsensor losgekomen
+  911: Fout stromingsschakelaar
+  912: Waterdebiet te laag
+  913: Fout stromingsschakelaar (vergrendeld)
+  914: Aansluitfout externe thermostaat
+  915: Fout DC-ventilator
+  916: Fout sensor mengklep
+  917: Configuratiefout boiler
+  919: Desinfectietemperatuur niet bereikt
+  920: Fout FSV / SD-kaart
+  973: Fout waterdruksensor

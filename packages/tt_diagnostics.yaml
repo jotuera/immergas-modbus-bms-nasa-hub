@@ -1,0 +1,90 @@
+# Immergas Magis Pro / Combo T-/T+ BMS - package "tt_diagnostics"
+# Undecoded registers (raw, diagnostic) and the undocumented writable 0/1 registers - help decoding them.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# File and id names start with tt_ so this repo can be combined with the D+/D- and F1/F2 repos on one device.
+
+sensor:
+  - platform: modbus_controller
+    modbus_controller_id: tt_bms_diag
+    name: "${n_tt_pdu_512}"
+    id: tt_pdu_512
+    register_type: holding
+    address: 512
+    value_type: U_WORD
+    entity_category: diagnostic
+    accuracy_decimals: 0
+
+  - platform: modbus_controller
+    modbus_controller_id: tt_bms_diag
+    name: "${n_tt_pdu_3061}"
+    id: tt_pdu_3061
+    register_type: holding
+    address: 3061
+    value_type: U_WORD
+    entity_category: diagnostic
+    accuracy_decimals: 0
+
+  - platform: modbus_controller
+    modbus_controller_id: tt_bms_diag
+    name: "${n_tt_pdu_4588}"
+    id: tt_pdu_4588
+    register_type: holding
+    address: 4588
+    value_type: U_WORD
+    entity_category: diagnostic
+    accuracy_decimals: 0
+
+  # A03/A04 (pump min/max %) removed from diagnostics — available as number sliders.
+
+  - platform: modbus_controller
+    modbus_controller_id: tt_bms_diag
+    name: "${n_tt_pdu_6014}"
+    id: tt_pdu_6014
+    register_type: holding
+    address: 6014
+    value_type: U_WORD
+    entity_category: diagnostic
+    accuracy_decimals: 0
+
+  - platform: modbus_controller
+    modbus_controller_id: tt_bms_diag
+    name: "${n_tt_pdu_6503}"
+    id: tt_pdu_6503
+    register_type: holding
+    address: 6503
+    value_type: U_WORD
+    entity_category: diagnostic
+    accuracy_decimals: 0
+
+  - platform: modbus_controller
+    modbus_controller_id: tt_bms_diag
+    name: "${n_tt_pdu_6504}"
+    id: tt_pdu_6504
+    register_type: holding
+    address: 6504
+    value_type: U_WORD
+    entity_category: diagnostic
+    accuracy_decimals: 0
+
+switch:
+  # 2102 - writable, but a 1 falls back to 0 within seconds and nothing visible happens (not a remote Reset: it does not
+  # end the chimney sweep function).
+  - platform: modbus_controller
+    modbus_controller_id: tt_bms
+    name: "${n_tt_sw_2102}"
+    id: tt_sw_2102
+    register_type: holding
+    address: 2102
+    bitmask: 1
+    entity_category: config
+
+  # 6014 - always reads 0, but accepts writes and keeps the value (a 1 stayed for 13 min). Nothing visible happened
+  # on the unit or the panel, and no panel parameter that reads 0 changed (T21, P04, P05, P07, P23, P24, A05).
+  - platform: modbus_controller
+    modbus_controller_id: tt_bms
+    name: "${n_tt_sw_6014}"
+    id: tt_sw_6014
+    register_type: holding
+    address: 6014
+    bitmask: 1
+    entity_category: config

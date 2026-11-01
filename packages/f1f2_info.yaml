@@ -1,0 +1,16 @@
+# Immergas Magis Pro / Combo F1/F2 (Samsung NASA) - package "f1f2_info"
+# Unit information: firmware of the outdoor main board, EEPROM, inverter and MIM board; capacity class;
+# number of linked indoor units.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# File, id and substitution names start with f1f2_ so this repo can be combined with the D+/D- and T-/T+
+# repos on one device.
+
+sensor:
+  - {platform: f1f2_nasa, key: unit_capacity, id: f1f2_unit_capacity}
+  - {platform: f1f2_nasa, key: linked_indoor_units, id: f1f2_linked_indoor_units}
+
+text_sensor:
+  - {platform: f1f2_nasa, key: firmware_outdoor, id: f1f2_firmware_outdoor}
+  - {platform: f1f2_nasa, key: firmware_outdoor_eeprom, id: f1f2_firmware_outdoor_eeprom}
+  - {platform: f1f2_nasa, key: firmware_inverter, id: f1f2_firmware_inverter}
+  - {platform: f1f2_nasa, key: firmware_indoor, id: f1f2_firmware_indoor}

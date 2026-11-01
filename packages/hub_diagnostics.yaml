@@ -1,0 +1,63 @@
+# IMMERGAS Modbus BMS NASA Hub - package "hub_diagnostics"
+# Device diagnostics and project info; works with any combination of the buses.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+substitutions:
+  hub_project_version: "1.0.0"
+
+binary_sensor:
+  - platform: status
+    name: "${n_hub_status}"
+    entity_category: diagnostic
+
+button:
+  - platform: restart
+    name: "${n_hub_restart}"
+    entity_category: diagnostic
+
+sensor:
+  - platform: uptime
+    name: "${n_hub_uptime}"
+    entity_category: diagnostic
+    update_interval: 10s
+  - platform: wifi_signal
+    name: "${n_hub_wifi}"
+    entity_category: diagnostic
+    update_interval: 30s
+  - platform: debug
+    loop_time:
+      name: "${n_hub_loop_time}"
+      entity_category: diagnostic
+    free:
+      name: "${n_hub_free_mem}"
+      entity_category: diagnostic
+
+text_sensor:
+  - platform: debug
+    reset_reason:
+      name: "${n_hub_reset_reason}"
+      entity_category: diagnostic
+  - platform: template
+    id: hub_meta_version
+    name: "${n_hub_version}"
+    icon: mdi:tag-outline
+    entity_category: diagnostic
+    update_interval: 3600s
+    lambda: |-
+      return std::string("${hub_project_version}");
+  - platform: template
+    id: hub_meta_author
+    name: "${n_hub_author}"
+    icon: mdi:account
+    entity_category: diagnostic
+    update_interval: 3600s
+    lambda: |-
+      return std::string("JoTu");
+  - platform: template
+    id: hub_meta_github
+    name: "${n_hub_github}"
+    icon: mdi:github
+    entity_category: diagnostic
+    update_interval: 3600s
+    lambda: |-
+      return std::string("https://github.com/jotuera/immergas-modbus-bms-nasa-hub");

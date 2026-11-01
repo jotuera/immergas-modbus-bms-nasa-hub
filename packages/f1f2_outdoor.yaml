@@ -1,0 +1,45 @@
+# Immergas Magis Pro / Combo F1/F2 (Samsung NASA) - package "f1f2_outdoor"
+# Outdoor unit (10.00.00): compressor (Hz, limit, start sequence), fan, EEV, refrigerant temperatures,
+# power, energy, voltages, defrost, errors.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# File, id and substitution names start with f1f2_ so this repo can be combined with the D+/D- and T-/T+
+# repos on one device.
+
+sensor:
+  - {platform: f1f2_nasa, key: outdoor_temperature, id: f1f2_outdoor_temperature}
+  - {platform: f1f2_nasa, key: compressor_frequency, id: f1f2_compressor_frequency}
+  - {platform: f1f2_nasa, key: order_frequency, id: f1f2_order_frequency}
+  - {platform: f1f2_nasa, key: target_frequency, id: f1f2_target_frequency}
+  - {platform: f1f2_nasa, key: frequency_limit, id: f1f2_frequency_limit}
+  - {platform: f1f2_nasa, key: fan_speed_target, id: f1f2_fan_speed_target}
+  - {platform: f1f2_nasa, key: fan_speed_actual, id: f1f2_fan_speed_actual}
+  - {platform: f1f2_nasa, key: power_consumed, id: f1f2_power_consumed}
+  - {platform: f1f2_nasa, key: outdoor_power, id: f1f2_outdoor_power}
+  - {platform: f1f2_nasa, key: energy_consumed_total, id: f1f2_energy_consumed_total}
+  - {platform: f1f2_nasa, key: outdoor_current, id: f1f2_outdoor_current}
+  - {platform: f1f2_nasa, key: heat_pump_voltage, id: f1f2_heat_pump_voltage}
+  - {platform: f1f2_nasa, key: mains_voltage, id: f1f2_mains_voltage}
+  - {platform: f1f2_nasa, key: dc_link_voltage, id: f1f2_dc_link_voltage}
+  - {platform: f1f2_nasa, key: discharge_temp, id: f1f2_discharge_temp}
+  - {platform: f1f2_nasa, key: target_discharge_temp, id: f1f2_target_discharge_temp}
+  - {platform: f1f2_nasa, key: comp_top_temp, id: f1f2_comp_top_temp}
+  - {platform: f1f2_nasa, key: cond_out_temp, id: f1f2_cond_out_temp}
+  - {platform: f1f2_nasa, key: ipm_temp, id: f1f2_ipm_temp}
+  - {platform: f1f2_nasa, key: main_eev, id: f1f2_main_eev}
+  - {platform: f1f2_nasa, key: start_sequence, id: f1f2_start_sequence}
+  - {platform: f1f2_nasa, key: restart_inhibit, id: f1f2_restart_inhibit}
+  - {platform: f1f2_nasa, key: error_code, id: f1f2_error_code}
+
+binary_sensor:
+  - {platform: f1f2_nasa, key: compressor, id: f1f2_compressor}
+  - {platform: f1f2_nasa, key: four_way_valve, id: f1f2_four_way_valve}
+  - {platform: f1f2_nasa, key: hot_gas_valve, id: f1f2_hot_gas_valve}
+  - {platform: f1f2_nasa, key: base_heater, id: f1f2_base_heater}
+  - {platform: f1f2_nasa, key: night_limit, id: f1f2_night_limit}
+
+text_sensor:
+  - {platform: f1f2_nasa, key: outdoor_driving_mode, id: f1f2_outdoor_driving_mode}
+  - {platform: f1f2_nasa, key: outdoor_operation_state, id: f1f2_outdoor_operation_state}
+  - {platform: f1f2_nasa, key: outdoor_fan_state, id: f1f2_outdoor_fan_state}
+  - {platform: f1f2_nasa, key: defrost_stage, id: f1f2_defrost_stage}
+  - {platform: f1f2_nasa, key: system_error, id: f1f2_system_error}

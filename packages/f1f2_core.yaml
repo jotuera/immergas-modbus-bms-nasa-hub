@@ -1,0 +1,61 @@
+# Immergas Magis Pro / Combo F1/F2 (Samsung NASA) - package "f1f2_core"
+# Base: project info, RS485 UART, the f1f2_nasa hub (component fetched from GitHub), device list. Required.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# File, id and substitution names start with f1f2_ so this repo can be combined with the D+/D- and T-/T+
+# repos on one device.
+
+substitutions:
+  f1f2_project_version: "2.7.4"
+  # RS485 pins (M5Stack Atom + Atomic RS485 Base). Override in your main YAML if your wiring differs.
+  f1f2_uart_tx_pin: GPIO19
+  f1f2_uart_rx_pin: GPIO22
+  f1f2_transmit: "true"            # false = listen only (then no FSV values)
+  f1f2_poll_interval: 30min        # how often the FSV values are re-read
+  f1f2_indoor_address: "20.00.01"  # see README "Finding the addresses"
+  f1f2_outdoor_address: "10.00.00"
+  # Text put in front of every entity name. Empty = names as before. On a device shared with other Immergas
+  # buses, e.g. f1f2_name_prefix: "Immergas FF - " -> "Immergas FF - Flow temperature".
+  f1f2_name_prefix: ""
+  # Start state of "Active ODU control" (the write arm, f1f2_control). ALWAYS_OFF = safe default, arm by hand after
+  # every restart. ALWAYS_ON = writes to the whitelisted controls (outing, FR, the editable FSV numbers you loaded)
+  # are always allowed; compressor / EEV / protection / flow stay hard-blocked in code either way.
+  f1f2_write_arm_restore: ALWAYS_OFF
+
+esphome:
+  project:
+    name: "jotuera.immergas-modbus-bms-nasa-hub"
+    version: "${f1f2_project_version}"
+
+# The components (components/) are loaded once in the main YAML (external_components).
+
+# Magis indoor box: F1/F2 (terminals of the MIM-B19N board) -> RS485 A/B. 9600 8E1. MIM rotary switch must be 1.
+uart:
+  - id: f1f2_uart
+    tx_pin: ${f1f2_uart_tx_pin}
+    rx_pin: ${f1f2_uart_rx_pin}
+    baud_rate: 9600
+    parity: EVEN
+    stop_bits: 1
+    rx_buffer_size: 1024
+
+f1f2_nasa:
+  id: f1f2_hub
+  uart_id: f1f2_uart
+  language: ${f1f2_language}
+  name_prefix: "${f1f2_name_prefix}"
+  transmit: ${f1f2_transmit}
+  poll_interval: ${f1f2_poll_interval}
+  indoor_address: ${f1f2_indoor_address}
+  outdoor_address: ${f1f2_outdoor_address}
+  # flow_control_pin: GPIO23       # only for RS485 boards with a DE/RE pin
+
+text_sensor:
+  # units that talk on the bus (address discovery)
+  - {platform: f1f2_nasa, type: devices}
+  # this integration's version (static), e.g. for checking what the device is running
+  - platform: template
+    name: "${f1f2_name_prefix}${n_f1f2_project_version}"
+    icon: "mdi:tag-outline"
+    entity_category: diagnostic
+    update_interval: 6h
+    lambda: 'return std::string("${f1f2_project_version}");'

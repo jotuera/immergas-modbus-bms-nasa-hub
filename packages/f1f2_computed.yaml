@@ -1,0 +1,31 @@
+# Immergas Magis Pro / Combo F1/F2 (Samsung NASA) - package "f1f2_computed"
+# Derived values: flow/return delta T, energy consumed today. Needs f1f2_indoor and f1f2_outdoor.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# File, id and substitution names start with f1f2_ so this repo can be combined with the D+/D- and T-/T+
+# repos on one device.
+
+time:
+  - platform: homeassistant
+    id: f1f2_time
+
+sensor:
+  - platform: template
+    id: f1f2_flow_delta
+    name: "${f1f2_name_prefix}${n_f1f2_flow_delta}"
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    update_interval: 10s
+    lambda: |-
+      return id(f1f2_flow_temp_out).state - id(f1f2_flow_temp_return).state;
+  - platform: total_daily_energy
+    id: f1f2_daily_energy
+    name: "${f1f2_name_prefix}${n_f1f2_daily_energy}"
+    power_id: f1f2_power_consumed
+    unit_of_measurement: kWh
+    state_class: total_increasing
+    device_class: energy
+    accuracy_decimals: 3
+    filters:
+      - multiply: 0.001

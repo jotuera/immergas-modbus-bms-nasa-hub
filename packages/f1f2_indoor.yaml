@@ -1,0 +1,54 @@
+# Immergas Magis Pro / Combo F1/F2 (Samsung NASA) - package "f1f2_indoor"
+# Indoor unit (MIM board, 20.00.01): water temperatures, active water target, DHW, zone 1, pump, heaters, modes.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# File, id and substitution names start with f1f2_ so this repo can be combined with the D+/D- and T-/T+
+# repos on one device.
+
+sensor:
+  - {platform: f1f2_nasa, key: flow_temp_out, id: f1f2_flow_temp_out}
+  - {platform: f1f2_nasa, key: flow_temp_return, id: f1f2_flow_temp_return}
+  - {platform: f1f2_nasa, key: water_outlet_target, id: f1f2_water_outlet_target}
+  - {platform: f1f2_nasa, key: dhw_temperature, id: f1f2_dhw_temperature}
+  - {platform: f1f2_nasa, key: dhw_target, id: f1f2_dhw_target}
+  - {platform: f1f2_nasa, key: zone1_room_temp, id: f1f2_zone1_room_temp}
+  - {platform: f1f2_nasa, key: zone1_target, id: f1f2_zone1_target}
+  - {platform: f1f2_nasa, key: eva_in_temp, id: f1f2_eva_in_temp}
+  - {platform: f1f2_nasa, key: water_out_tw2, id: f1f2_water_out_tw2}
+  - {platform: f1f2_nasa, key: outdoor_temp_copy, id: f1f2_outdoor_temp_copy}
+  - {platform: f1f2_nasa, key: heater_out_temp, id: f1f2_heater_out_temp}
+  - {platform: f1f2_nasa, key: mixing_valve_temp, id: f1f2_mixing_valve_temp}
+  - {platform: f1f2_nasa, key: capacity_request, id: f1f2_capacity_request}
+  - {platform: f1f2_nasa, key: capacity_absolute, id: f1f2_capacity_absolute}
+  - {platform: f1f2_nasa, key: indoor_eev, id: f1f2_indoor_eev}
+  - {platform: f1f2_nasa, key: two_way_valve, id: f1f2_two_way_valve}
+  # operation_mode (0x4001) and three_way_valve (0x4067) are exposed as decoded text_sensors below
+  # (operation_mode_text / three_way_valve_text) - the raw duplicates were removed.
+  - {platform: f1f2_nasa, key: control_reference, id: f1f2_control_reference}
+  - {platform: f1f2_nasa, key: status_bits_440e, id: f1f2_status_bits_440e}
+  # Night function (U11) capacity limit %: the low byte of 0x428D (30 % while active, 0 otherwise).
+  - platform: template
+    name: "${f1f2_name_prefix}${n_f1f2_night_limit_pct}"
+    icon: "mdi:percent"
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    update_interval: 10s
+    lambda: |-
+      if (!id(f1f2_hub).get_bus_enabled()) return NAN;   // NASA connection off -> unavailable
+      float v = id(f1f2_hub).read_value(0x428D);
+      if (isnan(v)) return NAN;
+      return fmodf(v, 256.0f);   // low byte = capacity limit %
+
+binary_sensor:
+  - {platform: f1f2_nasa, key: water_pump, id: f1f2_water_pump}
+  - {platform: f1f2_nasa, key: backup_heater, id: f1f2_backup_heater}
+  - {platform: f1f2_nasa, key: booster_heater, id: f1f2_booster_heater}
+  - {platform: f1f2_nasa, key: defrost, id: f1f2_defrost}
+  - {platform: f1f2_nasa, key: dhw_power, id: f1f2_dhw_power}
+  - {platform: f1f2_nasa, key: zone1_power, id: f1f2_zone1_power}
+  - {platform: f1f2_nasa, key: night_mode, id: f1f2_night_mode}
+  # zone2_power / pv_control / smart_grid moved to the optional f1f2_ehs_extra (a Magis has none of them).
+
+text_sensor:
+  - {platform: f1f2_nasa, key: dhw_mode, id: f1f2_dhw_mode}
+  - {platform: f1f2_nasa, key: operation_mode_text, id: f1f2_operation_mode_text}
+  - {platform: f1f2_nasa, key: three_way_valve_text, id: f1f2_three_way_valve_text}

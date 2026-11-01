@@ -1,0 +1,108 @@
+# Immergas Magis Pro / Combo D+/D- emulator - package "dd_core"
+# Base: project info, components from GitHub, HA time (boiler clock drift), RS485 UART (pins via substitutions).
+# Device settings (esp32, logger, Wi-Fi, API, debug sensors) live in the main YAML.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# File and id names start with dd_ so this repo can be combined with the T-/T+ and F1/F2 repos on one device.
+
+substitutions:
+  dd_author: "JoTu"
+  dd_github_url: "https://github.com/jotuera/immergas-modbus-bms-nasa-hub"
+  dd_project_version: "2.4.0"
+  # RS485 pins (M5Stack Atom + RS485 unit). Override in your main YAML if your wiring differs.
+  dd_uart_tx_pin: GPIO26
+  dd_uart_rx_pin: GPIO32
+  dd_uart_de_pin: GPIO23
+  # Step of the setpoint sliders/climates (C). 0.1 = fine control; 0.5 = like the Dominus app.
+  dd_setpoint_step: "0.1"
+  # First part of every entity name ("<prefix> - <name>"). Change it when several Immergas buses share one device,
+  # e.g. dd_name_prefix: "Immergas DD" -> "Immergas DD - D03 ...". Default keeps the names of v2.0.x.
+  dd_name_prefix: "Immergas"
+
+esphome:
+  project:
+    name: "jotuera.immergas-modbus-bms-nasa-hub"
+    version: "${dd_project_version}"
+  on_boot:
+    # v2.0.0: one-time copy of the values saved by v1.x (old global ids) - after restore (priority 600 < 800).
+    - priority: 600
+      then:
+        - lambda: |-
+            if (!id(dd_migrated_v2)) {
+            id(dd_panel_a31_raw) = id(panel_a31_raw);
+            id(dd_ha_room_temp_raw) = id(ha_room_temp_raw);
+            id(dd_ha_room_humidity_raw) = id(ha_room_humidity_raw);
+            id(dd_ha_room_temp_2_raw) = id(ha_room_temp_2_raw);
+            id(dd_ha_room_temp_3_raw) = id(ha_room_temp_3_raw);
+            id(dd_ha_room_humidity_2_raw) = id(ha_room_humidity_2_raw);
+            id(dd_ha_room_humidity_3_raw) = id(ha_room_humidity_3_raw);
+            id(dd_cwu_setpoint_raw) = id(cwu_setpoint_raw);
+            id(dd_zone1_setpoint_raw) = id(zone1_setpoint_raw);
+            id(dd_zone1_offset_raw) = id(zone1_offset_raw);
+            id(dd_zone2_setpoint_raw) = id(zone2_setpoint_raw);
+            id(dd_zone3_setpoint_raw) = id(zone3_setpoint_raw);
+            id(dd_zone2_offset_raw) = id(zone2_offset_raw);
+            id(dd_zone3_offset_raw) = id(zone3_offset_raw);
+            id(dd_operating_mode_raw) = id(operating_mode_raw);
+            id(dd_operating_mode_target_raw) = id(operating_mode_target_raw);
+            id(dd_dominus_comfort_heat_raw) = id(dominus_comfort_heat_raw);
+            id(dd_dominus_eco_heat_raw) = id(dominus_eco_heat_raw);
+            id(dd_dominus_comfort_cool_raw) = id(dominus_comfort_cool_raw);
+            id(dd_dominus_eco_cool_raw) = id(dominus_eco_cool_raw);
+            id(dd_dominus_humidity_raw) = id(dominus_humidity_raw);
+            id(dd_dominus_set_flow_raw) = id(dominus_set_flow_raw);
+            id(dd_dominus_comfort_heat_z2_raw) = id(dominus_comfort_heat_z2_raw);
+            id(dd_dominus_eco_heat_z2_raw) = id(dominus_eco_heat_z2_raw);
+            id(dd_dominus_comfort_cool_z2_raw) = id(dominus_comfort_cool_z2_raw);
+            id(dd_dominus_eco_cool_z2_raw) = id(dominus_eco_cool_z2_raw);
+            id(dd_dominus_humidity_z2_raw) = id(dominus_humidity_z2_raw);
+            id(dd_dominus_set_flow_z2_raw) = id(dominus_set_flow_z2_raw);
+            id(dd_dominus_comfort_heat_z3_raw) = id(dominus_comfort_heat_z3_raw);
+            id(dd_dominus_eco_heat_z3_raw) = id(dominus_eco_heat_z3_raw);
+            id(dd_dominus_comfort_cool_z3_raw) = id(dominus_comfort_cool_z3_raw);
+            id(dd_dominus_eco_cool_z3_raw) = id(dominus_eco_cool_z3_raw);
+            id(dd_dominus_humidity_z3_raw) = id(dominus_humidity_z3_raw);
+            id(dd_dominus_set_flow_z3_raw) = id(dominus_set_flow_z3_raw);
+              id(dd_migrated_v2) = true;
+              ESP_LOGW("dd_migrate", "v2.0.0: restored values of 34 globals copied from the v1.x ids");
+            }
+    # v2.0.2: the source selects restore their option, but set_action does not run on restore - run it once
+    # so the source index and the value sent to the boiler follow the restored option (issue #2).
+    - priority: 590
+      then:
+        - lambda: |-
+            for (auto *s : std::vector<select::Select *>{id(dd_temp_source_select), id(dd_hum_source_select),
+                                                       id(dd_temp_source_z2_select), id(dd_temp_source_z3_select),
+                                                       id(dd_hum_source_z2_select), id(dd_hum_source_z3_select)}) {
+              auto idx = s->active_index();
+              if (idx.has_value()) s->make_call().set_index(*idx).perform();
+            }
+    - priority: 800
+      then:
+        - lambda: |-
+            // the RS485 direction is switched by the UART (flow_control_pin) or by an auto-direction transceiver
+            ESP_LOGW("dd_rs485", "RS485 hardware DE on ${dd_uart_de_pin}; Dominus 0x33 + panels + thermostats + chrono + faults + status ready, fw ${dd_project_version}");
+
+# The components (components/) are loaded once in the main YAML (external_components).
+
+immergas_core:
+
+# HA time: drift of the boiler clock (PDU 2300) and the DHW Comfort / Eco schedule.
+
+time:
+  - platform: homeassistant
+    id: dd_ha_time
+
+# List form (like tt_/f1f2_), so the uart buses of the combined repos are merged, not replaced.
+uart:
+  - id: dd_uart
+    tx_pin: ${dd_uart_tx_pin}
+    rx_pin: ${dd_uart_rx_pin}
+    # Transceiver with a DE pin: ESP-IDF drives it from the UART (RS485 half-duplex mode), high only while the frame
+    # is sent, so sending never blocks the main loop. A transceiver with automatic direction needs no DE pin
+    # (remove flow_control_pin, see packages/hw_atoms3_portabc.yaml).
+    flow_control_pin: ${dd_uart_de_pin}
+    baud_rate: 9600
+    data_bits: 8
+    parity: EVEN
+    stop_bits: 1
+    rx_buffer_size: 1024

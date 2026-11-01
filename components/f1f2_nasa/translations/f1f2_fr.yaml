@@ -1,0 +1,374 @@
+# Français. Les clés manquantes sont reprises de f1f2_en.yaml.
+language: Français
+
+sensors:
+  flow_temp_out: Température de départ
+  flow_temp_return: Température de retour
+  water_outlet_target: Consigne de température d'eau en sortie (active)
+  dhw_temperature: Température ECS
+  dhw_target: Consigne de température ECS
+  zone1_room_temp: Température ambiante zone 1
+  zone1_target: Consigne de température zone 1
+  zone2_room_temp: Température ambiante zone 2
+  zone2_target: Consigne de température zone 2
+  eva_in_temp: Température d'entrée évaporateur (unité intérieure)
+  water_out_tw2: Température d'eau en sortie TW2 (4204)
+  outdoor_temp_copy: NASA PDU intérieur 420C copie de la température extérieure
+  heater_out_temp: Température en sortie de résistance
+  mixing_valve_temp: Température de la vanne mélangeuse
+  flow_rate: Capteur de débit d'eau
+  capacity_request: Puissance demandée unité intérieure
+  capacity_absolute: Puissance absolue unité intérieure
+  power_produced: Puissance produite (dernière minute)
+  energy_produced_total: Énergie produite totale
+  indoor_eev: Valeur détendeur EEV 1 (unité intérieure)
+  two_way_valve: Vanne 2 voies
+  three_way_valve: Vanne 3 voies
+  operation_mode: Mode de fonctionnement unité intérieure (4=chauffage)
+  control_reference: Référence de régulation EHS (1=eau en sortie)
+  status_bits_440e: Bits d'état unité intérieure (440E)
+  raw_0402: NASA PDU intérieur 0402 LONG RAW
+  raw_0411: NASA PDU intérieur 0411 LONG RAW
+  raw_0412: NASA PDU intérieur 0412 LONG RAW
+  raw_0413: NASA PDU intérieur 0413 LONG RAW
+  raw_0414: NASA PDU intérieur 0414 LONG RAW
+  raw_0415: NASA PDU intérieur 0415 LONG RAW
+  raw_4006: NASA PDU intérieur 4006 RAW
+  raw_440a: NASA PDU intérieur 440A LONG RAW
+  outdoor_temperature: Température extérieure
+  compressor_frequency: Fréquence actuelle du compresseur
+  order_frequency: Fréquence commandée du compresseur 1
+  target_frequency: Fréquence cible du compresseur 1
+  frequency_limit: Limite de fréquence du compresseur
+  fan_speed_target: Vitesse du ventilateur extérieur (consigne)
+  fan_speed_actual: Vitesse du ventilateur extérieur (réelle)
+  power_consumed: Puissance consommée (dernière minute)
+  outdoor_power: Puissance de l'unité extérieure (1 unité)
+  energy_consumed_total: Énergie consommée totale
+  outdoor_current: Courant de l'unité extérieure
+  heat_pump_voltage: Tension de la pompe à chaleur
+  mains_voltage: Tension secteur AC
+  dc_link_voltage: Tension du bus DC extérieur
+  unit_capacity: Puissance nominale de l'unité extérieure
+  discharge_temp: Température de refoulement 1 extérieur (820A)
+  target_discharge_temp: Consigne de température de refoulement
+  comp_top_temp: Température haut du compresseur (8280)
+  cond_out_temp: Température sortie condenseur (8218)
+  ipm_temp: Température IPM1 extérieur (8254)
+  main_eev: Position du détendeur EEV principal
+  start_sequence: Étape de la séquence de démarrage du compresseur
+  restart_inhibit: Inhibition du redémarrage du compresseur
+  error_code: Code d'erreur
+  linked_indoor_units: Unités intérieures raccordées
+  raw_041b: NASA PDU extérieur 041B LONG RAW
+  raw_8201: NASA PDU extérieur 8201 RAW
+  raw_8239: NASA PDU extérieur 8239 RAW
+  raw_823f: NASA PDU extérieur 823F RAW
+  raw_8243: NASA PDU extérieur 8243 RAW
+  raw_824b: NASA PDU extérieur 824B RAW
+  raw_824c: NASA PDU extérieur 824C RAW
+  raw_82e1: NASA PDU extérieur 82E1 RAW
+  raw_840f: NASA PDU extérieur 840F LONG RAW
+  raw_8417: NASA PDU extérieur 8417 LONG RAW
+  # statistiques du hub (type:)
+  rx_frames: Trames NASA reçues
+  bad_frames: Trames NASA invalides
+  tx_frames: Trames NASA émises
+  timeouts: Délais de lecture NASA dépassés
+
+binary_sensors:
+  water_pump: Pompe à eau primaire
+  backup_heater: Résistance d'appoint
+  booster_heater: Résistance d'appoint EHS (booster)
+  defrost: Mode dégivrage
+  dhw_power: Marche ECS
+  zone1_power: Marche zone 1
+  zone2_power: Marche zone 2
+  pv_control: Contrôle PV
+  smart_grid: Smart Grid
+  compressor: État du compresseur
+  four_way_valve: Vanne 4 voies
+  hot_gas_valve: Vanne gaz chaud
+  base_heater: Résistance de bac
+  night_limit: Limite nocturne du compresseur (U11)
+  night_mode: Fonction nocturne (U11) active
+
+text_sensors:
+  outdoor_driving_mode: Mode de fonctionnement unité extérieure
+  outdoor_operation_state: État de fonctionnement unité extérieure
+  outdoor_fan_state: État du ventilateur extérieur
+  defrost_stage: Étape de dégivrage
+  system_error: État d'erreur du système
+  dhw_mode: Mode eau chaude
+  operation_mode_text: Mode de fonctionnement unité intérieure
+  three_way_valve_text: Position de la vanne 3 voies
+  firmware_outdoor: Firmware de l'unité extérieure
+  firmware_outdoor_eeprom: EEPROM de l'unité extérieure
+  firmware_inverter: Firmware de l'inverter
+  firmware_indoor: Firmware de l'unité intérieure (MIM)
+  raw_4604: NASA PDU intérieur 4604 RAW
+  # sniffer du hub (type:)
+  last_frame: Dernière trame NASA
+  last_change: Dernier changement NASA
+  devices: Appareils NASA
+
+# Libellés des classes d'adresses d'appareils dans la liste « Appareils NASA »
+device_classes:
+  0x10: unité extérieure
+  0x11: module hydraulique (HTU)
+  0x20: unité intérieure
+  0x50: télécommande filaire
+  0x58: module PIM
+  0x59: module SIM
+  0x62: kit Wi-Fi
+  0x63: module MIM
+  0x65: contrôleur centralisé
+  0x6A: DMS
+  0x80: outil de service
+
+switches:
+  sniffer: Sniffer NASA
+
+buttons:
+  poll: Lire les FSV maintenant
+
+texts:
+  unknown: "Inconnu ({value})"
+  no_error: Aucune erreur
+  error: "E{code}"
+  error_with_text: "E{code}: {text}"
+
+fsv_format: "FSV {code} - {name}"
+fsv:
+  1011: Eau en sortie max (refroidissement)
+  1012: Eau en sortie min (refroidissement)
+  1021: Température ambiante max (refroidissement)
+  1022: Température ambiante min (refroidissement)
+  1031: Eau en sortie max (chauffage)
+  1032: Eau en sortie min (chauffage)
+  1041: Température ambiante max (chauffage)
+  1042: Température ambiante min (chauffage)
+  1051: Ballon ECS max
+  1052: Ballon ECS min
+  2011: Loi d'eau chauffage - point 1 de température extérieure
+  2012: Loi d'eau chauffage - point 2 de température extérieure
+  2021: Chauffage WL1 - point 1 d'eau en sortie
+  2022: Chauffage WL1 - point 2 d'eau en sortie
+  2031: Chauffage WL2 - point 1 d'eau en sortie
+  2032: Chauffage WL2 - point 2 d'eau en sortie
+  2041: Type de loi d'eau chauffage
+  2051: Loi d'eau refroidissement - point 1 de température extérieure
+  2052: Loi d'eau refroidissement - point 2 de température extérieure
+  2061: Refroidissement WL1 - point 1 d'eau en sortie
+  2062: Refroidissement WL1 - point 2 d'eau en sortie
+  2071: Refroidissement WL2 - point 1 d'eau en sortie
+  2072: Refroidissement WL2 - point 2 d'eau en sortie
+  2081: Type de loi d'eau refroidissement
+  2091: Thermostat d'ambiance externe (plancher chauffant)
+  2092: Thermostat d'ambiance externe (ventilo-convecteur)
+  2093: Régulation de la température ambiante par la télécommande
+  3011: Application du ballon ECS
+  3021: Température max ECS par la pompe à chaleur
+  3022: Écart d'arrêt ECS de la pompe à chaleur
+  3023: Écart de démarrage ECS de la pompe à chaleur
+  3024: Durée min de chauffage des locaux
+  3025: Durée max ECS
+  3026: Durée max de chauffage des locaux
+  3031: Résistance d'appoint (booster)
+  3032: Temporisation de la résistance d'appoint (booster)
+  3033: Dépassement de la résistance d'appoint (booster)
+  3041: Désinfection
+  3042: Jour de désinfection
+  3043: Heure de début de désinfection
+  3044: Température cible de désinfection
+  3045: Durée de désinfection
+  3046: Durée max de désinfection
+  3051: Minuterie ECS forcée
+  3052: Durée ECS forcée
+  3061: Panneau solaire ou thermostat ECS
+  3071: Sens de la vanne 3 voies
+  3081: Puissance 1er étage de la résistance d'appoint (booster)
+  3082: Puissance 2e étage de la résistance d'appoint (booster)
+  3083: Puissance de la résistance d'appoint (BSH)
+  4011: Priorité chauffage ou ECS
+  4012: Température extérieure pour la priorité
+  4013: Température extérieure d'arrêt du chauffage
+  4021: Application de la résistance d'appoint
+  4022: Priorité résistance d'appoint ou booster
+  4023: Compensation par temps froid
+  4024: Température seuil de la résistance d'appoint
+  4025: Température d'appoint pendant le dégivrage
+  4031: Chaudière d'appoint
+  4032: Priorité de la chaudière d'appoint
+  4033: Température seuil de la chaudière d'appoint
+  4041: Vanne mélangeuse
+  4042: Delta T cible de la vanne mélangeuse (chauffage)
+  4043: Delta T cible de la vanne mélangeuse (refroidissement)
+  4044: Facteur de régulation de la vanne mélangeuse
+  4045: Intervalle de régulation de la vanne mélangeuse
+  4046: Temps de course de la vanne mélangeuse
+  4051: Régulation de la pompe à inverter
+  4052: Delta T cible de la pompe à inverter
+  4053: Facteur de régulation de la pompe à inverter
+  4061: Régulation par zones
+  5011: Mode absence - eau en sortie refroidissement
+  5012: Mode absence - ambiance refroidissement
+  5013: Mode absence - eau en sortie chauffage
+  5014: Mode absence - ambiance chauffage
+  5015: Mode absence - eau WL1 refroidissement auto
+  5016: Mode absence - eau WL2 refroidissement auto
+  5017: Mode absence - eau WL1 chauffage auto
+  5018: Mode absence - eau WL2 chauffage auto
+  5019: Mode absence - consigne du ballon ECS
+  5021: Écart de température du mode économie ECS
+  5022: Mode économie ECS
+  5023: Écart d'arrêt thermostatique du mode économie ECS
+  5041: Contrôle de pointe de puissance
+  5042: Pointe de puissance - éléments coupés de force
+  5043: Pointe de puissance - tension d'entrée
+  5051: Contrôle du rapport de fréquence
+  5081: Contrôle PV
+  5082: Contrôle PV - décalage refroidissement
+  5083: Contrôle PV - décalage chauffage
+  5091: Contrôle Smart Grid
+  5092: Smart Grid - décalage chauffage
+  5093: Smart Grid - décalage ECS
+  5094: Smart Grid - mode ECS
+
+maps:
+  driving_mode:
+    0: Arrêt
+    1: Sécurité
+    2: Normal
+    3: Équilibrage
+    4: Récupération
+    5: Dégivrage
+    6: Compresseur à l'arrêt
+    7: Interdit
+    8: Test sur banc de ligne
+    9: Test sur banc de carte
+    10: Test
+    11: Charge en réfrigérant
+    12: Tirage au vide (pump down)
+    13: Évacuation du fluide (pump out)
+    14: Vide
+    15: Test calorimétrique
+    16: Arrêt du pump down
+    17: Arrêt secondaire
+    18: Contrôle des conduites
+    19: Contrôle du réfrigérant
+    20: Test sur banc FPT
+    21: Inversion chaud/froid (sans arrêt)
+    22: Auto-inspection
+    23: Décharge électrique
+    24: Dégivrage fractionné
+    25: Contrôle de l'inverter
+    26: Dégivrage (sans arrêt)
+    27: Test à distance
+    28: Mesure des performances (rating)
+    29: Test PC
+    30: Pump down (thermostat coupé)
+    31: Test triphasé
+    32: Test d'installation intelligente
+    33: Test de performance de dégivrage
+    34: Contrôle de la carte inverter du ventilateur
+    35: Appairage automatique des conduites
+    36: Charge automatique
+  heat_cool:
+    0: Indéfini
+    1: Refroidissement
+    2: Chauffage
+    3: Refroidissement (principal)
+    4: Chauffage (principal)
+  fan_state:
+    0: Arrêté
+    1: En marche
+  defrost_stage:
+    0: Pas de dégivrage
+    1: Étape 1
+    2: Étape 2
+    3: Étape 3
+    7: Étape finale
+    255: Pas de dégivrage
+  dhw_mode:
+    0: Éco
+    1: Standard
+    2: Puissance
+    3: Forcé
+  operation_mode:
+    0: Auto
+    1: Refroidissement
+    2: Déshumidification
+    3: Ventilation
+    4: Chauffage
+    21: Stockage de froid
+    24: Eau chaude
+  three_way_valve:
+    0: Chauffage des locaux
+    1: Ballon ECS
+
+errors:
+  101: Erreur de communication unité intérieure - extérieure
+  120: Erreur de sonde ambiante zone 2
+  121: Erreur de sonde ambiante zone 1
+  122: Erreur de sonde d'entrée évaporateur
+  123: Erreur de sonde de sortie évaporateur
+  162: Erreur EEPROM
+  198: Erreur de fusible thermique
+  201: Nombre d'unités intérieures / extérieures incohérent
+  202: Pas de communication entre l'unité intérieure et l'unité extérieure
+  203: Dépassement du délai de communication carte principale - carte inverter
+  221: Erreur de sonde de température extérieure
+  231: Erreur de sonde de température du condenseur
+  251: Erreur de sonde de température de refoulement
+  320: Erreur de sonde de surcharge du compresseur (OLP)
+  403: Gel de l'unité extérieure détecté (compresseur arrêté)
+  404: Protection contre la surcharge de l'unité extérieure (compresseur arrêté)
+  416: Température de refoulement du compresseur trop élevée
+  419: Erreur d'ouverture du détendeur EEV extérieur
+  425: Erreur de câblage de l'alimentation triphasée
+  439: Fuite de réfrigérant (unité arrêtée)
+  440: Chauffage bloqué - température extérieure trop élevée
+  441: Refroidissement bloqué - température extérieure trop basse
+  443: Fuite de réfrigérant (avant démarrage)
+  458: Erreur du ventilateur extérieur 1
+  461: Erreur de démarrage du compresseur
+  462: Déclenchement du courant primaire
+  463: Surintensité / surintensité PFC
+  464: Surintensité IPM
+  465: Surcharge du compresseur
+  466: Tension du bus DC trop basse / trop haute
+  467: Erreur de câblage du compresseur
+  468: Erreur du capteur de courant
+  469: Erreur du capteur de tension du bus DC
+  470: Erreur de lecture / écriture EEPROM
+  471: Erreur EEPROM extérieure
+  474: Erreur de sonde de température IPM / PFC
+  475: Erreur du ventilateur extérieur 2
+  484: Surcharge PFC
+  485: Erreur du capteur de courant d'entrée
+  500: Surchauffe de l'IPM
+  554: Fuite de réfrigérant
+  604: Erreur de communication unité intérieure - télécommande filaire
+  653: Erreur de sonde de température de la télécommande filaire
+  654: Erreur EEPROM de la télécommande filaire
+  899: Erreur de sonde de sortie d'eau zone 1
+  900: Erreur de sonde de sortie d'eau zone 2
+  901: Erreur de sonde de température d'entrée d'eau
+  903: Erreur de sonde de température de sortie d'eau
+  904: Erreur de sonde de température du ballon ECS
+  906: Erreur de sonde de température d'entrée du réfrigérant
+  907: Protection contre la rupture de conduite
+  908: Protection antigel (réarmable)
+  909: Protection antigel (verrouillée)
+  910: Sonde de sortie d'eau détachée
+  911: Erreur du contacteur de débit
+  912: Débit d'eau trop faible
+  913: Erreur du contacteur de débit (verrouillée)
+  914: Erreur de connexion du thermostat externe
+  915: Erreur du ventilateur DC
+  916: Erreur de sonde de la vanne mélangeuse
+  917: Erreur de configuration du ballon d'eau
+  919: Température de désinfection non atteinte
+  920: Erreur FSV / carte SD
+  973: Erreur du capteur de pression d'eau

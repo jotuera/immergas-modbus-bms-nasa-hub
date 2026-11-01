@@ -1,0 +1,243 @@
+# Immergas Magis Pro / Combo D+/D- emulator - package "dd_heat_pump"
+# Heat pump via the outdoor-unit interface board (0x1E, Samsung MIM): temperatures, compressor, fan, EEV,
+# run flags, stage, firmware, night function U11, system flow/return.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# File and id names start with dd_ so this repo can be combined with the T-/T+ and F1/F2 repos on one device.
+
+sensor:
+  # Flow / return of the heating (cooling) circuit = the heat-pump water probes TW2 / TW1 (0x1E W21 / W20), but
+  # only while those probes really see that circuit: dd_tw_on_system (below). Otherwise unknown, so the graph
+  # shows a gap instead of DHW or standing-water values. TW2 matches the boiler display D20.
+  - platform: template
+    name: "${n_dd_system_flow_temp}"
+    id: dd_system_flow_temp
+    icon: mdi:arrow-up-bold-circle-outline
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    update_interval: 10s
+    lambda: |-
+      return id(dd_tw_on_system).state ? id(dd_sniff_1e_w_21).state : NAN;
+  - platform: template
+    name: "${n_dd_system_return_temp}"
+    id: dd_system_return_temp
+    icon: mdi:arrow-down-bold-circle-outline
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    update_interval: 10s
+    lambda: |-
+      return id(dd_tw_on_system).state ? id(dd_sniff_1e_w_20).state : NAN;
+  - platform: template
+    name: "${n_dd_system_delta_t}"
+    id: dd_system_delta_t
+    icon: mdi:delta
+    state_class: measurement
+    unit_of_measurement: "K"
+    accuracy_decimals: 1
+    update_interval: 10s
+    lambda: |-
+      // > 0 heating, < 0 cooling
+      return id(dd_tw_on_system).state ? id(dd_sniff_1e_w_21).state - id(dd_sniff_1e_w_20).state : NAN;
+  # v1.2.0 heat pump via the outdoor-unit interface board (0x1E, Samsung MIM). Verified on 3 buses (D+/D-, T-/T+, NASA F1/F2).
+  # 0x1E I3
+  - platform: template
+    name: "${n_dd_sniff_1e_i_3}"
+    id: dd_sniff_1e_i_3
+    icon: mdi:thermometer
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    update_interval: never
+  # 0x1E I4
+  - platform: template
+    name: "${n_dd_sniff_1e_i_4}"
+    id: dd_sniff_1e_i_4
+    icon: mdi:thermometer
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    update_interval: never
+  # 0x1E I5 (the boiler forwards it as 3002)
+  - platform: template
+    name: "${n_dd_sniff_1e_i_5}"
+    id: dd_sniff_1e_i_5
+    icon: mdi:thermometer
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    update_interval: never
+  # 0x1E I6
+  - platform: template
+    name: "${n_dd_sniff_1e_i_6}"
+    id: dd_sniff_1e_i_6
+    icon: mdi:thermometer
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    update_interval: never
+  # 0x1E I17
+  - platform: template
+    name: "${n_dd_sniff_1e_i_17}"
+    id: dd_sniff_1e_i_17
+    icon: mdi:thermometer
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    update_interval: never
+  # 0x1E I10 = water target sent to the HP (= D04 on demand, 5.0 idle)
+  - platform: template
+    name: "${n_dd_sniff_1e_i_10}"
+    id: dd_sniff_1e_i_10
+    icon: mdi:thermometer
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    update_interval: never
+  # 0x1E W20 = boiler -> HP (the outdoor unit has no water probes)
+  - platform: template
+    name: "${n_dd_sniff_1e_w_20}"
+    id: dd_sniff_1e_w_20
+    icon: mdi:thermometer
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    update_interval: never
+  # 0x1E W21
+  - platform: template
+    name: "${n_dd_sniff_1e_w_21}"
+    id: dd_sniff_1e_w_21
+    icon: mdi:thermometer
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    update_interval: never
+  # 0x1E W22
+  - platform: template
+    name: "${n_dd_sniff_1e_w_22}"
+    id: dd_sniff_1e_w_22
+    icon: mdi:thermometer
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    update_interval: never
+  - platform: template
+    name: "${n_dd_sniff_1e_i_11}"
+    id: dd_sniff_1e_i_11
+    icon: mdi:sine-wave
+    device_class: frequency
+    state_class: measurement
+    unit_of_measurement: "Hz"
+    accuracy_decimals: 0
+    update_interval: never
+  - platform: template
+    name: "${n_dd_sniff_1e_i_13}"
+    id: dd_sniff_1e_i_13
+    icon: mdi:current-ac
+    device_class: current
+    state_class: measurement
+    unit_of_measurement: "A"
+    accuracy_decimals: 1
+    update_interval: never
+  - platform: template
+    name: "${n_dd_sniff_1e_i_14}"
+    id: dd_sniff_1e_i_14
+    icon: mdi:fan
+    state_class: measurement
+    unit_of_measurement: "rpm"
+    accuracy_decimals: 0
+    update_interval: never
+  - platform: template
+    name: "${n_dd_sniff_1e_i_16}"
+    id: dd_sniff_1e_i_16
+    icon: mdi:valve
+    state_class: measurement
+    accuracy_decimals: 0
+    update_interval: never
+  # v1.3.1: compressor capacity limit in % (0x1E input 12 = MIM echo of the boiler write to reg 2; 0 -> 100 %)
+  - platform: template
+    name: "${n_dd_sniff_1e_i_12}"
+    id: dd_sniff_1e_i_12
+    icon: mdi:speedometer-slow
+    unit_of_measurement: "%"
+    state_class: measurement
+    accuracy_decimals: 0
+    update_interval: never
+
+text_sensor:
+  - platform: template
+    name: "${n_dd_pc_etap_pracy}"
+    id: dd_pc_etap_pracy
+    icon: mdi:progress-clock
+    update_interval: never
+  - platform: template
+    name: "${n_dd_pc_fw_odu_main}"
+    id: dd_pc_fw_odu_main
+    icon: mdi:chip
+    entity_category: diagnostic
+    update_interval: never
+  - platform: template
+    name: "${n_dd_pc_fw_interface}"
+    id: dd_pc_fw_interface
+    icon: mdi:chip
+    entity_category: diagnostic
+    update_interval: never
+  - platform: template
+    name: "${n_dd_pc_fw_inv_mem}"
+    id: dd_pc_fw_inv_mem
+    icon: mdi:chip
+    entity_category: diagnostic
+    update_interval: never
+  - platform: template
+    name: "${n_dd_pc_fw_inv_fw}"
+    id: dd_pc_fw_inv_fw
+    icon: mdi:chip
+    entity_category: diagnostic
+    update_interval: never
+
+binary_sensor:
+  # v1.2.0 heat-pump run flags (0x1E, published from handle_pdu)
+  - platform: template
+    name: "${n_dd_pc_zlecenie_pracy}"
+    id: dd_pc_zlecenie_pracy
+    icon: mdi:power
+  # v1.3.1: night function U11 active (0x1E input 12 != 0) - compressor limited inside the U12-U13 window
+  - platform: template
+    name: "${n_dd_pc_funkcja_nocna}"
+    id: dd_pc_funkcja_nocna
+    icon: mdi:weather-night
+  - platform: template
+    name: "${n_dd_pc_zlecenie_przyjete}"
+    id: dd_pc_zlecenie_przyjete
+    icon: mdi:check-circle-outline
+  - platform: template
+    name: "${n_dd_pc_sprezarka_pracuje}"
+    id: dd_pc_sprezarka_pracuje
+    icon: mdi:heat-pump
+    device_class: running
+  - platform: template
+    name: "${n_dd_pc_wentylator_pracuje}"
+    id: dd_pc_wentylator_pracuje
+    icon: mdi:fan
+    device_class: running
+  # TW1 / TW2 measure the heating (cooling) circuit: winter or cooling mode, the zone asks (2010 bit 3), no DHW
+  # request (2001 bit 0 - the 3-way valve would be on the cylinder) and the compressor runs.
+  - platform: template
+    id: dd_tw_on_system
+    internal: true
+    lambda: |-
+      const int mode = id(dd_operating_mode_reported);
+      if (mode != 2 && mode != 3) return false;
+      if (!(id(dd_zone1_status_raw) & 0x08)) return false;
+      return !id(dd_piec_zadanie_cwu_oczek).state && id(dd_pc_sprezarka_pracuje).state;

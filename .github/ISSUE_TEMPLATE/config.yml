@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Collecting logs
+    url: https://github.com/jotuera/immergas-modbus-bms-nasa-hub/blob/main/docs/collecting-logs.md
+    about: How to collect logs for a new model, more zones or an accessory

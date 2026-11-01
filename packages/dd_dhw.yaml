@@ -1,0 +1,174 @@
+# Immergas Magis Pro / Combo D+/D- emulator - package "dd_dhw"
+# Domestic hot water: setpoint, climate, temperatures, active setpoint written by the boiler.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# File and id names start with dd_ so this repo can be combined with the T-/T+ and F1/F2 repos on one device.
+
+number:
+  # ------------------------------------------------------------
+  # v57 DHW setpoint - control (the emulator returns it on READ 2095, the boiler applies it)
+  # ------------------------------------------------------------
+  - platform: template
+    name: "${n_dd_cwu_setpoint_number}"
+    id: dd_cwu_setpoint_number
+    icon: mdi:water-thermometer
+    unit_of_measurement: "°C"
+    min_value: 30
+    max_value: 60
+    step: 0.5
+    mode: slider
+    optimistic: false
+    lambda: |-
+      return id(dd_cwu_setpoint_raw) / 10.0f;
+    set_action:
+      - lambda: |-
+          immergas::served::dhw_setpoint.set_from_ha((int) round(x * 10.0f));
+          id(dd_cwu_setpoint_raw) = (int) round(x * 10.0f);
+          ESP_LOGW("dd_control", "v57 STEROWANIE CWU: zadana %.1f stopni raw=%d. Emulator zwraca to na READ 2095.", x, id(dd_cwu_setpoint_raw));
+          id(dd_cwu_setpoint_number).publish_state(x);  // v61: natychmiastowy update suwaka w HA
+
+  # ------------------------------------------------------------
+  # v2.4.0 DHW Comfort / Eco setpoints. With "DHW Comfort/Eco by schedule" on, the D05 setpoint (2095) follows the
+  # boiler's own DHW schedule: Comfort inside the ranges of the calendar assigned to today (DHW Schedule Mon..Sun ->
+  # Calendar 1-4, ranges 2310-2347), Eco outside them. Works with the zone 1 time program in Manual too.
+  # ------------------------------------------------------------
+  - platform: template
+    name: "${n_dd_dhw_comfort_set}"
+    id: dd_dhw_comfort_set
+    icon: mdi:sofa-outline
+    unit_of_measurement: "°C"
+    min_value: 30
+    max_value: 60
+    step: 0.5
+    mode: box
+    optimistic: true
+    restore_value: true
+    initial_value: 50
+  - platform: template
+    name: "${n_dd_dhw_eco_set}"
+    id: dd_dhw_eco_set
+    icon: mdi:leaf
+    unit_of_measurement: "°C"
+    min_value: 30
+    max_value: 60
+    step: 0.5
+    mode: box
+    optimistic: true
+    restore_value: true
+    initial_value: 45
+
+sensor:
+  # 3015 = DHW setpoint the boiler is actually using (e.g. 60 during anti-legionella)
+  - platform: template
+    name: "${n_dd_sniff_29_w_3015}"
+    id: dd_sniff_29_w_3015
+    icon: mdi:thermometer
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    update_interval: never
+  # ------------------------------------------------------------
+  # Main user values
+  # ------------------------------------------------------------
+  - platform: template
+    name: "${n_dd_dhw_temp_sensor}"
+    id: dd_dhw_temp_sensor
+    icon: mdi:thermometer-water
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    device_class: temperature
+    state_class: measurement
+    lambda: |-
+      if (id(dd_dhw_temp_raw) == 0) return {};
+      return id(dd_dhw_temp_raw) / 10.0f;
+    update_interval: 5s
+
+climate:
+  # DHW cylinder: heats in every mode except standby; the request is 2001 bit 0. Turning DHW off means standby,
+  # which stops space heating too, so the mode is shown here but changed only on the mode select.
+  - platform: immergas_climate
+    name: "${n_dd_cwu_thermostat}"
+    id: dd_cwu_thermostat
+    icon: mdi:water-boiler
+    kind: dhw
+    target: dd_cwu_setpoint_number
+    operating_mode: return id(dd_operating_mode_reported);
+    dhw_request: return id(dd_piec_zadanie_cwu_oczek).state;
+    room_temperature: |-
+      return id(dd_dhw_temp_raw) > 0 ? id(dd_dhw_temp_raw) / 10.0f : NAN;
+    visual:
+      min_temperature: 30
+      max_temperature: 60
+      temperature_step:
+        target_temperature: 0.5
+        current_temperature: 0.1
+
+switch:
+  - platform: template
+    name: "${n_dd_dhw_comfort_eco}"
+    id: dd_dhw_comfort_eco
+    icon: mdi:calendar-clock
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    on_turn_on:
+      - lambda: id(dd_dhw_phase_last) = -1;  // apply the current phase at the next check
+    on_turn_off:
+      - lambda: id(dd_dhw_phase).publish_state("");
+
+text_sensor:
+  - platform: template
+    name: "${n_dd_dhw_phase}"
+    id: dd_dhw_phase
+    icon: mdi:water-boiler-auto
+    update_interval: never
+
+globals:
+  - id: dd_dhw_phase_last      # -1 = not applied yet, 0 = Eco, 1 = Comfort
+    type: int
+    restore_value: false
+    initial_value: "-1"
+  - id: dd_dhw_target_last     # last setpoint written by the schedule, x10
+    type: int
+    restore_value: false
+    initial_value: "0"
+
+interval:
+  - interval: 30s
+    then:
+      - lambda: |-
+          if (!id(dd_dhw_comfort_eco).state) return;
+          auto now = id(dd_ha_time).now();
+          if (!now.is_valid()) return;
+          // 2490-2496 = Mon..Sun; ESPTime day_of_week 1 = Sunday
+          select::Select *days[7] = {id(dd_sel_dhw_weekday_1), id(dd_sel_dhw_weekday_2), id(dd_sel_dhw_weekday_3),
+                                     id(dd_sel_dhw_weekday_4), id(dd_sel_dhw_weekday_5), id(dd_sel_dhw_weekday_6),
+                                     id(dd_sel_dhw_weekday_7)};
+          datetime::TimeEntity *cal[4][8] = {
+                {id(dd_dt_cal1_f1_on), id(dd_dt_cal1_f1_off), id(dd_dt_cal1_f2_on), id(dd_dt_cal1_f2_off), id(dd_dt_cal1_f3_on), id(dd_dt_cal1_f3_off), id(dd_dt_cal1_f4_on), id(dd_dt_cal1_f4_off)},
+                {id(dd_dt_cal2_f1_on), id(dd_dt_cal2_f1_off), id(dd_dt_cal2_f2_on), id(dd_dt_cal2_f2_off), id(dd_dt_cal2_f3_on), id(dd_dt_cal2_f3_off), id(dd_dt_cal2_f4_on), id(dd_dt_cal2_f4_off)},
+                {id(dd_dt_cal3_f1_on), id(dd_dt_cal3_f1_off), id(dd_dt_cal3_f2_on), id(dd_dt_cal3_f2_off), id(dd_dt_cal3_f3_on), id(dd_dt_cal3_f3_off), id(dd_dt_cal3_f4_on), id(dd_dt_cal3_f4_off)},
+                {id(dd_dt_cal4_f1_on), id(dd_dt_cal4_f1_off), id(dd_dt_cal4_f2_on), id(dd_dt_cal4_f2_off), id(dd_dt_cal4_f3_on), id(dd_dt_cal4_f3_off), id(dd_dt_cal4_f4_on), id(dd_dt_cal4_f4_off)}
+          };
+          int c = (int) days[(now.day_of_week + 5) % 7]->active_index().value_or(0);
+          if (c < 0 || c > 3) return;
+          int m = now.hour * 60 + now.minute;
+          bool comfort = false;
+          for (int f = 0; f < 4; f++) {
+            int a = cal[c][2 * f]->hour * 60 + cal[c][2 * f]->minute;
+            int b = cal[c][2 * f + 1]->hour * 60 + cal[c][2 * f + 1]->minute;
+            if (a == b) continue;        // unused range
+            if (b == 0) b = 1440;        // "until 00:00" = until midnight
+            if (a < b ? (m >= a && m < b) : (m >= a || m < b)) comfort = true;
+          }
+          float t = comfort ? id(dd_dhw_comfort_set).state : id(dd_dhw_eco_set).state;
+          if (std::isnan(t)) return;
+          int raw = (int) round(t * 10.0f), phase = comfort ? 1 : 0;
+          if (phase != id(dd_dhw_phase_last)) id(dd_dhw_phase).publish_state(comfort ? "${t_dd_phase_comfort}" : "${t_dd_phase_eco}");
+          // write only on a phase change or a new Comfort / Eco value: a manual D05 change holds until the next phase
+          if (phase == id(dd_dhw_phase_last) && raw == id(dd_dhw_target_last)) return;
+          id(dd_dhw_phase_last) = phase;
+          id(dd_dhw_target_last) = raw;
+          if (raw != id(dd_cwu_setpoint_raw)) {
+            ESP_LOGW("dd_control", "DHW %s by schedule (calendar %d): setpoint %.1f", comfort ? "Comfort" : "Eco", c + 1, t);
+            id(dd_cwu_setpoint_number).make_call().set_value(t).perform();
+          }

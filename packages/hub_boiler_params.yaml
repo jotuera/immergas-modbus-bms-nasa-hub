@@ -1,0 +1,115 @@
+# IMMERGAS Modbus BMS NASA Hub - package "hub_boiler_params"
+# Settings the cards need that none of the three buses carries. Boiler menu: night function window (U12/U13), anti-legionella start
+# time, day and maximum duration (P16/P17/P13) and the flow limit of an underfloor circuit. They do NOT change anything
+# in the boiler: set them once to the same values as in the boiler menu, the cards use them to show the night window,
+# the next anti-legionella cycle and the floor limit on the curve. Calibration card: cheaper tariff hours and the
+# start of the before / after comparison. Remembered after a restart.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+datetime:
+  - platform: template
+    id: hub_u12_night_start
+    name: "${n_hub_u12}"
+    type: time
+    icon: mdi:weather-night
+    entity_category: config
+    optimistic: true
+    restore_value: true
+    initial_value: "22:00:00"
+  - platform: template
+    id: hub_u13_night_stop
+    name: "${n_hub_u13}"
+    type: time
+    icon: mdi:weather-sunset-up
+    entity_category: config
+    optimistic: true
+    restore_value: true
+    initial_value: "06:00:00"
+  - platform: template
+    id: hub_p16_legionella_time
+    name: "${n_hub_p16}"
+    type: time
+    icon: mdi:bacteria-outline
+    entity_category: config
+    optimistic: true
+    restore_value: true
+    initial_value: "02:00:00"
+
+  # date of the last change of settings: the card compares the time after it with the same time before it
+  - platform: template
+    id: hub_compare_since
+    name: "${n_hub_compare_since}"
+    type: datetime
+    icon: mdi:calendar-start
+    entity_category: config
+    optimistic: true
+    restore_value: true
+    initial_value: "2000-01-01 00:00:00"
+
+select:
+  # option index: 0 = daily, 1-7 = Monday-Sunday (the cards read the index, so any language works)
+  - platform: template
+    id: hub_p17_legionella_day
+    name: "${n_hub_p17}"
+    icon: mdi:calendar-week
+    entity_category: config
+    optimistic: true
+    restore_value: true
+    options: ["${t_hub_day0}", "${t_hub_day1}", "${t_hub_day2}", "${t_hub_day3}", "${t_hub_day4}", "${t_hub_day5}", "${t_hub_day6}", "${t_hub_day7}"]
+    initial_option: "${t_hub_day7}"
+
+number:
+  - platform: template
+    id: hub_p13_legionella_hours
+    name: "${n_hub_p13}"
+    icon: mdi:timer-outline
+    entity_category: config
+    unit_of_measurement: "h"
+    min_value: 1
+    max_value: 24
+    step: 1
+    mode: box
+    optimistic: true
+    restore_value: true
+    initial_value: 3
+  - platform: template
+    id: hub_floor_flow_limit
+    name: "${n_hub_floor_max}"
+    icon: mdi:heating-coil
+    entity_category: config
+    unit_of_measurement: "°C"
+    device_class: temperature
+    min_value: 25
+    max_value: 60
+    step: 1
+    mode: box
+    optimistic: true
+    restore_value: true
+    initial_value: 45
+
+# --- for the Calibration card: cheaper tariff hours and the start of the before / after comparison ---------------------
+text:
+  # e.g. "13:00-15:00,22:00-06:00" for a two-rate tariff (G12); empty = one rate all day
+  - platform: template
+    id: hub_cheap_hours
+    name: "${n_hub_cheap_hours}"
+    icon: mdi:cash-clock
+    entity_category: config
+    mode: text
+    max_length: 64
+    optimistic: true
+    restore_value: true
+    initial_value: ""
+
+button:
+  - platform: template
+    name: "${n_hub_compare_now}"
+    icon: mdi:flag-checkered
+    entity_category: config
+    on_press:
+      - lambda: |-
+          auto now = id(f1f2_time).now();
+          if (!now.is_valid()) return;
+          auto call = id(hub_compare_since).make_call();
+          call.set_datetime(now);
+          call.perform();

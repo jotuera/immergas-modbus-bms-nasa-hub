@@ -1,0 +1,5436 @@
+[
+ {
+  "en": "Sun",
+  "pl": "nd",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "Mon",
+  "pl": "pn",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "Tue",
+  "pl": "wt",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "Wed",
+  "pl": "śr",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "Thu",
+  "pl": "cz",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "Fri",
+  "pl": "pt",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "Sat",
+  "pl": "so",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "daily",
+  "pl": "codziennie",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "Looking for the Immergas hub… (device with the “Immergas Hub - Operating state” entity)",
+  "pl": "Szukam huba Immergas… (urządzenie z encją „Immergas Hub - Stan pracy”)",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "no reading",
+  "pl": "brak odczytu",
+  "files": [
+   "base.ts",
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "ON for ",
+  "pl": "WŁĄCZONY od ",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "off",
+  "pl": "wyłączony",
+  "files": [
+   "base.ts",
+   "calibration.ts",
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "tap again to confirm",
+  "pl": "dotknij ponownie, aby potwierdzić",
+  "files": [
+   "base.ts",
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "capacity",
+  "pl": "wydajność",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "NASA connection off – control unavailable",
+  "pl": "Połączenie NASA wyłączone – sterowanie niedostępne",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "Write locked",
+  "pl": "Zapis zablokowany",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "older hub: arm “Active ODU control” (hub v23+ keeps writing enabled)",
+  "pl": "starszy hub: uzbrój „Aktywne sterowanie ODU” (hub v23+ trzyma zapis stale włączony)",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "Confirm",
+  "pl": "Potwierdź",
+  "files": [
+   "base.ts",
+   "calibration.ts",
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "Arm",
+  "pl": "Uzbrój",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "Outing mode",
+  "pl": "Tryb wyjazdowy",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "Compressor limit",
+  "pl": "Ograniczenie sprężarki",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "limit {0} Hz · now {1} Hz – quieter, less power",
+  "pl": "limit {0} Hz · teraz {1} Hz – cichsza praca, mniejsza moc",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "Boiler heating",
+  "pl": "Grzanie kotłem",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "Heat pump heating",
+  "pl": "Grzanie pompą",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "forced via BMS (4449) – the heat pump stops, the boiler heats",
+  "pl": "wymuszone przez BMS (4449) – pompa stoi, grzeje kocioł",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "no boiler assistance (I02 OFF) – mind frosty days",
+  "pl": "bez dogrzewania kotłem (I02 OFF) – uwaga przy mrozie",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "the boiler joins by the integration rules (I02 AL, I04, I10)",
+  "pl": "kocioł dołącza wg integracji (I02 AL, I04, I10)",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "CH heat source",
+  "pl": "Źródło ciepła CO",
+  "files": [
+   "base.ts",
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "heat pump only (I01 OFF)",
+  "pl": "tylko pompa ciepła (I01 OFF)",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "the boiler takes over at once (I01 AL, I03 = {0} min)",
+  "pl": "kocioł przejmuje od razu (I01 AL, I03 = {0} min)",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "heat pump, the boiler joins after {0} min (I01 AL, I03)",
+  "pl": "pompa, kocioł dołącza po {0} min (I01 AL, I03)",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "DHW heat source",
+  "pl": "Źródło ciepła CWU",
+  "files": [
+   "base.ts",
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Confirm – tap again",
+  "pl": "Potwierdź – dotknij ponownie",
+  "files": [
+   "base.ts",
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "Summer / winter automatically",
+  "pl": "Lato / Zima automatycznie",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "daily 12:00: 3-day forecast > 17 °C → summer (DHW), < 13 °C → winter (CH + DHW)",
+  "pl": "codziennie 12:00: prognoza na 3 dni > 17 °C → Lato (CWU), < 13 °C → Zima (CO + CWU)",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "vacation active",
+  "pl": "urlop aktywny",
+  "files": [
+   "automations.ts",
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Vacation mode",
+  "pl": "Tryb urlopowy",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "nobody home > 24 h → zone 1 CH −2 °C and DHW 40 °C; restores the setpoints on return",
+  "pl": "nikogo w domu > 24 h → CO strefy 1 −2 °C i CWU 40 °C; po powrocie przywraca nastawy",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "starts this hour",
+  "pl": "starty w tej godzinie",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "Compressor short cycling",
+  "pl": "Taktowanie sprężarki",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "more than 3 compressor starts in an hour → warning",
+  "pl": "więcej niż 3 starty sprężarki w godzinie → ostrzeżenie",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "Fault or no communication",
+  "pl": "Błąd lub brak komunikacji",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "fault code or Atom offline > 10 min → notification",
+  "pl": "kod błędu albo Atom offline > 10 min → powiadomienie",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "COP threshold",
+  "pl": "próg COP",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "Low COP → consider gas",
+  "pl": "Niski COP → rozważ gaz",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "COP below the threshold for 30 min of running → notification (at most every 6 h)",
+  "pl": "COP poniżej progu przez 30 min pracy → powiadomienie (najwyżej raz na 6 h)",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "Cooling near the dew point",
+  "pl": "Chłodzenie blisko punktu rosy",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "flow < dew point + 2 °C for 5 min → warning (at most every 2 h)",
+  "pl": "zasilanie < punkt rosy + 2 °C przez 5 min → ostrzeżenie (najwyżej raz na 2 h)",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "floor limit",
+  "pl": "limit podłogi",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "Floor flow too hot",
+  "pl": "Za gorące zasilanie podłogi",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "CH flow > floor limit for 10 min → warning (at most every 3 h)",
+  "pl": "zasilanie CO > limit podłogi przez 10 min → ostrzeżenie (najwyżej raz na 3 h)",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "boiler now",
+  "pl": "kocioł teraz",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "Boiler heats although the heat pump is cheaper",
+  "pl": "Kocioł grzeje, choć pompa tańsza",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "gas boiler runs 15 min while the heat pump is cheaper and outdoor > I10 + 2 °C → notification (at most every 6 h)",
+  "pl": "kocioł gazowy pracuje 15 min, pompa tańsza, a na zewnątrz > I10 + 2 °C → powiadomienie (najwyżej raz na 6 h)",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "Control",
+  "pl": "Sterowanie",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "Warnings",
+  "pl": "Ostrzeżenia",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "Safety",
+  "pl": "Zabezpieczenia",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "has not fired yet",
+  "pl": "jeszcze nie zadziałała",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "today ",
+  "pl": "dziś ",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "yesterday ",
+  "pl": "wczoraj ",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "fired ",
+  "pl": "zadziałała ",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "threshold",
+  "pl": "próg",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "not needed since hub v23 – writing is always armed",
+  "pl": "zbędna od huba v23 – zapis jest stale uzbrojony",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "automation disabled in HA",
+  "pl": "automatyzacja wyłączona w HA",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "Automations",
+  "pl": "Automatyzacje",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "{0} of {1} on",
+  "pl": "włączone {0} z {1}",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "No automation switches (input_boolean.auto_pompa_*) – list your own in the items option.",
+  "pl": "Brak przełączników automatyzacji (input_boolean.auto_pompa_*) – podaj własne w opcji items.",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "Cycling",
+  "pl": "Taktowanie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "How it runs",
+  "pl": "Sposób pracy",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Heating and curve",
+  "pl": "Ogrzewanie i krzywa",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Hot water",
+  "pl": "Ciepła woda",
+  "files": [
+   "calibration.ts",
+   "diagram.ts",
+   "setpoints.ts",
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Circulation pump",
+  "pl": "Pompa obiegowa",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Boiler integration",
+  "pl": "Współpraca z kotłem",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Cooling",
+  "pl": "Chłodzenie",
+  "files": [
+   "calibration.ts",
+   "curve.ts",
+   "mode.ts",
+   "now.ts",
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "Other",
+  "pl": "Pozostałe",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "mean",
+  "pl": "change",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0}/°C·d",
+  "pl": "costHdd",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Heating cost per degree day",
+  "pl": "Koszt ogrzewania na stopniodzień",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0}/kWh",
+  "pl": "costKwh",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Cost of 1 kWh of heat (pump + gas)",
+  "pl": "Koszt 1 kWh ciepła (pompa + gaz)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "kWh/°C·d",
+  "pl": "elecHdd",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Electricity per degree day",
+  "pl": "Prąd na stopniodzień",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "m³/°C·d",
+  "pl": "gasHdd",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Gas per degree day",
+  "pl": "Gaz na stopniodzień",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Heat-pump COP (heat ÷ electricity)",
+  "pl": "COP pompy (ciepło ÷ prąd)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Compressor starts per hour",
+  "pl": "Starty sprężarki na godzinę",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Average compressor cycle length",
+  "pl": "Średnia długość cyklu sprężarki",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Optimisation effectiveness",
+  "pl": "Skuteczność optymalizacji",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Before",
+  "pl": "Przed",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "After",
+  "pl": "Po",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Change",
+  "pl": "Zmiana",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "too little gas for %",
+  "pl": "za mało gazu na %",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "heat is cheaper, but more of it was delivered (higher room targets)",
+  "pl": "ciepło tańsze, ale oddano go więcej (wyższe nastawy pokoi)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Overall effectiveness",
+  "pl": "Skuteczność łącznie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "weighted: cost/degree day 30 %, heat kWh cost 20 %, COP 20 %, starts/h 20 %, cycle length 10 %",
+  "pl": "ważona: koszt/stopniodzień 30 %, koszt kWh ciepła 20 %, COP 20 %, starty/h 20 %, długość cyklu 10 %",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "preliminary – little data",
+  "pl": "wstępnie – mało danych",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "days",
+  "pl": "dnia",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "degree days",
+  "pl": "stopniodni",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "since",
+  "pl": "od",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Without the hub's “Compare from” date: the last 7 days against the 7 before.",
+  "pl": "Bez daty „Porównanie od” w hubie: ostatnie 7 dni wobec poprzednich 7.",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": " Reliable after at least a day since the change.",
+  "pl": " Wynik wiarygodny po co najmniej dobie od zmiany.",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Weather normalisation: degree days (18 °C − hourly mean). Gas is the hub's estimate.",
+  "pl": "Normalizacja pogodą: stopniodni (18 °C − średnia godzinowa). Gaz to szacunek huba.",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "the curve changed {0} h ago – judge after a day",
+  "pl": "krzywą zmieniono {0} h temu – oceń po dobie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "cycles ~{0} min, rooms {1} K below target → warmer water",
+  "pl": "cykle ~{0} min, pokoje {1} K poniżej nastaw → cieplejsza woda",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "long cycles, rooms {0} K above target → cooler",
+  "pl": "długie cykle, pokoje {0} K ponad nastawy → chłodniej",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": " (first judge the curve change after a day)",
+  "pl": " (najpierw oceń zmianę krzywej po dobie)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "raise R05 by 2 K and T05 to 20 min",
+  "pl": "podnieś R05 o 2 K i T05 do 20 min",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "warmer water: R05 +2 K (longer cycles)",
+  "pl": "cieplejsza woda: R05 +2 K (dłuższe cykle)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "fine",
+  "pl": "w normie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Cycling: CH starts per hour",
+  "pl": "Taktowanie: starty CO na godzinę",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "fewer starts = longer compressor life and better COP",
+  "pl": "mniej startów = dłuższa żywotność sprężarki i lepszy COP",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "average of {0} CH starts in 24 h",
+  "pl": "średnio z {0} startów CO w 24 h",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Cycling: CH cycle length",
+  "pl": "Taktowanie: długość cyklu CO",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "the compressor warms up and runs efficiently modulating",
+  "pl": "sprężarka rozgrzewa się i modulując pracuje wydajnie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "R05 +2 K – water too close to the return temperature",
+  "pl": "R05 +2 K – woda za blisko temperatury powrotu",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "✓ fine",
+  "pl": "✓ w normie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "median of the heat-pump CH cycles in 24 h",
+  "pl": "mediana cykli pompy w CO z 24 h",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Compressor starts today",
+  "pl": "Starty sprężarki dziś",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "CH and DHW together since midnight",
+  "pl": "łącznie CO i CWU od północy",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "reduce CH cycling (rows above)",
+  "pl": "ogranicz taktowanie CO (wiersze wyżej)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "hub counter",
+  "pl": "licznik huba",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "DHW cycles per day",
+  "pl": "Cykle CWU na dobę",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "each DHW cycle is a compressor start and a pause in CH",
+  "pl": "każdy cykl CWU to start sprężarki i przerwa w CO",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "T02 already 7 K – judge after a day; shorten the DHW schedule",
+  "pl": "T02 już 7 K – oceń po dobie; skróć harmonogram CWU",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "larger T02 hysteresis (row below)",
+  "pl": "większa histereza T02 (wiersz niżej)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "from 24 h, gaps < 15 min merged",
+  "pl": "z 24 h, przerwy < 15 min scalone",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Boiler",
+  "pl": "Kotłem",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Heat pump",
+  "pl": "Pompą",
+  "files": [
+   "calibration.ts",
+   "gas.ts",
+   "now.ts",
+   "strategy.ts"
+  ]
+ },
+ {
+  "en": "heat pump {0}% cheaper",
+  "pl": "pompa {0}% taniej",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "gas {0}% cheaper",
+  "pl": "gaz {0}% taniej",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "; similar cost – keep",
+  "pl": "; podobny koszt – bez zmian",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "cheapest",
+  "pl": "najtańsze",
+  "files": [
+   "calibration.ts",
+   "gas.ts"
+  ]
+ },
+ {
+  "en": "break-even COP {0} (electricity {1} / gas heat {2} {3}/kWh)",
+  "pl": "próg opłacalności COP {0} (prąd {1} / ciepło z gazu {2} {3}/kWh)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "waiting for the COP",
+  "pl": "czeka na COP z pracy",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "COP today {0} vs break-even {1} → {2}{3}",
+  "pl": "COP dziś {0} vs próg {1} → {2}{3}",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "DHW heats to ~50 °C, so the heat-pump COP is lower than in CH",
+  "pl": "CWU grzeje do ~50 °C, więc COP pompy jest niższy niż w CO",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "waiting for a heat-pump DHW cycle",
+  "pl": "czeka na cykl CWU pompą",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "last cycle COP {0} vs break-even {1} → {2}{3}",
+  "pl": "COP ostatniego cyklu {0} vs próg {1} → {2}{3}",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "no ranges",
+  "pl": "brak zakresów",
+  "files": [
+   "calibration.ts",
+   "schedule.ts"
+  ]
+ },
+ {
+  "en": "CH schedule (time program)",
+  "pl": "Harmonogram CO (program czasowy)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "a floor is slow and the rooms have thermostats – a fixed setpoint without setbacks",
+  "pl": "podłogówka jest wolna, a pokoje regulują termostaty – stała nastawa bez obniżeń",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Comfort / Eco by time of day, Eco at most 1 K lower (a floor reheats slowly)",
+  "pl": "Komfort / Eko wg pory dnia, Eko najwyżej 1 K niżej (podłoga długo się nagrzewa)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0} room thermostats – schedule them instead",
+  "pl": "{0} termostatów pokojowych – harmonogram ustawiaj w nich",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Eco {0} K lower – raise Eco to Comfort − 1 K",
+  "pl": "Eko o {0} K niżej – podnieś Eko do Komfort − 1 K",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "a night setback up to 1 K saves without morning cycling",
+  "pl": "obniżka nocna do 1 K oszczędza bez taktowania rano",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "DHW schedule",
+  "pl": "Harmonogram CWU",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "1–2 windows of ~2 h",
+  "pl": "1–2 okna po ~2 h",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "heat water in the cheaper tariff",
+  "pl": "grzej wodę w tańszej taryfie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "short windows before use = fewer DHW cycles; for a two-rate tariff enter its hours in the hub (Cheap tariff hours)",
+  "pl": "krótkie okna przed poborem = mniej cykli CWU; przy taryfie dwustrefowej wpisz jej godziny w hubie (Tania taryfa – godziny)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Cal. ",
+  "pl": "Kal. ",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "shorten to 1–2 windows (e.g. 05:00–07:00, 17:00–19:00)",
+  "pl": "skróć do 1–2 okien (np. 05:00–07:00, 17:00–19:00)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0} h a day, {1} h outside the cheap tariff · {2} cycles/day",
+  "pl": "{0} h dziennie, {1} h poza tanią taryfą · {2} cykli/dobę",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0} h a day · {1} cycles/day",
+  "pl": "{0} h dziennie · {1} cykli/dobę",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "switch U11 off for cold nights – the heat pump cannot keep up",
+  "pl": "wyłącz U11 na chłodne noce – pompa nie nadąża",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0} °C today – consider switching it off tonight",
+  "pl": "dziś {0} °C – rozważ wyłączenie na tę noc",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "✓ keep – mild night, lower Hz = better COP",
+  "pl": "✓ zostaw – noc łagodna, niższe Hz = lepszy COP",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "✓ keep and watch the room temperatures",
+  "pl": "✓ zostaw i obserwuj spadek temperatur",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Night mode (night function)",
+  "pl": "Tryb nocny (funkcja nocna)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "on for nights ≥ 5 °C",
+  "pl": "wł. przy nocach ≥ 5 °C",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "limited compressor power: higher COP and quieter; switch off when nights start to lack power (rooms drop > 0.4 K)",
+  "pl": "ograniczona moc sprężarki: wyższy COP i ciszej; wyłącz, gdy w nocy zaczyna brakować mocy (pokoje spadają > 0,4 K)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "last ",
+  "pl": "ostatnio ",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": " (from options)",
+  "pl": " (z opcji)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "last night: outdoor {0} °C, rooms {1}, compressor {2} % of the window · set on the boiler (U11–U13)",
+  "pl": "ostatnia noc: zewn. {0} °C, pokoje {1}, sprężarka {2} % okna · ustawia się na piecu (U11–U13)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Compressor frequency limit",
+  "pl": "Ograniczenie częstotliwości sprężarki",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "on when mild, off when cold",
+  "pl": "wł. przy cieple, wył. w chłody",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "limit {0} Hz: higher COP and quieter, but less power (DHW not limited)",
+  "pl": "limit {0} Hz: wyższy COP i ciszej, ale mniej mocy (CWU bez limitu)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "short of power: rooms {0} K below target, CH running {1} % of the day, outdoor {2} °C",
+  "pl": "brakuje mocy: pokoje {0} K poniżej nastaw, praca CO {1} % doby, zewn. {2} °C",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "power to spare: outdoor {0} °C, rooms at target, CH running {1} % of the day",
+  "pl": "zapas mocy: zewn. {0} °C, pokoje przy nastawach, praca CO {1} % doby",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "in between – keep",
+  "pl": "warunki pośrednie – bez zmian",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Anti-legionella",
+  "pl": "Anty-legionella",
+  "files": [
+   "calibration.ts",
+   "mode.ts",
+   "now.ts"
+  ]
+ },
+ {
+  "en": "on with DHW < 55 °C",
+  "pl": "wł. przy CWU < 55 °C",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "now and then the cylinder at ~60 °C kills Legionella; needed with a lower setpoint",
+  "pl": "raz na jakiś czas zasobnik do ~60 °C zabija bakterie Legionella; przy niższej nastawie to konieczne",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "DHW setpoint ≥ 55 °C – the water is disinfected anyway",
+  "pl": "nastawa CWU ≥ 55 °C – woda i tak jest dezynfekowana",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "setpoint {0} °C · slot {1} outside the cheap tariff – move it to {2}",
+  "pl": "nastawa {0} °C · termin {1} poza tanią taryfą – przesuń na {2}",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "DHW setpoint {0} °C{1}",
+  "pl": "nastawa CWU {0} °C{1}",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "CH setpoint in the rooms (thermostats)",
+  "pl": "Nastawa CO w pokojach (termostaty)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "comfort; each 1 K more is about 6 % more heat",
+  "pl": "komfort; każdy 1 K więcej to ok. 6 % więcej ciepła",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0} thermostats at {1} °C, rooms already ~{2} °C – 22 °C still keeps the loops open, about {3} % cheaper",
+  "pl": "{0} termostatów na {1} °C, pokoje już ~{2} °C – 22 °C nadal trzyma pętle otwarte, ok. {3} % taniej",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "below 20 °C – risk of cooling down and long reheating",
+  "pl": "poniżej 20 °C – ryzyko wychłodzenia i długiego dogrzewania",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "median target {0} °C, rooms ~{1} °C – keep",
+  "pl": "mediana nastaw {0} °C, pokoje ~{1} °C – bez zmian",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Minimum CH flow (curve foot)",
+  "pl": "Minimalne zasilanie CO (stopa krzywej)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "underfloor: ~25 °C in mild weather",
+  "pl": "podłogówka: ~25 °C przy cieple na zewnątrz",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Maximum CH flow (curve top)",
+  "pl": "Maksymalne zasilanie CO (szczyt krzywej)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "underfloor: 35 °C in frost, with margin to the floor limit",
+  "pl": "podłogówka: 35 °C w mrozy, z zapasem do limitu podłogi",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "about 10 K above the curve foot{0}",
+  "pl": "ok. 10 K nad stopą krzywej{0}",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Curve offset",
+  "pl": "Przesunięcie krzywej",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "tune the curve with R04 / R05, keep the offset at 0",
+  "pl": "krzywą stroi się R04 / R05, offset zostaje 0",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "0 – correct with R05",
+  "pl": "0 – korekta przez R05",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Room probe modulation",
+  "pl": "Modulacja z sondą pokojową",
+  "files": [
+   "calibration.ts",
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "rooms have own thermostats – the panel must not lower the flow",
+  "pl": "pokoje regulują własne termostaty – panel nie może zaniżać zasilania",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "without room thermostats the panel corrects the flow",
+  "pl": "bez termostatów pokojowych panel koryguje zasilanie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0} room thermostats",
+  "pl": "{0} termostatów pokojowych",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "no room thermostats",
+  "pl": "brak termostatów pokojowych",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Zone 1 setpoint (panel)",
+  "pl": "Nastawa Strefy 1 (panel)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "room comfort",
+  "pl": "komfort pokojowy",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "with modulation: not below the highest thermostat target",
+  "pl": "przy modulacji: nie niżej niż najwyższa nastawa termostatów",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "without modulation it does not change the flow – keep",
+  "pl": "bez modulacji nie wpływa na zasilanie – bez zmian",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "CH ignition timer",
+  "pl": "Zegar uruchamiania CO",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "heat pump: at most ~3 starts per hour",
+  "pl": "pompa ciepła: najwyżej ~3 starty na godzinę",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0} CH starts per hour (24 h){1}",
+  "pl": "{0} startu CO na godzinę (24 h){1}",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Room thermostat request delay",
+  "pl": "Opóźnienie żądania z termostatu",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "no delay – the thermostats are slow anyway",
+  "pl": "bez opóźnienia – termostaty i tak pracują wolno",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "DHW setpoint",
+  "pl": "Nastawa CWU",
+  "files": [
+   "calibration.ts",
+   "schedule.ts"
+  ]
+ },
+ {
+  "en": "heat pump: each 1 K more costs ~3 % COP; legionella separately (P15)",
+  "pl": "pompa: każdy 1 K więcej to ~3 % gorszy COP; legionella osobno (P15)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "above 50 °C the heat pump heats expensively",
+  "pl": "powyżej 50 °C pompa grzeje drogo",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "within 45–50 °C – keep",
+  "pl": "w zakresie 45–50 °C – bez zmian",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "DHW hysteresis",
+  "pl": "Histereza CWU",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "larger hysteresis = fewer, longer DHW cycles",
+  "pl": "większa histereza = rzadsze, dłuższe cykle CWU",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0} DHW cycles per day",
+  "pl": "{0} cykli CWU na dobę",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Boiler CH below outdoor temp.",
+  "pl": "Kocioł CO poniżej temp. zewn.",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "bivalent point: below it the COP falls under the gas break-even",
+  "pl": "punkt biwalentny: poniżej COP pompy < progu opłacalności gazu",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "set from electricity and gas prices – keep",
+  "pl": "ustalone z cen prądu i gazu – bez zmian",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Floor flow limit",
+  "pl": "Limit zasilania podłogi",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "anhydrite screed: up to ~45 °C",
+  "pl": "jastrych anhydrytowy: do ~45 °C",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "keep",
+  "pl": "bez zmian",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Dew point correction",
+  "pl": "Korekcja punktu rosy",
+  "files": [
+   "calibration.ts",
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "protects the floor from condensation when cooling",
+  "pl": "chroni podłogę przed wykropleniem przy chłodzeniu",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "always on",
+  "pl": "zawsze włączona",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "short cycles – do not reduce the flow",
+  "pl": "krótkie cykle – nie zmniejszaj przepływu",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "CH ΔT {0} K – too much flow",
+  "pl": "ΔT w CO {0} K – przepływ za duży",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "CH ΔT {0} K – too little flow",
+  "pl": "ΔT w CO {0} K – przepływ za mały",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "CH ΔT {0} K – fine",
+  "pl": "ΔT w CO {0} K – w normie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "DHW Comfort",
+  "pl": "CWU Komfort",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "a comfortable shower; above 55 °C the heat pump heats expensively",
+  "pl": "wygodny prysznic; powyżej 55 °C pompa grzeje drogo",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "within range – keep",
+  "pl": "w zakresie – bez zmian",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "too cool for a comfortable shower",
+  "pl": "za chłodno na wygodny prysznic",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "higher is expensive – leave the rest to anti-legionella",
+  "pl": "wyżej grzeje drogo – resztę zrobi anty-legionella",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "DHW Eco",
+  "pl": "CWU Eko",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Comfort − 3…8 K",
+  "pl": "Komfort − 3…8 K",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "outside the schedule the cylinder only keeps warm",
+  "pl": "poza godzinami zasobnik tylko podtrzymuje ciepło",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "difference {0} K – keep",
+  "pl": "różnica {0} K – bez zmian",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "almost like Comfort – little saving",
+  "pl": "prawie jak Komfort – mała oszczędność",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "too low – the water cools before Comfort",
+  "pl": "za nisko – woda wystygnie przed Komfortem",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Outing: heating water",
+  "pl": "Wyjazd: woda grzanie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Outing: room heating",
+  "pl": "Wyjazd: pokój grzanie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Outing: DHW cylinder",
+  "pl": "Wyjazd: zasobnik CWU",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "frost protection with the least energy",
+  "pl": "ochrona przed mrozem przy najmniejszym zużyciu",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "too low – risk of cooling down",
+  "pl": "za nisko – ryzyko wychłodzenia",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "too high – no need to heat an empty house",
+  "pl": "za wysoko – po co grzać pusty dom",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Force boiler heating",
+  "pl": "Wymuś grzanie kotłem",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "only briefly, e.g. when the heat pump fails",
+  "pl": "tylko na chwilę, np. przy awarii pompy",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "on – all CH comes from gas",
+  "pl": "włączone – całe CO idzie z gazu",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Gas estimate (m³/h CH / DHW)",
+  "pl": "Szacowanie gazu (m³/h CO / CWU)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "like the meter",
+  "pl": "jak licznik",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "the hub estimates gas from the boiler runtime",
+  "pl": "hub szacuje gaz z czasu pracy kotła",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "✓ compare with the meter once a season",
+  "pl": "✓ raz w sezonie porównaj z licznikiem",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "meter difference ÷ increase of “Gas estimated consumption” × both values",
+  "pl": "różnica licznika ÷ przyrost „Gaz szacowane zużycie” × obie wartości",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Zone 1 humidity source",
+  "pl": "Źródło wilgotności strefy 1",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "a sensor in the zone",
+  "pl": "czujnik w strefie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "the dew point correction uses this humidity",
+  "pl": "korekcja punktu rosy liczy z tej wilgotności",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "the panel measures humidity in one place",
+  "pl": "panel mierzy wilgotność w jednym miejscu",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": " (no effect now)",
+  "pl": " (teraz bez wpływu)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "System operating mode",
+  "pl": "Tryb pracy systemu",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Winter < 13 °C, Summer > 17 °C",
+  "pl": "Zima < 13 °C, Lato > 17 °C",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "CH only when it is cool outside; DHW only in summer",
+  "pl": "CO tylko wtedy, gdy na zewnątrz chłodno; w lecie tylko CWU",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "outdoor {0} °C",
+  "pl": "na zewnątrz {0} °C",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Outdoor temperature probe",
+  "pl": "Sonda temperatury zewnętrznej",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "the heating curve needs the outdoor temperature; the outdoor unit probe is in place",
+  "pl": "krzywa grzewcza wymaga temperatury zewnętrznej; sonda jednostki zewnętrznej jest na miejscu",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "the R04 / R05 curve works only with a probe",
+  "pl": "krzywa R04 / R05 działa tylko z sondą",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Zone 1 fixed flow temperature",
+  "pl": "Stała temperatura zasilania strefy 1",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "used without the curve (R01 = OFF); with a probe the curve sets the flow",
+  "pl": "używana bez krzywej (R01 = OFF); przy sondzie zasilanie liczy krzywa",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "R01 = OFF – this value drives the flow",
+  "pl": "R01 = OFF – ta wartość steruje zasilaniem",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "no effect with a probe – keep",
+  "pl": "z sondą bez wpływu – bez zmian",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Comfort – heating",
+  "pl": "Komfort – grzanie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "comfort temperature in the AUTO program",
+  "pl": "temperatura komfortu w programie AUTO",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Eco – heating",
+  "pl": "Eko – grzanie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "at most 1 K under Comfort – a floor reheats slowly",
+  "pl": "najwyżej 1 K poniżej Komfortu – podłoga długo się nagrzewa",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "difference {0} K",
+  "pl": "różnica {0} K",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Zone 1 temperature source",
+  "pl": "Źródło temperatury strefy 1",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "the slowest-heating floor",
+  "pl": "piętro najwolniej się grzejące",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "zone temperature for the panel and modulation; with room thermostats informative only",
+  "pl": "temperatura strefy dla panelu i modulacji; przy termostatach pokojowych tylko informacyjnie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "modulation off – keep",
+  "pl": "modulacja wyłączona – bez zmian",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "DHW boost duration",
+  "pl": "Czas wymuszenia CWU",
+  "files": [
+   "calibration.ts",
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "the heat pump heats the cylinder in ~25–40 min",
+  "pl": "pompa grzeje zasobnik ~25–40 min",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Boiler joins DHW after",
+  "pl": "Kocioł dołącza do CWU po",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "set by the DHW source buttons",
+  "pl": "ustawiane przyciskiem źródła CWU",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "I01 OFF (DHW by heat pump) – no effect",
+  "pl": "I01 OFF (CWU pompą) – bez wpływu",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "DHW by boiler below outdoor temp.",
+  "pl": "CWU kotłem poniżej temp. zewn.",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "DHW integration on – same threshold as CH",
+  "pl": "integracja CWU włączona – próg jak dla CO",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "I01 OFF – no effect",
+  "pl": "I01 OFF – bez wpływu",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Circulation pump – minimum speed",
+  "pl": "Pompa obiegowa – minimalna prędkość",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "lower limit of the pump modulation",
+  "pl": "dolna granica modulacji pompy",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Circulation pump – maximum speed",
+  "pl": "Pompa obiegowa – maksymalna prędkość",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "high flow keeps the flow temperature lower = longer compressor cycles",
+  "pl": "duży przepływ trzyma niższe zasilanie = dłuższe cykle sprężarki",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Boiler integration (CH)",
+  "pl": "Integracja z kotłem (CO)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "the boiler as a backup in frost (I10)",
+  "pl": "kocioł jako zapas w mrozy (I10)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "without the boiler the heat pump is alone in frost",
+  "pl": "bez kotła pompa sama w mrozy",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Boiler joins CH after",
+  "pl": "Kocioł dołącza do CO po",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "a floor is slow – do not call the boiler too early",
+  "pl": "podłoga jest wolna – nie wołaj kotła za wcześnie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Integration activation mode",
+  "pl": "Tryb aktywacji integracji",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "manual I10 threshold from the prices",
+  "pl": "ręczny próg I10 z cen prądu i gazu",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "I10 set on purpose",
+  "pl": "próg I10 ustalony świadomie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Activation band",
+  "pl": "Przedział aktywacji",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "from I10 to I10 + I07 heat pump, gas joins after I04",
+  "pl": "od I10 do I10 + I07 pompa, gaz dołącza po I04",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Immergas default – keep",
+  "pl": "wartość Immergasa – bez zmian",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Comfort – cooling",
+  "pl": "Komfort – chłodzenie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "24–25 °C: cool without dew on the floor",
+  "pl": "24–25 °C: chłodno, bez ryzyka rosy na podłodze",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0} °C is too low for floor cooling{1}",
+  "pl": "{0} °C to za nisko dla chłodzenia podłogą{1}",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Eco – cooling",
+  "pl": "Eko – chłodzenie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "in cooling Eco is above Comfort",
+  "pl": "Eko przy chłodzeniu jest wyżej niż Komfort",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Comfort + 2 K",
+  "pl": "Komfort + 2 K",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Minimum cooling flow",
+  "pl": "Minimalne zasilanie chłodzenia",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "floor: not colder than ~18 °C (dew)",
+  "pl": "podłoga: nie zimniej niż ~18 °C (rosa)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Maximum cooling flow",
+  "pl": "Maksymalne zasilanie chłodzenia",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "warmer water is enough in moderate heat",
+  "pl": "przy umiarkowanym upale wystarczy cieplejsza woda",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "at least 2 K above R12",
+  "pl": "min. 2 K nad R12",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Zone 1 humidity setpoint",
+  "pl": "Wilgotność zadana strefy 1",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "40–60 % is comfortable; in cooling it shifts the dew point",
+  "pl": "40–60 % to komfort; przy chłodzeniu wpływa na punkt rosy",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "within 40–60 %",
+  "pl": "w zakresie 40–60 %",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Auto venting at power-up",
+  "pl": "Auto-odpowietrzanie przy starcie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "removes air after every boiler power-up",
+  "pl": "usuwa powietrze po każdym włączeniu pieca",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "keep on",
+  "pl": "zostaw włączone",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Venting now",
+  "pl": "Odpowietrzanie teraz",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "only briefly after work on the system – the boiler does not heat meanwhile",
+  "pl": "tylko na chwilę po pracach przy instalacji – piec wtedy nie grzeje",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "on – the boiler does not heat",
+  "pl": "włączone – piec nie grzeje",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Undocumented parameter",
+  "pl": "Parametr nieopisany",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "meaning unknown",
+  "pl": "znaczenie nieznane",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "do not change",
+  "pl": "nie zmieniaj",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Heat spread between floors",
+  "pl": "Rozkład ciepła między piętrami",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "difference in under-heating of the floors; larger = uneven manifold flow",
+  "pl": "różnica niedogrzania pięter; większa = nierówny przepływ na rozdzielaczach",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0} heats slower – raise the flow on its manifold, check the actuators",
+  "pl": "{0} dogrzewa się wolniej – zwiększ przepływ na jego rozdzielaczu, sprawdź siłowniki",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "✓ even",
+  "pl": "✓ równo",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "difference {0} K (median target − temperature per floor)",
+  "pl": "różnica {0} K (mediana nastawa − temperatura na piętrze)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Flow – return ΔT while heating",
+  "pl": "ΔT zasilanie – powrót w pracy CO",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "flow matched to the compressor power",
+  "pl": "przepływ dopasowany do mocy sprężarki",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "high flow, but keep it while cycles are short – the curve first",
+  "pl": "przepływ duży, ale przy krótkich cyklach zostaw – najpierw krzywa",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "lower A04 to {0} %",
+  "pl": "zmniejsz A04 do {0} %",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "too little flow – raise A03 / A04, check the filter",
+  "pl": "za mały przepływ – podnieś A03 / A04, sprawdź filtr",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "median while the heat pump heats CH, 24 h",
+  "pl": "mediana z pracy pompy w CO, 24 h",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Heat-pump COP today",
+  "pl": "COP pompy dziś",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "for ~{0} °C flow and {1} °C outdoor (45 % of Carnot)",
+  "pl": "dla zasilania ~{0} °C i {1} °C na zewnątrz (45 % Carnota)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "losses on cycling and DHW – longer cycles (R05), lower DHW setpoint",
+  "pl": "straty na taktowaniu i CWU – dłuższe cykle (R05), niższa nastawa CWU",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0} % of the model (today's COP includes DHW)",
+  "pl": "{0} % modelu (COP dziś zawiera też CWU)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Hot water COP (last cycle)",
+  "pl": "COP ciepłej wody (ostatni cykl)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "heat pump at ~50 °C and 5–15 °C outdoor",
+  "pl": "pompa przy ~50 °C i 5–15 °C na zewnątrz",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "lower the DHW setpoint to 45–46 °C (now {0} °C)",
+  "pl": "obniż nastawę CWU do 45–46 °C (teraz {0} °C)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "low – check the coil and the cycle time",
+  "pl": "niska – sprawdź wężownicę i czas cyklu",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "mean of the flow and cylinder methods",
+  "pl": "średnia metody przepływu i zasobnika",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Defrosting (24 h)",
+  "pl": "Odszranianie (24 h)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "frost grows at 0–5 °C in humid air; in mild weather defrosting is rare",
+  "pl": "szron rośnie przy 0–5 °C i wilgoci; przy dodatniej pogodzie odszraniania prawie nie ma",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "frequent for this weather – clean the coil, check the condensate drain and that nothing blocks the unit",
+  "pl": "częste jak na tę pogodę – wyczyść parownik, sprawdź odpływ skroplin i czy nic nie zasłania jednostki",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "mean {0} °C outdoor",
+  "pl": "średnio {0} °C na zewnątrz",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Evaporator – difference to the air",
+  "pl": "Parownik – różnica do powietrza",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "a clean coil with good airflow is a few K colder than the air",
+  "pl": "czysty parownik przy dobrym przepływie powietrza jest kilka K zimniejszy od powietrza",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "too large – dirty or iced coil, weak fan or low refrigerant (service)",
+  "pl": "za duża – brudny lub oszroniony parownik, słaby wentylator albo mało czynnika (serwis)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "median while the compressor runs, 24 h",
+  "pl": "mediana z pracy sprężarki, 24 h",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Discharge temperature – maximum",
+  "pl": "Temperatura tłoczenia – maksimum",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "90–105 °C is normal while heating DHW; above it the compressor limits its power to protect itself",
+  "pl": "przy ładowaniu CWU 90–105 °C to norma; wyżej sprężarka ogranicza moc dla ochrony",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "high – check the water flow (filter, A04) and the DHW setpoint; high all the time = low refrigerant",
+  "pl": "wysoka – sprawdź przepływ wody (filtr, A04) i nastawę CWU; trwale wysoka = mało czynnika",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "while the compressor runs, 24 h",
+  "pl": "z pracy sprężarki, 24 h",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Standby power",
+  "pl": "Pobór w postoju",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "unit electronics; more = crankcase / drip-tray heater",
+  "pl": "elektronika jednostki; więcej = grzałka karteru / tacy ociekowej",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "high – outdoor-unit heaters run in mild weather too; check their settings (FSV) with the service",
+  "pl": "wysoki – grzałki jednostki zewnętrznej pracują także w cieple; sprawdź ich ustawienia (FSV) z serwisem",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "~{0} kWh/month{1}",
+  "pl": "~{0} kWh/mies.{1}",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "DHW cylinder loss at night",
+  "pl": "Straty zasobnika CWU w nocy",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "a well insulated cylinder without circulation loses a few tenths of a K per hour",
+  "pl": "dobrze izolowany zasobnik bez cyrkulacji traci kilka dziesiątych K na godzinę",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "large – stop the DHW circulation at night (pump timer), check the insulation and the check valve",
+  "pl": "duże – wyłącz cyrkulację CWU w nocy (harmonogram pompki), sprawdź izolację i zawór zwrotny",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0} h without DHW heating{1} (water use also lowers it)",
+  "pl": "{0} h bez grzania CWU{1} (pobór wody też obniża)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Boiler heating in mild weather",
+  "pl": "Kocioł w CO przy łagodnej pogodzie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "above I10 the heat pump alone should cover the demand",
+  "pl": "powyżej progu I10 pompa sama powinna pokryć zapotrzebowanie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "the boiler joined although it was mild – lengthen I04 or lower the curve (R04/R05)",
+  "pl": "kocioł dołączał mimo ciepła – wydłuż I04 albo obniż krzywą (R04/R05)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "boiler CH time at > I10 + 2 K ({0} °C), 24 h",
+  "pl": "czas kotła w CO przy temp. > I10 + 2 K ({0} °C), 24 h",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Outing mode (F1/F2)",
+  "pl": "Tryb wyjazdowy (F1/F2)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "on only while away",
+  "pl": "wł. tylko podczas wyjazdu",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "lowered FSV 5011–5019 targets while away",
+  "pl": "obniżone nastawy FSV 5011–5019 na czas nieobecności",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "people at home",
+  "pl": "domownicy w domu",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Night capacity limit",
+  "pl": "Nocny limit wydajności",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "lower = quieter and better COP, but less power at night",
+  "pl": "niżej = ciszej i lepszy COP, ale mniej mocy w nocy",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "rooms dropped at night – raise the limit on the boiler",
+  "pl": "pokoje spadały w nocy – podnieś limit na piecu",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "✓ enough",
+  "pl": "✓ wystarcza",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "last night: rooms {0}{1} K",
+  "pl": "ostatnia noc: pokoje {0}{1} K",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "no night data",
+  "pl": "brak danych z nocy",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "on",
+  "pl": "wł.",
+  "files": [
+   "calibration.ts",
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "t02",
+  "pl": "dhw_set",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Calibration: all as recommended",
+  "pl": "Kalibracja: wszystko zgodnie z rekomendacją",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Calibration",
+  "pl": "Kalibracja",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "to change: {0}",
+  "pl": "do zmiany: {0}",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "all as recommended",
+  "pl": "wszystko zgodnie z rekomendacją",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Parameter",
+  "pl": "Parametr",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Now",
+  "pl": "Obecnie",
+  "files": [
+   "calibration.ts",
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Recommendation",
+  "pl": "Rekomendacja",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Set",
+  "pl": "Ustaw",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Recommendations from the last 24 h",
+  "pl": "Rekomendacje liczone z ostatnich 24 h",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "CH starts/h",
+  "pl": "startu CO/h",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "cycle",
+  "pl": "cykl",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": ", {0} room thermostats",
+  "pl": ", {0} termostatów pokojowych",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Change one parameter at a time and judge after a day.",
+  "pl": "Zmieniaj po jednym parametrze i oceniaj po dobie.",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "elec_power",
+  "pl": "heat_power",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "elec_total",
+  "pl": "heat_total",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "No history data",
+  "pl": "Brak danych w historii",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "No statistics",
+  "pl": "Brak statystyk",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "Loading history…",
+  "pl": "Wczytuję historię…",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "Return TW1",
+  "pl": "Powrót TW1",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "Flow TW2",
+  "pl": "Zasilanie TW2",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "Outdoor",
+  "pl": "Na zewnątrz",
+  "files": [
+   "charts.ts",
+   "diagram.ts",
+   "now.ts"
+  ]
+ },
+ {
+  "en": "DHW cylinder",
+  "pl": "Zasobnik CWU",
+  "files": [
+   "charts.ts",
+   "curve.ts",
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Compressor",
+  "pl": "Sprężarka",
+  "files": [
+   "charts.ts",
+   "circuits.ts",
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "Water and cylinder temperatures",
+  "pl": "Temperatury wody i zasobnika",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "Compressor frequency",
+  "pl": "Częstotliwość sprężarki",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "running",
+  "pl": "praca",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "starts today",
+  "pl": "starty dziś",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "DHW heating",
+  "pl": "grzanie CWU",
+  "files": [
+   "charts.ts",
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Loading statistics…",
+  "pl": "Wczytuję statystyki…",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "Electrical input",
+  "pl": "Pobór prądu",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "Heat output",
+  "pl": "Moc cieplna",
+  "files": [
+   "charts.ts",
+   "circuits.ts",
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "Hourly mean, 7 days",
+  "pl": "Średnia godzinowa, 7 dni",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "avg ",
+  "pl": "śr. ",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "Energy per day, 30 days",
+  "pl": "Energia dziennie, 30 dni",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "Electricity",
+  "pl": "Prąd",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "Heat",
+  "pl": "Ciepło",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "Daily COP",
+  "pl": "COP dzienny",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "30 days",
+  "pl": "30 dni",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "Charts",
+  "pl": "Wykresy",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "Day",
+  "pl": "Doba",
+  "files": [
+   "charts.ts",
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Week",
+  "pl": "Tydzień",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "Month",
+  "pl": "Miesiąc",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "unknown",
+  "pl": "unavailable",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Water circuit",
+  "pl": "Obieg wodny",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "HP flow (TW2)",
+  "pl": "Zasilanie PC (TW2)",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "HP return (TW1)",
+  "pl": "Powrót PC (TW1)",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "HP Delta T",
+  "pl": "Delta T pompy",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Flow (D20)",
+  "pl": "Zasilanie (D20)",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Boiler flow (D01)",
+  "pl": "Zasilanie kotła (D01)",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Boiler return",
+  "pl": "Powrót kotła",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Circuit average",
+  "pl": "Średnia obiegu",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Flow rate (D14)",
+  "pl": "Przepływ (D14)",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Thermal lift",
+  "pl": "Lift termiczny",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "3-way valve (1=DHW)",
+  "pl": "Zawór 3-dr. (1=CWU)",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Setpoint D04",
+  "pl": "Zadane D04",
+  "files": [
+   "circuits.ts",
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "Refrigerant circuit",
+  "pl": "Obieg chłodniczy",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Frequency (D71)",
+  "pl": "Częstotliwość (D71)",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Target frequency",
+  "pl": "Częstotl. docelowa",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Ordered frequency",
+  "pl": "Częstotl. zlecona",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Discharge (D73)",
+  "pl": "Tłoczenie (D73)",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Target discharge",
+  "pl": "Tłoczenie zadane",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Compressor shell (D72)",
+  "pl": "Korpus sprężarki (D72)",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Outdoor coil (D74)",
+  "pl": "Wymiennik zewn. (D74)",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Liquid line (D24)",
+  "pl": "Faza ciekła (D24)",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "ODU probe (D79)",
+  "pl": "Sonda jedn. zewn. (D79)",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Compressor current (D75)",
+  "pl": "Prąd sprężarki (D75)",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Fan target",
+  "pl": "Wentylator zadany",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Fan actual",
+  "pl": "Wentylator faktyczny",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "ODU power",
+  "pl": "Moc jedn. zewn.",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Power demand",
+  "pl": "Zapotrzeb. mocy",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "IPM module",
+  "pl": "Moduł IPM",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "DC link",
+  "pl": "DC-Link",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Mains voltage",
+  "pl": "Napięcie sieci",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "ODU state",
+  "pl": "Stan jedn. zewn.",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "ODU mode",
+  "pl": "Tryb jedn. zewn.",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Start stage",
+  "pl": "Etap rozruchu",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Run stage",
+  "pl": "Etap pracy",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Restart lock",
+  "pl": "Blokada restartu",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Frequency limit",
+  "pl": "Limit częstotliwości",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Fan",
+  "pl": "Wentylator",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Run request",
+  "pl": "Zlecenie pracy",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Defrost",
+  "pl": "Odszranianie",
+  "files": [
+   "circuits.ts",
+   "now.ts"
+  ]
+ },
+ {
+  "en": "4-way valve",
+  "pl": "Zawór 4-dr.",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Hot gas",
+  "pl": "Gorący gaz",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Circ. pump",
+  "pl": "Pompa obieg.",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Backup heater",
+  "pl": "Grzałka rez.",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "DHW heater",
+  "pl": "Grzałka CWU",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Tray heater",
+  "pl": "Grzałka tacy",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "Device states",
+  "pl": "Stan urządzeń",
+  "files": [
+   "circuits.ts"
+  ]
+ },
+ {
+  "en": "F1/F2 write locked",
+  "pl": "Zapis F1/F2 zablokowany",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "comfort ✓",
+  "pl": "komfort ✓",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "too warm +",
+  "pl": "za ciepło +",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "° → lower U03",
+  "pl": "° → obniż U03",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": " to ",
+  "pl": " do ",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "too cold ",
+  "pl": "za zimno ",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "° → raise U03",
+  "pl": "° → podnieś U03",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "room",
+  "pl": "pokój",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "max. floor ",
+  "pl": "maks. podłoga ",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "below it does not heat (room {0}° + 2)",
+  "pl": "poniżej nie grzeje (pokój {0}° + 2)",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "R04 · max. flow",
+  "pl": "R04 · maks. zasilanie",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "from R02 = {0} °C down",
+  "pl": "od R02 = {0} °C w dół",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "R05 · min. flow",
+  "pl": "R05 · min. zasilanie",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "from R03 = {0} °C up",
+  "pl": "od R03 = {0} °C w górę",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "U03 · curve offset",
+  "pl": "U03 · offset krzywej",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "shifts the whole curve (D+/D-)",
+  "pl": "przesuwa całą krzywą (D+/D-)",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "Immergas curve",
+  "pl": "krzywa Immergas",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "with offset {0}{1} °C (in effect)",
+  "pl": "z offsetem {0}{1} °C (działająca)",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "● D04 setpoint (boiler) · ○ actual flow",
+  "pl": "● zadane D04 (piec) · ○ faktyczne zasilanie",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "Drag a point or use −/+ (1 °C step). R02 {0} °C / R03 {1} °C are card options (not on any bus). R04/R05 → T-/T+, U03 → D+/D-.",
+  "pl": "Przeciągnij punkt albo użyj −/+ (krok 1 °C). R02 {0} °C / R03 {1} °C to opcje karty (nie ma ich na magistrali). R04/R05 → T-/T+, U03 → D+/D-.",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "dew point",
+  "pl": "rosa",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "dew point ",
+  "pl": "punkt rosy ",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "R13 · max. flow",
+  "pl": "R13 · maks. zasilanie",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "from R11 = {0} °C down",
+  "pl": "od R11 = {0} °C w dół",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "R12 · min. flow",
+  "pl": "R12 · min. zasilanie",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "from R10 = {0} °C up",
+  "pl": "od R10 = {0} °C w górę",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "Immergas cooling curve",
+  "pl": "krzywa chłodzenia Immergas",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "dew point (red band = dew point + 2 °C)",
+  "pl": "punkt rosy (czerwone tło = rosa + 2 °C)",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "● D04 setpoint (cooling mode only) · ○ actual flow",
+  "pl": "● zadane D04 (tylko w trybie Chłodzenie) · ○ faktyczne zasilanie",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "R11 {0} °C / R10 {1} °C are card options (not on any bus). R13/R12 → T-/T+. With floor cooling watch the dew point.",
+  "pl": "R11 {0} °C / R10 {1} °C to opcje karty (nie ma ich na magistrali). R13/R12 → T-/T+. Przy chłodzeniu podłogowym pilnuj punktu rosy.",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "outing water",
+  "pl": "woda wyjazdowa",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "Water – heating",
+  "pl": "Woda – grzanie",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "Room – heating",
+  "pl": "Pokój – grzanie",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "Auto heating WL1",
+  "pl": "Auto grzanie WL1",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "Auto heating WL2",
+  "pl": "Auto grzanie WL2",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "Water – cooling",
+  "pl": "Woda – chłodzenie",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "Room – cooling",
+  "pl": "Pokój – chłodzenie",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "Auto cooling WL1",
+  "pl": "Auto chłodzenie WL1",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "Auto cooling WL2",
+  "pl": "Auto chłodzenie WL2",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "now",
+  "pl": "teraz",
+  "files": [
+   "curve.ts",
+   "gas.ts",
+   "now.ts"
+  ]
+ },
+ {
+  "en": "normally",
+  "pl": "normalnie",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "outing",
+  "pl": "na wyjeździe",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "DHW",
+  "pl": "CWU",
+  "files": [
+   "curve.ts",
+   "diagram.ts",
+   "schedule.ts"
+  ]
+ },
+ {
+  "en": "outing flow",
+  "pl": "zasilanie na wyjeździe",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "outing cooling flow",
+  "pl": "zasilanie chłodzenia na wyjeździe",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "normal Immergas curve",
+  "pl": "normalna krzywa Immergas",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "Changes go straight to the unit (0.5 °C step).",
+  "pl": "Zmiany idą od razu do jednostki (krok 0,5 °C).",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "🔒 Older hub: arm the write in the F1/F2 control card to change the setpoints.",
+  "pl": "🔒 Starszy hub: nastawy zmienisz po uzbrojeniu zapisu w karcie Sterowanie F1/F2.",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": " In outing mode the unit holds a fixed water setpoint instead of the Immergas curve.",
+  "pl": " Na wyjeździe jednostka trzyma stałą nastawę wody zamiast krzywej Immergas.",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "setpoint D04",
+  "pl": "zadane D04",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "curve",
+  "pl": "krzywa",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "flow",
+  "pl": "zasilanie",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "Curve · outing · heating",
+  "pl": "Krzywa · wyjazd · grzanie",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "Curve · outing · cooling",
+  "pl": "Krzywa · wyjazd · chłodzenie",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "F1/F2 outing setpoints (FSV 5011–5019)",
+  "pl": "nastawy wyjazdowe F1/F2 (FSV 5011–5019)",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": " · outing mode ACTIVE",
+  "pl": " · tryb wyjazdowy AKTYWNY",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "Heating curve",
+  "pl": "Krzywa grzewcza",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "Zone 1 · R04 / R05 (T-/T+) · U03 (D+/D-)",
+  "pl": "Strefa 1 · R04 / R05 (T-/T+) · U03 (D+/D-)",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "Cooling curve",
+  "pl": "Krzywa chłodzenia",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "Zone 1 · R13 / R12 (T-/T+)",
+  "pl": "Strefa 1 · R13 / R12 (T-/T+)",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "Heating",
+  "pl": "Grzanie",
+  "files": [
+   "curve.ts",
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "Outing",
+  "pl": "Wyjazd",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "Last DHW cycle",
+  "pl": "Ostatni cykl CWU",
+  "files": [
+   "dhw.ts"
+  ]
+ },
+ {
+  "en": "● heating now",
+  "pl": "● trwa grzanie",
+  "files": [
+   "dhw.ts"
+  ]
+ },
+ {
+  "en": "No cycle yet",
+  "pl": "Brak cyklu",
+  "files": [
+   "dhw.ts"
+  ]
+ },
+ {
+  "en": "electricity",
+  "pl": "prądu",
+  "files": [
+   "dhw.ts"
+  ]
+ },
+ {
+  "en": "cylinder now",
+  "pl": "zasobnik teraz",
+  "files": [
+   "dhw.ts"
+  ]
+ },
+ {
+  "en": "COP (cylinder)",
+  "pl": "COP (zasobnik)",
+  "files": [
+   "dhw.ts"
+  ]
+ },
+ {
+  "en": "COP (flow)",
+  "pl": "COP (przepływ)",
+  "files": [
+   "dhw.ts"
+  ]
+ },
+ {
+  "en": "Heat (cylinder)",
+  "pl": "Ciepło (zasobnik)",
+  "files": [
+   "dhw.ts"
+  ]
+ },
+ {
+  "en": "Heat (flow)",
+  "pl": "Ciepło (przepływ)",
+  "files": [
+   "dhw.ts"
+  ]
+ },
+ {
+  "en": "Cycle cost",
+  "pl": "Koszt cyklu",
+  "files": [
+   "dhw.ts"
+  ]
+ },
+ {
+  "en": "Same heat from gas",
+  "pl": "To samo z gazu",
+  "files": [
+   "dhw.ts"
+  ]
+ },
+ {
+  "en": "Same heat from the heater",
+  "pl": "To samo z grzałki",
+  "files": [
+   "dhw.ts"
+  ]
+ },
+ {
+  "en": "heat pump cheaper",
+  "pl": "pompa taniej",
+  "files": [
+   "dhw.ts"
+  ]
+ },
+ {
+  "en": "gas cheaper",
+  "pl": "gaz taniej",
+  "files": [
+   "dhw.ts"
+  ]
+ },
+ {
+  "en": "heater cheaper",
+  "pl": "grzałka taniej",
+  "files": [
+   "dhw.ts"
+  ]
+ },
+ {
+  "en": "Cylinder: capacity × temperature rise (misses hot water drawn during the cycle). Flow: D14 × heat-pump ΔT. The truth is usually in between.",
+  "pl": "Zasobnik: pojemność × przyrost temperatury (nie widzi poboru wody w trakcie). Przepływ: D14 × ΔT pompy. Prawda zwykle pomiędzy.",
+  "files": [
+   "dhw.ts"
+  ]
+ },
+ {
+  "en": " Heater: cylinder heat × electricity price (1 kWh of electricity = 1 kWh of heat).",
+  "pl": " Grzałka: ciepło z zasobnika × cena prądu (1 kWh prądu = 1 kWh ciepła).",
+  "files": [
+   "dhw.ts"
+  ]
+ },
+ {
+  "en": "Active fault",
+  "pl": "Aktywny błąd",
+  "files": [
+   "diagram.ts",
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Compressor capacity ",
+  "pl": "Wydajność sprężarki ",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "night function U11 – quieter, less power",
+  "pl": "funkcja nocna U11 – cichsza praca, niższa moc",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "compressor limit (FR) on",
+  "pl": "ograniczenie sprężarki (FR) włączone",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "limited by the boiler",
+  "pl": "ograniczona przez piec",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "All running",
+  "pl": "Wszystko działa",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "COP today ",
+  "pl": "COP dziś ",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "OUTDOOR UNIT",
+  "pl": "JEDNOSTKA ZEWNĘTRZNA",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": " rpm",
+  "pl": " obr/min",
+  "files": [
+   "diagram.ts",
+   "now.ts"
+  ]
+ },
+ {
+  "en": "defrost",
+  "pl": "odszranianie",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "fan stopped",
+  "pl": "wentylator stoi",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "Evaporator",
+  "pl": "Parownik",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "Condenser",
+  "pl": "Skraplacz",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "pump stopped",
+  "pl": "pompa stoi",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "Gas boiler",
+  "pl": "Kocioł gazowy",
+  "files": [
+   "diagram.ts",
+   "gas.ts",
+   "now.ts"
+  ]
+ },
+ {
+  "en": "CH",
+  "pl": "CO",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "Buffer",
+  "pl": "Bufor",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "set ",
+  "pl": "zadana ",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "State · ☾ U11",
+  "pl": "Stan · ☾ U11",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "Operating state",
+  "pl": "Stan pracy",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "Input",
+  "pl": "Pobór",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "❄ DEFROST",
+  "pl": "❄ ODSZRANIANIE",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "F1/F2 control",
+  "pl": "Sterowanie F1/F2",
+  "files": [
+   "f1f2.ts"
+  ]
+ },
+ {
+  "en": "tap twice to switch",
+  "pl": "dotknij 2× aby przełączyć",
+  "files": [
+   "f1f2.ts"
+  ]
+ },
+ {
+  "en": "Heater",
+  "pl": "Grzałka",
+  "files": [
+   "gas.ts"
+  ]
+ },
+ {
+  "en": "last while running",
+  "pl": "ostatnio z pracy",
+  "files": [
+   "gas.ts"
+  ]
+ },
+ {
+  "en": "waiting for the compressor",
+  "pl": "czeka na pracę sprężarki",
+  "files": [
+   "gas.ts"
+  ]
+ },
+ {
+  "en": "Heat pump, gas or heater?",
+  "pl": "Pompa, gaz czy grzałka?",
+  "files": [
+   "gas.ts"
+  ]
+ },
+ {
+  "en": "Heat pump or heater?",
+  "pl": "Pompa czy grzałka?",
+  "files": [
+   "gas.ts"
+  ]
+ },
+ {
+  "en": "Prices",
+  "pl": "Ceny",
+  "files": [
+   "gas.ts"
+  ]
+ },
+ {
+  "en": "Cheapest: ",
+  "pl": "Najtaniej: ",
+  "files": [
+   "gas.ts"
+  ]
+ },
+ {
+  "en": "No data",
+  "pl": "Brak danych",
+  "files": [
+   "gas.ts",
+   "links.ts"
+  ]
+ },
+ {
+  "en": "{0}% cheaper than {1}",
+  "pl": "{0}% taniej niż {1}",
+  "files": [
+   "gas.ts"
+  ]
+ },
+ {
+  "en": "cost of 1 kWh of heat compared",
+  "pl": "porównanie kosztu 1 kWh ciepła",
+  "files": [
+   "gas.ts"
+  ]
+ },
+ {
+  "en": " (last)",
+  "pl": " (ostatni)",
+  "files": [
+   "gas.ts"
+  ]
+ },
+ {
+  "en": "Heat from heat pump",
+  "pl": "Ciepło z pompy",
+  "files": [
+   "gas.ts"
+  ]
+ },
+ {
+  "en": "Heat from gas",
+  "pl": "Ciepło z gazu",
+  "files": [
+   "gas.ts"
+  ]
+ },
+ {
+  "en": "Heat from heater",
+  "pl": "Ciepło z grzałki",
+  "files": [
+   "gas.ts"
+  ]
+ },
+ {
+  "en": "electricity 1:1",
+  "pl": "prąd 1:1",
+  "files": [
+   "gas.ts"
+  ]
+ },
+ {
+  "en": "efficiency {0}",
+  "pl": "sprawność {0}",
+  "files": [
+   "gas.ts"
+  ]
+ },
+ {
+  "en": "The heat pump gives",
+  "pl": "Pompa daje",
+  "files": [
+   "gas.ts"
+  ]
+ },
+ {
+  "en": "more heat from 1 kWh of electricity than the heater",
+  "pl": "więcej ciepła z 1 kWh prądu niż grzałka",
+  "files": [
+   "gas.ts"
+  ]
+ },
+ {
+  "en": "Electricity price",
+  "pl": "Cena prądu",
+  "files": [
+   "gas.ts",
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Gas price",
+  "pl": "Cena gazu",
+  "files": [
+   "gas.ts",
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Heat pump = electricity price ÷ COP, gas = gas price per kWh of heat from the boiler, heater = electricity price (1 kWh of electricity = 1 kWh of heat).",
+  "pl": "Pompa = cena prądu ÷ COP, gaz = cena gazu w przeliczeniu na kWh ciepła z kotła, grzałka = cena prądu (1 kWh prądu = 1 kWh ciepła).",
+  "files": [
+   "gas.ts"
+  ]
+ },
+ {
+  "en": "Magis Pro has no gas boiler: the backup is the electric heater. Heat pump = electricity price ÷ COP, heater = electricity price.",
+  "pl": "Magis Pro nie ma kotła gazowego: rezerwą jest grzałka elektryczna. Pompa = cena prądu ÷ COP, grzałka = cena prądu.",
+  "files": [
+   "gas.ts"
+  ]
+ },
+ {
+  "en": "CRC errors: ",
+  "pl": "błędy CRC: ",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "polling off",
+  "pl": "odpytywanie wyłączone",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "the boiler answers (slave 11)",
+  "pl": "piec odpowiada (slave 11)",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": " · firmware ",
+  "pl": " · oprogramowanie ",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "the boiler does not answer",
+  "pl": "piec nie odpowiada",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "frames ",
+  "pl": "ramki ",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": " · bad ",
+  "pl": " · błędne ",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": " · no reply ",
+  "pl": " · bez odp. ",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Zone 1 panel",
+  "pl": "Panel strefy 1",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "emulated by the hub",
+  "pl": "emulowany przez hub",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "physical panel",
+  "pl": "panel fizyczny",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "EHS panel",
+  "pl": "Panel EHS",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "emulation off",
+  "pl": "emulacja wyłączona",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": " · TX frames ",
+  "pl": " · ramki TX ",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "physical Dominus module",
+  "pl": "fizyczny moduł Dominus",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "not on the bus",
+  "pl": "nie ma na magistrali",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "System controller",
+  "pl": "Centralka systemu",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "T-/T+ master",
+  "pl": "T-/T+ master",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "the hub acts as the controller (BMS master)",
+  "pl": "hub pełni rolę centralki (master BMS)",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "the hub does not poll – room for a controller",
+  "pl": "hub nie odpytuje – miejsce dla centralki",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "signal ",
+  "pl": "sygnał ",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": " · weak",
+  "pl": " · słaby",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Dominus",
+  "pl": "Hub",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Modbus",
+  "pl": "Dominus",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Photovoltaics",
+  "pl": "EHS panel",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Dehumidifier",
+  "pl": "Photovoltaics",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Connected",
+  "pl": "Połączono",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Emulated",
+  "pl": "Emulacja",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Off",
+  "pl": "Wyłączone",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "No link",
+  "pl": "Brak łączności",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Connectivity",
+  "pl": "Łączność",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "problems: ",
+  "pl": "problemy: ",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "all connected",
+  "pl": "wszystko połączone",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Summer",
+  "pl": "Lato",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "Winter",
+  "pl": "Zima",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "Boiler switched off with its button (OFF) – switch it on at the boiler",
+  "pl": "Piec wyłączony przyciskiem (OFF) – włącz go na piecu",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "disinfection running · ",
+  "pl": "dezynfekcja trwa · ",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": " · next ",
+  "pl": " · następna ",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "DAY · P17",
+  "pl": "DZIEŃ · P17",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "by the schedule",
+  "pl": "wg harmonogramu",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": " · now: ",
+  "pl": " · teraz: ",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "fixed setpoint, no schedule",
+  "pl": "stała nastawa, bez harmonogramu",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "Zone 1 CH time program",
+  "pl": "Program czasowy CO Strefy 1",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "Comfort / Eco by the DHW calendar",
+  "pl": "Komfort / Eko wg kalendarza CWU",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "fixed setpoint",
+  "pl": "stała nastawa",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "DHW time program",
+  "pl": "Program czasowy CWU",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "active outside the entered hours – check U12/U13 on the boiler",
+  "pl": "aktywny poza wpisanymi godzinami – sprawdź U12/U13 na piecu",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "inside the entered hours but inactive – check U11 on the boiler",
+  "pl": "we wpisanych godzinach, ale nieaktywny – sprawdź U11 na piecu",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "Night mode",
+  "pl": "Tryb nocny",
+  "files": [
+   "mode.ts",
+   "now.ts"
+  ]
+ },
+ {
+  "en": "active · quieter operation",
+  "pl": "aktywny · cichsza praca",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "inactive",
+  "pl": "nieaktywny",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "no limit",
+  "pl": "bez limitu",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "on · tap twice to turn off",
+  "pl": "włączone · dotknij 2× aby wyłączyć",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "off · tap twice to turn on",
+  "pl": "wyłączone · dotknij 2× aby włączyć",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "Operating mode",
+  "pl": "Tryb pracy",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "tap twice to change",
+  "pl": "dotknij 2× aby zmienić",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "flow corrected by the room temperature",
+  "pl": "zasilanie korygowane wg temp. w pokoju",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "temperature",
+  "pl": "temperatura",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "humidity",
+  "pl": "wilgotność",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "DHW boost",
+  "pl": "Wymuszenie CWU",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "Auto venting (A12)",
+  "pl": "Auto-odpowietrzanie (A12)",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "setting: at every boiler power-up",
+  "pl": "ustawienie: przy każdym włączeniu pieca",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "Venting running · ",
+  "pl": "Odpowietrzanie trwa · ",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "Vent the system now",
+  "pl": "Odpowietrz instalację teraz",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "one-off AP99 cycle – the boiler does not heat meanwhile; switch off to stop",
+  "pl": "jednorazowy cykl AP99 – piec w tym czasie nie grzeje; wyłącz, aby przerwać",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "No error",
+  "pl": "Brak błędów",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "No Error",
+  "pl": "No error",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Loading cycle history…",
+  "pl": "Wczytuję historię cykli…",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "not enough history to estimate the length",
+  "pl": "za mało historii, by oszacować długość",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "next start ~",
+  "pl": "następny start ~",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "ends ~",
+  "pl": "koniec ~",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": " left",
+  "pl": "",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "longer than usual by ",
+  "pl": "dłużej niż zwykle o ",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Pause (idle)",
+  "pl": "Przerwa (postój)",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "since ",
+  "pl": "od ",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "DHW rhythm",
+  "pl": "Rytm CWU",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "last at ",
+  "pl": "ostatnie ",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": " · next ~",
+  "pl": " · następne ~",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": " · next is overdue",
+  "pl": " · następne już po czasie",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": " (usually every ",
+  "pl": " (typowo co ",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": " ago",
+  "pl": " temu",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": " · ends ~",
+  "pl": " · koniec ~",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Until night mode",
+  "pl": "Do trybu nocnego",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "starts ~",
+  "pl": "start ~",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": " (from history)",
+  "pl": " (z historii)",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "in ",
+  "pl": "za ",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Anti-legionella · disinfection running",
+  "pl": "Anty-legionella · dezynfekcja trwa",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": " · at the latest until ",
+  "pl": " · najpóźniej do ",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": " · cylinder ",
+  "pl": " · zasobnik ",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Until disinfection (anti-legionella)",
+  "pl": "Do dezynfekcji (anty-legionella)",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "next ",
+  "pl": "następna ",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": " · last ",
+  "pl": " · ostatnia ",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "last disinfection ",
+  "pl": "ostatnia dezynfekcja ",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "on for {0} · no cycle (cylinder ≥ {1} °C) in history yet",
+  "pl": "włączona od {0} · cyklu (zasobnik ≥ {1} °C) jeszcze nie było w historii",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "waiting",
+  "pl": "czeka",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": " starts",
+  "pl": " startów",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "on ~",
+  "pl": "praca ~",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "off ~",
+  "pl": "przerwa ~",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Last 6 h",
+  "pl": "Ostatnie 6 h",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "no active faults",
+  "pl": "brak aktywnych błędów",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "outdoor unit: ",
+  "pl": "jedn. zewn.: ",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": " · avg ",
+  "pl": " · śr. ",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "starts",
+  "pl": "startów",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": " · gas ",
+  "pl": " · gaz ",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Compressor today",
+  "pl": "Sprężarka dziś",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Burner today",
+  "pl": "Palnik dziś",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Operating state (hub)",
+  "pl": "Stan pracy (hub)",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "excluded · boiler heats",
+  "pl": "wykluczona · grzeje kocioł",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "allowed to run",
+  "pl": "dopuszczona do pracy",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "FAULT",
+  "pl": "AWARIA",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Space heating",
+  "pl": "Ogrzewanie CO",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Standby",
+  "pl": "Czuwanie",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "compressor ",
+  "pl": "sprężarka ",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "compressor stopped",
+  "pl": "sprężarka stoi",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "heat",
+  "pl": "ciepła",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "fan ",
+  "pl": "wentylator ",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "⚡ heater",
+  "pl": "⚡ grzałka",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "🔥 gas boiler",
+  "pl": "🔥 kocioł gazowy",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "check diagnostics",
+  "pl": "sprawdź diagnostykę",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "HEAT PUMP FAULT",
+  "pl": "BŁĄD POMPY CIEPŁA",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "DEFROST",
+  "pl": "ODSZRANIANIE",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "outdoor unit is defrosting",
+  "pl": "jednostka zewnętrzna się odszrania",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "system model (D61) and outdoor-unit size",
+  "pl": "model systemu (D61) i moc jednostki zewnętrznej",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "COP NOW",
+  "pl": "COP TERAZ",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "COP TODAY",
+  "pl": "COP DZIŚ",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "COP MONTH",
+  "pl": "COP MIESIĄC",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "heat-pump flow (TW2)",
+  "pl": "zasilanie z pompy (TW2)",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "heat-pump return (TW1)",
+  "pl": "powrót do pompy (TW1)",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "flow – return difference",
+  "pl": "różnica zasilanie – powrót",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "flow setpoint (D04)",
+  "pl": "zadana temperatura zasilania (D04)",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Zone 1",
+  "pl": "Strefa 1",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Electrical",
+  "pl": "Moc elektr.",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Calendar",
+  "pl": "Kalendarz",
+  "files": [
+   "schedule.ts"
+  ]
+ },
+ {
+  "en": "move {0} to calendar {1}",
+  "pl": "przenieś {0} do kalendarza {1}",
+  "files": [
+   "schedule.ts"
+  ]
+ },
+ {
+  "en": "All days",
+  "pl": "Wszystkie dni",
+  "files": [
+   "schedule.ts"
+  ]
+ },
+ {
+  "en": "tap twice",
+  "pl": "2× dotknij",
+  "files": [
+   "schedule.ts"
+  ]
+ },
+ {
+  "en": "Edit calendar",
+  "pl": "Edycja kalendarza",
+  "files": [
+   "schedule.ts"
+  ]
+ },
+ {
+  "en": "now in schedule",
+  "pl": "teraz w harmonogramie",
+  "files": [
+   "schedule.ts"
+  ]
+ },
+ {
+  "en": "now outside schedule (Eco)",
+  "pl": "teraz poza harmonogramem (Eko)",
+  "files": [
+   "schedule.ts"
+  ]
+ },
+ {
+  "en": "Eco",
+  "pl": "Eko",
+  "files": [
+   "schedule.ts",
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "Comfort",
+  "pl": "Komfort",
+  "files": [
+   "schedule.ts",
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "Schedule",
+  "pl": "Harmonogram",
+  "files": [
+   "schedule.ts"
+  ]
+ },
+ {
+  "en": "CH · Zone 1",
+  "pl": "CO · Strefa 1",
+  "files": [
+   "schedule.ts"
+  ]
+ },
+ {
+  "en": "calendar view",
+  "pl": "widok kalendarzy",
+  "files": [
+   "schedule.ts"
+  ]
+ },
+ {
+  "en": "week view",
+  "pl": "widok tygodnia",
+  "files": [
+   "schedule.ts"
+  ]
+ },
+ {
+  "en": "Comfort / Eco by the DHW schedule",
+  "pl": "Komfort / Eko wg harmonogramu CWU",
+  "files": [
+   "schedule.ts",
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "now ",
+  "pl": "teraz ",
+  "files": [
+   "schedule.ts"
+  ]
+ },
+ {
+  "en": "setpoint",
+  "pl": "nastawa",
+  "files": [
+   "schedule.ts"
+  ]
+ },
+ {
+  "en": "off – the boiler keeps one DHW setpoint",
+  "pl": "wył. – piec trzyma jedną nastawę CWU",
+  "files": [
+   "schedule.ts"
+  ]
+ },
+ {
+  "en": "Pick a calendar for each day; edit the ranges below. Calendar ranges are shared by CH and DHW, the day assignment is separate.",
+  "pl": "Wybierz kalendarz dla każdego dnia; zakresy edytujesz w polu poniżej. Zakresy kalendarzy są wspólne dla CO i CWU, przypisanie dni — osobne.",
+  "files": [
+   "schedule.ts"
+  ]
+ },
+ {
+  "en": "Tap a day to move it to the calendar; the pencil opens the time ranges. Calendar ranges are shared by CH and DHW, the weekdays are separate.",
+  "pl": "Dotknij dnia, aby przenieść go do kalendarza; ołówek otwiera zakresy godzin. Zakresy kalendarzy są wspólne dla CO i CWU, dni tygodnia — osobne.",
+  "files": [
+   "schedule.ts"
+  ]
+ },
+ {
+  "en": "SETPOINT",
+  "pl": "NASTAWA",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "CH · zone 1",
+  "pl": "CO · strefa 1",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "cooling",
+  "pl": "chłodzi",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "heating",
+  "pl": "grzeje",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "standby",
+  "pl": "czuwa",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "ECO",
+  "pl": "EKO",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "COMFORT",
+  "pl": "KOMFORT",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "AUTO program: the schedule changes the setpoint",
+  "pl": "program AUTO: nastawę zmienia harmonogram",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": " · now ",
+  "pl": " · teraz ",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "DHW · cylinder",
+  "pl": "CWU · zasobnik",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "the boiler now heats to ",
+  "pl": "piec grzeje teraz do ",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "Setpoints",
+  "pl": "Nastawy",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "Zone 1 cooling profiles (boiler)",
+  "pl": "Profile chłodzenia Strefy 1 (piec)",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "Zone 1 heating profiles (boiler)",
+  "pl": "Profile ogrzewania Strefy 1 (piec)",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "Hot water profiles",
+  "pl": "Profile ciepłej wody",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "Comfort inside the DHW calendar ranges, Eco outside",
+  "pl": "w przedziałach kalendarza CWU Komfort, poza nimi Eko",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "Point the card options dhw_eco / dhw_comfort to input_number helpers to edit them here (now ",
+  "pl": "Wskaż w opcjach karty dhw_eco / dhw_comfort pomocników input_number, aby edytować je tutaj (teraz ",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "Hub settings",
+  "pl": "Ustawienia huba",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "prices, cylinder, night mode, legionella…",
+  "pl": "ceny, zasobnik, tryb nocny, legionella…",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Energy prices",
+  "pl": "Ceny energii",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "DHW cylinder capacity",
+  "pl": "Pojemność zasobnika CWU",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Gas estimate",
+  "pl": "Szacowanie gazu",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Gas use CH",
+  "pl": "Zużycie gazu CO",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Gas use DHW",
+  "pl": "Zużycie gazu CWU",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Night mode U11 (reminder – set on the boiler)",
+  "pl": "Tryb nocny U11 (przypomnienie – ustawia się na piecu)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Anti-legionella P15 (reminder – set on the boiler)",
+  "pl": "Anty-legionella P15 (przypomnienie – ustawia się na piecu)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Time",
+  "pl": "Godzina",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Fault descriptions",
+  "pl": "Opisy błędów",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Language",
+  "pl": "Język",
+  "files": [
+   "settings.ts"
+  ]
+ }
+]

@@ -1,0 +1,11 @@
+# local secrets (copy secrets.yaml.example)
+secrets.yaml
+
+# build output of ESPHome and of the cards
+.esphome/
+*.bin
+cards/node_modules/
+
+# Python caches of the components and tools
+__pycache__/
+*.pyc

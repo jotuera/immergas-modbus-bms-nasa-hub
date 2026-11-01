@@ -1,0 +1,371 @@
+# Magyar. A hiányzó kulcsok az f1f2_en.yaml fájlból kerülnek átvételre.
+language: Magyar
+
+sensors:
+  flow_temp_out: Előremenő hőmérséklet
+  flow_temp_return: Visszatérő hőmérséklet
+  water_outlet_target: Előremenő víz célhőmérséklet (aktív)
+  dhw_temperature: HMV hőmérséklet
+  dhw_target: HMV célhőmérséklet
+  zone1_room_temp: 1. zóna szobahőmérséklet
+  zone1_target: 1. zóna célhőmérséklet
+  zone2_room_temp: 2. zóna szobahőmérséklet
+  zone2_target: 2. zóna célhőmérséklet
+  eva_in_temp: Beltéri párologtató bemeneti hőmérséklet
+  water_out_tw2: Beltéri kimenő víz TW2 (4204)
+  outdoor_temp_copy: NASA beltéri PDU 420C külső hőmérséklet másolat
+  heater_out_temp: Fűtőbetét kimeneti hőmérséklet
+  mixing_valve_temp: Keverőszelep hőmérséklet
+  flow_rate: Térfogatáram
+  capacity_request: Beltéri teljesítményigény
+  capacity_absolute: Beltéri névleges teljesítmény
+  power_produced: Termelt teljesítmény (utolsó perc)
+  energy_produced_total: Termelt energia (összesen)
+  indoor_eev: Beltéri expanziós szelep (EEV) érték 1
+  two_way_valve: 2-járatú szelep
+  three_way_valve: 3-járatú szelep
+  operation_mode: Beltéri üzemmód (4=fűtés)
+  control_reference: EHS szabályozási alap (1=kimenő víz)
+  status_bits_440e: Beltéri állapotbitek (440E)
+  raw_0402: NASA beltéri PDU 0402 LONG RAW
+  raw_0411: NASA beltéri PDU 0411 LONG RAW
+  raw_0412: NASA beltéri PDU 0412 LONG RAW
+  raw_0413: NASA beltéri PDU 0413 LONG RAW
+  raw_0414: NASA beltéri PDU 0414 LONG RAW
+  raw_0415: NASA beltéri PDU 0415 LONG RAW
+  raw_4006: NASA beltéri PDU 4006 RAW
+  raw_440a: NASA beltéri PDU 440A LONG RAW
+  outdoor_temperature: Külső hőmérséklet
+  compressor_frequency: Kompresszor aktuális frekvencia
+  order_frequency: Kompresszor 1 előírt frekvencia
+  target_frequency: Kompresszor 1 célfrekvencia
+  frequency_limit: Kompresszor frekvenciahatár
+  fan_speed_target: Kültéri ventilátor fordulatszám (cél)
+  fan_speed_actual: Kültéri ventilátor fordulatszám (tényleges)
+  power_consumed: Felvett teljesítmény (utolsó perc)
+  outdoor_power: Kültéri teljesítményfelvétel (1 egység)
+  energy_consumed_total: Felvett energia (összesen)
+  outdoor_current: Kültéri áramfelvétel
+  heat_pump_voltage: Hőszivattyú feszültség
+  mains_voltage: Hálózati AC feszültség
+  dc_link_voltage: Kültéri DC-köri feszültség
+  unit_capacity: Kültéri egység névleges teljesítmény
+  discharge_temp: Kültéri nyomóoldali hőmérséklet 1 (820A)
+  target_discharge_temp: Kültéri nyomóoldali célhőmérséklet
+  comp_top_temp: Kültéri kompresszor fej hőmérséklet (8280)
+  cond_out_temp: Kültéri kondenzátor kimeneti hőmérséklet (8218)
+  ipm_temp: Kültéri IPM1 hőmérséklet (8254)
+  main_eev: Kültéri fő expanziós szelep (EEV) állása
+  start_sequence: Kompresszor indítási szakasz
+  restart_inhibit: Kompresszor újraindítás tiltása
+  error_code: Hibakód
+  linked_indoor_units: Csatlakoztatott beltéri egységek
+  raw_041b: NASA kültéri PDU 041B LONG RAW
+  raw_8201: NASA kültéri PDU 8201 RAW
+  raw_8239: NASA kültéri PDU 8239 RAW
+  raw_823f: NASA kültéri PDU 823F RAW
+  raw_8243: NASA kültéri PDU 8243 RAW
+  raw_824b: NASA kültéri PDU 824B RAW
+  raw_824c: NASA kültéri PDU 824C RAW
+  raw_82e1: NASA kültéri PDU 82E1 RAW
+  raw_840f: NASA kültéri PDU 840F LONG RAW
+  raw_8417: NASA kültéri PDU 8417 LONG RAW
+  rx_frames: NASA fogadott keretek
+  bad_frames: NASA hibás keretek
+  tx_frames: NASA küldött keretek
+  timeouts: NASA olvasási időtúllépések
+
+binary_sensors:
+  water_pump: Primer keringetőszivattyú
+  backup_heater: Tartalék fűtőbetét
+  booster_heater: EHS kiegészítő fűtőbetét
+  defrost: Jégtelenítés
+  dhw_power: HMV bekapcsolva
+  zone1_power: 1. zóna bekapcsolva
+  zone2_power: 2. zóna bekapcsolva
+  pv_control: PV vezérlés
+  smart_grid: Smart Grid
+  compressor: Kompresszor állapot
+  four_way_valve: 4-járatú szelep
+  hot_gas_valve: Forró gáz szelep
+  base_heater: Kondenzvíztálca fűtés
+  night_limit: Kompresszor éjszakai korlát (U11)
+  night_mode: Éjszakai funkció (U11) aktív
+
+text_sensors:
+  outdoor_driving_mode: Kültéri egység üzemmód
+  outdoor_operation_state: Kültéri egység állapot
+  outdoor_fan_state: Kültéri ventilátor állapot
+  defrost_stage: Jégtelenítési szakasz
+  system_error: Rendszerhiba állapot
+  dhw_mode: HMV mód
+  operation_mode_text: Beltéri üzemmód
+  three_way_valve_text: 3-járatú szelep állása
+  firmware_outdoor: Kültéri egység firmware
+  firmware_outdoor_eeprom: Kültéri egység EEPROM
+  firmware_inverter: Inverter firmware
+  firmware_indoor: Beltéri egység (MIM) firmware
+  raw_4604: NASA beltéri PDU 4604 RAW
+  last_frame: NASA utolsó keret
+  last_change: NASA utolsó változás
+  devices: NASA eszközök
+
+device_classes:
+  0x10: kültéri egység
+  0x11: hidraulikus egység (HTU)
+  0x20: beltéri egység
+  0x50: vezetékes vezérlő
+  0x58: PIM modul
+  0x59: SIM modul
+  0x62: Wi-Fi modul
+  0x63: MIM modul
+  0x65: központi vezérlő
+  0x6A: DMS
+  0x80: szervizeszköz
+
+switches:
+  sniffer: NASA sniffer
+
+buttons:
+  poll: FSV olvasása most
+
+texts:
+  unknown: "Ismeretlen ({value})"
+  no_error: Nincs hiba
+  error: "E{code}"
+  error_with_text: "E{code}: {text}"
+
+fsv_format: "FSV {code} - {name}"
+fsv:
+  1011: Kimenő víz max. (hűtés)
+  1012: Kimenő víz min. (hűtés)
+  1021: Szobahőmérséklet max. (hűtés)
+  1022: Szobahőmérséklet min. (hűtés)
+  1031: Kimenő víz max. (fűtés)
+  1032: Kimenő víz min. (fűtés)
+  1041: Szobahőmérséklet max. (fűtés)
+  1042: Szobahőmérséklet min. (fűtés)
+  1051: HMV tároló max.
+  1052: HMV tároló min.
+  2011: Fűtési görbe - külső hőmérséklet 1. pont
+  2012: Fűtési görbe - külső hőmérséklet 2. pont
+  2021: Fűtési görbe WL1 - kimenő víz 1. pont
+  2022: Fűtési görbe WL1 - kimenő víz 2. pont
+  2031: Fűtési görbe WL2 - kimenő víz 1. pont
+  2032: Fűtési görbe WL2 - kimenő víz 2. pont
+  2041: Fűtési görbe típusa
+  2051: Hűtési görbe - külső hőmérséklet 1. pont
+  2052: Hűtési görbe - külső hőmérséklet 2. pont
+  2061: Hűtési görbe WL1 - kimenő víz 1. pont
+  2062: Hűtési görbe WL1 - kimenő víz 2. pont
+  2071: Hűtési görbe WL2 - kimenő víz 1. pont
+  2072: Hűtési görbe WL2 - kimenő víz 2. pont
+  2081: Hűtési görbe típusa
+  2091: Külső szobatermosztát (padlófűtés)
+  2092: Külső szobatermosztát (fan-coil)
+  2093: Szobahőmérséklet-szabályozás a vezérlőről
+  3011: HMV tároló használata
+  3021: HMV max. hőmérséklet hőszivattyúval
+  3022: HMV hőszivattyú leállási különbség
+  3023: HMV hőszivattyú indítási különbség
+  3024: Min. fűtési idő
+  3025: Max. HMV idő
+  3026: Max. fűtési idő
+  3031: Kiegészítő fűtőbetét
+  3032: Kiegészítő fűtőbetét késleltetése
+  3033: Kiegészítő fűtőbetét túllövés
+  3041: Fertőtlenítés
+  3042: Fertőtlenítés napja
+  3043: Fertőtlenítés kezdési órája
+  3044: Fertőtlenítés célhőmérséklete
+  3045: Fertőtlenítés időtartama
+  3046: Fertőtlenítés max. ideje
+  3051: Kényszerített HMV időzítő
+  3052: Kényszerített HMV időtartam
+  3061: Napkollektor vagy HMV termosztát
+  3071: 3-járatú szelep iránya
+  3081: Kiegészítő fűtőbetét 1. fokozat teljesítménye
+  3082: Kiegészítő fűtőbetét 2. fokozat teljesítménye
+  3083: Kiegészítő fűtőbetét (BSH) teljesítménye
+  4011: Fűtés vagy HMV prioritás
+  4012: Külső hőmérséklet a prioritáshoz
+  4013: Fűtés kikapcsolási külső hőmérséklet
+  4021: Tartalék fűtőbetét használata
+  4022: Tartalék vagy kiegészítő fűtőbetét prioritás
+  4023: Hideg idő kompenzáció
+  4024: Tartalék fűtőbetét küszöbhőmérséklet
+  4025: Tartalék hőmérséklet jégtelenítéskor
+  4031: Tartalék kazán
+  4032: Tartalék kazán prioritás
+  4033: Tartalék kazán küszöbhőmérséklet
+  4041: Keverőszelep
+  4042: Keverőszelep cél delta T (fűtés)
+  4043: Keverőszelep cél delta T (hűtés)
+  4044: Keverőszelep szabályozási tényező
+  4045: Keverőszelep szabályozási intervallum
+  4046: Keverőszelep futásideje
+  4051: Inverteres szivattyú vezérlés
+  4052: Inverteres szivattyú cél delta T
+  4053: Inverteres szivattyú szabályozási tényező
+  4061: Zónavezérlés
+  5011: Távollét mód - hűtés kimenő víz
+  5012: Távollét mód - hűtés szoba
+  5013: Távollét mód - fűtés kimenő víz
+  5014: Távollét mód - fűtés szoba
+  5015: Távollét mód - automata hűtés WL1 víz
+  5016: Távollét mód - automata hűtés WL2 víz
+  5017: Távollét mód - automata fűtés WL1 víz
+  5018: Távollét mód - automata fűtés WL2 víz
+  5019: Távollét mód - HMV tároló célhőmérséklet
+  5021: HMV takarékos hőmérsékletkülönbség
+  5022: HMV takarékos mód
+  5023: HMV takarékos termosztát-kikapcsolási különbség
+  5041: Csúcsteljesítmény-szabályozás
+  5042: Csúcsteljesítmény - kényszerített kikapcsolt részek
+  5043: Csúcsteljesítmény - bemeneti feszültség
+  5051: Frekvenciaarány-szabályozás
+  5081: PV vezérlés
+  5082: PV vezérlés - hűtés eltolás
+  5083: PV vezérlés - fűtés eltolás
+  5091: Smart Grid vezérlés
+  5092: Smart Grid - fűtés eltolás
+  5093: Smart Grid - HMV eltolás
+  5094: Smart Grid - HMV mód
+
+maps:
+  driving_mode:
+    0: Leállítva
+    1: Biztonsági
+    2: Normál
+    3: Kiegyenlítés
+    4: Visszanyerés
+    5: Jégtelenítés
+    6: Kompresszor leállítása
+    7: Tiltott
+    8: Vonali tesztelés (jig)
+    9: Panel tesztelés (jig)
+    10: Teszt
+    11: Hűtőközeg-feltöltés
+    12: Hűtőközeg-leszívás
+    13: Hűtőközeg-kiszivattyúzás
+    14: Vákuum
+    15: Kalorimétertesztelés
+    16: Leszívás leállítása
+    17: Segéd leállítás
+    18: Csővezeték-ellenőrzés
+    19: Hűtőközeg-ellenőrzés
+    20: FPT tesztelés (jig)
+    21: Fűtés/hűtés váltás (leállás nélkül)
+    22: Automatikus ellenőrzés
+    23: Elektromos kisülés
+    24: Osztott jégtelenítés
+    25: Inverter ellenőrzés
+    26: Jégtelenítés (leállás nélkül)
+    27: Távoli teszt
+    28: Névleges mérés
+    29: PC teszt
+    30: Leszívás (termosztát ki)
+    31: 3 fázisú teszt
+    32: Smart telepítési teszt
+    33: Jégtelenítési teljesítményteszt
+    34: Inverter ventilátorpanel ellenőrzés
+    35: Automatikus csőpárosítás
+    36: Automatikus feltöltés
+  heat_cool:
+    0: Nincs megadva
+    1: Hűtés
+    2: Fűtés
+    3: Hűtés (fő)
+    4: Fűtés (fő)
+  fan_state:
+    0: Áll
+    1: Működik
+  defrost_stage:
+    0: Nincs jégtelenítés
+    1: 1. szakasz
+    2: 2. szakasz
+    3: 3. szakasz
+    7: Befejező szakasz
+    255: Nincs jégtelenítés
+  dhw_mode:
+    0: Eco
+    1: Normál
+    2: Teljesítmény
+    3: Kényszerített
+  operation_mode:
+    0: Automata
+    1: Hűtés
+    2: Szárítás
+    3: Ventilátor
+    4: Fűtés
+    21: Hideg tárolás
+    24: Melegvíz
+  three_way_valve:
+    0: Fűtés
+    1: HMV tároló
+
+errors:
+  101: Beltéri - kültéri kommunikációs hiba
+  120: 2. zóna szobaérzékelő hiba
+  121: 1. zóna szobaérzékelő hiba
+  122: Párologtató bemeneti érzékelő hiba
+  123: Párologtató kimeneti érzékelő hiba
+  162: EEPROM hiba
+  198: Hőbiztosíték hiba
+  201: Beltéri / kültéri egységek számának eltérése
+  202: Nincs kommunikáció a beltéri és kültéri egység között
+  203: Főpanel - inverterpanel kommunikációs időtúllépés
+  221: Külső hőmérséklet-érzékelő hiba
+  231: Kondenzátor hőmérséklet-érzékelő hiba
+  251: Nyomóoldali hőmérséklet-érzékelő hiba
+  320: Kompresszor túlterhelés (OLP) érzékelő hiba
+  403: Kültéri egység befagyás észlelve (kompresszor leállt)
+  404: Kültéri egység túlterhelés-védelem (kompresszor leállt)
+  416: Kompresszor nyomóoldali hőmérséklet túl magas
+  419: Kültéri expanziós szelep (EEV) nyitási hiba
+  425: 3 fázisú tápellátás bekötési hiba
+  439: Hűtőközeg-szivárgás (egység leállt)
+  440: Fűtés tiltva - külső hőmérséklet túl magas
+  441: Hűtés tiltva - külső hőmérséklet túl alacsony
+  443: Hűtőközeg-szivárgás (indítás előtt)
+  458: Kültéri ventilátor 1 hiba
+  461: Kompresszor indítási hiba
+  462: Primer áram kioldás
+  463: Túláram / PFC túláram
+  464: IPM túláram
+  465: Kompresszor túlterhelés
+  466: DC-köri feszültség túl alacsony / túl magas
+  467: Kompresszor bekötési hiba
+  468: Áramérzékelő hiba
+  469: DC-köri feszültségérzékelő hiba
+  470: EEPROM olvasási / írási hiba
+  471: Kültéri EEPROM hiba
+  474: IPM / PFC hőmérséklet-érzékelő hiba
+  475: Kültéri ventilátor 2 hiba
+  484: PFC túlterhelés
+  485: Bemeneti áramérzékelő hiba
+  500: IPM túlmelegedés
+  554: Hűtőközeg-szivárgás
+  604: Beltéri - vezetékes vezérlő kommunikációs hiba
+  653: Vezetékes vezérlő hőmérséklet-érzékelő hiba
+  654: Vezetékes vezérlő EEPROM hiba
+  899: 1. zóna kimenő víz érzékelő hiba
+  900: 2. zóna kimenő víz érzékelő hiba
+  901: Bemenő víz hőmérséklet-érzékelő hiba
+  903: Kimenő víz hőmérséklet-érzékelő hiba
+  904: HMV tároló hőmérséklet-érzékelő hiba
+  906: Hűtőközeg bemeneti hőmérséklet-érzékelő hiba
+  907: Csőrepedés elleni védelem
+  908: Fagyvédelem (törölhető)
+  909: Fagyvédelem (zárolt)
+  910: Kimenő víz érzékelő levált
+  911: Áramláskapcsoló hiba
+  912: Térfogatáram túl alacsony
+  913: Áramláskapcsoló hiba (zárolt)
+  914: Külső termosztát csatlakozási hiba
+  915: DC ventilátor hiba
+  916: Keverőszelep érzékelő hiba
+  917: Tároló konfigurációs hiba
+  919: Fertőtlenítési hőmérséklet nem érte el a célértéket
+  920: FSV / SD-kártya hiba
+  973: Víznyomás-érzékelő hiba

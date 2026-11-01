@@ -1,0 +1,105 @@
+# Immergas Magis Pro / Combo F1/F2 (Samsung NASA) - package "f1f2_fsv"
+# All 94 FSV installer settings of the Samsung side (read-only; read 30 s after boot, then every
+# f1f2_poll_interval; button 'Read FSV now'). Needs f1f2_transmit: true.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# File, id and substitution names start with f1f2_ so this repo can be combined with the D+/D- and T-/T+
+# repos on one device.
+
+sensor:
+  - {platform: f1f2_nasa, fsv: 1011, id: f1f2_fsv_1011}
+  - {platform: f1f2_nasa, fsv: 1012, id: f1f2_fsv_1012}
+  - {platform: f1f2_nasa, fsv: 1021, id: f1f2_fsv_1021}
+  - {platform: f1f2_nasa, fsv: 1022, id: f1f2_fsv_1022}
+  - {platform: f1f2_nasa, fsv: 1031, id: f1f2_fsv_1031}
+  - {platform: f1f2_nasa, fsv: 1032, id: f1f2_fsv_1032}
+  - {platform: f1f2_nasa, fsv: 1041, id: f1f2_fsv_1041}
+  - {platform: f1f2_nasa, fsv: 1042, id: f1f2_fsv_1042}
+  - {platform: f1f2_nasa, fsv: 1051, id: f1f2_fsv_1051}
+  - {platform: f1f2_nasa, fsv: 1052, id: f1f2_fsv_1052}
+  - {platform: f1f2_nasa, fsv: 2011, id: f1f2_fsv_2011}
+  - {platform: f1f2_nasa, fsv: 2012, id: f1f2_fsv_2012}
+  - {platform: f1f2_nasa, fsv: 2021, id: f1f2_fsv_2021}
+  - {platform: f1f2_nasa, fsv: 2022, id: f1f2_fsv_2022}
+  - {platform: f1f2_nasa, fsv: 2031, id: f1f2_fsv_2031}
+  - {platform: f1f2_nasa, fsv: 2032, id: f1f2_fsv_2032}
+  - {platform: f1f2_nasa, fsv: 2041, id: f1f2_fsv_2041}
+  - {platform: f1f2_nasa, fsv: 2051, id: f1f2_fsv_2051}
+  - {platform: f1f2_nasa, fsv: 2052, id: f1f2_fsv_2052}
+  - {platform: f1f2_nasa, fsv: 2061, id: f1f2_fsv_2061}
+  - {platform: f1f2_nasa, fsv: 2062, id: f1f2_fsv_2062}
+  - {platform: f1f2_nasa, fsv: 2071, id: f1f2_fsv_2071}
+  - {platform: f1f2_nasa, fsv: 2072, id: f1f2_fsv_2072}
+  - {platform: f1f2_nasa, fsv: 2081, id: f1f2_fsv_2081}
+  - {platform: f1f2_nasa, fsv: 2091, id: f1f2_fsv_2091}
+  - {platform: f1f2_nasa, fsv: 2092, id: f1f2_fsv_2092}
+  - {platform: f1f2_nasa, fsv: 2093, id: f1f2_fsv_2093}
+  - {platform: f1f2_nasa, fsv: 3011, id: f1f2_fsv_3011}
+  - {platform: f1f2_nasa, fsv: 3021, id: f1f2_fsv_3021}
+  - {platform: f1f2_nasa, fsv: 3022, id: f1f2_fsv_3022}
+  - {platform: f1f2_nasa, fsv: 3023, id: f1f2_fsv_3023}
+  - {platform: f1f2_nasa, fsv: 3024, id: f1f2_fsv_3024}
+  - {platform: f1f2_nasa, fsv: 3025, id: f1f2_fsv_3025}
+  - {platform: f1f2_nasa, fsv: 3026, id: f1f2_fsv_3026}
+  - {platform: f1f2_nasa, fsv: 3031, id: f1f2_fsv_3031}
+  - {platform: f1f2_nasa, fsv: 3032, id: f1f2_fsv_3032}
+  - {platform: f1f2_nasa, fsv: 3033, id: f1f2_fsv_3033}
+  - {platform: f1f2_nasa, fsv: 3041, id: f1f2_fsv_3041}
+  - {platform: f1f2_nasa, fsv: 3042, id: f1f2_fsv_3042}
+  - {platform: f1f2_nasa, fsv: 3043, id: f1f2_fsv_3043}
+  - {platform: f1f2_nasa, fsv: 3044, id: f1f2_fsv_3044}
+  - {platform: f1f2_nasa, fsv: 3045, id: f1f2_fsv_3045}
+  - {platform: f1f2_nasa, fsv: 3046, id: f1f2_fsv_3046}
+  - {platform: f1f2_nasa, fsv: 3051, id: f1f2_fsv_3051}
+  - {platform: f1f2_nasa, fsv: 3052, id: f1f2_fsv_3052}
+  - {platform: f1f2_nasa, fsv: 3061, id: f1f2_fsv_3061}
+  - {platform: f1f2_nasa, fsv: 3071, id: f1f2_fsv_3071}
+  - {platform: f1f2_nasa, fsv: 3081, id: f1f2_fsv_3081}
+  - {platform: f1f2_nasa, fsv: 3082, id: f1f2_fsv_3082}
+  - {platform: f1f2_nasa, fsv: 3083, id: f1f2_fsv_3083}
+  - {platform: f1f2_nasa, fsv: 4011, id: f1f2_fsv_4011}
+  - {platform: f1f2_nasa, fsv: 4012, id: f1f2_fsv_4012}
+  - {platform: f1f2_nasa, fsv: 4013, id: f1f2_fsv_4013}
+  - {platform: f1f2_nasa, fsv: 4021, id: f1f2_fsv_4021}
+  - {platform: f1f2_nasa, fsv: 4022, id: f1f2_fsv_4022}
+  - {platform: f1f2_nasa, fsv: 4023, id: f1f2_fsv_4023}
+  - {platform: f1f2_nasa, fsv: 4024, id: f1f2_fsv_4024}
+  - {platform: f1f2_nasa, fsv: 4025, id: f1f2_fsv_4025}
+  - {platform: f1f2_nasa, fsv: 4031, id: f1f2_fsv_4031}
+  - {platform: f1f2_nasa, fsv: 4032, id: f1f2_fsv_4032}
+  - {platform: f1f2_nasa, fsv: 4033, id: f1f2_fsv_4033}
+  - {platform: f1f2_nasa, fsv: 4041, id: f1f2_fsv_4041}
+  - {platform: f1f2_nasa, fsv: 4042, id: f1f2_fsv_4042}
+  - {platform: f1f2_nasa, fsv: 4043, id: f1f2_fsv_4043}
+  - {platform: f1f2_nasa, fsv: 4044, id: f1f2_fsv_4044}
+  - {platform: f1f2_nasa, fsv: 4045, id: f1f2_fsv_4045}
+  - {platform: f1f2_nasa, fsv: 4046, id: f1f2_fsv_4046}
+  - {platform: f1f2_nasa, fsv: 4051, id: f1f2_fsv_4051}
+  - {platform: f1f2_nasa, fsv: 4052, id: f1f2_fsv_4052}
+  - {platform: f1f2_nasa, fsv: 4053, id: f1f2_fsv_4053}
+  - {platform: f1f2_nasa, fsv: 4061, id: f1f2_fsv_4061}
+  - {platform: f1f2_nasa, fsv: 5011, id: f1f2_fsv_5011}
+  - {platform: f1f2_nasa, fsv: 5012, id: f1f2_fsv_5012}
+  - {platform: f1f2_nasa, fsv: 5013, id: f1f2_fsv_5013}
+  - {platform: f1f2_nasa, fsv: 5014, id: f1f2_fsv_5014}
+  - {platform: f1f2_nasa, fsv: 5015, id: f1f2_fsv_5015}
+  - {platform: f1f2_nasa, fsv: 5016, id: f1f2_fsv_5016}
+  - {platform: f1f2_nasa, fsv: 5017, id: f1f2_fsv_5017}
+  - {platform: f1f2_nasa, fsv: 5018, id: f1f2_fsv_5018}
+  - {platform: f1f2_nasa, fsv: 5019, id: f1f2_fsv_5019}
+  - {platform: f1f2_nasa, fsv: 5021, id: f1f2_fsv_5021}
+  - {platform: f1f2_nasa, fsv: 5022, id: f1f2_fsv_5022}
+  - {platform: f1f2_nasa, fsv: 5023, id: f1f2_fsv_5023}
+  - {platform: f1f2_nasa, fsv: 5041, id: f1f2_fsv_5041}
+  - {platform: f1f2_nasa, fsv: 5042, id: f1f2_fsv_5042}
+  - {platform: f1f2_nasa, fsv: 5043, id: f1f2_fsv_5043}
+  - {platform: f1f2_nasa, fsv: 5051, id: f1f2_fsv_5051}
+  - {platform: f1f2_nasa, fsv: 5081, id: f1f2_fsv_5081}
+  - {platform: f1f2_nasa, fsv: 5082, id: f1f2_fsv_5082}
+  - {platform: f1f2_nasa, fsv: 5083, id: f1f2_fsv_5083}
+  - {platform: f1f2_nasa, fsv: 5091, id: f1f2_fsv_5091}
+  - {platform: f1f2_nasa, fsv: 5092, id: f1f2_fsv_5092}
+  - {platform: f1f2_nasa, fsv: 5093, id: f1f2_fsv_5093}
+  - {platform: f1f2_nasa, fsv: 5094, id: f1f2_fsv_5094}
+
+button:
+  - platform: f1f2_nasa   # read all FSV now

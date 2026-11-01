@@ -1,0 +1,374 @@
+# Deutsch. Fehlende Schlüssel werden aus f1f2_en.yaml übernommen.
+language: Deutsch
+
+sensors:
+  flow_temp_out: Vorlauftemperatur
+  flow_temp_return: Rücklauftemperatur
+  water_outlet_target: Vorlauf-Solltemperatur (aktiv)
+  dhw_temperature: Warmwassertemperatur
+  dhw_target: Warmwasser-Solltemperatur
+  zone1_room_temp: Raumtemperatur Zone 1
+  zone1_target: Solltemperatur Zone 1
+  zone2_room_temp: Raumtemperatur Zone 2
+  zone2_target: Solltemperatur Zone 2
+  eva_in_temp: Verdampfereintritt Innengerät Temperatur
+  water_out_tw2: Wasseraustritt Innengerät TW2 (4204)
+  outdoor_temp_copy: Außentemperatur (Kopie des Innengeräts)
+  heater_out_temp: Temperatur nach Heizstab
+  mixing_valve_temp: Mischventil-Temperatur
+  flow_rate: Durchflusssensor
+  capacity_request: Leistungsanforderung Innengerät
+  capacity_absolute: Absolute Leistung Innengerät
+  power_produced: Heizleistung (letzte Minute)
+  energy_produced_total: Erzeugte Energie (gesamt)
+  indoor_eev: EEV-Wert 1 Innengerät
+  two_way_valve: 2-Wege-Ventil
+  three_way_valve: 3-Wege-Ventil
+  operation_mode: Betriebsmodus Innengerät (4=Heizen)
+  control_reference: EHS-Regelgröße (1=Wasseraustritt)
+  status_bits_440e: Statusbits Innengerät (440E)
+  raw_0402: NASA Innen-PDU 0402 LONG RAW
+  raw_0411: NASA Innen-PDU 0411 LONG RAW
+  raw_0412: NASA Innen-PDU 0412 LONG RAW
+  raw_0413: NASA Innen-PDU 0413 LONG RAW
+  raw_0414: NASA Innen-PDU 0414 LONG RAW
+  raw_0415: NASA Innen-PDU 0415 LONG RAW
+  raw_4006: NASA Innen-PDU 4006 RAW
+  raw_440a: NASA Innen-PDU 440A LONG RAW
+  outdoor_temperature: Außentemperatur
+  compressor_frequency: Aktuelle Verdichterfrequenz
+  order_frequency: Verdichter 1 Vorgabefrequenz
+  target_frequency: Verdichter 1 Zielfrequenz
+  frequency_limit: Verdichter-Frequenzbegrenzung
+  fan_speed_target: Lüfterdrehzahl Außengerät (Soll)
+  fan_speed_actual: Lüfterdrehzahl Außengerät (Ist)
+  power_consumed: Leistungsaufnahme (letzte Minute)
+  outdoor_power: Leistungsaufnahme Außengerät (1 Gerät)
+  energy_consumed_total: Verbrauchte Energie (gesamt)
+  outdoor_current: Strom Außengerät
+  heat_pump_voltage: Spannung Wärmepumpe
+  mains_voltage: Netzspannung (AC)
+  dc_link_voltage: DC-Zwischenkreisspannung Außengerät
+  unit_capacity: Nennleistung Außengerät
+  discharge_temp: Druckgastemperatur 1 Außengerät (820A)
+  target_discharge_temp: Soll-Druckgastemperatur Außengerät
+  comp_top_temp: Verdichterkopf-Temperatur Außengerät (8280)
+  cond_out_temp: Kondensatoraustritt-Temperatur Außengerät (8218)
+  ipm_temp: IPM1-Temperatur Außengerät (8254)
+  main_eev: EEV-Hauptposition Außengerät
+  start_sequence: Startphase des Verdichters
+  restart_inhibit: Wiederanlaufsperre des Verdichters
+  error_code: Fehlercode
+  linked_indoor_units: Angeschlossene Innengeräte
+  raw_041b: NASA Außen-PDU 041B LONG RAW
+  raw_8201: NASA Außen-PDU 8201 RAW
+  raw_8239: NASA Außen-PDU 8239 RAW
+  raw_823f: NASA Außen-PDU 823F RAW
+  raw_8243: NASA Außen-PDU 8243 RAW
+  raw_824b: NASA Außen-PDU 824B RAW
+  raw_824c: NASA Außen-PDU 824C RAW
+  raw_82e1: NASA Außen-PDU 82E1 RAW
+  raw_840f: NASA Außen-PDU 840F LONG RAW
+  raw_8417: NASA Außen-PDU 8417 LONG RAW
+  # Hub-Statistik (type:)
+  rx_frames: NASA empfangene Frames
+  bad_frames: NASA fehlerhafte Frames
+  tx_frames: NASA gesendete Frames
+  timeouts: NASA Lese-Timeouts
+
+binary_sensors:
+  water_pump: Primärkreispumpe
+  backup_heater: Reserveheizung
+  booster_heater: EHS-Zusatzheizung
+  defrost: Abtaubetrieb
+  dhw_power: Warmwasser ein
+  zone1_power: Zone 1 ein
+  zone2_power: Zone 2 ein
+  pv_control: PV-Steuerung
+  smart_grid: Smart Grid
+  compressor: Verdichterstatus
+  four_way_valve: 4-Wege-Ventil
+  hot_gas_valve: Heißgasventil
+  base_heater: Bodenwannenheizung
+  night_limit: Verdichter-Nachtbegrenzung (U11)
+  night_mode: Nachtfunktion (U11) aktiv
+
+text_sensors:
+  outdoor_driving_mode: Betriebsmodus Außengerät
+  outdoor_operation_state: Betriebszustand Außengerät
+  outdoor_fan_state: Lüfterzustand Außengerät
+  defrost_stage: Abtauphase
+  system_error: Systemfehler
+  dhw_mode: Warmwassermodus
+  operation_mode_text: Betriebsmodus Innengerät
+  three_way_valve_text: Position 3-Wege-Ventil
+  firmware_outdoor: Firmware Außengerät
+  firmware_outdoor_eeprom: EEPROM Außengerät
+  firmware_inverter: Firmware Inverter
+  firmware_indoor: Firmware Innengerät (MIM)
+  raw_4604: NASA Innen-PDU 4604 RAW
+  # Hub-Sniffer (type:)
+  last_frame: NASA letzter Frame
+  last_change: NASA letzte Änderung
+  devices: NASA Geräte am Bus
+
+# Bezeichnungen der Geräteklassen in der Liste "NASA Geräte am Bus"
+device_classes:
+  0x10: Außengerät
+  0x11: Hydraulikmodul (HTU)
+  0x20: Innengerät
+  0x50: Kabelfernbedienung
+  0x58: PIM-Modul
+  0x59: SIM-Modul
+  0x62: WLAN-Kit
+  0x63: MIM-Modul
+  0x65: Zentralsteuerung
+  0x6A: DMS
+  0x80: Service-Tool
+
+switches:
+  sniffer: NASA-Sniffer
+
+buttons:
+  poll: FSV jetzt auslesen
+
+texts:
+  unknown: "Unbekannt ({value})"
+  no_error: Kein Fehler
+  error: "E{code}"
+  error_with_text: "E{code}: {text}"
+
+fsv_format: "FSV {code} - {name}"
+fsv:
+  1011: Max. Vorlauftemperatur (Kühlen)
+  1012: Min. Vorlauftemperatur (Kühlen)
+  1021: Max. Raumtemperatur (Kühlen)
+  1022: Min. Raumtemperatur (Kühlen)
+  1031: Max. Vorlauftemperatur (Heizen)
+  1032: Min. Vorlauftemperatur (Heizen)
+  1041: Max. Raumtemperatur (Heizen)
+  1042: Min. Raumtemperatur (Heizen)
+  1051: Max. Warmwasserspeichertemperatur
+  1052: Min. Warmwasserspeichertemperatur
+  2011: Heizkurve - Außentemperatur Punkt 1
+  2012: Heizkurve - Außentemperatur Punkt 2
+  2021: Heizkurve WL1 - Vorlauftemperatur Punkt 1
+  2022: Heizkurve WL1 - Vorlauftemperatur Punkt 2
+  2031: Heizkurve WL2 - Vorlauftemperatur Punkt 1
+  2032: Heizkurve WL2 - Vorlauftemperatur Punkt 2
+  2041: Heizkurventyp
+  2051: Kühlkurve - Außentemperatur Punkt 1
+  2052: Kühlkurve - Außentemperatur Punkt 2
+  2061: Kühlkurve WL1 - Vorlauftemperatur Punkt 1
+  2062: Kühlkurve WL1 - Vorlauftemperatur Punkt 2
+  2071: Kühlkurve WL2 - Vorlauftemperatur Punkt 1
+  2072: Kühlkurve WL2 - Vorlauftemperatur Punkt 2
+  2081: Kühlkurventyp
+  2091: Externer Raumthermostat (Fußbodenheizung)
+  2092: Externer Raumthermostat (Gebläsekonvektor)
+  2093: Raumtemperaturregelung über Fernbedienung
+  3011: Warmwasserspeicher
+  3021: Max. Warmwassertemperatur durch Wärmepumpe
+  3022: Warmwasser Wärmepumpe - Abschaltdifferenz
+  3023: Warmwasser Wärmepumpe - Einschaltdifferenz
+  3024: Min. Heizzeit (Raumheizung)
+  3025: Max. Warmwasserzeit
+  3026: Max. Heizzeit (Raumheizung)
+  3031: Zusatzheizung (Speicher)
+  3032: Zusatzheizung - Verzögerung
+  3033: Zusatzheizung - Überschwingen
+  3041: Desinfektion (Anti-Legionellen)
+  3042: Desinfektion - Tag
+  3043: Desinfektion - Startstunde
+  3044: Desinfektion - Zieltemperatur
+  3045: Desinfektion - Dauer
+  3046: Desinfektion - Max. Zeit
+  3051: Erzwungenes Warmwasser - Timer
+  3052: Erzwungenes Warmwasser - Dauer
+  3061: Solar oder Warmwasser-Thermostat
+  3071: Richtung des 3-Wege-Ventils
+  3081: Zusatzheizung - Leistung Stufe 1
+  3082: Zusatzheizung - Leistung Stufe 2
+  3083: Zusatzheizung (BSH) - Leistung
+  4011: Priorität Heizen oder Warmwasser
+  4012: Außentemperatur für Priorität
+  4013: Außentemperatur Heizung aus
+  4021: Reserveheizung
+  4022: Priorität Reserve- oder Zusatzheizung
+  4023: Kaltwetterkompensation
+  4024: Reserveheizung - Schwellentemperatur
+  4025: Reserveheizung - Temperatur bei Abtauung
+  4031: Reservekessel
+  4032: Priorität Reservekessel
+  4033: Reservekessel - Schwellentemperatur
+  4041: Mischventil
+  4042: Mischventil - Soll-Delta T (Heizen)
+  4043: Mischventil - Soll-Delta T (Kühlen)
+  4044: Mischventil - Regelfaktor
+  4045: Mischventil - Regelintervall
+  4046: Mischventil - Laufzeit
+  4051: Inverter-Pumpenregelung
+  4052: Inverter-Pumpe - Soll-Delta T
+  4053: Inverter-Pumpe - Regelfaktor
+  4061: Zonenregelung
+  5011: Abwesenheit - Kühlen Vorlauf
+  5012: Abwesenheit - Kühlen Raum
+  5013: Abwesenheit - Heizen Vorlauf
+  5014: Abwesenheit - Heizen Raum
+  5015: Abwesenheit - Auto-Kühlen WL1 Vorlauf
+  5016: Abwesenheit - Auto-Kühlen WL2 Vorlauf
+  5017: Abwesenheit - Auto-Heizen WL1 Vorlauf
+  5018: Abwesenheit - Auto-Heizen WL2 Vorlauf
+  5019: Abwesenheit - Warmwasserspeicher Soll
+  5021: Warmwasser-Sparbetrieb - Temperaturdifferenz
+  5022: Warmwasser-Sparmodus
+  5023: Warmwasser-Sparbetrieb - Thermo-aus-Differenz
+  5041: Lastspitzenbegrenzung
+  5042: Lastspitze - zwangsabgeschaltete Komponenten
+  5043: Lastspitze - Eingangsspannung
+  5051: Frequenzverhältnis-Regelung
+  5081: PV-Steuerung
+  5082: PV-Steuerung - Verschiebung Kühlen
+  5083: PV-Steuerung - Verschiebung Heizen
+  5091: Smart-Grid-Steuerung
+  5092: Smart Grid - Verschiebung Heizen
+  5093: Smart Grid - Verschiebung Warmwasser
+  5094: Smart Grid - Warmwassermodus
+
+maps:
+  driving_mode:
+    0: Stopp
+    1: Sicherheit
+    2: Normal
+    3: Ausgleich
+    4: Rückführung
+    5: Abtauung
+    6: Verdichter abwärts
+    7: Gesperrt
+    8: Leitungs-Jig-Test
+    9: Platinen-Jig-Test
+    10: Test
+    11: Kältemittelfüllung
+    12: Abpumpen
+    13: Auspumpen
+    14: Vakuum
+    15: Kalorimetertest
+    16: Abpumpen-Stopp
+    17: Neben-Stopp
+    18: Rohrprüfung
+    19: Kältemittelprüfung
+    20: FPT-Jig-Test
+    21: Heiz-/Kühlwechsel (ohne Stopp)
+    22: Automatische Prüfung
+    23: Elektrische Entladung
+    24: Geteilte Abtauung
+    25: Inverter-Prüfung
+    26: Abtauung (ohne Stopp)
+    27: Fern-Test
+    28: Nennleistungsmessung
+    29: PC-Test
+    30: Abpumpen (Thermo aus)
+    31: 3-Phasen-Test
+    32: Smart-Install-Test
+    33: Abtau-Leistungstest
+    34: Inverter-Lüfterplatinen-Prüfung
+    35: Automatische Rohrzuordnung
+    36: Automatische Befüllung
+  heat_cool:
+    0: Undefiniert
+    1: Kühlen
+    2: Heizen
+    3: Kühlen (Haupt)
+    4: Heizen (Haupt)
+  fan_state:
+    0: Gestoppt
+    1: Läuft
+  defrost_stage:
+    0: Keine Abtauung
+    1: Phase 1
+    2: Phase 2
+    3: Phase 3
+    7: Endphase
+    255: Keine Abtauung
+  dhw_mode:
+    0: Eco
+    1: Standard
+    2: Power
+    3: Erzwungen
+  operation_mode:
+    0: Auto
+    1: Kühlen
+    2: Entfeuchten
+    3: Lüfter
+    4: Heizen
+    21: Kältespeicherung
+    24: Warmwasser
+  three_way_valve:
+    0: Raumheizung
+    1: Warmwasserspeicher
+
+errors:
+  101: Kommunikationsfehler Innengerät - Außengerät
+  120: Fehler Raumsensor Zone 2
+  121: Fehler Raumsensor Zone 1
+  122: Fehler Verdampfereintrittssensor
+  123: Fehler Verdampferaustrittssensor
+  162: EEPROM-Fehler
+  198: Fehler Temperatursicherung
+  201: Anzahl Innen-/Außengeräte stimmt nicht überein
+  202: Keine Kommunikation zwischen Innen- und Außengerät
+  203: Kommunikations-Timeout Hauptplatine - Inverterplatine
+  221: Fehler Außentemperatursensor
+  231: Fehler Kondensatortemperatursensor
+  251: Fehler Druckgastemperatursensor
+  320: Fehler Verdichter-Überlastsensor (OLP)
+  403: Vereisung des Außengeräts erkannt (Verdichter gestoppt)
+  404: Überlastschutz des Außengeräts (Verdichter gestoppt)
+  416: Druckgastemperatur des Verdichters zu hoch
+  419: Fehler Öffnen des EEV im Außengerät
+  425: Fehler Verdrahtung 3-Phasen-Versorgung
+  439: Kältemittelleck (Gerät gestoppt)
+  440: Heizen gesperrt - Außentemperatur zu hoch
+  441: Kühlen gesperrt - Außentemperatur zu niedrig
+  443: Kältemittelleck (vor dem Start)
+  458: Fehler Außenlüfter 1
+  461: Fehler Verdichterstart
+  462: Primärstrom-Abschaltung
+  463: Überstrom / PFC-Überstrom
+  464: IPM-Überstrom
+  465: Verdichter-Überlast
+  466: DC-Zwischenkreisspannung zu niedrig / zu hoch
+  467: Fehler Verdichterverdrahtung
+  468: Fehler Stromsensor
+  469: Fehler DC-Zwischenkreis-Spannungssensor
+  470: EEPROM-Lese-/Schreibfehler
+  471: EEPROM-Fehler Außengerät
+  474: Fehler IPM-/PFC-Temperatursensor
+  475: Fehler Außenlüfter 2
+  484: PFC-Überlast
+  485: Fehler Eingangsstromsensor
+  500: IPM überhitzt
+  554: Kältemittelleck
+  604: Kommunikationsfehler Innengerät - Kabelfernbedienung
+  653: Fehler Temperatursensor der Kabelfernbedienung
+  654: EEPROM-Fehler der Kabelfernbedienung
+  899: Fehler Vorlaufsensor Zone 1
+  900: Fehler Vorlaufsensor Zone 2
+  901: Fehler Wassereintrittstemperatursensor
+  903: Fehler Wasseraustrittstemperatursensor
+  904: Fehler Warmwasserspeicher-Temperatursensor
+  906: Fehler Kältemitteleintrittstemperatursensor
+  907: Rohrbruchschutz
+  908: Frostschutz (rücksetzbar)
+  909: Frostschutz (gesperrt)
+  910: Wasseraustrittssensor abgelöst
+  911: Fehler Strömungswächter
+  912: Durchfluss zu gering
+  913: Fehler Strömungswächter (gesperrt)
+  914: Fehler Anschluss externer Thermostat
+  915: Fehler DC-Lüfter
+  916: Fehler Mischventilsensor
+  917: Fehler Speicherkonfiguration
+  919: Desinfektionstemperatur nicht erreicht
+  920: FSV- / SD-Karten-Fehler
+  973: Fehler Wasserdrucksensor

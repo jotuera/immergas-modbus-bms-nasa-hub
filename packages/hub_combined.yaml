@@ -1,0 +1,700 @@
+# IMMERGAS Modbus BMS NASA Hub - package "hub_combined"
+# Values computed from all three buses (D+/D-, T-/T+, F1/F2): heat pump COP, heat output, operating state,
+# DHW cycle (energy, heat, COP, cost), heat cost heat pump vs gas, energy prices. Also hides the entities that the
+# three buses report twice (the D+/D- one stays). Needs the dd_, tt_ and f1f2_ packages.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+substitutions:
+  # useful heat from 1 m3 of gas (calorific value ~10.9 kWh/m3 x boiler efficiency ~0.97)
+  hub_gas_heat_kwh_per_m3: "10.6"
+  # currency symbol in the units of the prices and costs (e.g. "€", "Kč", "Ft"); the cards use the same one
+  hub_currency: "zł"
+
+# --- Urządzenie + wielkości liczone z dwóch magistral ---------------------------------------------------------------
+globals:
+  - id: hub_comp_starts_today
+    type: int
+    restore_value: true
+    initial_value: "0"
+  # gas boiler today (T-/T+ gas package): starts and the gas meter value at midnight (-1 = not taken yet)
+  - id: hub_burner_starts_today
+    type: int
+    restore_value: true
+    initial_value: "0"
+  - id: hub_gas_m3_midnight
+    type: double
+    restore_value: true
+    initial_value: "-1.0"
+  # CWU: bieżący cykl (0 = brak, 1 = trwa) i wartości na jego starcie
+  - id: hub_dhw_active
+    type: bool
+    initial_value: "false"
+  - id: hub_dhw_t0
+    type: float
+    initial_value: "NAN"
+  - id: hub_dhw_tmax
+    type: float
+    initial_value: "NAN"
+  - id: hub_dhw_e0
+    type: float
+    initial_value: "NAN"
+  - id: hub_dhw_q0
+    type: float
+    initial_value: "NAN"
+  - id: hub_dhw_start_ms
+    type: uint32_t
+    initial_value: "0"
+  - id: hub_dhw_used_hp
+    type: bool
+    initial_value: "false"
+  - id: hub_dhw_used_gas
+    type: bool
+    initial_value: "false"
+  # CWU: wyniki ostatniego cyklu
+  - id: hub_dhw_last_elec
+    type: float
+    restore_value: true
+    initial_value: "NAN"
+  - id: hub_dhw_last_heat_tank
+    type: float
+    restore_value: true
+    initial_value: "NAN"
+  - id: hub_dhw_last_heat_flow
+    type: float
+    restore_value: true
+    initial_value: "NAN"
+  - id: hub_dhw_last_minutes
+    type: float
+    restore_value: true
+    initial_value: "NAN"
+  - id: hub_dhw_last_source
+    type: int
+    restore_value: true
+    initial_value: "0"    # 0 brak, 1 pompa, 2 gaz, 3 pompa + gaz
+  # Ostatni koszt ciepła z pompy z czasu pracy sprężarki (zł/kWh), pokazywany też w postoju.
+  - id: hub_hp_heat_cost_last
+    type: float
+    restore_value: true
+    initial_value: "NAN"
+
+# CWU: cykl = TT D99 61 (pompą) / 62 (gazem) / 64 (grzałką) + 44/45 (koniec CWU, dobieg). Na starcie zapamiętuje
+# temperaturę zasobnika, energię pobraną łącznie (F1/F2) i energię cieplną łącznie (hub); na końcu liczy wyniki.
+# Ciepło z zasobnika = pojemność x 1,163 Wh/(l·K) x (najwyższa temperatura w cyklu - temperatura startowa).
+interval:
+  - interval: 10s
+    then:
+      - lambda: |-
+          int d99 = (int) id(tt_system_state_raw).state;
+          bool dhw_now = (d99 == 61 || d99 == 62 || d99 == 64);
+          bool dhw_tail = (d99 == 44 || d99 == 45);
+          float t = id(dd_dhw_temp_sensor).state;
+          float e = id(f1f2_energy_consumed_total).state;
+          float q = id(hub_heat_energy_total).state;
+          float hz = id(dd_sniff_1e_i_11).state;
+          if (!id(hub_dhw_active)) {
+            if (!dhw_now) return;
+            id(hub_dhw_active) = true;
+            id(hub_dhw_t0) = t;
+            id(hub_dhw_tmax) = t;
+            id(hub_dhw_e0) = e;
+            id(hub_dhw_q0) = q;
+            id(hub_dhw_start_ms) = millis();
+            id(hub_dhw_used_hp) = false;
+            id(hub_dhw_used_gas) = false;
+            ESP_LOGI("hub_dhw", "Start cyklu CWU: D99=%d, zasobnik %.1f °C", d99, t);
+          }
+          if (!std::isnan(t) && (std::isnan(id(hub_dhw_tmax)) || t > id(hub_dhw_tmax))) id(hub_dhw_tmax) = t;
+          if (d99 == 61 && !std::isnan(hz) && hz > 0.0f) id(hub_dhw_used_hp) = true;
+          if (d99 == 62 || id(tt_gas_boiler_running).state) id(hub_dhw_used_gas) = true;
+          if (dhw_now || dhw_tail) return;
+          // koniec cyklu
+          id(hub_dhw_active) = false;
+          float vol = id(hub_dhw_tank_volume).state;
+          id(hub_dhw_last_minutes) = (millis() - id(hub_dhw_start_ms)) / 60000.0f;
+          id(hub_dhw_last_elec) = (std::isnan(e) || std::isnan(id(hub_dhw_e0))) ? NAN : e - id(hub_dhw_e0);
+          id(hub_dhw_last_heat_flow) = (std::isnan(q) || std::isnan(id(hub_dhw_q0))) ? NAN : q - id(hub_dhw_q0);
+          float dtt = id(hub_dhw_tmax) - id(hub_dhw_t0);
+          id(hub_dhw_last_heat_tank) = (std::isnan(dtt) || std::isnan(vol) || dtt < 0.0f) ? NAN : vol * 1.163f * dtt / 1000.0f;
+          id(hub_dhw_last_source) = id(hub_dhw_used_hp) ? (id(hub_dhw_used_gas) ? 3 : 1) : (id(hub_dhw_used_gas) ? 2 : 0);
+          ESP_LOGI("hub_dhw", "Koniec cyklu CWU: %.0f min, zasobnik %.1f -> %.1f °C, prąd %.2f kWh, ciepło %.2f (zasobnik) / %.2f (przepływ) kWh, źródło %d",
+                   id(hub_dhw_last_minutes), id(hub_dhw_t0), id(hub_dhw_tmax), id(hub_dhw_last_elec),
+                   id(hub_dhw_last_heat_tank), id(hub_dhw_last_heat_flow), id(hub_dhw_last_source));
+
+# Północ: zerowanie liczników dziennych huba (zegar z pakietu F1/F2 = czas z Home Assistant).
+time:
+  - id: !extend f1f2_time
+    on_time:
+      - seconds: 0
+        minutes: 0
+        hours: 0
+        then:
+          - lambda: id(hub_comp_starts_today) = 0;
+          - sensor.duty_time.reset: hub_comp_runtime_today
+          - lambda: |-
+              id(hub_burner_starts_today) = 0;
+              id(hub_gas_m3_midnight) = id(tt_gas_total_m3);
+          - sensor.duty_time.reset: hub_burner_runtime_today
+
+
+binary_sensor:
+  # Sprężarka pracuje = PC D71 > 0 Hz (D+/D-). Tylko do liczenia startów - w HA jest już "DD - PC Sprężarka pracuje".
+  - platform: template
+    id: hub_compressor_on
+    name: "${n_hub_compressor_running}"
+    internal: true
+    lambda: |-
+      float hz = id(dd_sniff_1e_i_11).state;
+      return !std::isnan(hz) && hz > 0.0f;
+    on_press:
+      - lambda: id(hub_comp_starts_today) += 1;
+
+  # Gas boiler running (CH or DHW by gas, T-/T+). Only for counting its starts today.
+  - platform: template
+    id: hub_burner_on
+    name: "${n_hub_burner_starts} (on)"
+    internal: true
+    lambda: |-
+      return id(tt_gas_mode) != 0;
+    on_press:
+      - lambda: id(hub_burner_starts_today) += 1;
+
+  # Pompa tańsza od gazu: koszt 1 kWh ciepła z pompy (przy obecnym COP) niższy niż z kotła gazowego.
+  - platform: template
+    id: hub_hp_cheaper
+    name: "${n_hub_hp_cheaper}"
+    icon: mdi:scale-balance
+    lambda: |-
+      float hp = id(hub_hp_heat_cost).state, gas = id(hub_gas_heat_cost).state;
+      if (std::isnan(hp) || std::isnan(gas)) return {};
+      return hp < gas;
+
+  # --- duplikaty: TT ukryte, bo jest DD ---
+  - id: !extend tt_error_active
+    internal: true
+
+  # Active fault on any of the three buses: boiler code from D+/D- or T-/T+ (2100), outdoor unit error from F1/F2.
+  - platform: template
+    id: hub_fault_any
+    name: "${n_hub_fault_any}"
+    device_class: problem
+    lambda: |-
+      float t = id(tt_pdu_2100).state, f = id(f1f2_error_code).state;
+      return id(dd_err_code) != 0 || (!std::isnan(t) && t > 0) || (!std::isnan(f) && f > 0);
+
+  # --- duplikaty: FF ukryte, bo jest DD / TT ---
+  - id: !extend f1f2_compressor
+    internal: true
+  - id: !extend f1f2_night_limit                     # = DD PC U11 Funkcja nocna (0x1E input 12)
+    internal: true
+  - id: !extend f1f2_night_mode                      # 0x428D = DD PC U11 Funkcja nocna
+    internal: true
+
+sensor:
+  # --- COP pompy ciepła, liczony w ESP z trzech magistral ---
+  # Moc elektryczna: pobór jednostki zewnętrznej z NASA (0x8413, F1/F2). Gdy brak - prąd x napięcie sieci (F1/F2).
+  # Nazwa bez zmian (używają jej szablony w HA).
+  - platform: template
+    id: hub_elec_power_bus
+    name: "${n_hub_elec_power}"
+    icon: mdi:flash
+    unit_of_measurement: "W"
+    device_class: power
+    state_class: measurement
+    accuracy_decimals: 0
+    update_interval: 10s
+    lambda: |-
+      float p = id(f1f2_power_consumed).state;    // W (NASA 0x8413)
+      if (!std::isnan(p)) return p;
+      float i = id(f1f2_outdoor_current).state;   // A (NASA 0x8217)
+      float u = id(f1f2_mains_voltage).state;     // V (NASA 0x82ED)
+      if (std::isnan(i) || std::isnan(u)) return NAN;
+      return i * u;
+
+  # Moc cieplna: przepływ D14 (T-/T+) x ΔT na wymienniku pompy: PC D20 TW2 (wyjście) - PC D08 TW1 (powrót), D+/D-.
+  # 1 l/h x 1 K = 1,163 W. Tylko gdy sprężarka pracuje (PC D71 > 0) i odczyty są sensowne, inaczej 0 W.
+  - platform: template
+    id: hub_heat_power
+    name: "${n_hub_heat_power}"
+    icon: mdi:radiator
+    unit_of_measurement: "W"
+    device_class: power
+    state_class: measurement
+    accuracy_decimals: 0
+    update_interval: 10s
+    lambda: |-
+      float flow = id(tt_d14_pump_flow_rate).state;  // l/h
+      float tw2  = id(dd_sniff_1e_w_21).state;       // °C, wyjście wody z PC
+      float tw1  = id(dd_sniff_1e_w_20).state;       // °C, powrót wody do PC
+      float hz   = id(dd_sniff_1e_i_11).state;       // Hz, sprężarka
+      if (std::isnan(flow) || std::isnan(tw2) || std::isnan(tw1) || std::isnan(hz)) return NAN;
+      float dt = tw2 - tw1;
+      if (hz <= 0.0f || flow < 100.0f || dt <= 0.0f || dt > 25.0f) return 0.0f;
+      return flow * dt * 1.163f;
+
+  # COP chwilowy, średnia z ostatniej minuty (6 x 10 s). Tylko przy pracy sprężarki, inaczej brak wartości,
+  # żeby wykres i statystyki pokazywały wyłącznie realną pracę.
+  - platform: template
+    id: hub_cop
+    name: "${n_hub_cop}"
+    icon: mdi:heat-pump-outline
+    state_class: measurement
+    accuracy_decimals: 2
+    update_interval: 10s
+    lambda: |-
+      float q = id(hub_heat_power).state;
+      float p = id(hub_elec_power_bus).state;
+      if (std::isnan(q) || std::isnan(p) || p < 150.0f || q <= 0.0f) return NAN;
+      float cop = q / p;
+      if (cop < 0.5f || cop > 10.0f) return NAN;   // rozruch, odszranianie, chwilowe rozjazdy odczytów
+      return cop;
+    filters:
+      - sliding_window_moving_average:
+          window_size: 6
+          send_every: 1
+
+  - platform: total_daily_energy
+    id: hub_heat_energy_today
+    name: "${n_hub_heat_today}"
+    icon: mdi:radiator
+    power_id: hub_heat_power
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    accuracy_decimals: 3
+    restore: true
+    filters:
+      - multiply: 0.001
+
+  # COP dzienny = energia cieplna dziś / energia pobrana dziś (Immergas FF - Energia pobrana dziś, z 0x8413).
+  - platform: template
+    id: hub_cop_today
+    name: "${n_hub_cop_today}"
+    icon: mdi:heat-pump-outline
+    state_class: measurement
+    accuracy_decimals: 2
+    update_interval: 60s
+    lambda: |-
+      float q = id(hub_heat_energy_today).state;   // kWh
+      float e = id(f1f2_daily_energy).state;       // kWh
+      if (std::isnan(q) || std::isnan(e) || e < 0.05f) return NAN;
+      return q / e;
+
+  # ΔT na wymienniku pompy: PC D20 TW2 (wyjście) - PC D08 TW1 (powrót), D+/D-. Tylko przy pracy sprężarki
+  # (PC D71 > 0); ujemne = odszranianie. Zastępuje "Immergas DD - Delta T instalacji" (usunięte niżej).
+  - platform: template
+    id: hub_hp_delta_t
+    name: "${n_hub_hp_delta_t}"
+    icon: mdi:thermometer-lines
+    unit_of_measurement: "K"
+    state_class: measurement
+    accuracy_decimals: 1
+    update_interval: 10s
+    lambda: |-
+      float tw2 = id(dd_sniff_1e_w_21).state, tw1 = id(dd_sniff_1e_w_20).state;
+      float hz = id(dd_sniff_1e_i_11).state;
+      if (std::isnan(tw2) || std::isnan(tw1) || std::isnan(hz) || hz <= 0.0f) return NAN;
+      return tw2 - tw1;
+
+  # --- CWU, ostatni cykl (liczone na końcu cyklu, patrz interval) ---
+  - platform: template
+    id: hub_dhw_last_elec_sensor
+    name: "${n_hub_dhw_elec}"
+    icon: mdi:flash
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    accuracy_decimals: 2
+    update_interval: 60s
+    lambda: return id(hub_dhw_last_elec);
+  - platform: template
+    id: hub_dhw_last_heat_tank_sensor
+    name: "${n_hub_dhw_heat_tank}"
+    icon: mdi:water-boiler
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    accuracy_decimals: 2
+    update_interval: 60s
+    lambda: return id(hub_dhw_last_heat_tank);
+  - platform: template
+    id: hub_dhw_last_heat_flow_sensor
+    name: "${n_hub_dhw_heat_flow}"
+    icon: mdi:water-boiler
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: measurement
+    accuracy_decimals: 2
+    update_interval: 60s
+    lambda: |-
+      if (id(hub_dhw_last_source) == 2) return NAN;   // kocioł: przepływ liczy tylko ciepło z pompy
+      return id(hub_dhw_last_heat_flow);
+  - platform: template
+    id: hub_dhw_last_cop_tank
+    name: "${n_hub_dhw_cop_tank}"
+    icon: mdi:heat-pump-outline
+    state_class: measurement
+    accuracy_decimals: 2
+    update_interval: 60s
+    lambda: |-
+      float q = id(hub_dhw_last_heat_tank), e = id(hub_dhw_last_elec);
+      if (id(hub_dhw_last_source) != 1 || std::isnan(q) || std::isnan(e) || e < 0.1f) return NAN;
+      return q / e;
+  - platform: template
+    id: hub_dhw_last_cop_flow
+    name: "${n_hub_dhw_cop_flow}"
+    icon: mdi:heat-pump-outline
+    state_class: measurement
+    accuracy_decimals: 2
+    update_interval: 60s
+    lambda: |-
+      float q = id(hub_dhw_last_heat_flow), e = id(hub_dhw_last_elec);
+      if (id(hub_dhw_last_source) != 1 || std::isnan(q) || std::isnan(e) || e < 0.1f) return NAN;
+      return q / e;
+  - platform: template
+    id: hub_dhw_last_minutes_sensor
+    name: "${n_hub_dhw_minutes}"
+    icon: mdi:timer-outline
+    unit_of_measurement: min
+    state_class: measurement
+    accuracy_decimals: 0
+    update_interval: 60s
+    lambda: return id(hub_dhw_last_minutes);
+  # Koszt cyklu: pompa = prąd x cena prądu; gaz = ciepło (zasobnik) / ciepło z 1 m³ x cena gazu.
+  - platform: template
+    id: hub_dhw_last_cost
+    name: "${n_hub_dhw_cost}"
+    icon: mdi:cash
+    unit_of_measurement: "${hub_currency}"
+    state_class: measurement
+    accuracy_decimals: 2
+    update_interval: 60s
+    lambda: |-
+      int src = id(hub_dhw_last_source);
+      if (src == 1) return id(hub_dhw_last_elec) * id(hub_price_electricity).state;
+      if (src == 2) return id(hub_dhw_last_heat_tank) / ${hub_gas_heat_kwh_per_m3} * id(hub_price_gas).state;
+      return NAN;
+  # To samo ciepło (zasobnik) z kotła gazowego - porównanie z kosztem cyklu z pompy.
+  - platform: template
+    id: hub_dhw_last_cost_gas_equiv
+    name: "${n_hub_dhw_cost_gas}"
+    icon: mdi:fire
+    unit_of_measurement: "${hub_currency}"
+    state_class: measurement
+    accuracy_decimals: 2
+    update_interval: 60s
+    lambda: return id(hub_dhw_last_heat_tank) / ${hub_gas_heat_kwh_per_m3} * id(hub_price_gas).state;
+
+  # --- dubel: ten sam TW2 - TW1 co Hub - Delta T pompy ---
+  - id: !remove dd_system_delta_t
+
+  # Energia cieplna pompy łącznie (licznik rosnący) - do panelu Energia / statystyk długoterminowych w HA.
+  - platform: integration
+    id: hub_heat_energy_total
+    name: "${n_hub_heat_total}"
+    icon: mdi:radiator
+    sensor: hub_heat_power
+    time_unit: h
+    restore: true
+    integration_method: left
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.001
+
+  # Czas pracy sprężarki od północy (h) i liczba startów - pokazuje taktowanie.
+  - platform: duty_time
+    id: hub_comp_runtime_today
+    name: "${n_hub_comp_runtime}"
+    icon: mdi:timer-outline
+    lambda: |-
+      float hz = id(dd_sniff_1e_i_11).state;
+      return !std::isnan(hz) && hz > 0.0f;
+    restore: true
+    update_interval: 60s
+    unit_of_measurement: h
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.000277778   # s -> h
+  - platform: duty_time
+    id: hub_burner_runtime_today
+    name: "${n_hub_burner_runtime}"
+    icon: mdi:fire-circle
+    lambda: |-
+      return id(tt_gas_mode) != 0;
+    restore: true
+    update_interval: 60s
+    unit_of_measurement: h
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.000277778   # s -> h
+  - platform: template
+    id: hub_burner_starts_today_sensor
+    name: "${n_hub_burner_starts}"
+    icon: mdi:fire
+    state_class: total_increasing
+    accuracy_decimals: 0
+    update_interval: 60s
+    lambda: |-
+      return (float) id(hub_burner_starts_today);
+  # gas used today = estimated gas meter now - its value at midnight (first day: since the first reading)
+  - platform: template
+    id: hub_gas_today
+    name: "${n_hub_gas_today}"
+    icon: mdi:meter-gas-outline
+    unit_of_measurement: "m³"
+    device_class: gas
+    state_class: total_increasing
+    accuracy_decimals: 3
+    update_interval: 60s
+    lambda: |-
+      if (id(hub_gas_m3_midnight) < 0.0) id(hub_gas_m3_midnight) = id(tt_gas_total_m3);
+      double d = id(tt_gas_total_m3) - id(hub_gas_m3_midnight);
+      return d < 0.0 ? 0.0f : (float) d;
+  - platform: template
+    id: hub_comp_starts_today_sensor
+    name: "${n_hub_comp_starts}"
+    icon: mdi:counter
+    state_class: total_increasing
+    accuracy_decimals: 0
+    update_interval: 60s
+    lambda: |-
+      return (float) id(hub_comp_starts_today);
+
+  # Koszt 1 kWh ciepła: z pompy = cena prądu / COP (liczony przy pracy, w postoju ostatnia wartość z pracy),
+  # z gazu = cena gazu / ciepło z 1 m³.
+  - platform: template
+    id: hub_hp_heat_cost
+    name: "${n_hub_hp_heat_cost}"
+    icon: mdi:cash
+    unit_of_measurement: "${hub_currency}/kWh"
+    state_class: measurement
+    accuracy_decimals: 3
+    update_interval: 60s
+    lambda: |-
+      float cop = id(hub_cop).state, price = id(hub_price_electricity).state;
+      if (!std::isnan(cop) && !std::isnan(price) && cop > 0.0f) id(hub_hp_heat_cost_last) = price / cop;
+      return id(hub_hp_heat_cost_last);
+  - platform: template
+    id: hub_gas_heat_cost
+    name: "${n_hub_gas_heat_cost}"
+    icon: mdi:cash
+    unit_of_measurement: "${hub_currency}/kWh"
+    state_class: measurement
+    accuracy_decimals: 3
+    update_interval: 60s
+    lambda: |-
+      float price = id(hub_price_gas).state;
+      if (std::isnan(price)) return NAN;
+      return price / ${hub_gas_heat_kwh_per_m3};
+
+  # --- duplikaty: TT ukryte, bo jest DD ---
+  - id: !extend tt_d06_oat                            # D06 temperatura zewnętrzna (3002)
+    internal: true
+  - id: !extend tt_d03_dhw_temperatura_zasobnika      # D03 zasobnik CWU (3016)
+    internal: true
+  - id: !extend tt_pdu_2100                           # kod błędu kotła (2100)
+    internal: true
+  - id: !extend tt_d04_calc_flow_setpoint             # D04 wyliczona zadana zasilania (3003)
+    internal: true
+  - id: !extend tt_d20_system_flow_temp               # D20 zasilanie (DD 3011 / 0x1E W21)
+    internal: true
+  - id: !extend tt_d08_system_return_temp             # D08 powrót (DD 3012 / 0x1E W20)
+    internal: true
+  - id: !extend tt_delta_t                            # delta T instalacji
+    internal: true
+  - id: !extend tt_secondary_gen_flow_temp            # D01 zasilanie generatora wtórnego (DD 3013)
+    internal: true
+  - id: !extend tt_pdu_4558                           # D71 częstotliwość sprężarki
+    internal: true
+  - id: !extend tt_pdu_4554                           # D73 temperatura tłoczenia
+    internal: true
+  - id: !extend tt_pdu_4585                           # D72 temperatura sprężarki
+    internal: true
+  - id: !extend tt_pdu_4551                           # D74 parownik
+    internal: true
+  - id: !extend tt_d24_refrigerant_liquid_phase_temp  # D24 faza ciekła
+    internal: true
+  - id: !extend tt_eev_position                       # D77 EEV
+    internal: true
+  - id: !extend tt_pdu_6505                           # D91 firmware płyty
+    internal: true
+
+  # --- duplikaty: FF ukryte, bo jest DD / TT ---
+  - id: !extend f1f2_outdoor_temperature              # = DD D79 sonda zewnętrzna / D06
+    internal: true
+  - id: !extend f1f2_outdoor_temp_copy
+    internal: true
+  - id: !extend f1f2_dhw_temperature                  # na Magisie zawsze 0; CWU = DD D03
+    internal: true
+  - id: !extend f1f2_dhw_target                       # = DD aktywna nastawa CWU (3015)
+    internal: true
+  - id: !extend f1f2_water_outlet_target              # = D04 / 0x1E I10
+    internal: true
+  - id: !extend f1f2_water_out_tw2                    # = DD 0x1E W21 (D20)
+    internal: true
+  - id: !extend f1f2_flow_temp_out                    # zasilanie (D20)
+    internal: true
+  - id: !extend f1f2_flow_temp_return                 # powrót (D08)
+    internal: true
+  - id: !extend f1f2_flow_delta                       # delta T
+    internal: true
+  - id: !extend f1f2_compressor_frequency             # D71
+    internal: true
+  - id: !extend f1f2_discharge_temp                   # D73
+    internal: true
+  - id: !extend f1f2_comp_top_temp                    # D72
+    internal: true
+  - id: !extend f1f2_cond_out_temp                    # D74
+    internal: true
+  - id: !extend f1f2_eva_in_temp                      # D24
+    internal: true
+  - id: !extend f1f2_main_eev                         # D77
+    internal: true
+  - id: !extend f1f2_fan_speed_target                 # D76
+    internal: true
+  - id: !extend f1f2_outdoor_current                  # D75 (dalej liczy moc elektryczną huba)
+    internal: true
+  - id: !extend f1f2_target_discharge_temp            # zadana temperatura tłoczenia
+    internal: true
+
+text_sensor:
+  # Stan pracy z trzech magistral: co grzeje (pompa D71 z D+/D-, kocioł z T-/T+) i dokąd (CWU z TT D99 61/62/64,
+  # bo D22 przy CWU pompą zostaje 0; chłodzenie z F1/F2), odszranianie z F1/F2.
+  - platform: template
+    id: hub_operating_state
+    name: "${n_hub_operating_state}"
+    icon: mdi:state-machine
+    update_interval: 10s
+    lambda: |-
+      if (id(f1f2_defrost).state) return std::string("${t_hub_defrost}");
+      float hz = id(dd_sniff_1e_i_11).state;
+      bool hp = !std::isnan(hz) && hz > 0.0f;
+      bool boiler = id(tt_gas_boiler_running).state;
+      std::string what;
+      int d99 = (int) id(tt_system_state_raw).state;
+      if (d99 == 61 || d99 == 62 || d99 == 64 || id(tt_pdu_3028).state == 1.0f) what = "${t_hub_dhw}";
+      else if (id(f1f2_outdoor_operation_state).state.find("${t_hub_ff_cooling_match}") != std::string::npos) what = "${t_hub_cooling}";
+      else what = "${t_hub_heating}";
+      if (hp && boiler) return std::string("${t_hub_hp_boiler}: ") + what;
+      if (hp) return std::string("${t_hub_hp}: ") + what;
+      if (boiler) return std::string("${t_hub_boiler}: ") + what;
+      return std::string("${t_hub_idle}");
+  - platform: template
+    id: hub_dhw_last_source_text
+    name: "${n_hub_dhw_source}"
+    icon: mdi:water-boiler
+    update_interval: 60s
+    lambda: |-
+      switch (id(hub_dhw_last_source)) {
+        case 1: return std::string("${t_hub_hp}");
+        case 2: return std::string("${t_hub_boiler}");
+        case 3: return std::string("${t_hub_hp_boiler}");
+        default: return std::string("${t_hub_no_data}");
+      }
+
+  # metadane projektu DD zastąpione encjami huba
+  - id: !remove dd_meta_author
+  - id: !remove dd_meta_github
+
+  # --- duplikaty: TT ukryte, bo jest DD ---
+  - id: !extend tt_error_text                         # opis błędu kotła
+    internal: true
+
+  # Active fault text from all three buses: "E12 <description> (D+/D-, T-/T+) | <outdoor unit>: E<code>: <text>".
+  # The boiler code comes from D+/D- and T-/T+ (both read 2100); either bus alone is enough when the other one is down.
+  - platform: template
+    id: hub_fault_text
+    name: "${n_hub_fault_text}"
+    icon: mdi:alert-octagon-outline
+    update_interval: 10s
+    lambda: |-
+      int lang = id(dd_fault_lang).active_index().value_or(0);
+      int dd = id(dd_err_code);
+      float tv = id(tt_pdu_2100).state, fv = id(f1f2_error_code).state;
+      int tt = std::isnan(tv) ? 0 : (int) tv, ff = std::isnan(fv) ? 0 : (int) fv;
+      std::string out;
+      auto boiler = [&](int code, const char *bus) {
+        char b[8];
+        snprintf(b, sizeof(b), "E%02d", code);
+        if (!out.empty()) out += " | ";
+        out += std::string(b) + " " + std::string(immergas::fault_description(code, lang)) + " (" + bus + ")";
+      };
+      if (dd && tt && dd == tt) boiler(dd, "D+/D-, T-/T+");
+      else {
+        if (dd) boiler(dd, "D+/D-");
+        if (tt) boiler(tt, "T-/T+");
+      }
+      if (ff) {
+        if (!out.empty()) out += " | ";
+        out += std::string("${t_hub_fault_odu}: ") + id(f1f2_system_error).state;
+      }
+      return out.empty() ? std::string("${t_hub_no_faults}") : out;
+  - id: !extend tt_zegar_wewnetrzny                   # zegar pieca (DD 2300)
+    internal: true
+
+  # --- duplikaty: FF ukryte, bo jest DD / TT ---
+  - id: !extend f1f2_outdoor_fan_state                # = DD wentylator pracuje
+    internal: true
+  - id: !extend f1f2_three_way_valve_text             # = TT D22 (3028)
+    internal: true
+  - id: !extend f1f2_firmware_outdoor                 # = DD firmware ODU (0x1E I22-29)
+    internal: true
+  - id: !extend f1f2_firmware_inverter
+    internal: true
+  - id: !extend f1f2_firmware_outdoor_eeprom
+    internal: true
+  - id: !extend f1f2_firmware_indoor
+    internal: true
+
+# --- ceny energii do porównania pompa vs gaz (ustawiane z HA, pamiętane po restarcie) ---
+number:
+  - platform: template
+    id: hub_price_electricity
+    name: "${n_hub_price_elec}"
+    icon: mdi:flash
+    entity_category: config
+    unit_of_measurement: "${hub_currency}/kWh"
+    min_value: 0
+    max_value: 5
+    step: 0.001
+    mode: box
+    optimistic: true
+    restore_value: true
+    initial_value: 0.984
+  - platform: template
+    id: hub_price_gas
+    name: "${n_hub_price_gas}"
+    icon: mdi:fire
+    entity_category: config
+    unit_of_measurement: "${hub_currency}/m³"
+    min_value: 0
+    max_value: 20
+    step: 0.01
+    mode: box
+    optimistic: true
+    restore_value: true
+    initial_value: 3.86
+  - platform: template
+    id: hub_dhw_tank_volume
+    name: "${n_hub_tank_volume}"
+    icon: mdi:water-boiler
+    entity_category: config
+    unit_of_measurement: "L"
+    min_value: 50
+    max_value: 1000
+    step: 1
+    mode: box
+    optimistic: true
+    restore_value: true
+    initial_value: 286
+
+# --- duplikaty sterujące: zapis 2000 (tryb) i 2095 (CWU) tylko z DD (emulowany panel i tak nadpisuje zapisy z T-/T+) ---
+select:
+  - id: !extend tt_operation_mode_select
+    internal: true
+
+water_heater:
+  - id: !extend tt_cwu_water_heater
+    internal: true

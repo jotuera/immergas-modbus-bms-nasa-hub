@@ -1,0 +1,40 @@
+# Immergas Magis Pro / Combo F1/F2 (Samsung NASA) - package "f1f2_ehs_extra"
+# OPTIONAL. Values and features a Magis Pro / Combo does NOT provide: zone 2 (temps + power), flow rate,
+# produced power and energy, COP, PV control, Smart Grid. On a Magis these stay OFF / not available.
+# Useful on other Samsung EHS installs. Needs f1f2_outdoor.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# File, id and substitution names start with f1f2_ so this repo can be combined with the D+/D- and T-/T+
+# repos on one device.
+
+sensor:
+  - {platform: f1f2_nasa, key: zone2_room_temp, id: f1f2_zone2_room_temp}
+  - {platform: f1f2_nasa, key: zone2_target, id: f1f2_zone2_target}
+  - {platform: f1f2_nasa, key: flow_rate, id: f1f2_flow_rate}
+  - {platform: f1f2_nasa, key: power_produced, id: f1f2_power_produced}
+  - {platform: f1f2_nasa, key: energy_produced_total, id: f1f2_energy_produced_total}
+  - platform: template
+    id: f1f2_cop_instant
+    name: "${f1f2_name_prefix}${n_f1f2_cop_instant}"
+    icon: mdi:chart-bar
+    state_class: measurement
+    accuracy_decimals: 2
+    update_interval: 10s
+    lambda: |-
+      float in = id(f1f2_power_consumed).state, out = id(f1f2_power_produced).state;
+      if (std::isnan(in) || std::isnan(out) || in <= 0) return NAN;
+      return std::min(8.0f, std::max(0.0f, out / in));
+  - platform: template
+    id: f1f2_cop_total
+    name: "${f1f2_name_prefix}${n_f1f2_cop_total}"
+    icon: mdi:chart-bar
+    accuracy_decimals: 2
+    update_interval: 300s
+    lambda: |-
+      float in = id(f1f2_energy_consumed_total).state, out = id(f1f2_energy_produced_total).state;
+      if (std::isnan(in) || std::isnan(out) || in <= 0) return NAN;
+      return out / in;
+
+binary_sensor:
+  - {platform: f1f2_nasa, key: zone2_power, id: f1f2_zone2_power}   # Magis: no zone 2 on NASA
+  - {platform: f1f2_nasa, key: pv_control, id: f1f2_pv_control}    # Magis: no PV control
+  - {platform: f1f2_nasa, key: smart_grid, id: f1f2_smart_grid}    # Magis: no Smart Grid

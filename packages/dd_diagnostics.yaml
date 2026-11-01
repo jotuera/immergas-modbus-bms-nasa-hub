@@ -1,0 +1,234 @@
+# Immergas Magis Pro / Combo D+/D- emulator - package "dd_diagnostics"
+# Diagnostics: bus sniffer, device health (uptime, Wi-Fi, loop time, heap, reset reason), RS485 CRC errors,
+# Dominus TX frames, clock drift, link status, project metadata.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# File and id names start with dd_ so this repo can be combined with the T-/T+ and F1/F2 repos on one device.
+
+switch:
+  # v1.2.0: bus sniffer - logs (tag "sniff") every NEW/CHANGED register value on D+/D-. Diagnostic, OFF by default.
+  - platform: template
+    name: "${n_dd_sniff_switch}"
+    id: dd_sniff_switch
+    icon: mdi:radar
+    entity_category: diagnostic
+    restore_mode: RESTORE_DEFAULT_OFF
+    lambda: |-
+      return id(dd_sniff_enabled);
+    turn_on_action:
+      - lambda: |-
+          id(dd_sniff_enabled) = true;
+    turn_off_action:
+      - lambda: |-
+          id(dd_sniff_enabled) = false;
+
+button:
+  - platform: template
+    name: "${n_dd_sniff_reset_button}"
+    id: dd_sniff_reset_button
+    icon: mdi:restart
+    entity_category: diagnostic
+    on_press:
+      - lambda: |-
+          id(dd_sniff_reset_req) = true;
+
+sensor:
+  # Registers not decoded yet (raw values, published from handle_pdu). Disabled by default - enable them in HA
+  # if you want to help decoding (see REGISTER_MAP.md, "still unknown").
+  - platform: template
+    name: "${n_dd_sniff_29_r_0}"
+    id: dd_sniff_29_r_0
+    icon: mdi:help-rhombus-outline
+    entity_category: diagnostic
+    disabled_by_default: true
+    state_class: measurement
+    accuracy_decimals: 0
+    update_interval: never
+  - platform: template
+    name: "${n_dd_sniff_29_r_1}"
+    id: dd_sniff_29_r_1
+    icon: mdi:help-rhombus-outline
+    entity_category: diagnostic
+    disabled_by_default: true
+    state_class: measurement
+    accuracy_decimals: 0
+    update_interval: never
+  - platform: template
+    name: "${n_dd_sniff_29_r_2103}"
+    id: dd_sniff_29_r_2103
+    icon: mdi:help-rhombus-outline
+    entity_category: diagnostic
+    disabled_by_default: true
+    state_class: measurement
+    accuracy_decimals: 0
+    update_interval: never
+  - platform: template
+    name: "${n_dd_sniff_33_w_2012}"
+    id: dd_sniff_33_w_2012
+    icon: mdi:help-rhombus-outline
+    entity_category: diagnostic
+    disabled_by_default: true
+    state_class: measurement
+    accuracy_decimals: 0
+    update_interval: never
+  - platform: template
+    name: "${n_dd_sniff_1e_i_15}"
+    id: dd_sniff_1e_i_15
+    icon: mdi:help-rhombus-outline
+    entity_category: diagnostic
+    disabled_by_default: true
+    state_class: measurement
+    accuracy_decimals: 0
+    update_interval: never
+  - platform: template
+    name: "${n_dd_sniff_1e_i_20}"
+    id: dd_sniff_1e_i_20
+    icon: mdi:help-rhombus-outline
+    entity_category: diagnostic
+    disabled_by_default: true
+    state_class: measurement
+    accuracy_decimals: 0
+    update_interval: never
+  - platform: template
+    name: "${n_dd_sniff_1e_w_5}"
+    id: dd_sniff_1e_w_5
+    icon: mdi:help-rhombus-outline
+    entity_category: diagnostic
+    disabled_by_default: true
+    state_class: measurement
+    accuracy_decimals: 0
+    update_interval: never
+
+  # v1.2.0 bus sniffer counters
+  - platform: template
+    name: "${n_dd_sniff_regs_sensor}"
+    id: dd_sniff_regs_sensor
+    icon: mdi:counter
+    entity_category: diagnostic
+    state_class: measurement  # integer: HA shows "1", not "1.0"
+    accuracy_decimals: 0
+    update_interval: 10s
+    lambda: |-
+      return id(dd_sniff_regs);
+  - platform: template
+    name: "${n_dd_sniff_changes_sensor}"
+    id: dd_sniff_changes_sensor
+    icon: mdi:counter
+    entity_category: diagnostic
+    state_class: measurement  # integer: HA shows "1", not "1.0"
+    accuracy_decimals: 0
+    update_interval: 10s
+    lambda: |-
+      return id(dd_sniff_changes);
+
+  # v1.2.0 boiler -> panel block (0x29) = zone-panel "Information" menu 1:1 (all x0.1 C, published from handle_pdu)
+  # Bus health, counted since boot: frames rejected for a bad CRC and replies sent as the Dominus. Watch how they
+  # grow after a change of wiring or of the RS485 unit; their absolute value means little.
+  - platform: template
+    name: "${n_dd_bus_crc_errors}"
+    id: dd_bus_crc_errors
+    icon: mdi:counter
+    entity_category: diagnostic
+    state_class: total_increasing
+    accuracy_decimals: 0
+    update_interval: 60s
+    lambda: return id(dd_crc_errors);
+  - platform: template
+    name: "${n_dd_dominus_replies}"
+    id: dd_dominus_replies
+    icon: mdi:send-variant-outline
+    entity_category: diagnostic
+    state_class: total_increasing
+    accuracy_decimals: 0
+    update_interval: 60s
+    lambda: return id(dd_emu_33_ack_count);
+  # How far the boiler clock (PDU 2300) is from the Home Assistant time, in minutes (+ boiler ahead). The time
+  # programs run on the boiler clock. Both are compared as minutes within the week, so midnight and Sunday ->
+  # Monday need no special case; a difference over half a week is taken the other way round.
+  - platform: template
+    name: "${n_dd_controller_clock_drift}"
+    id: dd_controller_clock_drift
+    icon: mdi:clock-fast
+    entity_category: diagnostic
+    unit_of_measurement: "min"
+    accuracy_decimals: 0
+    update_interval: 60s
+    lambda: |-
+      const uint16_t clk = (uint16_t) id(dd_pdu_29_2300_raw);
+      const ESPTime t = id(dd_ha_time).now();
+      const int wd = clk >> 13, h = (clk >> 8) & 0x1F, m = clk & 0xFF;
+      if (clk == 0 || !t.is_valid() || wd == 0 || h >= 24 || m >= 60) return NAN;
+      const int week = 7 * 24 * 60;
+      const int boiler_min = ((wd + 6) % 7) * 1440 + h * 60 + m;          // Monday 00:00 = 0
+      const int ha_min = ((t.day_of_week + 5) % 7) * 1440 + t.hour * 60 + t.minute;  // ESPTime: 1 = Sunday
+      int diff = ((boiler_min - ha_min) % week + week) % week;
+      if (diff > week / 2) diff -= week;
+      return diff;
+
+text_sensor:
+
+  # v1.2.0
+  - platform: template
+    name: "${n_dd_sniff_last_change}"
+    id: dd_sniff_last_change
+    icon: mdi:radar
+    entity_category: diagnostic
+    update_interval: never
+  # v110: metadane projektu (autor + repozytorium GitHub) - widoczne jako encje diagnostyczne urzadzenia.
+  - platform: template
+    name: "${n_dd_meta_author}"
+    id: dd_meta_author
+    icon: mdi:account
+    entity_category: diagnostic
+    update_interval: 3600s
+    lambda: |-
+      return std::string("${dd_author}");
+  - platform: template
+    name: "${n_dd_meta_github}"
+    id: dd_meta_github
+    icon: mdi:github
+    entity_category: diagnostic
+    update_interval: 3600s
+    lambda: |-
+      return std::string("${dd_github_url}");
+  - platform: template
+    name: "${n_dd_meta_version}"
+    id: dd_meta_version
+    icon: mdi:tag-outline
+    entity_category: diagnostic
+    update_interval: 3600s
+    lambda: |-
+      return std::string("${dd_project_version}");
+
+binary_sensor:
+  - platform: template
+    name: "${n_dd_bs_dominus_online}"
+    id: dd_bs_dominus_online
+    device_class: connectivity
+    entity_category: diagnostic
+    lambda: |-
+      if (id(dd_last_33_read_ms) == 0) return false;
+      return (millis() - id(dd_last_33_read_ms)) < 30000;
+
+  - platform: template
+    name: "${n_dd_bs_panel_online}"
+    id: dd_bs_panel_online
+    device_class: connectivity
+    entity_category: diagnostic
+    lambda: |-
+      if (id(dd_last_29_read_ms) == 0) return false;
+      return (millis() - id(dd_last_29_read_ms)) < 30000;
+
+  - platform: template
+    name: "${n_dd_bs_modbus_online}"
+    id: dd_bs_modbus_online
+    device_class: connectivity
+    entity_category: diagnostic
+    lambda: |-
+      if (!id(dd_enable_replies)) return false;  // v95: Modbus connection OFF -> disconnected
+      if (id(dd_last_1e_read_ms) == 0) return false;
+      return (millis() - id(dd_last_1e_read_ms)) < 30000;
+
+# Climates (components/immergas_climate) show what the boiler reports - setpoint, mode 2000, phase and request
+# 2010 - and change it through the same number / select entities as the sliders; the boiler does the regulation.
+# Presets: Comfort / Eco = the phase of the time program, no preset = Manual. Choosing Comfort or Eco sets the
+# zone setpoint to that level; inside an Eco slot the boiler answers Comfort with Manual, which is shown as it is.

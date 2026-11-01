@@ -1,0 +1,231 @@
+{#- Immergas Magis Pro Combo DFT HUB - dashboard generator (Jinja, Home Assistant)
+    Usage: Developer tools -> Template -> paste this WHOLE file -> copy the result from the right-hand side
+    -> Settings -> Dashboards -> Add dashboard (new, empty) -> open it -> pencil -> three dots -> Raw configuration
+    editor -> paste the result -> Save.
+    Entities are looked up by NAME ("Immergas Hub - COP"), not by entity_id, so the dashboard is correct whatever the
+    device name, the area and the entity-id format in HA. Works with the Polish and the English entity names; titles and
+    labels follow the hub language. A missing entity shows up as "sensor.missing_<name>". -#}
+{%- set ns = namespace(dev=none, d={}, en=false) -%}
+{%- for e in integration_entities('esphome') if ns.dev is none and (state_attr(e, 'friendly_name') or '') is string -%}
+  {%- set fn = state_attr(e, 'friendly_name') -%}
+  {%- if fn.endswith('Immergas Hub - Stan pracy') or fn.endswith('Immergas Hub - Operating state') -%}
+    {%- set ns.dev = device_id(e) -%}
+    {%- set ns.en = fn.endswith('Operating state') -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if ns.dev is none -%}
+# ERROR: no device with the entity "Immergas Hub - Operating state" / "Immergas Hub - Stan pracy". Is the hub added to HA (ESPHome integration)?
+{%- else -%}
+{%- set dn = device_attr(ns.dev, 'name_by_user') or device_attr(ns.dev, 'name') -%}
+{%- for e in device_entities(ns.dev) -%}
+  {%- set fn = state_attr(e, 'friendly_name') or '' -%}
+  {%- set ns.d = dict(ns.d, **{(fn[dn | length + 1:] if fn.startswith(dn ~ ' ') else fn): e}) -%}
+{%- endfor -%}
+{%- macro x(pl, en) -%}{{ ns.d.get(en if ns.en else pl, ns.d.get(pl if ns.en else en, 'sensor.missing_' ~ ((en if ns.en else pl) | slugify))) }}{%- endmacro -%}
+{%- macro t(pl, en) -%}{{ en if ns.en else pl }}{%- endmacro -%}
+{%- macro row(pl, en, lpl, len) %}          - entity: {{ x(pl, en) }}
+            name: {{ t(lpl, len) }}{% endmacro -%}
+# Generated for device "{{ dn }}" ({{ ns.d | length }} entities, {{ t('PL', 'EN') }}) - {{ now().strftime('%Y-%m-%d %H:%M') }}
+title: {{ t('Pompa ciepła', 'Heat pump') }}
+views:
+  - title: {{ t('Przegląd', 'Overview') }}
+    path: przeglad
+    icon: mdi:heat-pump
+    cards:
+      - type: grid
+        columns: 2
+        square: false
+        cards:
+          - type: tile
+            entity: {{ x('Immergas Hub - Stan pracy', 'Immergas Hub - Operating state') }}
+            name: {{ t('Stan pracy', 'Operating state') }}
+          - type: tile
+            entity: {{ x('Immergas TT - D99 Stan systemu', 'Immergas TT - D99 System state') }}
+            name: {{ t('Stan systemu', 'System state') }}
+          - type: tile
+            entity: {{ x('Immergas Hub - COP', 'Immergas Hub - COP') }}
+            name: {{ t('COP teraz', 'COP now') }}
+          - type: tile
+            entity: {{ x('Immergas Hub - COP dziś', 'Immergas Hub - COP today') }}
+            name: {{ t('COP dziś', 'COP today') }}
+          - type: tile
+            entity: {{ x('Immergas Hub - Moc cieplna pompy', 'Immergas Hub - Heat-pump heat output') }}
+            name: {{ t('Moc cieplna', 'Heat output') }}
+          - type: tile
+            entity: {{ x('Immergas Hub - Moc elektryczna pompy (magistrale)', 'Immergas Hub - Heat-pump electrical power (buses)') }}
+            name: {{ t('Moc elektryczna', 'Electrical power') }}
+          - type: tile
+            entity: {{ x('Immergas Hub - Starty sprężarki dziś', 'Immergas Hub - Compressor starts today') }}
+            name: {{ t('Starty sprężarki dziś', 'Compressor starts today') }}
+          - type: tile
+            entity: {{ x('Immergas Hub - Czas pracy sprężarki dziś', 'Immergas Hub - Compressor runtime today') }}
+            name: {{ t('Czas pracy dziś', 'Runtime today') }}
+      - type: entities
+        title: {{ t('Temperatury i praca', 'Temperatures and operation') }}
+        entities:
+{{ row('Immergas DD - D06 Zewnętrzna temperatura otoczenia', 'Immergas DD - D06 External ambient temperature', 'Na zewnątrz', 'Outdoor') }}
+{{ row('Immergas DD - Temperatura Strefy 1', 'Immergas DD - Temperature Zone 1', 'Strefa 1', 'Zone 1') }}
+{{ row('Immergas DD - D04 Wyliczona zadana temperatura zasilania', 'Immergas DD - D04 Calculated flow setpoint', 'Zadana zasilania (D04)', 'Flow setpoint (D04)') }}
+{{ row('Immergas DD - PC D20 Temperatura zasilania wody (TW2)', 'Immergas DD - HP D20 Water flow temperature (TW2)', 'Zasilanie z pompy (TW2)', 'Heat-pump flow (TW2)') }}
+{{ row('Immergas DD - PC D08 Temperatura powrotu wody (TW1)', 'Immergas DD - HP D08 Water return temperature (TW1)', 'Powrót do pompy (TW1)', 'Heat-pump return (TW1)') }}
+{{ row('Immergas Hub - Delta T pompy', 'Immergas Hub - Heat-pump Delta T', 'Delta T pompy', 'Heat-pump Delta T') }}
+{{ row('Immergas TT - D14 Natężenie przepływu pompy obiegowej', 'Immergas TT - D14 Circulator pump flow rate', 'Przepływ', 'Flow') }}
+{{ row('Immergas DD - PC D71 Częstotliwość sprężarki', 'Immergas DD - HP D71 Compressor frequency', 'Sprężarka', 'Compressor') }}
+{{ row('Immergas DD - PC U11 Funkcja nocna', 'Immergas DD - HP U11 Night function', 'Funkcja nocna (U11)', 'Night function (U11)') }}
+{{ row('Immergas FF - Nocny limit wydajności', 'Immergas FF - Night capacity limit', 'Nocny limit wydajności', 'Night capacity limit') }}
+{{ row('Immergas TT - Pompa ciepła wykluczona', 'Immergas TT - Heat pump excluded', 'Pompa wykluczona (kocioł)', 'Heat pump excluded (boiler)') }}
+{{ row('Immergas FF - Etap odszraniania', 'Immergas FF - Defrost Stage', 'Odszranianie', 'Defrost') }}
+      - type: history-graph
+        title: {{ t('Moc (24 h)', 'Power (24 h)') }}
+        hours_to_show: 24
+        entities:
+{{ row('Immergas Hub - Moc cieplna pompy', 'Immergas Hub - Heat-pump heat output', 'Cieplna', 'Heat') }}
+{{ row('Immergas Hub - Moc elektryczna pompy (magistrale)', 'Immergas Hub - Heat-pump electrical power (buses)', 'Elektryczna', 'Electrical') }}
+      - type: history-graph
+        title: {{ t('Temperatury (24 h)', 'Temperatures (24 h)') }}
+        hours_to_show: 24
+        entities:
+{{ row('Immergas DD - PC D20 Temperatura zasilania wody (TW2)', 'Immergas DD - HP D20 Water flow temperature (TW2)', 'TW2', 'TW2') }}
+{{ row('Immergas DD - PC D08 Temperatura powrotu wody (TW1)', 'Immergas DD - HP D08 Water return temperature (TW1)', 'TW1', 'TW1') }}
+{{ row('Immergas DD - D04 Wyliczona zadana temperatura zasilania', 'Immergas DD - D04 Calculated flow setpoint', 'D04', 'D04') }}
+{{ row('Immergas DD - D06 Zewnętrzna temperatura otoczenia', 'Immergas DD - D06 External ambient temperature', 'Zewn.', 'Outdoor') }}
+      - type: history-graph
+        title: {{ t('Sprężarka i stan (24 h)', 'Compressor and state (24 h)') }}
+        hours_to_show: 24
+        entities:
+{{ row('Immergas DD - PC D71 Częstotliwość sprężarki', 'Immergas DD - HP D71 Compressor frequency', 'Hz', 'Hz') }}
+{{ row('Immergas Hub - Stan pracy', 'Immergas Hub - Operating state', 'Stan pracy', 'Operating state') }}
+      - type: thermostat
+        entity: {{ x('Immergas DD - Termostat Strefa 1 (CO)', 'Immergas DD - Thermostat Zone 1 (CH)') }}
+        name: {{ t('Strefa 1', 'Zone 1') }}
+
+  - title: {{ t('CWU', 'DHW') }}
+    path: cwu
+    icon: mdi:water-boiler
+    cards:
+      - type: thermostat
+        entity: {{ x('Immergas DD - Termostat CWU', 'Immergas DD - DHW Thermostat') }}
+        name: {{ t('Ciepła woda', 'Hot water') }}
+      - type: entities
+        title: {{ t('Zasobnik', 'Cylinder') }}
+        entities:
+{{ row('Immergas DD - D03 Temperatura zasobnika c.w.u.', 'Immergas DD - D03 DHW cylinder temperature', 'Temperatura zasobnika', 'Cylinder temperature') }}
+{{ row('Immergas DD - D05 Aktywna nastawa CWU (piec)', 'Immergas DD - D05 Active DHW setpoint (boiler)', 'Aktywna nastawa', 'Active setpoint') }}
+{{ row('Immergas TT - D22 Zawór 3-drożny (1=CWU)', 'Immergas TT - D22 3-way valve (1=DHW)', 'Zawór 3-drożny', '3-way valve') }}
+{{ row('Immergas TT - Wymuszenie CWU (boost)', 'Immergas TT - DHW boost', 'Wymuszenie CWU', 'DHW boost') }}
+{{ row('Immergas TT - Czas wymuszenia CWU', 'Immergas TT - DHW boost duration', 'Czas wymuszenia', 'Boost duration') }}
+      - type: entities
+        title: {{ t('Ostatni cykl CWU', 'Last DHW cycle') }}
+        entities:
+{{ row('Immergas Hub - CWU ostatni cykl: źródło', 'Immergas Hub - Last DHW cycle: source', 'Źródło', 'Source') }}
+{{ row('Immergas Hub - CWU ostatni cykl: czas', 'Immergas Hub - Last DHW cycle: duration', 'Czas', 'Duration') }}
+{{ row('Immergas Hub - CWU ostatni cykl: energia elektryczna', 'Immergas Hub - Last DHW cycle: electrical energy', 'Prąd', 'Electricity') }}
+{{ row('Immergas Hub - CWU ostatni cykl: ciepło (zasobnik)', 'Immergas Hub - Last DHW cycle: heat (cylinder)', 'Ciepło (zasobnik)', 'Heat (cylinder)') }}
+{{ row('Immergas Hub - CWU ostatni cykl: ciepło (przepływ)', 'Immergas Hub - Last DHW cycle: heat (flow)', 'Ciepło (przepływ)', 'Heat (flow)') }}
+{{ row('Immergas Hub - CWU ostatni cykl: COP (zasobnik)', 'Immergas Hub - Last DHW cycle: COP (cylinder)', 'COP (zasobnik)', 'COP (cylinder)') }}
+{{ row('Immergas Hub - CWU ostatni cykl: COP (przepływ)', 'Immergas Hub - Last DHW cycle: COP (flow)', 'COP (przepływ)', 'COP (flow)') }}
+{{ row('Immergas Hub - CWU ostatni cykl: koszt', 'Immergas Hub - Last DHW cycle: cost', 'Koszt', 'Cost') }}
+{{ row('Immergas Hub - CWU ostatni cykl: koszt z gazu', 'Immergas Hub - Last DHW cycle: cost from gas', 'To samo z gazu', 'Same heat from gas') }}
+      - type: history-graph
+        title: {{ t('Zasobnik (48 h)', 'Cylinder (48 h)') }}
+        hours_to_show: 48
+        entities:
+{{ row('Immergas DD - D03 Temperatura zasobnika c.w.u.', 'Immergas DD - D03 DHW cylinder temperature', 'Zasobnik', 'Cylinder') }}
+
+  - title: {{ t('Koszty', 'Costs') }}
+    path: koszty
+    icon: mdi:cash
+    cards:
+      - type: entities
+        title: {{ t('Cena 1 kWh ciepła', 'Price of 1 kWh of heat') }}
+        entities:
+{{ row('Immergas Hub - Koszt ciepła z pompy', 'Immergas Hub - Heat cost from heat pump', 'Z pompy (ostatnio z pracy)', 'From heat pump (last while running)') }}
+{{ row('Immergas Hub - Koszt ciepła z gazu', 'Immergas Hub - Heat cost from gas', 'Z gazu', 'From gas') }}
+{{ row('Immergas Hub - Pompa tańsza od gazu', 'Immergas Hub - Heat pump cheaper than gas', 'Pompa tańsza od gazu', 'Heat pump cheaper than gas') }}
+      - type: entities
+        title: {{ t('Energia', 'Energy') }}
+        entities:
+{{ row('Immergas Hub - Energia cieplna dziś', 'Immergas Hub - Heat energy today', 'Ciepło dziś', 'Heat today') }}
+{{ row('Immergas FF - Energia pobrana dziś', 'Immergas FF - Daily Energy Consumed', 'Prąd dziś', 'Electricity today') }}
+{{ row('Immergas Hub - Energia cieplna łącznie', 'Immergas Hub - Heat energy total', 'Ciepło łącznie', 'Heat total') }}
+{{ row('Immergas FF - Pobrana energia (łącznie)', 'Immergas FF - Total Consumed Energy', 'Prąd łącznie', 'Electricity total') }}
+{{ row('Immergas TT - Gaz szacowane zużycie', 'Immergas TT - Gas estimated consumption', 'Gaz (szacunek)', 'Gas (estimate)') }}
+      - type: entities
+        title: {{ t('Ceny', 'Prices') }}
+        entities:
+{{ row('Immergas Hub - Cena prądu', 'Immergas Hub - Electricity price', 'Cena prądu', 'Electricity price') }}
+{{ row('Immergas Hub - Cena gazu', 'Immergas Hub - Gas price', 'Cena gazu', 'Gas price') }}
+{{ row('Immergas Hub - Pojemność zasobnika CWU', 'Immergas Hub - DHW cylinder capacity', 'Pojemność zasobnika', 'Cylinder capacity') }}
+
+  - title: {{ t('Ustawienia', 'Settings') }}
+    path: ustawienia
+    icon: mdi:tune
+    cards:
+      - type: entities
+        title: {{ t('System', 'System') }}
+        entities:
+{{ row('Immergas DD - Tryb pracy systemu', 'Immergas DD - System operating mode', 'Tryb pracy', 'Operating mode') }}
+{{ row('Immergas DD - Programy czasowe Strefy 1', 'Immergas DD - Time programs Zone 1', 'Programy czasowe', 'Time programs') }}
+{{ row('Immergas DD - Zadana CO Strefy 1', 'Immergas DD - CH Setpoint Zone 1', 'Zadana CO Strefy 1', 'Zone 1 CH setpoint') }}
+{{ row('Immergas DD - Modulacja z sondą pokojową', 'Immergas DD - Room probe modulation', 'Modulacja z sondą', 'Room probe modulation') }}
+{{ row('Immergas DD - Źródło temperatury Strefy 1', 'Immergas DD - Temperature source Zone 1', 'Źródło temperatury', 'Temperature source') }}
+{{ row('Immergas DD - D05 Wartość ustawiona nastawy c.w.u.', 'Immergas DD - D05 DHW setpoint value', 'Nastawa CWU', 'DHW setpoint') }}
+      - type: entities
+        title: {{ t('Krzywa i taktowanie', 'Curve and cycling') }}
+        entities:
+{{ row('Immergas DD - U03 Offset ogrzewania (c.o.) strefy 1', 'Immergas DD - U03 Heating offset (CH) zone 1', 'U03 Offset Strefy 1', 'U03 Zone 1 offset') }}
+{{ row('Immergas TT - R04 Maksymalne c.o. strefy 1', 'Immergas TT - R04 Zone 1 maximum central heating', 'R04 Maks. zasilanie', 'R04 Max. flow') }}
+{{ row('Immergas TT - R05 Minimalne c.o. strefy 1', 'Immergas TT - R05 Zone 1 minimum central heating', 'R05 Min. zasilanie', 'R05 Min. flow') }}
+{{ row('Immergas TT - R01 Sonda temperatury zewnętrznej', 'Immergas TT - R01 Outdoor temperature probe', 'R01 Sonda zewnętrzna', 'R01 Outdoor probe') }}
+{{ row('Immergas TT - T05 Zegary czasowe uruchamiania', 'Immergas TT - T05 Central heating ignitions timer', 'T05 Przerwa między startami', 'T05 Pause between starts') }}
+{{ row('Immergas TT - T07 Opóźnienie żądania z TA', 'Immergas TT - T07 Room thermostat request delay', 'T07 Opóźnienie z termostatu', 'T07 Thermostat delay') }}
+{{ row('Immergas TT - T02 Termostat c.w.u.', 'Immergas TT - T02 DHW thermostat', 'T02 Histereza CWU', 'T02 DHW hysteresis') }}
+      - type: entities
+        title: {{ t('Integracja z kotłem gazowym', 'Gas boiler integration') }}
+        entities:
+{{ row('Immergas TT - I01 Integracja c.w.u. (AL)', 'Immergas TT - I01 DHW integration enabling (AL)', 'I01 CWU z kotła', 'I01 DHW from boiler') }}
+{{ row('Immergas TT - I02 Integracja instalacji (AL)', 'Immergas TT - I02 System integration enabling (AL)', 'I02 CO z kotła', 'I02 CH from boiler') }}
+{{ row('Immergas TT - I05 Tryb aktywacji integracji', 'Immergas TT - I05 Integration activation mode', 'I05 Tryb', 'I05 Mode') }}
+{{ row('Immergas TT - I04 Maks. czas oczekiwania na c.o.', 'Immergas TT - I04 Central heating max wait time', 'I04 Czas oczekiwania CO', 'I04 CH wait time') }}
+{{ row('Immergas TT - I07 Przedział aktywacji', 'Immergas TT - I07 Activation band', 'I07 Przedział', 'I07 Band') }}
+{{ row('Immergas TT - I09 Temperatura aktywacji c.w.u.', 'Immergas TT - I09 DHW activation temperature', 'I09 Temp. aktywacji CWU', 'I09 DHW activation temp.') }}
+{{ row('Immergas TT - I10 Temperatura aktywacji c.o.', 'Immergas TT - I10 Central heating activation temperature', 'I10 Temp. aktywacji CO', 'I10 CH activation temp.') }}
+{{ row('Immergas TT - Wymuś grzanie kotłem', 'Immergas TT - Force boiler heating', 'Wymuś grzanie kotłem', 'Force boiler heating') }}
+      - type: entities
+        title: {{ t('Pompa obiegowa', 'Circulation pump') }}
+        entities:
+{{ row('Immergas TT - A03 Minimalna prędkość', 'Immergas TT - A03 Minimum speed', 'A03 Min. prędkość', 'A03 Min. speed') }}
+{{ row('Immergas TT - A04 Maksymalna stała prędkość', 'Immergas TT - A04 Maximum fixed speed', 'A04 Maks. prędkość', 'A04 Max. speed') }}
+{{ row('Immergas TT - A12 Odpowietrzanie instalacji', 'Immergas TT - A12 System vent', 'A12 Odpowietrzanie', 'A12 Venting') }}
+{{ row('Immergas TT - Uruchom odpowietrzanie instalacji', 'Immergas TT - Start system venting', 'Uruchom odpowietrzanie', 'Start venting') }}
+
+  - title: {{ t('Diagnostyka', 'Diagnostics') }}
+    path: diagnostyka
+    icon: mdi:stethoscope
+    cards:
+      - type: entities
+        title: {{ t('Błędy', 'Faults') }}
+        entities:
+{{ row('Immergas DD - Błąd kotła (kod)', 'Immergas DD - Boiler fault (code)', 'Błąd kotła', 'Boiler fault') }}
+{{ row('Immergas DD - Błąd kotła (opis)', 'Immergas DD - Boiler fault (description)', 'Opis', 'Description') }}
+{{ row('Immergas FF - Błąd systemu', 'Immergas FF - System Error Status', 'Błąd pompy (Samsung)', 'Heat-pump fault (Samsung)') }}
+{{ row('Immergas FF - Kod błędu', 'Immergas FF - Error Code', 'Kod błędu pompy', 'Heat-pump fault code') }}
+      - type: entities
+        title: {{ t('Magistrale', 'Buses') }}
+        entities:
+{{ row('Immergas DD - Połączenie Modbus', 'Immergas DD - Connection Modbus', 'D+/D- Modbus', 'D+/D- Modbus') }}
+{{ row('Immergas TT - Połączenie BMS', 'Immergas TT - BMS connection', 'T-/T+ BMS', 'T-/T+ BMS') }}
+{{ row('Immergas FF - Połączenie NASA', 'Immergas FF - NASA connection', 'F1/F2 NASA', 'F1/F2 NASA') }}
+      - type: entities
+        title: {{ t('Hub', 'Hub') }}
+        entities:
+{{ row('Immergas Hub - Wersja projektu', 'Immergas Hub - Project version', 'Wersja huba', 'Hub version') }}
+{{ row('Immergas DD - Wersja projektu', 'Immergas DD - Project version', 'Wersja DD', 'DD version') }}
+{{ row('Immergas TT - Wersja projektu', 'Immergas TT - Project version', 'Wersja TT', 'TT version') }}
+{{ row('Immergas FF - Wersja projektu', 'Immergas FF - Project version', 'Wersja FF', 'FF version') }}
+{{ row('Immergas Hub - Czas pracy', 'Immergas Hub - Uptime', 'Czas pracy huba', 'Hub uptime') }}
+{{ row('Immergas Hub - Przyczyna restartu', 'Immergas Hub - Reset reason', 'Przyczyna restartu', 'Reset reason') }}
+{{ row('Immergas Hub - Sygnał WiFi', 'Immergas Hub - WiFi signal', 'WiFi', 'WiFi') }}
+{{ row('Immergas Hub - Wolna pamięć', 'Immergas Hub - Free memory', 'Wolna pamięć', 'Free memory') }}
+{{ row('Immergas Hub - Restart', 'Immergas Hub - Restart', 'Restart huba', 'Restart hub') }}
+{%- endif %}

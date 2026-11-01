@@ -1,0 +1,374 @@
+# Čeština. Chybějící klíče se berou z f1f2_en.yaml.
+language: Čeština
+
+sensors:
+  flow_temp_out: Teplota výstupní vody
+  flow_temp_return: Teplota vratné vody
+  water_outlet_target: Požadovaná teplota výstupní vody (aktivní)
+  dhw_temperature: Teplota TUV
+  dhw_target: Požadovaná teplota TUV
+  zone1_room_temp: Pokojová teplota zóny 1
+  zone1_target: Požadovaná teplota zóny 1
+  zone2_room_temp: Pokojová teplota zóny 2
+  zone2_target: Požadovaná teplota zóny 2
+  eva_in_temp: Teplota chladiva na vstupu výparníku vnitřní jednotky
+  water_out_tw2: Teplota výstupní vody TW2 (4204)
+  outdoor_temp_copy: Venkovní teplota (kopie z vnitřní jednotky)
+  heater_out_temp: Teplota za topnou spirálou
+  mixing_valve_temp: Teplota směšovacího ventilu
+  flow_rate: Průtok vody
+  capacity_request: Požadovaný výkon vnitřní jednotky
+  capacity_absolute: Jmenovitý výkon vnitřní jednotky
+  power_produced: Topný výkon (poslední minuta)
+  energy_produced_total: Vyrobená energie (celkem)
+  indoor_eev: Ventil EEV vnitřní jednotky
+  two_way_valve: 2cestný ventil
+  three_way_valve: 3cestný ventil
+  operation_mode: Provozní režim vnitřní jednotky (4=topení)
+  control_reference: Regulace podle (1=teplota vody)
+  status_bits_440e: Stavové bity vnitřní jednotky (440E)
+  raw_0402: NASA PDU vnitřní 0402 LONG RAW
+  raw_0411: NASA PDU vnitřní 0411 LONG RAW
+  raw_0412: NASA PDU vnitřní 0412 LONG RAW
+  raw_0413: NASA PDU vnitřní 0413 LONG RAW
+  raw_0414: NASA PDU vnitřní 0414 LONG RAW
+  raw_0415: NASA PDU vnitřní 0415 LONG RAW
+  raw_4006: NASA PDU vnitřní 4006 RAW
+  raw_440a: NASA PDU vnitřní 440A LONG RAW
+  outdoor_temperature: Venkovní teplota
+  compressor_frequency: Aktuální frekvence kompresoru
+  order_frequency: Zadaná frekvence kompresoru 1
+  target_frequency: Cílová frekvence kompresoru 1
+  frequency_limit: Limit frekvence kompresoru
+  fan_speed_target: Otáčky ventilátoru (požadované)
+  fan_speed_actual: Otáčky ventilátoru (skutečné)
+  power_consumed: Příkon (poslední minuta)
+  outdoor_power: Příkon venkovní jednotky
+  energy_consumed_total: Spotřebovaná energie (celkem)
+  outdoor_current: Proud venkovní jednotky
+  heat_pump_voltage: Napětí tepelného čerpadla
+  mains_voltage: Napětí sítě
+  dc_link_voltage: Napětí DC meziobvodu
+  unit_capacity: Jmenovitý výkon venkovní jednotky
+  discharge_temp: Teplota výtlaku 1 (820A)
+  target_discharge_temp: Požadovaná teplota výtlaku
+  comp_top_temp: Teplota hlavy kompresoru (8280)
+  cond_out_temp: Teplota na výstupu kondenzátoru (8218)
+  ipm_temp: Teplota modulu IPM1 (8254)
+  main_eev: Poloha hlavního ventilu EEV
+  start_sequence: Fáze startu kompresoru
+  restart_inhibit: Blokace opětovného startu kompresoru
+  error_code: Kód chyby
+  linked_indoor_units: Počet propojených vnitřních jednotek
+  raw_041b: NASA PDU venkovní 041B LONG RAW
+  raw_8201: NASA PDU venkovní 8201 RAW
+  raw_8239: NASA PDU venkovní 8239 RAW
+  raw_823f: NASA PDU venkovní 823F RAW
+  raw_8243: NASA PDU venkovní 8243 RAW
+  raw_824b: NASA PDU venkovní 824B RAW
+  raw_824c: NASA PDU venkovní 824C RAW
+  raw_82e1: NASA PDU venkovní 82E1 RAW
+  raw_840f: NASA PDU venkovní 840F LONG RAW
+  raw_8417: NASA PDU venkovní 8417 LONG RAW
+  # statistiky huba (type:)
+  rx_frames: NASA přijaté rámce
+  bad_frames: NASA chybné rámce
+  tx_frames: NASA odeslané rámce
+  timeouts: NASA vypršení čekání na odpověď
+
+binary_sensors:
+  water_pump: Oběhové čerpadlo
+  backup_heater: Záložní topidlo
+  booster_heater: Dohřev zásobníku (EHS)
+  defrost: Odmrazování
+  dhw_power: TUV zapnuta
+  zone1_power: Zóna 1 zapnuta
+  zone2_power: Zóna 2 zapnuta
+  pv_control: Řízení PV
+  smart_grid: Smart Grid
+  compressor: Kompresor v provozu
+  four_way_valve: 4cestný ventil
+  hot_gas_valve: Ventil horkého plynu
+  base_heater: Topení vany výparníku
+  night_limit: Noční limit kompresoru (U11)
+  night_mode: Noční funkce U11 (aktivní)
+
+text_sensors:
+  outdoor_driving_mode: Provozní režim venkovní jednotky
+  outdoor_operation_state: Stav venkovní jednotky
+  outdoor_fan_state: Stav ventilátoru
+  defrost_stage: Fáze odmrazování
+  system_error: Chyba systému
+  dhw_mode: Režim TUV
+  operation_mode_text: Provozní režim vnitřní jednotky
+  three_way_valve_text: Poloha 3cestného ventilu
+  firmware_outdoor: Firmware venkovní jednotky
+  firmware_outdoor_eeprom: EEPROM venkovní jednotky
+  firmware_inverter: Firmware invertoru
+  firmware_indoor: Firmware vnitřní jednotky (MIM)
+  raw_4604: NASA PDU vnitřní 4604 RAW
+  # sniffer huba (type:)
+  last_frame: NASA poslední rámec
+  last_change: NASA poslední změna
+  devices: NASA zařízení na sběrnici
+
+# Popisky tříd adres zařízení v seznamu "NASA zařízení na sběrnici"
+device_classes:
+  0x10: venkovní jednotka
+  0x11: hydraulický modul (HTU)
+  0x20: vnitřní jednotka
+  0x50: drátový ovladač
+  0x58: modul PIM
+  0x59: modul SIM
+  0x62: sada Wi-Fi
+  0x63: modul MIM
+  0x65: centrální ovladač
+  0x6A: DMS
+  0x80: servisní nástroj
+
+switches:
+  sniffer: Sniffer NASA
+
+buttons:
+  poll: Přečíst FSV nyní
+
+texts:
+  unknown: "Neznámý ({value})"
+  no_error: Bez chyby
+  error: "E{code}"
+  error_with_text: "E{code}: {text}"
+
+fsv_format: "FSV {code} - {name}"
+fsv:
+  1011: Max. teplota vody (chlazení)
+  1012: Min. teplota vody (chlazení)
+  1021: Max. pokojová teplota (chlazení)
+  1022: Min. pokojová teplota (chlazení)
+  1031: Max. teplota vody (topení)
+  1032: Min. teplota vody (topení)
+  1041: Max. pokojová teplota (topení)
+  1042: Min. pokojová teplota (topení)
+  1051: Max. teplota zásobníku TUV
+  1052: Min. teplota zásobníku TUV
+  2011: Topná křivka - venkovní teplota, bod 1
+  2012: Topná křivka - venkovní teplota, bod 2
+  2021: Topná křivka WL1 - teplota vody, bod 1
+  2022: Topná křivka WL1 - teplota vody, bod 2
+  2031: Topná křivka WL2 - teplota vody, bod 1
+  2032: Topná křivka WL2 - teplota vody, bod 2
+  2041: Typ topné křivky
+  2051: Chladicí křivka - venkovní teplota, bod 1
+  2052: Chladicí křivka - venkovní teplota, bod 2
+  2061: Chladicí křivka WL1 - teplota vody, bod 1
+  2062: Chladicí křivka WL1 - teplota vody, bod 2
+  2071: Chladicí křivka WL2 - teplota vody, bod 1
+  2072: Chladicí křivka WL2 - teplota vody, bod 2
+  2081: Typ chladicí křivky
+  2091: Externí prostorový termostat (podlahové topení)
+  2092: Externí prostorový termostat (fancoily)
+  2093: Regulace pokojové teploty z ovladače
+  3011: Zásobník TUV
+  3021: Max. teplota TUV z tepelného čerpadla
+  3022: Hystereze vypnutí TUV z TČ
+  3023: Hystereze zapnutí TUV z TČ
+  3024: Min. doba vytápění
+  3025: Max. doba ohřevu TUV
+  3026: Max. doba vytápění
+  3031: Dohřev zásobníku
+  3032: Zpoždění dohřevu zásobníku
+  3033: Přehřátí dohřevem zásobníku
+  3041: Dezinfekce (antilegionella)
+  3042: Dezinfekce - den
+  3043: Dezinfekce - hodina startu
+  3044: Dezinfekce - cílová teplota
+  3045: Dezinfekce - doba trvání
+  3046: Dezinfekce - max. doba
+  3051: Vynucená TUV - časovač
+  3052: Vynucená TUV - doba trvání
+  3061: Solár nebo termostat TUV
+  3071: Směr 3cestného ventilu
+  3081: Výkon dohřevu - 1. stupeň
+  3082: Výkon dohřevu - 2. stupeň
+  3083: Výkon dohřevu zásobníku (BSH)
+  4011: Priorita topení nebo TUV
+  4012: Venkovní teplota pro prioritu
+  4013: Venkovní teplota vypnutí topení
+  4021: Záložní topidlo
+  4022: Priorita záložního topidla a dohřevu
+  4023: Kompenzace při mrazu
+  4024: Prahová teplota záložního topidla
+  4025: Teplota záložního topení při odmrazování
+  4031: Záložní kotel
+  4032: Priorita záložního kotle
+  4033: Prahová teplota záložního kotle
+  4041: Směšovací ventil
+  4042: Směšovací ventil - cílové delta T (topení)
+  4043: Směšovací ventil - cílové delta T (chlazení)
+  4044: Směšovací ventil - regulační faktor
+  4045: Směšovací ventil - interval regulace
+  4046: Směšovací ventil - doba chodu
+  4051: Řízení invertorového čerpadla
+  4052: Invertorové čerpadlo - cílové delta T
+  4053: Invertorové čerpadlo - regulační faktor
+  4061: Řízení zón
+  5011: Režim nepřítomnosti - voda chlazení
+  5012: Režim nepřítomnosti - pokoj chlazení
+  5013: Režim nepřítomnosti - voda topení
+  5014: Režim nepřítomnosti - pokoj topení
+  5015: Režim nepřítomnosti - auto chlazení WL1
+  5016: Režim nepřítomnosti - auto chlazení WL2
+  5017: Režim nepřítomnosti - auto topení WL1
+  5018: Režim nepřítomnosti - auto topení WL2
+  5019: Režim nepřítomnosti - zásobník TUV
+  5021: Úsporná TUV - rozdíl teplot
+  5022: Úsporný režim TUV
+  5023: Úsporná TUV - rozdíl vypnutí termostatu
+  5041: Omezení špičky odběru
+  5042: Špička odběru - vynuceně vypínané části
+  5043: Špička odběru - vstupní napětí
+  5051: Řízení poměru frekvence
+  5081: Řízení PV
+  5082: PV - posun chlazení
+  5083: PV - posun topení
+  5091: Řízení Smart Grid
+  5092: Smart Grid - posun topení
+  5093: Smart Grid - posun TUV
+  5094: Smart Grid - režim TUV
+
+maps:
+  driving_mode:
+    0: Klid
+    1: Bezpečný režim
+    2: Normální provoz
+    3: Vyrovnávání
+    4: Obnova
+    5: Odmrazování
+    6: Vypínání kompresoru
+    7: Provoz zakázán
+    8: Test linky (jig)
+    9: Test desky (jig)
+    10: Test
+    11: Plnění chladiva
+    12: Odčerpání chladiva
+    13: Vyčerpání
+    14: Vakuum
+    15: Kalorimetrický test
+    16: Konec odčerpání
+    17: Pomocné zastavení
+    18: Kontrola potrubí
+    19: Kontrola chladiva
+    20: Test FPT (jig)
+    21: Změna topení/chlazení (bez zastavení)
+    22: Automatická kontrola
+    23: Elektrické vybití
+    24: Dělené odmrazování
+    25: Kontrola invertoru
+    26: Odmrazování (bez zastavení)
+    27: Vzdálený test
+    28: Jmenovité měření
+    29: Test PC
+    30: Odčerpání (termostat vypnut)
+    31: Test 3 fází
+    32: Test chytré instalace
+    33: Test výkonu odmrazování
+    34: Kontrola desky ventilátoru invertoru
+    35: Automatické párování potrubí
+    36: Automatické plnění
+  heat_cool:
+    0: Nedefinováno
+    1: Chlazení
+    2: Topení
+    3: Chlazení (hlavní)
+    4: Topení (hlavní)
+  fan_state:
+    0: Zastaven
+    1: V provozu
+  defrost_stage:
+    0: Bez odmrazování
+    1: Fáze 1
+    2: Fáze 2
+    3: Fáze 3
+    7: Závěrečná fáze
+    255: Bez odmrazování
+  dhw_mode:
+    0: Eko
+    1: Standard
+    2: Výkon
+    3: Vynucený
+  operation_mode:
+    0: Auto
+    1: Chlazení
+    2: Odvlhčování
+    3: Ventilátor
+    4: Topení
+    21: Akumulace chladu
+    24: Teplá voda
+  three_way_valve:
+    0: Vytápění
+    1: Zásobník TUV
+
+errors:
+  101: Chyba komunikace vnitřní - venkovní jednotka
+  120: Chyba pokojového čidla zóny 2
+  121: Chyba pokojového čidla zóny 1
+  122: Chyba čidla vstupu výparníku
+  123: Chyba čidla výstupu výparníku
+  162: Chyba EEPROM
+  198: Chyba tepelné pojistky
+  201: Nesoulad počtu vnitřních / venkovních jednotek
+  202: Žádná komunikace mezi vnitřní a venkovní jednotkou
+  203: Vypršel čas komunikace hlavní deska - invertor
+  221: Chyba čidla venkovní teploty
+  231: Chyba čidla teploty kondenzátoru
+  251: Chyba čidla teploty výtlaku
+  320: Chyba čidla přetížení kompresoru (OLP)
+  403: Zamrznutí venkovní jednotky (kompresor zastaven)
+  404: Ochrana venkovní jednotky proti přetížení (kompresor zastaven)
+  416: Příliš vysoká teplota výtlaku kompresoru
+  419: Chyba otevření ventilu EEV venkovní jednotky
+  425: Chyba zapojení 3fázového napájení
+  439: Únik chladiva (jednotka zastavena)
+  440: Topení blokováno - příliš vysoká venkovní teplota
+  441: Chlazení blokováno - příliš nízká venkovní teplota
+  443: Únik chladiva (před startem)
+  458: Chyba ventilátoru 1 venkovní jednotky
+  461: Chyba startu kompresoru
+  462: Vypnutí primárním proudem
+  463: Nadproud / nadproud PFC
+  464: Nadproud modulu IPM
+  465: Přetížení kompresoru
+  466: Příliš nízké / příliš vysoké napětí DC meziobvodu
+  467: Chyba zapojení kompresoru
+  468: Chyba proudového čidla
+  469: Chyba čidla napětí DC meziobvodu
+  470: Chyba čtení / zápisu EEPROM
+  471: Chyba EEPROM venkovní jednotky
+  474: Chyba teplotního čidla IPM / PFC
+  475: Chyba ventilátoru 2 venkovní jednotky
+  484: Přetížení PFC
+  485: Chyba čidla vstupního proudu
+  500: Přehřátí modulu IPM
+  554: Únik chladiva
+  604: Chyba komunikace vnitřní jednotky s drátovým ovladačem
+  653: Chyba teplotního čidla drátového ovladače
+  654: Chyba EEPROM drátového ovladače
+  899: Chyba čidla výstupní vody zóny 1
+  900: Chyba čidla výstupní vody zóny 2
+  901: Chyba čidla teploty vstupní vody
+  903: Chyba čidla teploty výstupní vody
+  904: Chyba čidla teploty zásobníku TUV
+  906: Chyba čidla teploty chladiva na vstupu
+  907: Ochrana proti protržení potrubí
+  908: Ochrana proti zamrznutí (s možností resetu)
+  909: Ochrana proti zamrznutí (uzamčeno)
+  910: Odpojené čidlo výstupní vody
+  911: Chyba průtokového spínače
+  912: Příliš malý průtok vody
+  913: Chyba průtokového spínače (uzamčeno)
+  914: Chyba připojení externího termostatu
+  915: Chyba DC ventilátoru
+  916: Chyba čidla směšovacího ventilu
+  917: Chyba konfigurace zásobníku
+  919: Nebyla dosažena teplota dezinfekce
+  920: Chyba FSV / SD karty
+  973: Chyba čidla tlaku vody

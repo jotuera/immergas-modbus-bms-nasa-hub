@@ -1,0 +1,375 @@
+# English (default). Missing keys in other languages fall back to this file.
+# To add a language copy this file to translations/f1f2_<code>.yaml and translate the values only.
+language: English
+
+sensors:
+  flow_temp_out: Flow Temp Out
+  flow_temp_return: Flow Temp Return
+  water_outlet_target: Water Outlet Target (active)
+  dhw_temperature: DHW Temperature
+  dhw_target: DHW Target Temperature
+  zone1_room_temp: Zone 1 Indoor Temp
+  zone1_target: Zone 1 Target Temp
+  zone2_room_temp: Zone 2 Indoor Temp
+  zone2_target: Zone 2 Target Temp
+  eva_in_temp: Indoor EVA In Temperature
+  water_out_tw2: Indoor Water Out TW2 (4204)
+  outdoor_temp_copy: NASA Indoor PDU 420C Outdoor Temp Copy
+  heater_out_temp: Heater Out Temperature
+  mixing_valve_temp: Mixing Valve Temperature
+  flow_rate: Flow Rate Sensor
+  capacity_request: Indoor Capacity Request
+  capacity_absolute: Indoor Capacity Absolute
+  power_produced: Power Produced Last Minute
+  energy_produced_total: Total Produced Energy
+  indoor_eev: Indoor EEV Value 1
+  two_way_valve: 2-Way Valve
+  three_way_valve: 3-Way Valve
+  operation_mode: Indoor Operation Mode (4=Heat)
+  control_reference: EHS Control Reference (1=Water Out)
+  status_bits_440e: Indoor Status Bits (440E)
+  raw_0402: NASA Indoor PDU 0402 LONG RAW
+  raw_0411: NASA Indoor PDU 0411 LONG RAW
+  raw_0412: NASA Indoor PDU 0412 LONG RAW
+  raw_0413: NASA Indoor PDU 0413 LONG RAW
+  raw_0414: NASA Indoor PDU 0414 LONG RAW
+  raw_0415: NASA Indoor PDU 0415 LONG RAW
+  raw_4006: NASA Indoor PDU 4006 RAW
+  raw_440a: NASA Indoor PDU 440A LONG RAW
+  outdoor_temperature: Outdoor Temperature
+  compressor_frequency: Compressor Current Frequency
+  order_frequency: Compressor 1 Order Frequency
+  target_frequency: Compressor 1 Target Frequency
+  frequency_limit: Compressor Frequency Limit
+  fan_speed_target: Outdoor Fan Speed (target)
+  fan_speed_actual: Outdoor Fan Speed (actual)
+  power_consumed: Power Consumed last Minute
+  outdoor_power: Outdoor Power (1 unit)
+  energy_consumed_total: Total Consumed Energy
+  outdoor_current: Outdoor Current
+  heat_pump_voltage: Heat Pump Voltage
+  mains_voltage: Mains AC Voltage
+  dc_link_voltage: Outdoor DC-Link Voltage
+  unit_capacity: Outdoor Unit Capacity
+  discharge_temp: Outdoor Discharge 1 Temp (820A)
+  target_discharge_temp: Outdoor Target Discharge Temp
+  comp_top_temp: Outdoor Comp Top Temp (8280)
+  cond_out_temp: Outdoor Cond-Out Temp (8218)
+  ipm_temp: Outdoor IPM1 Temperature (8254)
+  main_eev: Outdoor Main EEV Position
+  start_sequence: Compressor Start Sequence Stage
+  restart_inhibit: Compressor Restart Inhibit
+  error_code: Error Code
+  linked_indoor_units: Linked Indoor Units
+  raw_041b: NASA Outdoor PDU 041B LONG RAW
+  raw_8201: NASA Outdoor PDU 8201 RAW
+  raw_8239: NASA Outdoor PDU 8239 RAW
+  raw_823f: NASA Outdoor PDU 823F RAW
+  raw_8243: NASA Outdoor PDU 8243 RAW
+  raw_824b: NASA Outdoor PDU 824B RAW
+  raw_824c: NASA Outdoor PDU 824C RAW
+  raw_82e1: NASA Outdoor PDU 82E1 RAW
+  raw_840f: NASA Outdoor PDU 840F LONG RAW
+  raw_8417: NASA Outdoor PDU 8417 LONG RAW
+  # hub statistics (type:)
+  rx_frames: NASA RX Frames
+  bad_frames: NASA Bad Frames
+  tx_frames: NASA TX Frames
+  timeouts: NASA Read Timeouts
+
+binary_sensors:
+  water_pump: Primary Water Pump
+  backup_heater: Backup Heater
+  booster_heater: EHS Booster Heater
+  defrost: Defrost Mode
+  dhw_power: DHW Power
+  zone1_power: Zone 1 Power
+  zone2_power: Zone 2 Power
+  pv_control: PV Control
+  smart_grid: Smart Grid
+  compressor: Compressor Status
+  four_way_valve: 4-Way Valve
+  hot_gas_valve: Hot Gas Valve
+  base_heater: Base Heater
+  night_limit: Compressor night limit (U11)
+  night_mode: Night function (U11) active
+
+text_sensors:
+  outdoor_driving_mode: Outdoor Driving Mode
+  outdoor_operation_state: Outdoor Operation State
+  outdoor_fan_state: Outdoor Fan Operation State
+  defrost_stage: Defrost Stage
+  system_error: System Error Status
+  dhw_mode: Hot Water Mode
+  operation_mode_text: Indoor Operation Mode
+  three_way_valve_text: 3-Way Valve Position
+  firmware_outdoor: Outdoor Unit Firmware
+  firmware_outdoor_eeprom: Outdoor Unit EEPROM
+  firmware_inverter: Inverter Firmware
+  firmware_indoor: Indoor Unit (MIM) Firmware
+  raw_4604: NASA Indoor PDU 4604 RAW
+  # hub sniffer (type:)
+  last_frame: NASA Last Frame
+  last_change: NASA Last Change
+  devices: NASA Devices
+
+# Labels for device address classes in the "NASA Devices" list
+device_classes:
+  0x10: outdoor unit
+  0x11: hydro unit (HTU)
+  0x20: indoor unit
+  0x50: wired remote
+  0x58: PIM module
+  0x59: SIM module
+  0x62: Wi-Fi kit
+  0x63: MIM module
+  0x65: central controller
+  0x6A: DMS
+  0x80: service tool
+
+switches:
+  sniffer: NASA Sniffer
+
+buttons:
+  poll: Read FSV Now
+
+texts:
+  unknown: "Unknown ({value})"
+  no_error: No error
+  error: "E{code}"
+  error_with_text: "E{code}: {text}"
+
+fsv_format: "FSV {code} - {name}"
+fsv:
+  1011: Water out max (cooling)
+  1012: Water out min (cooling)
+  1021: Room temp max (cooling)
+  1022: Room temp min (cooling)
+  1031: Water out max (heating)
+  1032: Water out min (heating)
+  1041: Room temp max (heating)
+  1042: Room temp min (heating)
+  1051: DHW tank max
+  1052: DHW tank min
+  2011: Heating water law - outdoor temp point 1
+  2012: Heating water law - outdoor temp point 2
+  2021: Heating WL1 - water out point 1
+  2022: Heating WL1 - water out point 2
+  2031: Heating WL2 - water out point 1
+  2032: Heating WL2 - water out point 2
+  2041: Heating water law type
+  2051: Cooling water law - outdoor temp point 1
+  2052: Cooling water law - outdoor temp point 2
+  2061: Cooling WL1 - water out point 1
+  2062: Cooling WL1 - water out point 2
+  2071: Cooling WL2 - water out point 1
+  2072: Cooling WL2 - water out point 2
+  2081: Cooling water law type
+  2091: External room thermostat (UFH)
+  2092: External room thermostat (FCU)
+  2093: Remote controller room temp control
+  3011: DHW tank application
+  3021: DHW max temp by heat pump
+  3022: DHW heat pump stop difference
+  3023: DHW heat pump start difference
+  3024: Min space heating time
+  3025: Max DHW time
+  3026: Max space heating time
+  3031: Booster heater
+  3032: Booster heater delay
+  3033: Booster heater overshoot
+  3041: Disinfection
+  3042: Disinfection day
+  3043: Disinfection start hour
+  3044: Disinfection target temp
+  3045: Disinfection duration
+  3046: Disinfection max time
+  3051: Forced DHW timer
+  3052: Forced DHW duration
+  3061: Solar panel or DHW thermostat
+  3071: 3-way valve direction
+  3081: Booster heater 1st step capacity
+  3082: Booster heater 2nd step capacity
+  3083: Booster heater (BSH) capacity
+  4011: Heating or DHW priority
+  4012: Outdoor temp for priority
+  4013: Heating off outdoor temp
+  4021: Backup heater application
+  4022: Backup or booster heater priority
+  4023: Cold weather compensation
+  4024: Backup heater threshold temp
+  4025: Defrost backup temp
+  4031: Backup boiler
+  4032: Backup boiler priority
+  4033: Backup boiler threshold temp
+  4041: Mixing valve
+  4042: Mixing valve target delta T (heating)
+  4043: Mixing valve target delta T (cooling)
+  4044: Mixing valve control factor
+  4045: Mixing valve control interval
+  4046: Mixing valve running time
+  4051: Inverter pump control
+  4052: Inverter pump target delta T
+  4053: Inverter pump control factor
+  4061: Zone control
+  5011: Outing mode - cooling water out
+  5012: Outing mode - cooling room
+  5013: Outing mode - heating water out
+  5014: Outing mode - heating room
+  5015: Outing mode - auto cooling WL1 water
+  5016: Outing mode - auto cooling WL2 water
+  5017: Outing mode - auto heating WL1 water
+  5018: Outing mode - auto heating WL2 water
+  5019: Outing mode - DHW tank target
+  5021: DHW saving temp difference
+  5022: DHW saving mode
+  5023: DHW saving thermo-off difference
+  5041: Power peak control
+  5042: Power peak - forced off parts
+  5043: Power peak - input voltage
+  5051: Frequency ratio control
+  5081: PV control
+  5082: PV control - cooling shift
+  5083: PV control - heating shift
+  5091: Smart Grid control
+  5092: Smart Grid - heating shift
+  5093: Smart Grid - DHW shift
+  5094: Smart Grid - DHW mode
+
+maps:
+  driving_mode:
+    0: Stop
+    1: Safety
+    2: Normal
+    3: Balance
+    4: Recovery
+    5: Defrost
+    6: Compressor down
+    7: Prohibited
+    8: Line jig test
+    9: PCB jig test
+    10: Test
+    11: Refrigerant charge
+    12: Pump down
+    13: Pump out
+    14: Vacuum
+    15: Calorimeter test
+    16: Pump down stop
+    17: Sub stop
+    18: Pipe check
+    19: Refrigerant check
+    20: FPT jig test
+    21: Heat/cool change (non-stop)
+    22: Auto inspection
+    23: Electric discharge
+    24: Split defrost
+    25: Inverter check
+    26: Defrost (non-stop)
+    27: Remote test
+    28: Rating
+    29: PC test
+    30: Pump down (thermo off)
+    31: 3-phase test
+    32: Smart install test
+    33: Defrost performance test
+    34: Inverter fan board check
+    35: Auto pipe pairing
+    36: Auto charge
+  heat_cool:
+    0: Undefined
+    1: Cooling
+    2: Heating
+    3: Cooling (main)
+    4: Heating (main)
+  fan_state:
+    0: Stopped
+    1: Running
+  defrost_stage:
+    0: No defrost
+    1: Stage 1
+    2: Stage 2
+    3: Stage 3
+    7: End stage
+    255: No defrost
+  dhw_mode:
+    0: Eco
+    1: Standard
+    2: Power
+    3: Forced
+  operation_mode:
+    0: Auto
+    1: Cool
+    2: Dry
+    3: Fan
+    4: Heat
+    21: Cool storage
+    24: Hot water
+  three_way_valve:
+    0: Space heating
+    1: DHW tank
+
+errors:
+  101: Indoor - outdoor communication error
+  120: Zone 2 room sensor error
+  121: Zone 1 room sensor error
+  122: Evaporator inlet sensor error
+  123: Evaporator outlet sensor error
+  162: EEPROM error
+  198: Thermal fuse error
+  201: Indoor / outdoor unit quantity mismatch
+  202: No communication between indoor and outdoor unit
+  203: Main - inverter board communication timeout
+  221: Outdoor temperature sensor error
+  231: Condenser temperature sensor error
+  251: Discharge temperature sensor error
+  320: Compressor overload (OLP) sensor error
+  403: Outdoor unit freezing detected (compressor stopped)
+  404: Outdoor unit overload protection (compressor stopped)
+  416: Compressor discharge temperature too high
+  419: Outdoor EEV open error
+  425: 3-phase power wiring error
+  439: Refrigerant leak (unit stopped)
+  440: Heating blocked - outdoor temperature too high
+  441: Cooling blocked - outdoor temperature too low
+  443: Refrigerant leak (before start)
+  458: Outdoor fan 1 error
+  461: Compressor start error
+  462: Primary current trip
+  463: Over-current / PFC over-current
+  464: IPM over-current
+  465: Compressor overload
+  466: DC-link voltage too low / too high
+  467: Compressor wiring error
+  468: Current sensor error
+  469: DC-link voltage sensor error
+  470: EEPROM read / write error
+  471: Outdoor EEPROM error
+  474: IPM / PFC temperature sensor error
+  475: Outdoor fan 2 error
+  484: PFC overload
+  485: Input current sensor error
+  500: IPM overheated
+  554: Refrigerant leak
+  604: Indoor - wired remote communication error
+  653: Wired remote temperature sensor error
+  654: Wired remote EEPROM error
+  899: Zone 1 water outlet sensor error
+  900: Zone 2 water outlet sensor error
+  901: Water inlet temperature sensor error
+  903: Water outlet temperature sensor error
+  904: DHW tank temperature sensor error
+  906: Refrigerant inlet temperature sensor error
+  907: Pipe rupture protection
+  908: Freeze protection (recoverable)
+  909: Freeze protection (locked)
+  910: Water outlet sensor detached
+  911: Flow switch error
+  912: Flow rate too low
+  913: Flow switch error (locked)
+  914: External thermostat connection error
+  915: DC fan error
+  916: Mixing valve sensor error
+  917: Water tank configuration error
+  919: Disinfection temperature not reached
+  920: FSV / SD card error
+  973: Water pressure sensor error

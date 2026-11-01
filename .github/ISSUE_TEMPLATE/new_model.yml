@@ -1,0 +1,54 @@
+name: New model or unknown signal
+description: Help the hub learn another unit, more zones or an accessory (dehumidifier, PV input, solar kit…)
+labels: ["new model / signal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you! Please collect the logs as described in [docs/collecting-logs.md](https://github.com/jotuera/immergas-modbus-bms-nasa-hub/blob/main/docs/collecting-logs.md) first.
+  - type: input
+    id: indoor
+    attributes:
+      label: Indoor unit model
+      placeholder: e.g. Magis Combo 9 Plus V2
+    validations:
+      required: true
+  - type: input
+    id: outdoor
+    attributes:
+      label: Outdoor unit model
+      placeholder: e.g. Audax Pro 9 V2
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Hub version
+      description: Entity "Immergas Hub - Project version"
+    validations:
+      required: true
+  - type: textarea
+    id: identity
+    attributes:
+      label: System model, firmware and accessories
+      description: D61 System model, A11 Outdoor unit model, D91 Boiler firmware, D132-D135 Inverter firmware, number of zones, connected accessories
+    validations:
+      required: true
+  - type: textarea
+    id: actions
+    attributes:
+      label: What you did and when
+      description: One change at a time, with the exact time (e.g. "14:05 dehumidifier on, 14:10 off")
+      placeholder: |
+        14:00 baseline
+        14:05 dehumidifier on
+        14:10 dehumidifier off
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Attach the log file (drag and drop) and, if you have it, a screenshot of the Connectivity card
+    validations:
+      required: true

@@ -1,0 +1,16 @@
+# Immergas Magis Pro / Combo F1/F2 (Samsung NASA) - package "f1f2_outing_targets"  -- OPTIONAL, WRITES
+# The Outing-mode target temperatures (FSV 5011-5019) as EDITABLE sliders. Changing one writes the FSV to
+# the indoor unit. Writing is still gated by the "Active ODU control" switch (f1f2_control); needs f1f2_transmit: "true".
+# These set what the Outing switch applies. Cooling values (5011/5012/5015/5016) are inert on a heating Magis.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0).
+
+number:
+  - {platform: f1f2_nasa, fsv: 5011, id: f1f2_fsv_5011_number, mode: slider, min_value: 5,  max_value: 25, step: 0.5}   # cooling water
+  - {platform: f1f2_nasa, fsv: 5012, id: f1f2_fsv_5012_number, mode: slider, min_value: 18, max_value: 30, step: 0.5}   # cooling room
+  - {platform: f1f2_nasa, fsv: 5013, id: f1f2_fsv_5013_number, mode: slider, min_value: 15, max_value: 55, step: 0.5}   # heating water
+  - {platform: f1f2_nasa, fsv: 5014, id: f1f2_fsv_5014_number, mode: slider, min_value: 16, max_value: 30, step: 0.5}   # heating room
+  - {platform: f1f2_nasa, fsv: 5015, id: f1f2_fsv_5015_number, mode: slider, min_value: 5,  max_value: 25, step: 0.5}   # auto cooling WL1
+  - {platform: f1f2_nasa, fsv: 5016, id: f1f2_fsv_5016_number, mode: slider, min_value: 5,  max_value: 25, step: 0.5}   # auto cooling WL2
+  - {platform: f1f2_nasa, fsv: 5017, id: f1f2_fsv_5017_number, mode: slider, min_value: 15, max_value: 55, step: 0.5}   # auto heating WL1
+  - {platform: f1f2_nasa, fsv: 5018, id: f1f2_fsv_5018_number, mode: slider, min_value: 15, max_value: 55, step: 0.5}   # auto heating WL2
+  - {platform: f1f2_nasa, fsv: 5019, id: f1f2_fsv_5019_number, mode: slider, min_value: 30, max_value: 70, step: 0.5}   # DHW tank
