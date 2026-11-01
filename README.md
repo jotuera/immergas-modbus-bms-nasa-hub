@@ -2,6 +2,11 @@
 
 **English** · [Polski](README.pl.md)
 
+[![Release](https://img.shields.io/github/v/release/jotuera/immergas-modbus-bms-nasa-hub?label=release&color=0077b6)](https://github.com/jotuera/immergas-modbus-bms-nasa-hub/releases/latest)
+[![ESPHome](https://img.shields.io/badge/ESPHome-2026.9%2B-41BDF5?logo=esphome&logoColor=white)](https://esphome.io)
+[![Platform](https://img.shields.io/badge/platform-ESP32--S3-41BDF5)](https://docs.m5stack.com/en/core/AtomS3%20Lite)
+[![HACS](https://img.shields.io/badge/HACS-Custom-41BDF5)](https://hacs.xyz)
+[![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial-blue)](LICENSE)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-jotuera-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/jotuera)
 
 One ESPHome device that connects **all three buses** of an Immergas Magis Pro / Magis Combo V2 heat pump to Home
