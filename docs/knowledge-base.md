@@ -706,7 +706,7 @@ operating state), but do not reach HA.
 
 | Substitution | Hub default | Meaning |
 |---|---|---|
-| `hub_project_version` | `"1.0.0"` | hub version, shown as *Immergas Hub - Project version* |
+| `hub_project_version` | `"1.0.1"` | hub version, shown as *Immergas Hub - Project version* |
 | `hub_name_prefix` | `Immergas Hub` | hub entity name prefix |
 | `device_name` / `friendly_name` | `immergas-hub` / `Immergas Hub` | device name (changing it = a new device in HA) |
 | `dd_name_prefix`, `tt_name_prefix`, `f1f2_name_prefix` | `Immergas DD`, `Immergas TT`, `Immergas FF - ` | entity name prefixes |

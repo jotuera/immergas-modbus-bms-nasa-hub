@@ -695,7 +695,7 @@ pracy), ale nie trafiają do HA.
 
 | Podstawienie | Domyślnie w hubie | Znaczenie |
 |---|---|---|
-| `hub_project_version` | `"1.0.0"` | wersja huba, widoczna jako *Immergas Hub - Wersja projektu* |
+| `hub_project_version` | `"1.0.1"` | wersja huba, widoczna jako *Immergas Hub - Wersja projektu* |
 | `hub_name_prefix` | `Immergas Hub` | prefiks nazw encji huba |
 | `device_name` / `friendly_name` | `immergas-hub` / `Immergas Hub` | nazwa urządzenia (zmiana = nowe urządzenie w HA) |
 | `dd_name_prefix`, `tt_name_prefix`, `f1f2_name_prefix` | `Immergas DD`, `Immergas TT`, `Immergas FF - ` | prefiksy nazw encji |

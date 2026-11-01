@@ -2,7 +2,7 @@
 
 [English](README.md) · **Polski**
 
-Karty Lovelace dla Immergas Magis Pro / Combo V2 DFT HUB. Jeden plik JavaScript; karty pojawiają się w
+Karty Lovelace dla IMMERGAS Modbus BMS NASA Hub. Jeden plik JavaScript; karty pojawiają się w
 **Dodaj kartę** jak wbudowane i same znajdują hub oraz jego encje — bez YAML-a i bez entity_id.
 
 | Karta | Typ | Co pokazuje |
@@ -52,10 +52,19 @@ korzysta z nazw przyjaznych. Etykiety są w języku Home Assistanta: polski, ang
 Kolory biorą zmienne palety Catppuccin, gdy taki motyw jest aktywny, a w innym przypadku wbudowane wartości Catppuccin
 Mocha.
 
+## Instalacja przez HACS (zalecana)
+
+1. HACS → ⋮ → **Niestandardowe repozytoria** → repozytorium `https://github.com/jotuera/immergas-modbus-bms-nasa-hub`,
+   typ **Dashboard** → Dodaj.
+2. Znajdź w HACS **Immergas Hub cards**, otwórz i naciśnij **Pobierz**. HACS sam doda zasób dashboardu i będzie
+   pokazywał nowe wydania jako aktualizacje.
+3. Odśwież przeglądarkę. Karty są w **Dodaj kartę → Niestandardowe: Immergas – …**.
+
 ## Instalacja (ręczna)
 
-1. Skopiuj `dist/immergas-hub-cards.js` do `/config/www/immergas-hub-cards/`.
-2. Ustawienia → Pulpity → ⋮ → Zasoby → Dodaj zasób: `/local/immergas-hub-cards/immergas-hub-cards.js?v=0.33.6`, typ
+1. Pobierz `immergas-hub-cards.js` z najnowszego [wydania](https://github.com/jotuera/immergas-modbus-bms-nasa-hub/releases/latest)
+   (albo weź `dist/immergas-hub-cards.js` z tego folderu) i skopiuj do `/config/www/immergas-hub-cards/`.
+2. Ustawienia → Pulpity → ⋮ → Zasoby → Dodaj zasób: `/local/immergas-hub-cards/immergas-hub-cards.js?v=1.0.1`, typ
    *Moduł JavaScript*. Po każdej aktualizacji podbij `?v=`.
 3. Odśwież przeglądarkę. Karty są w **Dodaj kartę → Niestandardowe: Immergas – …**.
 

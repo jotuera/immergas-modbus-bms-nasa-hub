@@ -48,7 +48,7 @@ strategy:
 ![Connectivity](docs/images/en/card-links.png)
 
 Further cards: water and refrigerant circuit, device states, last DHW cycle, [Calibration](#calibration),
-automations and the hub settings. Details, options and the manual install are in [cards/README.md](cards/README.md). Labels follow the Home Assistant language: Polish, English, Czech, German,
+automations and the hub settings. Details, options and the install (HACS or manual) are in [cards/README.md](cards/README.md). Labels follow the Home Assistant language: Polish, English, Czech, German,
 Spanish, French, Hungarian, Italian, Dutch, Portuguese, Slovak.
 
 ## Calibration
@@ -123,7 +123,7 @@ direction pin) substitutions and leave out `hw_atoms3_portabc.yaml`.
    (see [First start](#first-start)).
 4. Magis Pro (no gas boiler): keep all packages. The cards read the system model (D61) and switch to the Pro view —
    no gas costs, no burner row, no boiler integration in Calibration.
-5. Flash, add the device in Home Assistant, install the cards ([cards/README.md](cards/README.md)) and create the
+5. Flash, add the device in Home Assistant, install the cards with HACS ([cards/README.md](cards/README.md)) and create the
    dashboard with the strategy above.
 
 After the first start set once, in the hub's configuration entities, the values that are not on any bus — the same

@@ -48,7 +48,7 @@ strategy:
 ![Łączność](docs/images/card-links.png)
 
 Pozostałe karty: obieg wodny i chłodniczy, stan urządzeń, ostatni cykl CWU, [Kalibracja](#kalibracja),
-automatyzacje i ustawienia huba. Szczegóły, opcje i ręczna instalacja: [cards/README.pl.md](cards/README.pl.md).
+automatyzacje i ustawienia huba. Szczegóły, opcje i instalacja (HACS albo ręczna): [cards/README.pl.md](cards/README.pl.md).
 Napisy są w języku Home Assistanta: polski, angielski, czeski, niemiecki, hiszpański, francuski, węgierski, włoski,
 niderlandzki, portugalski, słowacki.
 
@@ -123,7 +123,7 @@ transceiverze z pinem kierunku) i pomiń `hw_atoms3_portabc.yaml`.
    F1/F2 (zobacz [Pierwsze uruchomienie](#pierwsze-uruchomienie)).
 4. Magis Pro (bez kotła gazowego): zostaw wszystkie pakiety. Karty czytają model systemu (D61) i przechodzą na widok
    Pro: bez kosztów gazu, bez wiersza palnika, bez integracji z kotłem w Kalibracji.
-5. Wgraj, dodaj urządzenie w Home Assistant, zainstaluj karty ([cards/README.pl.md](cards/README.pl.md)) i utwórz
+5. Wgraj, dodaj urządzenie w Home Assistant, zainstaluj karty przez HACS ([cards/README.pl.md](cards/README.pl.md)) i utwórz
    dashboard strategią z punktu wyżej.
 
 Po pierwszym uruchomieniu ustaw raz w encjach konfiguracyjnych huba wartości, których nie ma na żadnej magistrali,
