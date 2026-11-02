@@ -50,7 +50,8 @@ class ImmergasModeCard extends HubCard {
     const when = (t: number) => this.dayName(new Date(t).getDay()) + " " + new Date(t).toLocaleTimeString(this.loc, { hour: "2-digit", minute: "2-digit" });
     const st = bad ? this.t("brak odczytu", "no reading") : conf ? this.t("dotknij ponownie, aby potwierdzić", "tap again to confirm")
       : run ? this.t("dezynfekcja trwa · ", "disinfection running · ") + this.ago("dhw_active_set")
-      : on ? this.t("włączona", "on") + (nx > 0 ? this.t(" · następna ", " · next ") + when(nx) : "") : this.t("wyłączona", "off");
+      : on ? (this.dominus ? this.t("ustawiona na piecu", "set on the boiler") : this.t("włączona", "on")) + (nx > 0 ? this.t(" · następna ", " · next ") + when(nx) : "")
+      : this.dominus ? this.t("nieustawiona na piecu", "not set on the boiler") : this.t("wyłączona", "off");
     return html`<div class="night" style=${box(col, run)}>
       <ha-icon icon="mdi:bacteria-outline" style="color:${c(col)}" @click=${() => this.moreInfo("p15")}></ha-icon>
       <div class="cx" @click=${() => this.moreInfo("p15")}><div class="nt">${this.t("Anty-legionella", "Anti-legionella")} <span style="font-size:9.5px;opacity:.5">P15</span></div>
@@ -62,6 +63,23 @@ class ImmergasModeCard extends HubCard {
         ${tchip(this.opt("legionella_time"), "START · P16", hm(tm), "red")}<span style="opacity:.4">–</span>
         ${tchip(this.opt("legionella_hours"), "STOP · P13", tm === null ? null : hm((tm + Math.round(this.legHours() * 60)) % 1440), "red")}</div>` : nothing}
 </div>`;
+  }
+
+  /** Dominus: night function U11 is not readable over TCP - the switch declares it set on the boiler (two-tap), the
+   *  window U12 / U13 comes from the integration's time entities; status = inside / outside the window */
+  private declaredNight(tchip: (o: string | undefined, l: string, v: string | null, col?: string) => unknown, ns: string | null, ne: string | null, inWin: boolean | null) {
+    const on = this.on("u11"), conf = this.isArmed("tg_u11"), act = on && inWin === true, col = act ? "lavender" : on ? "lavender" : "overlay2";
+    const st = conf ? this.t("dotknij ponownie, aby potwierdzić", "tap again to confirm")
+      : !on ? this.t("nieustawiona na piecu", "not set on the boiler")
+      : this.t("ustawiona na piecu · ", "set on the boiler · ") + (act ? this.t("aktywna teraz", "active now") : this.t("poza oknem", "outside the window"));
+    return html`<div class="night" style=${box(col, act)}>
+      <ha-icon icon=${act ? "mdi:weather-night" : "mdi:moon-waning-crescent"} style="color:${c(on ? "lavender" : "overlay2")}" @click=${() => this.moreInfo("u11")}></ha-icon>
+      <div class="cx" @click=${() => this.moreInfo("u11")}><div class="nt">${this.t("Tryb nocny", "Night mode")} <span style="font-size:9.5px;opacity:.5">U11</span></div>
+        <div class="ns" style="color:${c(on ? "lavender" : "overlay2")}">${st}</div></div>
+      ${ns || ne ? html`<div class="tcs">${tchip(this.opt("night_start"), "START · U12", ns)}<span style="opacity:.4">–</span>${tchip(this.opt("night_stop"), "STOP · U13", ne)}</div>` : nothing}
+      <div class="tgl" style="flex:none;align-self:center;background:${on ? ca("lavender", 0.35) : "rgba(255,255,255,.08)"}${conf ? `;outline:2px solid ${c("lavender")}` : ""}"
+        @click=${() => this.confirm("tg_u11", () => this.call("switch", on ? "turn_off" : "turn_on", "u11"))}>
+        <div class="kn" style="left:${on ? 23 : 3}px;background:${on ? c("lavender") : c("overlay1")}"></div></div></div>`;
   }
 
   /** Zone 1 time program (DD select, options [manual, auto]) as two buttons AUTO / MANUAL, two-tap confirm */
@@ -129,13 +147,13 @@ class ImmergasModeCard extends HubCard {
     const a0 = this.timeOpt("night_start"), a1 = this.timeOpt("night_stop"), ns = hm(a0), ne = hm(a1);
     const now = new Date(), nm = now.getHours() * 60 + now.getMinutes();
     const inWin = a0 === null || a1 === null ? null : a0 <= a1 ? nm >= a0 && nm < a1 : nm >= a0 || nm < a1;
-    const hint = nBad || inWin === null || inWin === nOn ? nothing : html`<div class="hint">${nOn
+    const hint = this.dominus || nBad || inWin === null || inWin === nOn ? nothing : html`<div class="hint">${nOn
       ? this.t("aktywny poza wpisanymi godzinami – sprawdź U12/U13 na piecu", "active outside the entered hours – check U12/U13 on the boiler")
       : this.t("we wpisanych godzinach, ale nieaktywny – sprawdź U11 na piecu", "inside the entered hours but inactive – check U11 on the boiler")}</div>`;
     const tchip = (opt: string | undefined, lbl: string, v: string | null, col = "lavender") => html`<div class="tc" style="background:${ca(col, 0.08)};border:1px solid ${ca(col, 0.22)}"
       @click=${(e: Event) => { e.stopPropagation(); if (opt && this.hass.states[opt]) this.dispatchEvent(new CustomEvent("hass-more-info", { detail: { entityId: opt }, bubbles: true, composed: true })); }}>
       <span class="tt">${v ?? "–"}</span><span class="tl">${lbl}</span></div>`;
-    const night = html`<div class="night" style=${box(nc, nOn)} @click=${() => this.moreInfo("u11")}>
+    const night = this.dominus ? this.declaredNight(tchip, ns, ne, inWin) : html`<div class="night" style=${box(nc, nOn)} @click=${() => this.moreInfo("u11")}>
       <ha-icon icon=${nOn ? "mdi:weather-night" : "mdi:moon-waning-crescent"}
         style="color:${c(nOn ? "lavender" : "overlay2")};${nOn ? `filter:drop-shadow(0 0 5px ${c("lavender")})` : ""}"></ha-icon>
       <div class="cx"><div class="nt">${this.t("Tryb nocny", "Night mode")} <span style="font-size:9.5px;opacity:.5">U11</span></div>

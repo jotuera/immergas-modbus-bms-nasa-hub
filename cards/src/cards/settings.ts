@@ -15,7 +15,8 @@ class ImmergasSettingsCard extends HubCard {
       if (v === "–") return;
       const m = ((+v.slice(0, 2) * 60 + +v.slice(3, 5) + d) % 1440 + 1440) % 1440;
       const t = String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0") + ":00";
-      this.hass.callService("input_datetime", "set_datetime", { entity_id: entity, time: t });
+      if (entity!.startsWith("time.")) this.hass.callService("time", "set_value", { entity_id: entity, time: t });
+      else this.hass.callService("input_datetime", "set_datetime", { entity_id: entity, time: t });
     };
     return html`<div class="nr"><ha-icon icon=${icon}></ha-icon>
       <span class="nl" @click=${() => this.dispatchEvent(new CustomEvent("hass-more-info", { detail: { entityId: entity }, bubbles: true, composed: true }))}>${label}</span>
@@ -26,11 +27,12 @@ class ImmergasSettingsCard extends HubCard {
   /** input_select day helper (e.g. anti-legionella day): previous / next option */
   private selRow(entity: string | undefined, label: string, icon: string) {
     const st = entity ? this.hass.states[entity] : undefined;
-    if (!entity || !st || !entity.startsWith("input_select.")) return nothing;
-    const step = (d: number) => this.hass.callService("input_select", d < 0 ? "select_previous" : "select_next", { entity_id: entity, cycle: true });
+    if (!entity || !st || !/^(input_)?select\./.test(entity)) return nothing;
+    const dom = entity.startsWith("select.") ? "select" : "input_select";
+    const step = (d: number) => this.hass.callService(dom, d < 0 ? "select_previous" : "select_next", { entity_id: entity, cycle: true });
     return html`<div class="nr"><ha-icon icon=${icon}></ha-icon>
       <span class="nl" @click=${() => this.dispatchEvent(new CustomEvent("hass-more-info", { detail: { entityId: entity }, bubbles: true, composed: true }))}>${label}</span>
-      <div class="btn xs" @click=${() => step(-1)}><ha-icon icon="mdi:minus"></ha-icon></div><span class="nv">${st.state}</span>
+      <div class="btn xs" @click=${() => step(-1)}><ha-icon icon="mdi:minus"></ha-icon></div><span class="nv">${this.hass.formatEntityState?.(st) ?? st.state}</span>
       <div class="btn xs" @click=${() => step(1)}><ha-icon icon="mdi:plus"></ha-icon></div></div>`;
   }
 
@@ -41,6 +43,13 @@ class ImmergasSettingsCard extends HubCard {
     const season = this.so("dom_auto_season")?.attributes ?? {}, mean = parseFloat(season.outdoor_mean_24h), hrs = parseFloat(season.hours_of_data);
     const alert = (k: "dom_frost" | "dom_offline") => this.bad(k) ? "–" : this.on(k) ? this.t("ALARM", "ALERT") : this.t("ok", "ok");
     return html`
+      ${this.eid("u11") ? html`<div class="grp">${this.t("Tryb nocny U11 (ustawia się na piecu)", "Night mode U11 (set on the boiler)")}</div>
+        ${this.timeRow(this.eid("u12"), "START · U12")}
+        ${this.timeRow(this.eid("u13"), "STOP · U13")}` : nothing}
+      ${this.eid("p15") ? html`<div class="grp">${this.t("Anty-legionella P15 (ustawia się na piecu)", "Anti-legionella P15 (set on the boiler)")}</div>
+        ${this.selRow(this.eid("p17"), this.t("Dzień · P17", "Day · P17"), "mdi:calendar-week")}
+        ${this.timeRow(this.eid("p16"), "START · P16", "mdi:bacteria-outline")}
+        ${this.numRow("p13", "mdi:timer-sand", this.t("Czas · P13", "Duration · P13"), 0)}` : nothing}
       ${this.eid("dom_vacation") ? html`<div class="grp">${this.t("Tryb wyjazdowy", "Vacation")}</div>
         ${this.switchRow("dom_vacation", "mdi:bag-suitcase-outline", "sky", this.t("Tryb wyjazdowy", "Vacation mode"),
           this.t("obniża zadaną Strefy 1, po powrocie przywraca", "lowers the zone 1 target, restores it on return"))}
@@ -65,7 +74,7 @@ class ImmergasSettingsCard extends HubCard {
     return html`
       <div class="sh" @click=${() => { this.open = !open; this.requestUpdate(); }}>
         <ha-icon icon="mdi:cog-outline"></ha-icon><span class="ttl">${this.dominus ? this.t("Ustawienia", "Settings") : this.t("Ustawienia huba", "Hub settings")}</span>
-        <span class="sum">${open ? "" : this.dominus ? this.t("wyjazd, Lato/Zima, alarmy, język błędów", "vacation, summer/winter, alerts, fault language") : this.t("ceny, zasobnik, tryb nocny, legionella…", "prices, cylinder, night mode, legionella…")}</span>
+        <span class="sum">${open ? "" : this.dominus ? this.t("tryb nocny, legionella, wyjazd, Lato/Zima, alarmy, język błędów", "night mode, legionella, vacation, summer/winter, alerts, fault language") : this.t("ceny, zasobnik, tryb nocny, legionella…", "prices, cylinder, night mode, legionella…")}</span>
         <ha-icon class="chev" icon=${open ? "mdi:chevron-up" : "mdi:chevron-down"}></ha-icon></div>
       ${open && !this.dominus ? html`
         <div class="grp">${this.t("Ceny energii", "Energy prices")}</div>

@@ -23,6 +23,9 @@ const DOMINUS: Record<string, Key> = {
   eco_heat: "eco_heat", comfort_cool: "comfort_cool", eco_cool: "eco_cool", heating_demand: "dom_ch_demand",
   dhw_request: "dom_dhw_request", last_successful_read: "dom_last_read", failed_polls: "dom_failed",
   humidity_target: "dom_hum_target", flow_target: "dom_flow_target", fault_language: "err_lang",
+  // 1.4.0: boiler programs declared by the user (U11 / P15 are not readable over TCP)
+  night_mode: "u11", night_start: "u12", night_stop: "u13", legionella: "p15", legionella_start: "p16", legionella_day: "p17",
+  legionella_hours: "p13",
   // 1.3.0: statistics, vacation, auto season, alerts
   ch_heating_time_today: "dom_ch_time_today", ch_heating_share_24h: "dom_ch_share", dhw_cycles_today: "dom_dhw_cycles", last_dhw_cycle_duration: "dom_dhw_last_dur", last_dhw_cycle_rise: "dom_dhw_last_rise", ch_starts_per_hour: "dom_starts_h", ch_starts_today: "dom_starts_today", room_deviation: "dom_room_dev", time_to_target: "dom_ttt", degree_days_today: "dom_dd_today", degree_days_month: "dom_dd_month", heating_hours_per_degree_day: "dom_h_per_dd", frost_risk: "dom_frost", module_offline: "dom_offline", vacation_temperature: "dom_vac_temp", season_winter_below: "dom_win_below", season_summer_above: "dom_sum_above", frost_threshold: "dom_frost_thr", offline_minutes: "dom_off_min", vacation_mode: "dom_vacation", auto_season: "dom_auto_season", vacation_until: "dom_vac_until",
 };

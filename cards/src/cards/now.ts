@@ -220,16 +220,26 @@ class ImmergasNowCard extends HubCard {
         dur(now - ls) + this.t(" temu", " ago")));
     }
 
-    // 3) disinfection countdown when the anti-legionella slot is set in the card options (not readable over TCP)
-    const nx = this.nextLeg(now);
+    // 3) night function declared on the boiler (switch on): elapsed inside the U12-U13 window, else time to the start
+    const a0 = this.timeOpt("night_start"), a1 = this.timeOpt("night_stop");
+    if (this.on("u11") && a0 !== null && a1 !== null) {
+      const len = ((a1 - a0 + 1440) % 1440 || 1440) * 60000, nxs = nextAt(a0, now), ws = nxs - 86400e3;
+      if (now < ws + len) rows.push(this.bar("u11", "mdi:weather-night", "lavender", this.t("Tryb nocny", "Night mode"), now - ws, len,
+        this.t("od ", "since ") + clock(ws, pl) + this.t(" · koniec ~", " · ends ~") + clock(ws + len, pl) + this.t(" · zostało ", " · ") + dur(ws + len - now) + this.t("", " left")));
+      else rows.push(this.bar("u11", "mdi:moon-waning-crescent", "lavender", this.t("Do trybu nocnego", "Until night mode"), now - (ws + len), nxs - (ws + len),
+        this.t("start ~", "starts ~") + clock(nxs, pl), this.t("za ", "in ") + dur(nxs - now)));
+    }
+
+    // 4) disinfection countdown while anti-legionella is declared on the boiler (switch on; not readable over TCP)
+    const nx = this.on("p15") ? this.nextLeg(now) : NaN;
     if (nx > 0) {
       const prev = nx - ((this.dayOpt("legionella_day") ?? -1) < 0 ? 1 : 7) * 86400e3;
       const day = (t: number) => new Date(t).toLocaleDateString(pl, { weekday: "short", day: "numeric", month: "numeric" }) + " " + clock(t, pl);
-      rows.push(this.bar("tank", "mdi:bacteria-outline", "red", this.t("Do dezynfekcji (anty-legionella)", "Until disinfection (anti-legionella)"), now - prev, nx - prev,
+      rows.push(this.bar("p15", "mdi:bacteria-outline", "red", this.t("Do dezynfekcji (anty-legionella)", "Until disinfection (anti-legionella)"), now - prev, nx - prev,
         this.t("następna ", "next ") + day(nx), this.t("za ", "in ") + dur(nx - now)));
     }
 
-    // 4) last 6 h: CH demand (peach) and DHW heating (yellow) over the idle background
+    // 5) last 6 h: CH demand (peach) and DHW heating (yellow) over the idle background
     const w0 = now - WIN, pct = (t: number) => (Math.max(t, w0) - w0) / WIN * 100;
     const chOn = ch.filter((g) => g.s === "on" && g.t1 > w0), dw = dp.filter((g) => g.t1 > w0);
     const starts = chOn.filter((g) => g.t0 > w0).length;
