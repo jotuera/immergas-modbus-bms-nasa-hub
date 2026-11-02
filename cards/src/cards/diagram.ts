@@ -5,13 +5,16 @@
 import { svg, SVGTemplateResult } from "lit";
 import { HubCard, html, css, nothing, c, ca, register } from "../base";
 import { hubNote } from "../base";
-import { isDhw, hasBoiler as stBoiler } from "./timers";
+import { isDhw, hasBoiler as stBoiler, Pt, points, dhwHeatingNow } from "./timers";
 import { Key } from "../names";
 
 const HOT = "red", COLD = "blue", GAS = "mauve", LIQ = "lavender";
 
 class ImmergasDiagramCard extends HubCard {
   private narrow = false;
+  /** Dominus: recent cylinder temperatures (15 min) to see DHW heating, which no register reports */
+  private tk: Pt[] = [];
+  private tkLoaded = false;
   private ro?: ResizeObserver;
   getCardSize() { return 8; }
   connectedCallback() {
@@ -67,7 +70,89 @@ class ImmergasDiagramCard extends HubCard {
   }
   private val(k: Key, d = 1, unit = "") { const v = this.n(k); return isNaN(v) ? "–" : this.f(v, d) + unit; }
 
+  /** Dominus: cylinder samples from the last 10 min of history, then from every state update */
+  private tankTrack(now: number) {
+    const v = this.n("tank"), last = this.tk[this.tk.length - 1];
+    if (!this.tkLoaded && this.eid("tank")) {
+      this.tkLoaded = true;
+      this.hass.callWS({ type: "history/history_during_period", start_time: new Date(now - 10 * 60e3).toISOString(), end_time: new Date(now).toISOString(),
+        entity_ids: [this.eid("tank")], minimal_response: true, no_attributes: true, significant_changes_only: false })
+        .then((r: any) => { this.tk = [...points(r[this.eid("tank") ?? ""] ?? []), ...this.tk].sort((a, b) => a.t - b.t); this.requestUpdate(); })
+        .catch(() => undefined);
+    }
+    if (!isNaN(v) && (!last || last.v !== v || now - last.t > 60e3)) this.tk.push({ t: now, v });
+    this.tk = this.tk.filter((p) => p.t > now - 15 * 60e3);
+  }
+
+  /** Immergas Dominus: outdoor, one boiler block (heat pump or gas is not visible over TCP), the CH loop to the house
+   *  (while zone 1 asks for heat) and the DHW loop to the cylinder (while it warms up), Calibration note on top */
+  private domBody() {
+    const now = Date.now();
+    this.tankTrack(now);
+    const ch = this.on("dom_ch_demand"), rq = this.so("dom_dhw_request");
+    const reqOff = rq?.state === "off" ? new Date(rq.last_changed).getTime() : -Infinity;
+    const dw = dhwHeatingNow(reqOff, this.tk, now), heat = ch && !dw;
+    const err = this.on("err_active"), act = dw || ch;
+    const out = this.n("outdoor"), mean = parseFloat(this.attr("dom_auto_season", "outdoor_mean_24h") ?? "");
+    const z1 = this.n("zone1"), zs = this.n("zone1_set"), tank = this.n("tank"), ds = this.n("dhw_set");
+    const tankFill = isNaN(tank) ? 0 : Math.max(0, Math.min(1, (tank - 20) / 45)), tankCol = tank >= 45 ? "peach" : tank >= 35 ? "yellow" : "sky";
+    const flame = err ? "red" : dw ? "yellow" : heat ? "peach" : "overlay1";
+    const g: unknown[] = [this.note()];
+    // outdoor
+    g.push(svg`<g @click=${this.tap("outdoor")} class="hit"><rect x="16" y="150" width="230" height="170" rx="18" class="panel"/>
+      ${this.label(34, 178, this.t("NA ZEWNĄTRZ", "OUTDOOR"), "", 9, "start")}
+      ${this.label(34, 236, isNaN(out) ? "–" : this.f(out, 1, 1) + "°", "sky", 28, "start")}
+      ${isNaN(mean) ? nothing : this.label(34, 280, this.t("średnia 24 h ", "24 h mean ") + this.f(mean, 1, 1) + "°", "", 10.5, "start", 600)}</g>`);
+    // operating mode, curve offset, vacation and alerts
+    const vac = this.on("dom_vacation"), auto = this.on("dom_auto_season"), alarm = this.on("dom_frost") || this.on("dom_offline");
+    g.push(svg`<g @click=${this.tap("mode")} class="hit"><rect x="16" y="334" width="230" height="150" rx="18" class="panel"/>
+      ${this.label(34, 362, this.t("TRYB PRACY", "OPERATING MODE"), "", 9, "start")}
+      ${this.label(34, 396, (this.bad("mode") ? "–" : this.txt("mode") ?? "–") + (auto ? " (auto)" : ""), "", 15, "start")}
+      ${this.label(34, 424, "offset U03 " + this.val("u03", 1, ""), "", 10.5, "start", 600)}
+      ${this.label(34, 446, vac ? this.t("wyjazd: włączony", "vacation: on") : this.t("wyjazd: wył.", "vacation: off"), vac ? "teal" : "", 10.5, "start", 600)}
+      ${this.label(34, 468, alarm ? this.t("alarm!", "alert!") : this.t("alarmy: brak", "alerts: none"), alarm ? "red" : "", 10.5, "start", 600)}</g>`);
+    // one boiler block: Dominus does not tell whether the heat pump or the gas burner works
+    g.push(svg`<g @click=${this.tap("mode")} class="hit">
+        <rect x="300" y="196" width="180" height="170" rx="16" class="dev" style="stroke:${c(act || err ? flame : "overlay1")};${act ? `fill:${ca(flame, 0.1)}` : ""}"/>
+        <path d="M 390 236 C 372 258, 378 282, 390 292 C 402 282, 408 258, 390 236 Z M 390 258 C 383 268, 386 280, 390 284 C 394 280, 397 268, 390 258 Z"
+          fill=${c(flame)} fill-rule="evenodd" style=${act ? `filter:drop-shadow(0 0 6px ${c(flame)});animation:ih-pulse 1.2s ease-in-out infinite` : ""}/></g>
+      ${this.label(390, 186, this.t("Kocioł Magis", "Magis boiler"), "", 11, "middle", 800)}
+      ${this.label(390, 322, err ? this.t("AWARIA", "FAULT") : dw ? this.t("grzeje CWU", "heats DHW") : heat ? this.t("grzeje CO", "heats CH") : this.t("czuwanie", "standby"), flame, 12)}
+      ${this.label(390, 346, this.t("pompa / gaz – nie widać po TCP", "heat pump / gas – not visible over TCP"), "", 8, "middle", 600)}`);
+    // CH loop to the house
+    g.push(this.pipe("M 480 236 L 600 236 L 600 120 L 680 120", HOT, heat, 1.4));
+    g.push(this.pipe("M 680 200 L 630 200 L 630 270 L 480 270", COLD, heat, 1.4));
+    g.push(this.label(540, 226, this.t("CO", "CH"), heat ? "peach" : "overlay1", 10, "middle", 800));
+    const ph = this.bad("zone1_phase") ? "" : this.txt("zone1_phase") ?? "";
+    const chT = this.n("dom_ch_time_today"), st = this.n("dom_starts_today");
+    g.push(svg`<g @click=${this.tap("zone1")} class="hit">
+        <path d="M 680 92 L 790 30 L 900 92 L 900 230 L 680 230 Z" class="house" style="stroke:${c(heat ? "peach" : "overlay2")}"/>
+        <path d="M 696 214 h 188 M 696 214 q 0 -8 10 -8 h 168 q 10 0 10 -8 q 0 -8 -10 -8 h -168" fill="none"
+          stroke=${c(heat ? "peach" : "overlay2")} stroke-width="2.5" stroke-linecap="round" style=${heat ? `filter:drop-shadow(0 0 4px ${ca("peach", 0.7)})` : "opacity:.5"}/>
+        ${this.label(790, 92, this.t("Strefa 1", "Zone 1"), "", 10, "middle", 700)}
+        ${this.label(790, 134, isNaN(z1) ? "–" : this.f(z1, 1, 1) + "°", "", 24)}
+        ${this.label(790, 156, this.t("zadana ", "set ") + this.f(zs, 1, 1) + "°" + (ph ? " · " + ph : ""), "", 10, "middle", 600)}
+        ${isNaN(chT) ? nothing : this.label(790, 178, this.t("dziś ", "today ") + this.f(chT, 1, 1) + " h · " + this.f(st, 0) + this.t(" startów", " starts"), "", 9.5, "middle", 600)}</g>`);
+    // DHW loop to the cylinder
+    g.push(this.pipe("M 420 366 L 420 400 L 692 400", HOT, dw, 1.4));
+    g.push(this.pipe("M 692 452 L 360 452 L 360 366", COLD, dw, 1.4));
+    g.push(this.label(560, 390, this.t("CWU", "DHW"), dw ? "yellow" : "overlay1", 10, "middle", 800));
+    const dph = this.bad("dhw_phase") ? "" : this.txt("dhw_phase") ?? "", cyc = this.n("dom_dhw_cycles"), ld = this.n("dom_dhw_last_dur");
+    const cx = 692;
+    g.push(svg`<g @click=${this.tap("tank")} class="hit">
+        <rect x=${cx} y="296" width="150" height="190" rx="20" class="tank" style="stroke:${c(dw ? "yellow" : "overlay1")}"/>
+        <rect x=${cx + 3} y=${296 + 187 * (1 - tankFill) + 3} width="144" height=${Math.max(0, 187 * tankFill - 3)} rx="17" fill=${ca(tankCol, 0.22)}/>
+        <path d="M ${cx + 30} 404 q 45 0 45 10 q 0 10 -45 10 q -45 0 -45 10 q 0 10 45 10" fill="none" transform="translate(45 -6)"
+          stroke=${c(dw ? "yellow" : "overlay1")} stroke-width="2.5" style=${dw ? `filter:drop-shadow(0 0 4px ${ca("yellow", 0.7)})` : "opacity:.5"}/>
+        ${this.label(cx + 75, 340, isNaN(tank) ? "–" : this.f(tank, 1, 1) + "°", tankCol, 22)}
+        ${this.label(cx + 75, 362, this.t("nastawa ", "set ") + this.f(ds, 0) + "°" + (dph ? " · " + dph : ""), "", 9.5, "middle", 600)}
+        ${isNaN(cyc) ? nothing : this.label(cx + 75, 474, this.t("dziś ", "today ") + this.f(cyc, 0) + "×" + (isNaN(ld) ? "" : this.t(" · ost. ", " · last ") + this.f(ld, 0) + " min"), "", 9.5, "middle", 600)}</g>
+      ${this.label(cx + 75, 288, this.t("Ciepła woda", "Hot water"), "", 10, "middle", 700)}`);
+    return html`<svg viewBox="0 30 920 470" class="dia">${g}</svg>`;
+  }
+
   protected body() {
+    if (this.dominus) return this.domBody();
     const hz = this.n("hz"), run = hz > 0, flow = this.n("d14"), flowing = flow > 50;
     const defrost = this.on("defrost"), night = this.on("u11");
     const st = this.s("state") ?? "";

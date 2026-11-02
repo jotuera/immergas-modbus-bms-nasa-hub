@@ -1,7 +1,7 @@
 // "Teraz / Now": fault and defrost banners, the unit hero (mode, Hz, flow/return, COP) and four tiles.
 import { Key } from "../names";
 import { HubCard, html, css, nothing, c, ca, box, register } from "../base";
-import { Seg, BAD, segments, typical, median, isIdle, isDhw, isCool, isDefrost, phaseCol, phaseIcon, dur, clock, nextAt } from "./timers";
+import { Seg, Pt, BAD, segments, typical, median, isIdle, isDhw, isCool, isDefrost, phaseCol, phaseIcon, dur, clock, nextAt, points, dhwPeriods, dhwHeatingNow } from "./timers";
 
 const H = 3600e3, WIN = 6 * H, LEG_T = 60;
 const tempCol = (v: number) => isNaN(v) ? "overlay1" : v < 0 ? "sapphire" : v < 10 ? "sky" : v < 18 ? "teal" : v < 24 ? "green" : v < 28 ? "yellow" : v < 32 ? "peach" : "red";
@@ -11,6 +11,8 @@ const NO_ERR = ["Brak błędów", "No error", "No Error", "No faults", "OK", "un
 class ImmergasNowCard extends HubCard {
   private hist: { at: number; st: Seg[]; nt: Seg[]; leg: number[] } | null = null;
   private hLoading = false;
+  /** Dominus: heating-demand and DHW-request segments and cylinder temperatures (72 h) */
+  private dHist: { at: number; ch: Seg[]; rq: Seg[]; tk: Pt[] } | null = null;
   /** COP of the current month from the statistics of heat and electricity totals (refreshed every 30 min) */
   private copMonth: { at: number; v: number } | null = null;
   private cmLoading = false;
@@ -165,6 +167,82 @@ class ImmergasNowCard extends HubCard {
     return html`<div class="tmr">${rows}${strip}</div>`;
   }
 
+  private async loadDomHist() {
+    if (this.hLoading || !this.idx) return;
+    this.hLoading = true;
+    try {
+      const end = Date.now(), ids = [this.eid("dom_ch_demand"), this.eid("dom_dhw_request"), this.eid("tank")].filter(Boolean) as string[];
+      const r = await this.hass.callWS({ type: "history/history_during_period", start_time: new Date(end - 72 * H).toISOString(),
+        end_time: new Date(end).toISOString(), entity_ids: ids, minimal_response: true, no_attributes: true, significant_changes_only: false });
+      this.dHist = { at: end, ch: segments(r[this.eid("dom_ch_demand") ?? ""] ?? [], end), rq: segments(r[this.eid("dom_dhw_request") ?? ""] ?? [], end),
+        tk: points(r[this.eid("tank") ?? ""] ?? []) };
+    } catch {
+      this.dHist = { at: Date.now(), ch: [], rq: [], tk: [] };
+    }
+    this.hLoading = false;
+    this.requestUpdate();
+  }
+
+  /** Dominus timers: CH demand period vs. its typical length, DHW rhythm, disinfection countdown (card options) and
+   *  the last 6 h strip - from the heating-demand and DHW-request flags and the cylinder temperature */
+  private domTimers() {
+    const now = Date.now(), chS = this.s("dom_ch_demand"), rqS = this.s("dom_dhw_request");
+    const h = this.dHist, ch = h?.ch ?? [], rq = h?.rq ?? [], lc = ch[ch.length - 1], lr = rq[rq.length - 1];
+    const stale = !h || now - h.at > 10 * 60e3 || (now - h.at > 15e3 && ((!BAD(chS) && !!lc && lc.s !== chS) || (!BAD(rqS) && !!lr && lr.s !== rqS)));
+    if (stale) this.loadDomHist();
+    if (!lc) return h ? nothing : html`<div class="tmr"><div class="tbs">${this.t("Wczytuję historię cykli…", "Loading cycle history…")}</div></div>`;
+    const pl = this.loc, rows: unknown[] = [];
+    const tk: Pt[] = [...(h?.tk ?? [])], tv = this.n("tank");
+    if (!isNaN(tv)) tk.push({ t: now, v: tv });
+    const dp = dhwPeriods(rq, tk, now), reqOff = lr && lr.s === "off" ? lr.t0 : -Infinity;
+    const dhwNow = dhwHeatingNow(reqOff, tk, now), cur = dp[dp.length - 1];
+
+    // 1) CH demand on / pause vs. the typical length of the same state
+    const on = (BAD(chS) ? lc.s : chS) === "on", start = lc.s === (on ? "on" : "off") ? lc.t0 : now, el = now - start;
+    const typ = typical(ch, (x) => x === (on ? "on" : "off"), 60e3), col = on ? "peach" : "overlay1";
+    const sub = !(typ > 0) ? this.t("za mało historii, by oszacować długość", "not enough history to estimate the length")
+      : el <= typ ? (on ? this.t("koniec ~", "ends ~") : this.t("następne grzanie ~", "next heating ~")) + clock(start + typ, pl) + this.t(" · zostało ~", " · ~") + dur(typ - el) + this.t("", " left")
+      : this.t("dłużej niż zwykle o ", "longer than usual by ") + dur(el - typ);
+    rows.push(this.bar("dom_ch_demand", on ? "mdi:radiator" : "mdi:pause-circle-outline", col,
+      on ? this.t("Grzanie CO", "CH heating") : this.t("Przerwa CO", "CH pause"), el, typ, this.t("od ", "since ") + clock(start, pl) + " · " + sub));
+
+    // 2) DHW: a running cycle vs. the typical cycle, else the rhythm between cycle starts
+    if (dhwNow && cur && now - cur.t1 < 5 * 60e3) {
+      const ty = median(dp.slice(0, -1).map((g) => g.t1 - g.t0).slice(-6));
+      rows.push(this.bar("tank", "mdi:water-boiler", "yellow", this.t("Grzanie CWU", "DHW heating"), now - cur.t0, ty,
+        this.t("od ", "since ") + clock(cur.t0, pl) + this.t(" · zasobnik ", " · cylinder ") + this.f(tv, 1, 1) + " / " + this.f(this.n("dhw_set"), 0) + " °C"));
+    } else if (dp.length) {
+      const starts = dp.map((g) => g.t0), gaps = starts.slice(1).map((t, i) => t - starts[i]), iv = gaps.length ? median(gaps.slice(-6)) : NaN;
+      const ls = starts[starts.length - 1];
+      rows.push(this.bar("tank", "mdi:water-sync", "yellow", this.t("Rytm CWU", "DHW rhythm"), now - ls, iv,
+        this.t("ostatnie ", "last at ") + clock(ls, pl) + (iv > 0 ? (now - ls <= iv ? this.t(" · następne ~", " · next ~") + clock(ls + iv, pl)
+          : this.t(" · następne już po czasie", " · next is overdue")) + this.t(" (typowo co ", " (usually every ") + dur(iv) + ")" : ""),
+        dur(now - ls) + this.t(" temu", " ago")));
+    }
+
+    // 3) disinfection countdown when the anti-legionella slot is set in the card options (not readable over TCP)
+    const nx = this.nextLeg(now);
+    if (nx > 0) {
+      const prev = nx - ((this.dayOpt("legionella_day") ?? -1) < 0 ? 1 : 7) * 86400e3;
+      const day = (t: number) => new Date(t).toLocaleDateString(pl, { weekday: "short", day: "numeric", month: "numeric" }) + " " + clock(t, pl);
+      rows.push(this.bar("tank", "mdi:bacteria-outline", "red", this.t("Do dezynfekcji (anty-legionella)", "Until disinfection (anti-legionella)"), now - prev, nx - prev,
+        this.t("następna ", "next ") + day(nx), this.t("za ", "in ") + dur(nx - now)));
+    }
+
+    // 4) last 6 h: CH demand (peach) and DHW heating (yellow) over the idle background
+    const w0 = now - WIN, pct = (t: number) => (Math.max(t, w0) - w0) / WIN * 100;
+    const chOn = ch.filter((g) => g.s === "on" && g.t1 > w0), dw = dp.filter((g) => g.t1 > w0);
+    const starts = chOn.filter((g) => g.t0 > w0).length;
+    const stats = [starts + this.t(" startów CO", " CH starts"), dw.length ? dw.length + this.t(" × CWU", " × DHW") : ""].filter(Boolean).join(" · ");
+    const seg = (t0: number, t1: number, col: string, ttl: string) => html`<div class="sg" style="left:${pct(t0)}%;width:${Math.max(0.3, pct(t1) - pct(t0))}%;background:${c(col)}"
+      title="${ttl} · ${clock(t0, pl)}–${clock(t1, pl)} (${dur(t1 - t0)})"></div>`;
+    const strip = html`<div class="sh"><span class="tbl">${this.t("Ostatnie 6 h", "Last 6 h")}</span><span class="tbs">${stats}</span></div>
+      <div class="strip"><div class="sg" style="left:0;width:100%;background:${ca("overlay1", 0.18)}"></div>
+        ${chOn.map((g) => seg(g.t0, g.t1, "peach", this.t("grzanie CO", "CH heating")))}${dw.map((g) => seg(g.t0, g.t1, "yellow", this.t("grzanie CWU", "DHW heating")))}</div>
+      <div class="sx">${[0, 1, 2].map((i) => html`<span>${clock(w0 + i * 2 * H, pl)}</span>`)}<span>${this.t("teraz", "now")}</span></div>`;
+    return html`<div class="tmr">${rows}${strip}</div>`;
+  }
+
   /** active fault, always shown: the hub's fault from all three buses (D+/D-, T-/T+, F1/F2); older hubs: D+/D- and F1/F2 */
   private faultChip() {
     if (this.eid("fault_any") && this.eid("fault_text")) {
@@ -245,6 +323,7 @@ class ImmergasNowCard extends HubCard {
         ${this.tile("tank", "mdi:water-boiler", this.t("Zasobnik CWU", "DHW cylinder"), this.f(tank, 1, 1) + " °C", tank >= 45 ? "peach" : tank >= 35 ? "yellow" : "sky", (tank - 20) / 45 * 100)}
         ${this.tile("dom_ch_demand", ch ? "mdi:fire" : "mdi:fire-off", this.t("Żądanie CO", "CH demand"), ch ? this.t("tak", "yes") : this.t("nie", "no"), ch ? "peach" : "overlay1")}
       </div>
+      ${this.config.show_timers === false || !this.eid("dom_ch_demand") ? nothing : this.domTimers()}
       ${this.eid("dom_ch_time_today") ? html`<div class="chips2">
         ${this.chip("dom_ch_time_today", "mdi:radiator", "peach", this.t("Grzanie CO dziś", "CH heating today"),
           `${this.f(this.n("dom_ch_time_today"), 1, 1)} h · ${this.f(this.n("dom_starts_today"), 0)} ${this.t("startów", "starts")}`, false)}

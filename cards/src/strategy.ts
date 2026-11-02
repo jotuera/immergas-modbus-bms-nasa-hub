@@ -46,6 +46,7 @@ class ImmergasDominusStrategy {
         {
           title: t("Kocioł", "Boiler"), path: "dominus", icon: "mdi:water-boiler", type: "sections", max_columns: 3,
           sections: [
+            { type: "grid", column_span: 3, cards: [card("immergas-diagram-card", { stats: false, ...(config.diagram ?? {}) })] },
             { type: "grid", cards: [card("immergas-now-card", config.now ?? {}), card("immergas-setpoints-card", config.setpoints ?? {})] },
             { type: "grid", cards: [card("immergas-mode-card", config.mode ?? {}), card("immergas-links-card"),
               card("immergas-settings-card", config.settings ?? {})] },

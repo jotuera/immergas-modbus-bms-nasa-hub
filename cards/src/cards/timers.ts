@@ -99,3 +99,32 @@ export const nextAt = (minOfDay: number, after: number) => {
   while (t <= after) t += 86400e3;
   return t;
 };
+
+// ---- Immergas Dominus: no operating state, so the phases come from the heating-demand and DHW-request flags ----
+export type Pt = { t: number; v: number };
+/** numeric history points (minimal_response) -> [{t, v}] */
+export const points = (list: any[]): Pt[] => list.map((x) => ({ t: Math.round((x.lc ?? x.lu ?? 0) * 1000), v: parseFloat(x.s ?? x.state) }))
+  .filter((p) => !isNaN(p.v));
+/** DHW heating periods. The DHW request (PDU 2001 bit 0) lights ~9 min before a cycle and clears when the 3-way valve
+ *  switches to DHW, so a cycle starts when the request clears and lasts while the cylinder keeps warming (end = its
+ *  peak within 90 min; with no rise the period is dropped) */
+export function dhwPeriods(req: Seg[], tank: Pt[], now: number): { t0: number; t1: number }[] {
+  const out: { t0: number; t1: number }[] = [];
+  for (let i = 0; i < req.length; i++) {
+    const g = req[i];
+    if (g.s !== "on" || i === req.length - 1) continue;
+    const t0 = g.t1, pts = tank.filter((p) => p.t >= t0 - 60e3 && p.t <= t0 + 90 * 60e3);
+    const base = tank.filter((p) => p.t <= t0).pop()?.v ?? pts[0]?.v;
+    if (base === undefined || !pts.length) { if (now - t0 < 10 * 60e3) out.push({ t0, t1: now }); continue; }
+    const top = pts.reduce((a, b) => (b.v > a.v ? b : a));
+    if (top.v - base >= 0.5) out.push({ t0, t1: top.t > t0 ? top.t : t0 + 60e3 });
+    else if (now - t0 < 10 * 60e3) out.push({ t0, t1: now });
+  }
+  return out;
+}
+/** DHW heating right now: the request cleared within the last 5 min, or the cylinder rose >= 0.3 K over ~5 min */
+export const dhwHeatingNow = (reqOff: number, tank: Pt[], now: number) => {
+  if (now - reqOff < 5 * 60e3) return true;
+  const recent = tank.filter((p) => p.t >= now - 6 * 60e3), last = tank[tank.length - 1];
+  return !!last && recent.length > 0 && last.v - Math.min(...recent.map((p) => p.v)) >= 0.3 && now - last.t < 3 * 60e3;
+};
