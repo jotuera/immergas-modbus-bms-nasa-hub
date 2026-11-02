@@ -235,4 +235,5 @@ export const NAMES = {
   hub_wifi: ["Hub", ["Sygnał WiFi", "WiFi signal", "Signál WiFi", "WLAN-Signal", "Señal WiFi", "Signal WiFi", "WiFi jel", "Segnale WiFi", "WiFi-signaal", "Sinal WiFi"]],
   hub_status: ["Hub", ["Status", "Stav", "Estado", "État", "Állapot", "Stato"]],
 } as const satisfies Record<string, readonly [string, readonly string[]]>;
-export type Key = keyof typeof NAMES;
+// keys found only on the Immergas Dominus integration (see hub.ts)
+export type Key = keyof typeof NAMES | "dom_ch_demand" | "dom_dhw_request" | "dom_last_read" | "dom_failed" | "dom_hum_target" | "dom_flow_target";

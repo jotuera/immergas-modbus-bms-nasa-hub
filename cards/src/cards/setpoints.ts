@@ -91,14 +91,19 @@ class ImmergasSetpointsCard extends HubCard {
 
   protected body() {
     const modeIdx = ((this.attr("mode", "options") ?? []) as string[]).indexOf(this.s("mode") ?? ""), cool = modeIdx === 2;
-    const st = this.s("state") ?? "", dhwRun = isDhw(st), chRun = !dhwRun && (parseState(st).what === "heat" || isCool(st));
+    const st = this.s("state") ?? "";
+    // Dominus has no operating state: the zone heating demand and the DHW request flags instead
+    const dhwRun = this.dominus ? this.on("dom_dhw_request") : isDhw(st);
+    const chRun = this.dominus ? !dhwRun && this.on("dom_ch_demand") : !dhwRun && (parseState(st).what === "heat" || isCool(st));
 
     // CH tile
     const z = this.n("zone1"), hum = this.config.humidity_entity ? parseFloat(this.hass.states[this.config.humidity_entity]?.state) : NaN;
     const ht = this.config.humidity_target ? parseFloat(this.hass.states[this.config.humidity_target]?.state ?? this.config.humidity_target) : NaN;
     const cKey: Key = cool ? "comfort_cool" : "comfort_heat", eKey: Key = cool ? "eco_cool" : "eco_heat";
-    const auto = (() => { const o: string[] = this.attr("prog_mode", "options") ?? []; return o.length === 2 && this.s("prog_mode") === o[1]; })();
-    const phase = this.bad("zone1_phase") ? "" : this.s("zone1_phase")!;
+    // AUTO program: the hub select, or (Dominus) a Comfort / Eco phase of the zone
+    const auto = (() => { const o: string[] = this.attr("prog_mode", "options") ?? []; return o.length === 2 && this.s("prog_mode") === o[1]; })()
+      || (this.dominus && ["comfort", "economy"].includes(this.s("zone1_phase") ?? ""));
+    const phase = this.bad("zone1_phase") ? "" : this.txt("zone1_phase")!;
     const ch = this.tileView({
       k: "zone1_set", meas: "zone1", icon: cool ? "mdi:snowflake" : "mdi:radiator", col: cool ? "sky" : tempCol(z),
       title: cool ? this.t("Chłodzenie", "Cooling") : this.t("Ogrzewanie", "Heating"), sub: this.t("CO · strefa 1", "CH · zone 1"), temp: z,

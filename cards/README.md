@@ -42,6 +42,11 @@ strategy:
   type: custom:immergas-hub
 ```
 
+**Without a hub – Immergas Dominus:** with only the [Immergas Dominus](https://github.com/jotuera/immergas-dominus)
+integration (local TCP to the Dominus Wi-Fi module) use `type: custom:immergas-dominus` – a reduced dashboard with Now,
+Setpoints, Operating mode, Schedule and Connectivity. The integration ships these cards itself; the cards find its
+entities by their keys (no heat-pump data, COP or compressor – those need the hub).
+
 ## How entities are found
 
 The cards look for the device that has the entity "Immergas Hub - Operating state" ("Immergas Hub - Stan pracy") and

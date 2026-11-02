@@ -54,6 +54,21 @@ class ImmergasLinksCard extends HubCard {
       detail: bmsOn ? this.t("hub pełni rolę centralki (master BMS)", "the hub acts as the controller (BMS master)")
         : this.t("hub nie odpytuje – miejsce dla centralki", "the hub does not poll – room for a controller") });
 
+    // Immergas Dominus integration: the Wi-Fi module answers local TCP polls (last good poll, failed polls since HA start)
+    if (this.eid("dom_last_read")) {
+      const last = Date.parse(this.s("dom_last_read") ?? ""), fails = this.n("dom_failed");
+      const fresh = !isNaN(last) && Date.now() - last < 5 * 60e3;
+      out.push({ k: "dom_last_read", icon: "mdi:router-wireless", name: ["Dominus", "Dominus"], bus: this.t("Wi-Fi · TCP", "Wi-Fi · TCP"),
+        st: isNaN(last) ? "bad" : fresh ? "ok" : "bad",
+        detail: (isNaN(last) ? this.t("jeszcze bez odczytu", "no reading yet") : this.t("ostatni odczyt ", "last read ")
+          + new Date(last).toLocaleTimeString(this.loc, { hour: "2-digit", minute: "2-digit" }))
+          + (isNaN(fails) ? "" : this.t(" · nieudane odpytania ", " · failed polls ") + Math.round(fails)) });
+      // the boiler behind the module: its registers come back through Dominus
+      out.push({ k: "mode", icon: "mdi:water-boiler", name: ["Kocioł", "Boiler"], bus: "Dominus · Modbus",
+        st: this.bad("mode") && this.bad("zone1") ? "bad" : "ok",
+        detail: this.bad("mode") ? "" : this.t("tryb ", "mode ") + this.txt("mode") });
+    }
+
     const wifi = this.n("hub_wifi");
     if (this.eid("hub_status")) out.push({ k: "hub_status", icon: "mdi:chip", name: ["Hub", "Hub"], bus: "Wi-Fi",
       st: this.on("hub_status") ? "ok" : "bad",
@@ -69,8 +84,10 @@ class ImmergasLinksCard extends HubCard {
     // pairs: a bus and the device behind it, one column each (Hub / Dominus, Modbus / zone 1 panel, BMS / system
     // controller, NASA / EHS panel); a pair wraps as a whole on a narrow card
     const by = (n: string) => L.find((l) => l.name[1] === n);
-    const pairs = [["Hub", "Dominus"], ["Modbus", "Zone 1 panel"], ["BMS", "System controller"], ["NASA", "EHS panel"]]
-      .map((p) => p.map(by).filter((l): l is Link => !!l)).filter((p) => p.length);
+    // Dominus integration: the module and the boiler side by side
+    const pairs = this.dominus ? L.map((l) => [l])
+      : [["Hub", "Dominus"], ["Modbus", "Zone 1 panel"], ["BMS", "System controller"], ["NASA", "EHS panel"]]
+        .map((p) => p.map(by).filter((l): l is Link => !!l)).filter((p) => p.length);
     const meta: Record<State, [string, string, string]> = {
       ok: ["green", this.t("Połączono", "Connected"), "mdi:check-circle"],
       emu: ["sky", this.t("Emulacja", "Emulated"), "mdi:robot-outline"],
@@ -82,7 +99,7 @@ class ImmergasLinksCard extends HubCard {
     return html`
       ${this.head("mdi:lan", this.t("Łączność", "Connectivity"), nBad ? html`<span style="color:${c("red")}">${this.t("problemy: ", "problems: ")}${nBad}</span>`
         : this.t("wszystko połączone", "all connected"))}
-      <div class="links">${pairs.map((pair) => html`<div class="pair">${pair.map((l) => {
+      <div class="links" style=${this.dominus ? "grid-template-columns:repeat(2, minmax(0, 1fr))" : ""}>${pairs.map((pair) => html`<div class="pair">${pair.map((l) => {
         const [col, txt0, icon] = meta[l.st], txt = l.label ?? txt0;
         return html`<div class="lk" style=${box(col, l.st === "bad")} @click=${() => this.moreInfo(l.k)}>
           <ha-icon icon=${l.icon} style="color:${c(col)}"></ha-icon>

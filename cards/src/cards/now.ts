@@ -6,7 +6,7 @@ import { Seg, BAD, segments, typical, median, isIdle, isDhw, isCool, isDefrost, 
 const H = 3600e3, WIN = 6 * H, LEG_T = 60;
 const tempCol = (v: number) => isNaN(v) ? "overlay1" : v < 0 ? "sapphire" : v < 10 ? "sky" : v < 18 ? "teal" : v < 24 ? "green" : v < 28 ? "yellow" : v < 32 ? "peach" : "red";
 const copCol = (v: number) => isNaN(v) || v <= 0 ? "overlay1" : v < 2.5 ? "red" : v < 3.5 ? "peach" : v < 4.5 ? "yellow" : "green";
-const NO_ERR = ["Brak błędów", "No error", "No Error", "unavailable", "unknown", ""];
+const NO_ERR = ["Brak błędów", "No error", "No Error", "No faults", "OK", "unavailable", "unknown", ""];
 
 class ImmergasNowCard extends HubCard {
   private hist: { at: number; st: Seg[]; nt: Seg[]; leg: number[] } | null = null;
@@ -212,7 +212,44 @@ class ImmergasNowCard extends HubCard {
     </div>`;
   }
 
+  /** Immergas Dominus (no heat-pump data): mode and what the boiler is asked for, setpoints, three temperatures, fault */
+  private domBody() {
+    const err = this.on("err_active"), ch = this.on("dom_ch_demand"), dhw = this.on("dom_dhw_request");
+    const col = err ? "red" : dhw ? "yellow" : ch ? "peach" : "overlay1";
+    const state = err ? this.t("AWARIA", "FAULT") : dhw ? this.t("Ciepła woda", "Hot water") : ch ? this.t("Ogrzewanie", "Heating") : this.t("Czuwanie", "Standby");
+    const sub = [this.bad("mode") ? "" : this.t("tryb ", "mode ") + this.txt("mode"),
+      this.bad("zone1_phase") ? "" : this.t("program ", "program ") + this.txt("zone1_phase"),
+      ch && dhw ? this.t("CO też czeka", "CH also waiting") : ""].filter(Boolean).join(" · ");
+    const out = this.n("outdoor"), z1 = this.n("zone1"), tank = this.n("tank"), zs = this.n("zone1_set"), ds = this.n("dhw_set");
+    return html`
+      ${this.head("mdi:water-boiler", this.t("Teraz", "Now"))}
+      ${err ? html`<div class="banner" style=${box("red", true)} @click=${() => this.moreInfo("err_desc")}>
+        <ha-icon icon="mdi:alert-octagon" style="color:${c("red")}"></ha-icon>
+        <div class="cx"><div class="bt" style="color:${c("red")}">${this.t("BŁĄD KOTŁA", "BOILER FAULT")}</div><div class="bs">${this.s("err_desc") ?? ""}</div></div></div>` : nothing}
+      <div class="hero" style="background:${ch || dhw || err ? `color-mix(in srgb, ${c(col)} 16%, var(--ha-card-background, var(--card-background-color)))` : ca("overlay1", 0.06)}"
+        @click=${() => this.moreInfo("mode")}>
+        <ha-icon class="hi" icon=${dhw ? "mdi:water-boiler" : ch ? "mdi:radiator" : "mdi:water-boiler-off"} style="color:${c(col)}"></ha-icon>
+        <div class="hm">
+          <div class="hn">${this.config.title ?? "Immergas · Dominus"}</div>
+          <div class="mode" style="color:${c(col)}">${state}</div>
+          <div class="sub">${sub}</div></div>
+        <div class="flow">
+          <span style="color:${c("peach")}" title=${this.t("nastawa CO strefy 1", "zone 1 CH setpoint")}
+            @click=${(e: Event) => { e.stopPropagation(); this.moreInfo("zone1_set"); }}>CO ${this.f(zs)}°</span>
+          <span style="color:${c("yellow")}" title=${this.t("nastawa CWU", "DHW setpoint")}
+            @click=${(e: Event) => { e.stopPropagation(); this.moreInfo("dhw_set"); }}>${this.t("CWU", "DHW")} ${this.f(ds, 0)}°</span></div>
+      </div>
+      <div class="grid4">
+        ${this.tile("outdoor", "mdi:thermometer", this.t("Na zewnątrz", "Outdoor"), this.f(out, 1, 1) + " °C", tempCol(out), (out + 15) / 50 * 100)}
+        ${this.tile("zone1", "mdi:home-thermometer", this.t("Strefa 1", "Zone 1"), this.f(z1, 1, 1) + " °C", tempCol(z1), (z1 - 15) / 13 * 100)}
+        ${this.tile("tank", "mdi:water-boiler", this.t("Zasobnik CWU", "DHW cylinder"), this.f(tank, 1, 1) + " °C", tank >= 45 ? "peach" : tank >= 35 ? "yellow" : "sky", (tank - 20) / 45 * 100)}
+        ${this.tile("dom_ch_demand", ch ? "mdi:fire" : "mdi:fire-off", this.t("Żądanie CO", "CH demand"), ch ? this.t("tak", "yes") : this.t("nie", "no"), ch ? "peach" : "overlay1")}
+      </div>
+      <div class="chips2"><div class="span2">${this.faultChip()}</div></div>`;
+  }
+
   protected body() {
+    if (this.dominus) return this.domBody();
     if (this.idx && (!this.copMonth || Date.now() - this.copMonth.at > 30 * 60e3)) this.loadCopMonth();
     const hz = this.n("hz"), run = hz > 0;
     const defrost = this.on("defrost");

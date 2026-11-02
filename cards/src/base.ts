@@ -106,6 +106,13 @@ export abstract class HubCard extends LitElement {
   protected on(k: Key) { return this.s(k) === "on"; }
   protected bad(k: Key) { const v = this.s(k); return v === undefined || v === "unavailable" || v === "unknown"; }
   protected attr(k: Key, a: string) { return this.so(k)?.attributes?.[a]; }
+  /** state as Home Assistant shows it (translated enum / select option), e.g. Dominus "economy" -> "Eko" */
+  protected txt(k: Key): string | undefined {
+    const so = this.so(k);
+    return so ? this.hass.formatEntityState?.(so) ?? so.state : undefined;
+  }
+  /** entities come from the Immergas Dominus integration, not from the hub (reduced view, no heat-pump data) */
+  protected get dominus() { return this.idx?.source === "dominus"; }
   /** F1/F2 write gate: locked only while the "Active ODU control" switch is exposed and off (hub v23+ keeps it armed and hidden) */
   protected get writeLocked() { return !!this.eid("f_arm") && !this.on("f_arm"); }
 
@@ -148,10 +155,10 @@ export abstract class HubCard extends LitElement {
 
   render() {
     if (!this.hass) return nothing;
-    this.idx = hubIndex(this.hass, () => this.requestUpdate());
+    this.idx = hubIndex(this.hass, () => this.requestUpdate(), this.config.source);
     if (!this.idx) {
-      return html`<ha-card><div class="empty">${this.t("Szukam huba Immergas… (urządzenie z encją „Immergas Hub - Stan pracy”)",
-        "Looking for the Immergas hub… (device with the “Immergas Hub - Operating state” entity)")}</div></ha-card>`;
+      return html`<ha-card><div class="empty">${this.t("Szukam huba Immergas… (urządzenie z encją „Immergas Hub - Stan pracy”) albo integracji Immergas Dominus",
+        "Looking for the Immergas hub… (device with the “Immergas Hub - Operating state” entity) or the Immergas Dominus integration")}</div></ha-card>`;
     }
     return html`<ha-card>${this.body()}</ha-card>`;
   }
@@ -398,5 +405,6 @@ export abstract class HubCard extends LitElement {
 export function register(tag: string, cls: CustomElementConstructor, name: string, description: string) {
   if (!customElements.get(tag)) customElements.define(tag, cls);
   (window as any).customCards = (window as any).customCards || [];
-  (window as any).customCards.push({ type: tag, name, description, preview: true });
+  // the bundle can be loaded twice (hub cards resource + the copy shipped with the Dominus integration)
+  if (!(window as any).customCards.some((x: any) => x.type === tag)) (window as any).customCards.push({ type: tag, name, description, preview: true });
 }

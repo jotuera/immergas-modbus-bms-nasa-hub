@@ -137,7 +137,7 @@ class ImmergasScheduleCard extends HubCard {
         @click=${() => { this.tabT = id; this.open = 0; this.edit = 0; this.requestUpdate(); }}><ha-icon icon=${icon} style="color:${c(col)}"></ha-icon>${lbl}</div>`;
     };
     const stateTxt = cwu ? (active ? this.t("teraz w harmonogramie", "now in schedule") : this.t("teraz poza harmonogramem (Eko)", "now outside schedule (Eco)"))
-      : (this.s("zone1_phase") ?? "");
+      : (this.txt("zone1_phase") ?? "");
     // DHW: Comfort / Eco from the DD entities (DD >= 2.4.0), else the single D05 setpoint
     const ddDhw = !!this.eid("dhw_comfort_dd") && !!this.eid("dhw_eco_dd");
     const sets = cwu
@@ -164,7 +164,7 @@ class ImmergasScheduleCard extends HubCard {
           <div class="btn" @click=${() => set(1)}><ha-icon icon="mdi:plus"></ha-icon></div></div>`;
       })}</div>
       ${cwu && ddDhw && this.eid("dhw_sched") ? this.toggles([["dhw_sched", "mdi:calendar-clock", "peach", this.t("Komfort / Eko wg harmonogramu CWU", "Comfort / Eco by the DHW schedule"),
-        this.on("dhw_sched") ? this.t("teraz ", "now ") + (this.bad("dhw_phase") ? "–" : this.s("dhw_phase")) + " · " + this.t("nastawa", "setpoint") + " " + this.f(this.n("dhw_set"), 1, 1) + " °C"
+        this.on("dhw_sched") ? this.t("teraz ", "now ") + (this.bad("dhw_phase") ? "–" : this.txt("dhw_phase")) + " · " + this.t("nastawa", "setpoint") + " " + this.f(this.n("dhw_set"), 1, 1) + " °C"
           : this.t("wył. – piec trzyma jedną nastawę CWU", "off – the boiler keeps one DHW setpoint"), true]]) : nothing}
       <div class="note">${view === "week"
         ? this.t("Wybierz kalendarz dla każdego dnia; zakresy edytujesz w polu poniżej. Zakresy kalendarzy są wspólne dla CO i CWU, przypisanie dni — osobne.",

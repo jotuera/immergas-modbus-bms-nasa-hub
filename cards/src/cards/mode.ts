@@ -84,12 +84,38 @@ class ImmergasModeCard extends HubCard {
     if (!this.eid("dhw_sched")) return nothing;
     const bad = this.bad("dhw_sched"), cur = this.on("dhw_sched") ? "auto" : "manual";
     const set = (m: string) => this.call("switch", m === "auto" ? "turn_on" : "turn_off", "dhw_sched");
-    const ph = this.bad("dhw_phase") ? "" : this.s("dhw_phase")!, ds = this.n("dhw_set");
+    const ph = this.bad("dhw_phase") ? "" : this.txt("dhw_phase")!, ds = this.n("dhw_set");
     const sub = bad ? this.t("brak odczytu", "no reading")
       : cur === "auto" ? this.t("Komfort / Eko wg kalendarza CWU", "Comfort / Eco by the DHW calendar") + (ph ? this.t(" · teraz: ", " · now: ") + ph : "")
       : this.t("stała nastawa", "fixed setpoint") + (isNaN(ds) ? "" : ` ${this.f(ds, 0)} °C`);
     return this.srcBlock("dprog", this.t("Program czasowy CWU", "DHW time program"), sub,
       [["auto", "mdi:calendar-clock", "blue", "AUTO"], ["manual", "mdi:hand-back-right-outline", "peach", "MANUAL"]], cur, set, bad);
+  }
+
+  /** Dominus: the zone 1 program phase (no AUTO / MANUAL select there) and the boiler-side zone settings */
+  private domRows(cooling: boolean) {
+    const ph = this.bad("zone1_phase") ? "" : this.txt("zone1_phase")!, raw = this.s("zone1_phase") ?? "";
+    const col = raw === "comfort" ? "peach" : raw === "economy" ? "teal" : "overlay2";
+    return html`${ph ? html`<div class="night" style=${box(col, raw === "comfort" || raw === "economy")} @click=${() => this.moreInfo("zone1_phase")}>
+        <ha-icon icon="mdi:calendar-clock" style="color:${c(col)}"></ha-icon>
+        <div class="cx"><div class="nt">${this.t("Program czasowy CO Strefy 1", "Zone 1 CH time program")}</div>
+          <div class="ns" style="color:${c(col)}">${raw === "manual" ? this.t("ręczny – stała nastawa", "manual – fixed setpoint") : this.t("wg harmonogramu · teraz: ", "by the schedule · now: ") + ph}</div></div></div>` : nothing}
+      ${this.domZone(cooling)}`;
+  }
+
+  /** Dominus: zone 1 settings the Setpoints card does not show (it shows the Comfort / Eco pair of the current mode) */
+  private domZone(cooling: boolean) {
+    const rows = [
+      this.numRow("u03", "mdi:chart-bell-curve-cumulative", this.t("Offset krzywej (U03)", "Curve offset (U03)"), 1),
+      ...(cooling
+        ? [this.numRow("comfort_heat", "mdi:fire", this.t("Komfort grzanie", "Comfort heating"), 1),
+          this.numRow("eco_heat", "mdi:leaf", this.t("Eko grzanie", "Eco heating"), 1)]
+        : [this.numRow("comfort_cool", "mdi:snowflake", this.t("Komfort chłodzenie", "Comfort cooling"), 1),
+          this.numRow("eco_cool", "mdi:snowflake-thermometer", this.t("Eko chłodzenie", "Eco cooling"), 1)]),
+      this.numRow("dom_flow_target", "mdi:thermometer-water", this.t("Zadana zasilania", "Flow setpoint"), 0),
+      this.numRow("dom_hum_target", "mdi:water-percent", this.t("Zadana wilgotności", "Humidity setpoint"), 0),
+    ].filter((r) => r !== nothing);
+    return rows.length ? html`<div class="setp"><div class="st">${this.t("Nastawy Strefy 1", "Zone 1 settings")}</div>${rows}</div>` : nothing;
   }
 
   protected body() {
@@ -127,7 +153,8 @@ class ImmergasModeCard extends HubCard {
       ${this.head("mdi:tune-variant", this.t("Tryb pracy", "Operating mode"), this.t("dotknij 2× aby zmienić", "tap twice to change"))}
       <div class="modes">${this.modes()}</div>
       ${this.config.show_source === false ? nothing : html`${modeIdx === 3 ? this.sourceRow() : nothing}${modeIdx >= 1 ? this.dhwSourceRow() : nothing}`}
-      ${night}
+      ${this.eid("u11") ? night : nothing}
+      ${this.dominus ? this.domRows(modeIdx === 2) : nothing}
       ${this.legRow(tchip, hm)}
       ${this.config.show_f1f2 === false ? nothing : this.f1f2Rows()}
       ${this.progRow()}
@@ -146,6 +173,7 @@ class ImmergasModeCard extends HubCard {
   }
 
   static styles = [HubCard.styles, css`
+    .setp .st { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; opacity: .55; margin: 2px 0 2px; }
     .modes { display: flex; gap: 6px; }
     .mb.lock { opacity: .4; cursor: not-allowed; }
     .mb { cursor: pointer; flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 9px 2px; border-radius: 13px; }

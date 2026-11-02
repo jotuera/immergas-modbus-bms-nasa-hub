@@ -42,6 +42,11 @@ strategy:
   type: custom:immergas-hub
 ```
 
+**Bez huba – Immergas Dominus:** z samą integracją [Immergas Dominus](https://github.com/jotuera/immergas-dominus)
+(lokalne TCP do modułu Wi-Fi Dominus) użyj `type: custom:immergas-dominus` – okrojony dashboard z kartami Teraz,
+Nastawy, Tryb pracy, Harmonogram i Łączność. Integracja ma te karty w sobie; karty znajdują jej encje po kluczach (bez
+danych pompy ciepła, COP i sprężarki – do tego potrzebny jest hub).
+
 ## Jak karty znajdują encje
 
 Karty szukają urządzenia z encją „Immergas Hub - Stan pracy” („Operating state”) i dopasowują każdą encję po
