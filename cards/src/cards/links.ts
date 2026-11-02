@@ -67,6 +67,17 @@ class ImmergasLinksCard extends HubCard {
       out.push({ k: "mode", icon: "mdi:water-boiler", name: ["Kocioł", "Boiler"], bus: "Dominus · Modbus",
         st: this.bad("mode") && this.bad("zone1") ? "bad" : "ok",
         detail: this.bad("mode") ? "" : this.t("tryb ", "mode ") + this.txt("mode") });
+      // zone 1 room temperature: Dominus does not measure it - it comes from a zone panel on D+/D- (physical, or
+      // emulated by the hub); TCP has no panel firmware register, so physical and emulated look the same here
+      const room = this.n("zone1");
+      out.push({ k: "zone1", icon: "mdi:tablet-dashboard", name: ["Panel Strefy 1", "Zone 1 panel"], bus: "D+/D- 0x29",
+        st: isNaN(room) ? "off" : "ok",
+        label: isNaN(room) ? this.t("brak czujnika pokojowego", "no room sensor") : this.t("temperatura pokoju", "room temperature"),
+        detail: isNaN(room)
+          ? this.t("Dominus nie mierzy temperatury – potrzebny panel strefy (fizyczny albo emulowany przez hub)",
+            "Dominus does not measure it – a zone panel is needed (physical or emulated by the hub)")
+          : `${this.f(room, 1, 1)} °C · ` + this.t("panel fizyczny albo emulowany (po TCP nie do rozróżnienia)",
+            "physical or emulated panel (not distinguishable over TCP)") });
     }
 
     const wifi = this.n("hub_wifi");
