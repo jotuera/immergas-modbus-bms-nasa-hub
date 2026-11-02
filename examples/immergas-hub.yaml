@@ -79,13 +79,13 @@ web_server:
     password: !secret immergas_hub_web_password
 
 external_components:
-  - source: github://jotuera/immergas-modbus-bms-nasa-hub@v1.1.1
+  - source: github://jotuera/immergas-modbus-bms-nasa-hub@v1.1.2
     components: [immergas_core, immergas_climate, f1f2_nasa]
 
 packages:
   hub:
     url: https://github.com/jotuera/immergas-modbus-bms-nasa-hub
-    ref: v1.1.1
+    ref: v1.1.2
     refresh: 1d
     files:
       # languages: hub_xx / dd_xx / tt_xx = cs de en es fr hu it nl pl pt sk, f1f2_xx = en pl
