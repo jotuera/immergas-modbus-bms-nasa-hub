@@ -154,6 +154,9 @@ class ImmergasScheduleCard extends HubCard {
             @click=${() => { this.view = view === "week" ? "calendars" : "week"; this.requestUpdate(); }}>
             <ha-icon icon=${view === "week" ? "mdi:view-agenda-outline" : "mdi:calendar-week"}></ha-icon></div></div></div>
       <div class="st" style="color:${c(active ? "green" : "overlay2")}">${stateTxt}</div>
+      ${this.dominus && !this.eid("k1z1on") ? html`<div class="note" style="color:${c("yellow")}">${this.t(
+        "Godziny kalendarzy są ukryte: włącz urządzenie „Heating schedule” integracji Immergas Dominus (Ustawienia → Urządzenia).",
+        "Calendar hours are hidden: enable the “Heating schedule” device of the Immergas Dominus integration (Settings → Devices).")}</div>` : nothing}
       ${view === "week" ? this.week(ks, today, nowM) : this.calendars(ks, today, nowM)}
       <div class="row">${sets.map(([k, icon, lbl]) => {
         const v = this.n(k as Key), a = this.so(k as Key)?.attributes ?? {}, step = a.step ?? 0.5;

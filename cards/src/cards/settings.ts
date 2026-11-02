@@ -40,10 +40,10 @@ class ImmergasSettingsCard extends HubCard {
     const night = this.opt("night_start") || this.opt("night_stop"), leg = this.opt("legionella_day") || this.opt("legionella_time");
     return html`
       <div class="sh" @click=${() => { this.open = !open; this.requestUpdate(); }}>
-        <ha-icon icon="mdi:cog-outline"></ha-icon><span class="ttl">${this.t("Ustawienia huba", "Hub settings")}</span>
-        <span class="sum">${open ? "" : this.t("ceny, zasobnik, tryb nocny, legionella…", "prices, cylinder, night mode, legionella…")}</span>
+        <ha-icon icon="mdi:cog-outline"></ha-icon><span class="ttl">${this.dominus ? this.t("Ustawienia", "Settings") : this.t("Ustawienia huba", "Hub settings")}</span>
+        <span class="sum">${open ? "" : this.dominus ? this.t("język opisów błędów", "fault description language") : this.t("ceny, zasobnik, tryb nocny, legionella…", "prices, cylinder, night mode, legionella…")}</span>
         <ha-icon class="chev" icon=${open ? "mdi:chevron-up" : "mdi:chevron-down"}></ha-icon></div>
-      ${open ? html`
+      ${open && !this.dominus ? html`
         <div class="grp">${this.t("Ceny energii", "Energy prices")}</div>
         ${this.numRow("price_elec", "mdi:flash", this.t("Cena prądu", "Electricity price"), 3)}
         ${this.numRow("price_gas", "mdi:fire", this.t("Cena gazu", "Gas price"), 2)}
@@ -59,11 +59,11 @@ class ImmergasSettingsCard extends HubCard {
         ${leg ? html`<div class="grp">${this.t("Anty-legionella P15 (przypomnienie – ustawia się na piecu)", "Anti-legionella P15 (reminder – set on the boiler)")}</div>
           ${this.selRow(this.opt("legionella_day"), this.t("Dzień", "Day"), "mdi:calendar-week")}
           ${this.timeRow(this.opt("legionella_time"), this.t("Godzina", "Time"), "mdi:bacteria-outline")}` : nothing}
-        ${lang ? html`<div class="grp">${this.t("Opisy błędów", "Fault descriptions")}</div>
+      ` : nothing}
+      ${open && lang ? html`<div class="grp">${this.t("Opisy błędów", "Fault descriptions")}</div>
           <div class="nr"><ha-icon icon="mdi:translate"></ha-icon><span class="nl">${this.t("Język", "Language")}</span>
             <select class="langs" .value=${lang.state} @change=${(e: Event) => { const o = (e.target as HTMLSelectElement).value; if (o !== lang.state) this.call("select", "select_option", "err_lang", { option: o }); }}>
-              ${opts.map((o) => html`<option value=${o} ?selected=${o === lang.state}>${o}</option>`)}</select></div>` : nothing}
-      ` : nothing}`;
+              ${opts.map((o) => html`<option value=${o} ?selected=${o === lang.state}>${this.hass.formatEntityState?.(lang, o) ?? o}</option>`)}</select></div>` : nothing}`;
   }
 
   static styles = [HubCard.styles, css`

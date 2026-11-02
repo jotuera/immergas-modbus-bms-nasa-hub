@@ -22,7 +22,7 @@ const DOMINUS: Record<string, Key> = {
   dhw_comfort_eco: "dhw_sched", dhw_phase: "dhw_phase", program_phase: "zone1_phase", comfort_heat: "comfort_heat",
   eco_heat: "eco_heat", comfort_cool: "comfort_cool", eco_cool: "eco_cool", heating_demand: "dom_ch_demand",
   dhw_request: "dom_dhw_request", last_successful_read: "dom_last_read", failed_polls: "dom_failed",
-  humidity_target: "dom_hum_target", flow_target: "dom_flow_target",
+  humidity_target: "dom_hum_target", flow_target: "dom_flow_target", fault_language: "err_lang",
 };
 ["mon", "tue", "wed", "thu", "fri", "sat", "sun"].forEach((d, i) => {
   DOMINUS[`weekday_${i + 1}_profile`] = `co_${d}` as Key;

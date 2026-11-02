@@ -99,7 +99,7 @@ class ImmergasLinksCard extends HubCard {
     return html`
       ${this.head("mdi:lan", this.t("Łączność", "Connectivity"), nBad ? html`<span style="color:${c("red")}">${this.t("problemy: ", "problems: ")}${nBad}</span>`
         : this.t("wszystko połączone", "all connected"))}
-      <div class="links" style=${this.dominus ? "grid-template-columns:repeat(2, minmax(0, 1fr))" : ""}>${pairs.map((pair) => html`<div class="pair">${pair.map((l) => {
+      <div class="links" style=${this.dominus ? "grid-template-columns:repeat(2, minmax(0, 1fr))" : ""}>${pairs.map((pair) => html`<div class=${pair.length > 1 ? "pair" : "pair one"}>${pair.map((l) => {
         const [col, txt0, icon] = meta[l.st], txt = l.label ?? txt0;
         return html`<div class="lk" style=${box(col, l.st === "bad")} @click=${() => this.moreInfo(l.k)}>
           <ha-icon icon=${l.icon} style="color:${c(col)}"></ha-icon>
@@ -119,6 +119,7 @@ class ImmergasLinksCard extends HubCard {
     @container (max-width: 760px) { .links { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     /* every tile the same height: each pair spans two rows of one shared grid (subgrid), all rows 1fr */
     .pair { display: grid; grid-row: span 2; grid-template-rows: subgrid; gap: 8px; min-width: 0; }
+    .pair.one { grid-row: span 1; }
     .lk { box-sizing: border-box; height: 100%; }
     .lk { cursor: pointer; display: flex; gap: 9px; align-items: flex-start; padding: 9px 10px; border-radius: 12px; min-width: 0; }
     .lk > ha-icon { --mdc-icon-size: 22px; flex: none; margin-top: 2px; }

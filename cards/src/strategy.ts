@@ -40,7 +40,6 @@ class ImmergasDominusStrategy {
     const l = String(hass?.locale?.language ?? hass?.language ?? "en").slice(0, 2), lang = LANGS.includes(l) ? l : "en";
     const t = (a: string, b: string) => translate(lang, a, b);
     const card = (type: string, extra: Record<string, unknown> = {}) => ({ type: "custom:" + type, grid_options: { columns: "full" }, source: "dominus", ...extra });
-    const sched = Object.values(hass?.entities ?? {}).some((e: any) => e.platform === "immergas_dominus" && /^fascia_(start|end)$/.test(e.translation_key ?? ""));
     return {
       title: config.title ?? "Immergas Dominus",
       views: [
@@ -48,10 +47,9 @@ class ImmergasDominusStrategy {
           title: t("Kocioł", "Boiler"), path: "dominus", icon: "mdi:water-boiler", type: "sections", max_columns: 3,
           sections: [
             { type: "grid", cards: [card("immergas-now-card", config.now ?? {}), card("immergas-setpoints-card", config.setpoints ?? {})] },
-            { type: "grid", cards: [card("immergas-mode-card", config.mode ?? {})] },
-            // the schedule entities sit on the "Heating schedule" device, disabled by default
-            ...(sched ? [{ type: "grid", cards: [card("immergas-schedule-card", config.schedule ?? {})] }] : []),
-            { type: "grid", column_span: sched ? 3 : 1, cards: [card("immergas-links-card")] },
+            { type: "grid", cards: [card("immergas-mode-card", config.mode ?? {}), card("immergas-links-card"),
+              card("immergas-settings-card", config.settings ?? {})] },
+            { type: "grid", cards: [card("immergas-schedule-card", config.schedule ?? {})] },
           ],
         },
       ],
