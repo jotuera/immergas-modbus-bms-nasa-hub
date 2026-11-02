@@ -1055,5 +1055,6 @@
  "at low compressor output the same flow gives a smaller ΔT": "bij laag compressorvermogen geeft hetzelfde debiet een kleinere ΔT",
  "keep A04 – {0} heats {1}% of the day, it lacks water": "A04 laten – {0} verwarmt {1}% van de dag, er is te weinig water",
  "✓ low output – a small ΔT is normal": "✓ laag vermogen – kleine ΔT is normaal",
- "median while the heat pump heats CH, 24 h{0}": "mediaan tijdens verwarmen met de WP, 24 h{0}"
+ "median while the heat pump heats CH, 24 h{0}": "mediaan tijdens verwarmen met de WP, 24 h{0}",
+ "DHW heating – the water goes to the cylinder, not on the curve": "SWW-verwarming – het water gaat naar de boiler, niet op de curve"
 }

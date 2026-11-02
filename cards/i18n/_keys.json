@@ -4416,6 +4416,13 @@
   ]
  },
  {
+  "en": "DHW heating – the water goes to the cylinder, not on the curve",
+  "pl": "grzanie CWU – woda idzie do zasobnika, nie na krzywą",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
   "en": "The heating curve is not set yet",
   "pl": "Krzywa grzewcza nie jest jeszcze ustawiona",
   "files": [

@@ -1055,5 +1055,6 @@
  "at low compressor output the same flow gives a smaller ΔT": "pri nízkom výkone kompresora dáva rovnaký prietok menšie ΔT",
  "keep A04 – {0} heats {1}% of the day, it lacks water": "ponechajte A04 – {0} kúri {1}% dňa, chýba mu voda",
  "✓ low output – a small ΔT is normal": "✓ nízky výkon – malé ΔT je normálne",
- "median while the heat pump heats CH, 24 h{0}": "medián pri vykurovaní tepelným čerpadlom, 24 h{0}"
+ "median while the heat pump heats CH, 24 h{0}": "medián pri vykurovaní tepelným čerpadlom, 24 h{0}",
+ "DHW heating – the water goes to the cylinder, not on the curve": "ohrev TÚV – voda ide do zásobníka, nie na krivku"
 }

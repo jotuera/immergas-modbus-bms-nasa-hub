@@ -5,7 +5,7 @@
 // red band in cooling); tab: heat | cool | outing (initial tab).
 import { svg, SVGTemplateResult } from "lit";
 import { HubCard, html, css, nothing, c, ca, box, register } from "../base";
-import { isCoolMode } from "./timers";
+import { isCoolMode, isDhw } from "./timers";
 import { Key } from "../names";
 
 interface Axis { X0: number; X1: number; Y0: number; Y1: number; xs: number; ys: number }
@@ -17,6 +17,9 @@ class ImmergasCurveCard extends HubCard {
   private out: boolean | null = null; // Outing toggle: Heating / Cooling then show the outing curves
   private drag: { k: Key; v: number; mn: number; mx: number } | null = null;
   private ax: Axis = { X0: -20, X1: 30, Y0: 15, Y1: 60, xs: 5, ys: 10 };
+
+  /** DHW heating: the flow goes to the cylinder coil, not to the house, so it is not a point on the curve */
+  private get dhwNow() { return this.s("d22") === "1" || isDhw(this.s("state") ?? "") || this.on("tt_dhw"); }
 
   private px(x: number) { const { X0, X1 } = this.ax; return x0 + (Math.min(X1, Math.max(X0, x)) - X0) / (X1 - X0) * (x1 - x0); }
   private py(y: number) { const { Y0, Y1 } = this.ax; return y1 - (Math.min(Y1, Math.max(Y0, y)) - Y0) / (Y1 - Y0) * (y1 - y0); }
@@ -124,7 +127,7 @@ class ImmergasCurveCard extends HubCard {
         ${this.hline(maxF, "red", this.t("maks. podłoga ", "max. floor ") + this.f(maxF) + "°", "above")}
         ${this.hline(isNaN(zad) ? NaN : zad + 2, "sky", this.t(`poniżej nie grzeje (pokój ${this.f(zad)}° + 2)`, `below it does not heat (room ${this.f(zad)}° + 2)`), "below", "2 3", 1.4, false)}
         ${this.curveSvg("r04", "r05", hi, lo, xa, xb, "peach", off, [Math.max(25, lo + 1), 60, 20, Math.min(45, hi - 1)], ["R04", "R05", "R02", "R03"])}
-        ${this.nowMarks(out, tgt, d04, flow, "sky")}</svg>
+        ${this.nowMarks(out, tgt, d04, this.dhwNow ? NaN : flow, "sky")}</svg>
       <div class="row">
         ${this.ctl("r04", hi, Math.max(25, lo + 1), 60, this.t("R04 · maks. zasilanie", "R04 · max. flow"), this.t(`od R02 = ${xa} °C w dół`, `from R02 = ${xa} °C down`), "peach")}
         ${this.ctl("r05", lo, 20, Math.min(45, hi - 1), this.t("R05 · min. zasilanie", "R05 · min. flow"), this.t(`od R03 = ${xb} °C w górę`, `from R03 = ${xb} °C up`), "peach")}
@@ -161,7 +164,7 @@ class ImmergasCurveCard extends HubCard {
         ${isNaN(dew) ? nothing : svg`<rect x=${x0} y=${this.py(dew + 2)} width=${x1 - x0} height=${Math.max(0, this.py(this.ax.Y0) - this.py(dew + 2))} fill=${ca("red", 0.18)}/>`}
         ${this.hline(dew, "red", this.t("punkt rosy ", "dew point ") + this.f(dew) + "°", undefined, "3 3", 1.8)}
         ${this.curveSvg("r13", "r12", hi, lo, xa, xb, "sky", 0, [Math.max(7, lo + 1), 25, 5, Math.min(20, hi - 1)], ["R13", "R12", "R11", "R10"])}
-        ${this.nowMarks(out, tgt, d04, flow, "mauve")}</svg>
+        ${this.nowMarks(out, tgt, d04, this.dhwNow ? NaN : flow, "mauve")}</svg>
       <div class="row">
         ${this.ctl("r13", hi, Math.max(7, lo + 1), 25, this.t("R13 · maks. zasilanie", "R13 · max. flow"), this.t(`od R11 = ${xa} °C w dół`, `from R11 = ${xa} °C down`), "sky")}
         ${this.ctl("r12", lo, 5, Math.min(20, hi - 1), this.t("R12 · min. zasilanie", "R12 · min. flow"), this.t(`od R10 = ${xb} °C w górę`, `from R10 = ${xb} °C up`), "sky")}
@@ -247,7 +250,9 @@ class ImmergasCurveCard extends HubCard {
     return html`<div class="tr" style="margin-top:8px">
       <span>${this.t("teraz", "now")} <b>${this.f(out)} °C</b></span>${mid}
       <span @click=${() => this.moreInfo("d04")} style="cursor:pointer">${this.t("zadane D04", "setpoint D04")} <b style="color:${c("yellow")}">${this.f(isNaN(d04) ? tgt : d04)} °C</b>${!isNaN(d04) && !isNaN(tgt) && Math.abs(tgt - d04) >= 0.5 ? html` <span style="opacity:.55">(${this.t("krzywa", "curve")} ${this.f(tgt)})</span>` : nothing}</span>
-      <span @click=${() => this.moreInfo("flow_d20")} style="cursor:pointer">${this.t("zasilanie", "flow")} <b style="color:${c("red")}">${this.f(flow)} °C</b></span></div>`;
+      <span @click=${() => this.moreInfo("flow_d20")} style="cursor:pointer">${this.t("zasilanie", "flow")} ${this.dhwNow
+        ? html`<b style="opacity:.6">${this.f(flow)} °C</b> <b style="color:${c("yellow")}">${this.t("grzanie CWU – woda idzie do zasobnika, nie na krzywą", "DHW heating – the water goes to the cylinder, not on the curve")}</b>`
+        : html`<b style="color:${c("red")}">${this.f(flow)} °C</b>`}</span></div>`;
   }
   /** curve point: the card option, else the value declared in Immergas Dominus, else the default */
   private pt(opt: string, k: Key, def: number) {

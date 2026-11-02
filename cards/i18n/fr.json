@@ -1055,5 +1055,6 @@
  "at low compressor output the same flow gives a smaller ΔT": "à faible puissance du compresseur, le même débit donne un ΔT plus petit",
  "keep A04 – {0} heats {1}% of the day, it lacks water": "gardez A04 – {0} chauffe {1}% de la journée, il manque d’eau",
  "✓ low output – a small ΔT is normal": "✓ faible puissance – un petit ΔT est normal",
- "median while the heat pump heats CH, 24 h{0}": "médiane en chauffage par la PAC, 24 h{0}"
+ "median while the heat pump heats CH, 24 h{0}": "médiane en chauffage par la PAC, 24 h{0}",
+ "DHW heating – the water goes to the cylinder, not on the curve": "chauffe ECS – l'eau va au ballon, pas sur la courbe"
 }
