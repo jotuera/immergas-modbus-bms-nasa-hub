@@ -928,6 +928,119 @@ class ImmergasCalibrationCard extends HubCard {
       rec: slow ? ee + 0.5 : ee,
       reason: [`dojście do zadanej ${isNaN(ttt) ? "–" : this.f(ttt, 0)} min, różnica Komfort–Eko ${isNaN(gap) ? "–" : f1(gap)} K`,
         `reached the target in ${isNaN(ttt) ? "–" : this.f(ttt, 0)} min, Comfort–Eco gap ${isNaN(gap) ? "–" : f1(gap)} K`] });
+    // --- offline parameters (copies of the boiler menu typed in by hand): T02, T05, U11, P15/P13, I04/I10, A31, P07 ---
+    // a recommendation on a copy means "change it in the boiler menu"; Set only updates the copy
+    const menuP: [string, string] = [" – zmień w menu pieca, encja to tylko kopia", " – change it in the boiler menu, the entity is only the copy"];
+    const withMenu = (txt: [string, string], changed: boolean): [string, string] => changed ? [txt[0] + menuP[0], txt[1] + menuP[1]] : txt;
+    const offUnset = (k: Key, code: string, name: [string, string], group: string): Row => ({ k, code, name, unit: "", kind: "info", group, value: "–", ok: true,
+      model: "–", why: ["Dominus nie czyta tego ustawienia – przepisz je z menu pieca (karta Parametry pieca)", "Dominus cannot read this setting – copy it from the boiler menu (Boiler parameters card)"],
+      rec: this.t("nie ustawione – wpisz z pieca", "not set – enter it from the boiler"), reason: ["", ""] });
+    const dset = this.n("dhw_set");
+    // T02 DHW thermostat: a heat pump wants a wider hysteresis (5-7 K) - fewer, longer DHW cycles
+    if (this.eid("dom_t02")) {
+      if (!this.isSet("dom_t02")) out.push(offUnset("dom_t02", "T02", ["Termostat CWU (histereza)", "DHW thermostat (hysteresis)"], "dhw"));
+      else {
+        const t02 = this.n("dom_t02"), rec = dc > 3 && t02 < 5 ? 5 : t02, start = isNaN(dset) ? "–" : this.f(dset - t02, 0), cyc = isNaN(dc) ? "–" : this.f(dc, 0);
+        out.push({ k: "dom_t02", code: "T02", name: ["Termostat CWU (histereza)", "DHW thermostat (hysteresis)"], unit: "K", d: 0, kind: "number", group: "dhw",
+          model: "5–7 K", why: ["pompa ciepła: szersza histereza = rzadsze, dłuższe cykle CWU", "heat pump: a wider hysteresis = fewer, longer DHW cycles"], rec,
+          reason: withMenu(rec !== t02
+            ? [`${cyc} cykli CWU dziś przy T02 ${this.f(t02, 0)} K – cykl startuje już przy ${start} °C`, `${cyc} DHW cycles today with T02 ${this.f(t02, 0)} K – a cycle starts already at ${start} °C`]
+            : [`cykl CWU startuje przy ≤ ${start} °C · dziś ${cyc} cykli`, `a DHW cycle starts at ≤ ${start} °C · ${cyc} cycles today`], rec !== t02) });
+      }
+    }
+    // T05 CH start timer: the minimum pause between CH starts caps the cycling
+    if (this.eid("dom_t05")) {
+      if (!this.isSet("dom_t05")) out.push(offUnset("dom_t05", "T05", ["Minutnik startów CO", "CH start timer"], "cyc"));
+      else {
+        const t05 = this.n("dom_t05"), rec = many && t05 < 10 ? 10 : t05, cap = this.f(60 / Math.max(1, t05), 0), now = isNaN(sh) ? "–" : this.f(sh, 0);
+        out.push({ k: "dom_t05", code: "T05", name: ["Minutnik startów CO", "CH start timer"], unit: "min", d: 0, kind: "number", group: "cyc",
+          model: "≥ 10 min", why: ["minimalna przerwa między startami CO – dłuższa = mniej taktowania", "the minimum pause between CH starts – longer = less cycling"], rec,
+          reason: withMenu([`${now} startów/h, minutnik pozwala na ~${cap}/h`, `${now} starts/h, the timer allows ~${cap}/h`], rec !== t05) });
+      }
+    }
+    // U11 night function: worth it on mild nights (quieter, lower power); on frosty nights the rooms cool down
+    const tm = (k: Key) => { const v = this.s(k) ?? ""; return /^\d\d:\d\d/.test(v) ? v.slice(0, 5) : "–"; };
+    if (this.eid("u11")) {
+      if (!this.allSet("u12", "u13")) out.push(offUnset("u12", "U11", ["Tryb nocny (funkcja nocna)", "Night mode (night function)"], "use"));
+      else {
+        const mean = parseFloat(this.attr("dom_auto_season", "outdoor_mean_24h")), ref = isNaN(mean) ? out_ : mean, cur = this.on("u11") ? "on" : "off";
+        const rec = isNaN(ref) ? cur : ref >= 5 ? "on" : "off";
+        out.push({ k: "u11", code: "U11", name: ["Tryb nocny (funkcja nocna)", "Night mode (night function)"], unit: "", kind: "switch", group: "use",
+          model: this.t("wł. przy nocach ≥ 5 °C", "on for nights ≥ 5 °C"),
+          why: ["ogranicza moc nocą: ciszej i oszczędniej, ale w mrozy dom wychładza się", "limits the power at night: quieter and cheaper, but in frost the house cools down"], rec,
+          reason: withMenu([`${isNaN(mean) ? "teraz" : "średnia 24 h"} ${f1(ref)} °C · okno ${tm("u12")}–${tm("u13")}`, `${isNaN(mean) ? "now" : "24 h mean"} ${f1(ref)} °C · window ${tm("u12")}–${tm("u13")}`], rec !== cur) });
+      }
+    }
+    // P15 anti-legionella: needed with a DHW setpoint below 55 °C; P13 2-3 h; the slot belongs in the cheap tariff
+    if (this.eid("p15")) {
+      if (!this.allSet("p16", "p17", "p13")) out.push(offUnset("p16", "P15", ["Anty-legionella", "Anti-legionella"], "dhw"));
+      else {
+        const mm = (v: string) => /^\d\d?:\d\d/.test(v) ? +v.split(":")[0] * 60 + +v.split(":")[1].slice(0, 2) : null;
+        const cheap: [number, number][] = [], cheapOpt = String(this.config.cheap_hours ?? "");
+        for (const w of cheapOpt.split(",")) {
+          const m = w.trim().match(/^(\d\d?:\d\d)\s*-\s*(\d\d?:\d\d)$/), a = m ? mm(m[1]) : null, b = m ? mm(m[2]) : null;
+          if (a === null || b === null) continue;
+          if (b > a) cheap.push([a, b]); else { cheap.push([a, 1440]); if (b > 0) cheap.push([0, b]); }
+        }
+        const legT = this.timeOpt("legionella_time"), inCheap = legT === null || !cheap.length || cheap.some(([a, b]) => legT >= a && legT < b);
+        const cur = this.on("p15") ? "on" : "off", rec = isNaN(dset) ? cur : dset < 55 ? "on" : dset >= 60 ? "off" : cur;
+        const when = `${this.dayName(this.dayOpt("legionella_day"))} ${tm("p16")}`, ds = this.f(dset, 0);
+        out.push({ k: "p15", code: "P15", name: ["Anty-legionella", "Anti-legionella"], unit: "", kind: "switch", group: "dhw",
+          model: this.t("wł. przy CWU < 55 °C", "on with DHW < 55 °C"),
+          why: ["raz na jakiś czas zasobnik do ~60 °C zabija bakterie Legionella; przy niższej nastawie to konieczne", "now and then the cylinder at ~60 °C kills Legionella; needed with a lower setpoint"], rec,
+          reason: withMenu(rec !== cur
+            ? (rec === "on" ? [`nastawa CWU ${ds} °C – poniżej 55 °C dezynfekcja jest potrzebna`, `DHW setpoint ${ds} °C – below 55 °C disinfection is needed`]
+              : [`nastawa CWU ${ds} °C – woda i tak jest dezynfekowana`, `DHW setpoint ${ds} °C – the water is disinfected anyway`])
+            : !inCheap ? [`termin ${when} poza tanią taryfą (${cheapOpt}) – przesuń START P16`, `slot ${when} outside the cheap tariff (${cheapOpt}) – move START P16`]
+            : [`nastawa CWU ${ds} °C · termin ${when}`, `DHW setpoint ${ds} °C · slot ${when}`], rec !== cur || !inCheap) });
+        const p13 = this.n("p13"), r13 = p13 > 3 ? 3 : p13 < 2 ? 2 : p13;
+        out.push({ k: "p13", code: "P13", name: ["Anty-legionella: czas cyklu", "Anti-legionella: cycle duration"], unit: "h", d: 0, kind: "number", group: "dhw",
+          model: "2–3 h", why: ["dłuższy cykl to więcej energii bez dodatkowego efektu", "a longer cycle costs energy with no extra benefit"], rec: r13,
+          reason: withMenu([`cykl od ${tm("p16")} przez ${this.f(p13, 0)} h`, `cycle from ${tm("p16")} for ${this.f(p13, 0)} h`], r13 !== p13) });
+      }
+    }
+    // boiler integration (Magis Combo, I02 declared on): I04 = how long the heat pump works alone before the boiler
+    // may join, I10 = outdoor temperature below which the boiler heats - Dominus has no COP or prices, so informative
+    if (this.eid("dom_int_ch") && this.on("dom_int_ch")) {
+      const i10 = this.n("dom_i10"), colder = this.isSet("dom_i10") && !isNaN(out_) && out_ < i10 + 3;
+      if (!this.isSet("dom_i04")) out.push(offUnset("dom_i04", "I04", ["Maks. czas oczekiwania na kocioł (CO)", "Max. wait for the boiler (CH)"], "int"));
+      else {
+        const i04 = this.n("dom_i04"), cold = !isNaN(dev) && dev < -0.5 && colder && share >= 30, rec = cold && i04 > 30 ? 30 : i04;
+        out.push({ k: "dom_i04", code: "I04", name: ["Maks. czas oczekiwania na kocioł (CO)", "Max. wait for the boiler (CH)"], unit: "min", d: 0, kind: "number", group: "int",
+          model: "30–60 min", why: ["krócej = kocioł szybciej pomaga pompie, gdy w mrozy dom nie nadąża", "shorter = the boiler helps the heat pump sooner when the house lags in frost"], rec,
+          reason: withMenu(cold
+            ? [`pokój ${f1(dev)} K od zadanej przy ${f1(out_)} °C na zewnątrz, grzanie ${this.f(share, 0)} % doby`, `room ${f1(dev)} K from the target at ${f1(out_)} °C outdoor, heating ${this.f(share, 0)} % of the day`]
+            : ["dom nadąża – bez zmian", "the house keeps up – no change"], rec !== i04) });
+      }
+      if (!this.isSet("dom_i10")) out.push(offUnset("dom_i10", "I10", ["Temperatura aktywacji kotła", "Boiler activation temperature"], "int"));
+      else out.push({ k: "dom_i10", code: "I10", name: ["Temperatura aktywacji kotła", "Boiler activation temperature"], unit: "°C", d: 0, kind: "info", group: "int",
+        model: "−5…0 °C", why: ["poniżej tej temperatury zewnętrznej grzeje kocioł (Magis Combo)", "below this outdoor temperature the boiler heats (Magis Combo)"], value: i10, ok: true,
+        rec: this.t("informacyjnie", "informative"),
+        reason: ["Dominus nie zna COP ani cen – opłacalność gazu i pompy policzy hub", "Dominus knows no COP or prices – the hub compares gas and heat-pump cost"] });
+    }
+    // A31 room control: RT (thermostat only) leaves no room temperature for the curve / U03 calibration
+    if (this.eid("dom_a31")) {
+      if (!this.isSet("dom_a31")) out.push(offUnset("dom_a31", "A31", ["Sterowanie pokojowe", "Room control"], "other"));
+      else {
+        const a31 = this.s("dom_a31")!, noRoom = this.bad("zone1"), rec = a31 === "rt" && noRoom ? "rpt" : a31;
+        out.push({ k: "dom_a31", code: "A31", name: ["Sterowanie pokojowe", "Room control"], unit: "", kind: "select", group: "other",
+          labels: { rp: "RP", rpt: "RPT", rt: "RT" }, model: "rpt",
+          why: ["panel strefy daje temperaturę pokoju – bez niej kalibracja krzywej nie działa", "the zone panel gives the room temperature – without it the curve calibration cannot work"], rec,
+          reason: withMenu(rec !== a31 ? ["RT bez temperatury pokoju – podłącz panel strefy (RPT)", "RT with no room temperature – connect a zone panel (RPT)"]
+            : [noRoom ? "brak temperatury pokoju" : "temperatura pokoju dociera", noRoom ? "no room temperature" : "the room temperature arrives"], rec !== a31) });
+      }
+    }
+    // P07 outdoor probe correction: informative - the outdoor temperature over TCP is already corrected
+    if (this.eid("dom_p07")) {
+      if (!this.isSet("dom_p07")) out.push(offUnset("dom_p07", "P07", ["Korekta sondy zewnętrznej", "Outdoor probe correction"], "other"));
+      else {
+        const p07 = this.n("dom_p07"), sg = p07 > 0 ? "+" : "";
+        out.push({ k: "dom_p07", code: "P07", name: ["Korekta sondy zewnętrznej", "Outdoor probe correction"], unit: "K", d: 0, kind: "info", group: "other",
+          model: "0 K", why: ["korekta przesuwa całą krzywą – lepiej dobrze umieścić sondę", "a correction shifts the whole curve – better place the probe well"], value: p07, ok: p07 === 0,
+          rec: p07 === 0 ? this.t("✓ bez korekty", "✓ no correction") : this.t(`sonda skorygowana o ${sg}${this.f(p07, 0)} K – sprawdź jej umiejscowienie`, `probe corrected by ${sg}${this.f(p07, 0)} K – check its placement`),
+          reason: ["temperatura po TCP jest już skorygowana", "the temperature over TCP is already corrected"] });
+      }
+    }
     // efficiency (informative)
     const hdd = this.n("dom_h_per_dd"), ddm = this.n("dom_dd_month");
     if (this.eid("dom_h_per_dd")) out.push({ code: "", name: ["Godziny grzania na stopniodzień", "Heating hours per degree day"], unit: "h/°C·d", d: 2, kind: "info", group: "other",
