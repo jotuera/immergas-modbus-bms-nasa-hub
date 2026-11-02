@@ -62,6 +62,7 @@ substitutions:
   n_hub_r10: "${hub_name_prefix} - R10 Külső hőm. min. hűtési előremenőnél"
   n_hub_r11: "${hub_name_prefix} - R11 Külső hőm. max. hűtési előremenőnél"
   n_hub_p07: "${hub_name_prefix} - P07 Külső érzékelő korrekció"
+  n_hub_u11_set: "${hub_name_prefix} - U11 Éjszakai funkció beállítva a kazánon"
   t_hub_day0: "Naponta"
   t_hub_day1: "Hétfő"
   t_hub_day2: "Kedd"

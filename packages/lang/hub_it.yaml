@@ -62,6 +62,7 @@ substitutions:
   n_hub_r10: "${hub_name_prefix} - R10 Temp. esterna a mandata raffr. min"
   n_hub_r11: "${hub_name_prefix} - R11 Temp. esterna a mandata raffr. max"
   n_hub_p07: "${hub_name_prefix} - P07 Correzione sonda esterna"
+  n_hub_u11_set: "${hub_name_prefix} - U11 Funzione notturna impostata in caldaia"
   t_hub_day0: "Ogni giorno"
   t_hub_day1: "Lunedì"
   t_hub_day2: "Martedì"

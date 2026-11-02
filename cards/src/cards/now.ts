@@ -117,7 +117,8 @@ class ImmergasNowCard extends HubCard {
         const ne = a1 !== null ? nextAt(a1, ns) : ld > 0 ? ns + ld : learned && learned !== nl ? ns + learned.t1 - learned.t0 : NaN;
         rows.push(this.bar("u11", "mdi:weather-night", "lavender", this.t("Tryb nocny", "Night mode"), now - ns, ne - ns,
           this.t("od ", "since ") + clock(ns, pl) + (ne > now ? this.t(" · koniec ~", " · ends ~") + clock(ne, pl) + this.t(" · zostało ", " · ") + dur(ne - now) + this.t("", " left") : "") + lim));
-      } else if (a0 !== null && !BAD(u11)) {
+      } else if (a0 !== null && !BAD(u11) && !(this.eid("u11_set") && !this.on("u11_set"))) {
+        // countdown only while U11 is ON on the boiler (hub switch "U11 set on the boiler", when present)
         // progress from the end of the last night window (or the previous day's start + window length) to the next start
         const nx = nextAt(a0, now), prevStart = nx - 86400e3;
         const from = nl?.s === "off" && nl.t0 > prevStart ? nl.t0 : prevStart + (a1 !== null ? ((a1 - a0 + 1440) % 1440) * 60000 : ld > 0 ? ld : 0);

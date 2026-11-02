@@ -62,6 +62,7 @@ substitutions:
   n_hub_r10: "${hub_name_prefix} - R10 Temp. exterior com ida arref. mín."
   n_hub_r11: "${hub_name_prefix} - R11 Temp. exterior com ida arref. máx."
   n_hub_p07: "${hub_name_prefix} - P07 Correção sonda exterior"
+  n_hub_u11_set: "${hub_name_prefix} - U11 Função noturna definida na caldeira"
   t_hub_day0: "Diariamente"
   t_hub_day1: "Segunda-feira"
   t_hub_day2: "Terça-feira"

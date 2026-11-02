@@ -163,9 +163,16 @@ class ImmergasSettingsCard extends HubCard {
         <div class="grp">${this.t("Szacowanie gazu", "Gas estimate")}</div>
         ${this.numRow("gas_cal_co", "mdi:radiator", this.t("Zużycie gazu CO", "Gas use CH"), 2)}
         ${this.numRow("gas_cal_dhw", "mdi:water-thermometer", this.t("Zużycie gazu CWU", "Gas use DHW"), 2)}
+        <div class="grp">${this.t("Instalacja i taryfa", "Installation and tariff")}</div>
+        ${this.numRow("floor_max", "mdi:heating-coil", this.t("Limit zasilania podłogi (ostrzeżenie huba)", "Floor flow limit (hub warning)"), 0)}
+        ${this.eid("cheap_hours") ? html`<div class="nr"><ha-icon icon="mdi:cash-clock"></ha-icon>
+          <span class="nl" @click=${() => this.moreInfo("cheap_hours")}>${this.t("Tańsza taryfa – godziny", "Cheaper tariff hours")}</span>
+          <span class="nv" style="min-width:auto;cursor:pointer" @click=${() => this.moreInfo("cheap_hours")}>${this.s("cheap_hours") || this.t("jedna taryfa", "single rate")}</span></div>` : nothing}
       ` : nothing}
       ${open && !this.dominus && off ? html`
-        ${night ? html`<div class="grp">${this.t("Tryb nocny U11 (przypomnienie – ustawia się na piecu)", "Night mode U11 (reminder – set on the boiler)")}</div>
+        ${night || this.eid("u11_set") ? html`<div class="grp">${this.t("Tryb nocny U11 (przypomnienie – ustawia się na piecu)", "Night mode U11 (reminder – set on the boiler)")}</div>
+          ${this.eid("u11_set") ? this.switchRow("u11_set", "mdi:weather-night", "lavender", this.t("U11 · funkcja nocna", "U11 · night function"),
+            this.t("ON na piecu – pasek trybu nocnego w karcie Teraz", "ON on the boiler – night bar in the Now card")) : nothing}
           ${this.timeRow(this.opt("night_start"), "START · U12")}
           ${this.timeRow(this.opt("night_stop"), "STOP · U13")}` : nothing}
         ${leg ? html`<div class="grp">${this.t("Anty-legionella P15 (przypomnienie – ustawia się na piecu)", "Anti-legionella P15 (reminder – set on the boiler)")}</div>
@@ -177,12 +184,8 @@ class ImmergasSettingsCard extends HubCard {
           ${this.numRow("hub_r03", "mdi:thermometer-high", this.t("R03 · temp. zewn. przy min. zasilaniu CO", "R03 · outdoor at min. CH flow"), 0)}
           ${this.numRow("hub_r10", "mdi:thermometer-high", this.t("R10 · temp. zewn. przy min. zasilaniu chłodzenia", "R10 · outdoor at min. cooling flow"), 0)}
           ${this.numRow("hub_r11", "mdi:thermometer-low", this.t("R11 · temp. zewn. przy maks. zasilaniu chłodzenia", "R11 · outdoor at max. cooling flow"), 0)}` : nothing}
-        <div class="grp">${this.t("Instalacja", "Installation")}</div>
-        ${this.numRow("floor_max", "mdi:heating-coil", this.t("Limit zasilania podłogi", "Floor flow limit"), 0)}
-        ${this.numRow("hub_p07", "mdi:thermometer-plus", this.t("P07 · korekta sondy zewnętrznej", "P07 · outdoor probe correction"), 0)}
-        ${this.eid("cheap_hours") ? html`<div class="nr"><ha-icon icon="mdi:cash-clock"></ha-icon>
-          <span class="nl" @click=${() => this.moreInfo("cheap_hours")}>${this.t("Tańsza taryfa – godziny", "Cheaper tariff hours")}</span>
-          <span class="nv" style="min-width:auto;cursor:pointer" @click=${() => this.moreInfo("cheap_hours")}>${this.s("cheap_hours") || this.t("jedna taryfa", "single rate")}</span></div>` : nothing}
+        ${this.eid("hub_p07") ? html`<div class="grp">${this.t("Instalacja", "Installation")}</div>
+          ${this.numRow("hub_p07", "mdi:thermometer-plus", this.t("P07 · korekta sondy zewnętrznej", "P07 · outdoor probe correction"), 0)}` : nothing}
       ` : nothing}
       ${open && this.dominus && off ? this.domOffline() : nothing}
       ${open && this.dominus && on ? this.domRows() : nothing}

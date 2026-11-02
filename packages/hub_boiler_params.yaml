@@ -158,6 +158,16 @@ number:
     restore_value: true
     initial_value: 0
 
+# --- U11 night function is a boiler menu setting the buses do not show (D+/D- only shows when it is active) -----------
+switch:
+  - platform: template
+    id: hub_u11_set
+    name: "${n_hub_u11_set}"
+    icon: mdi:weather-night
+    entity_category: config
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+
 # --- for the Calibration card: cheaper tariff hours and the start of the before / after comparison ---------------------
 text:
   # e.g. "13:00-15:00,22:00-06:00" for a two-rate tariff (G12); empty = one rate all day

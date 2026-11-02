@@ -62,6 +62,7 @@ substitutions:
   n_hub_r10: "${hub_name_prefix} - R10 Buitentemp. bij min. koelaanvoer"
   n_hub_r11: "${hub_name_prefix} - R11 Buitentemp. bij max. koelaanvoer"
   n_hub_p07: "${hub_name_prefix} - P07 Correctie buitenvoeler"
+  n_hub_u11_set: "${hub_name_prefix} - U11 Nachtfunctie ingesteld op de ketel"
   t_hub_day0: "Dagelijks"
   t_hub_day1: "Maandag"
   t_hub_day2: "Dinsdag"
