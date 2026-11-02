@@ -26,8 +26,8 @@ class ImmergasHubStrategy {
             { type: "grid", column_span: 3, cards: [card("immergas-calibration-card", { grid_options: { columns: "full" }, ...(config.curve?.max_floor_entity ? { max_floor_entity: config.curve.max_floor_entity } : {}), ...(config.calibration ?? {}) })] },
             ...(autos ? [{ type: "grid", column_span: 3, cards: [card("immergas-automations-card", { grid_options: { columns: "full" }, ...(config.automations ?? {}) })] }] : []),
             { type: "grid", column_span: 3, cards: [
-              card("immergas-settings-card", { grid_options: { columns: 6 }, part: "online", ...(config.settings ?? {}) }),
-              card("immergas-settings-card", { grid_options: { columns: 6 }, part: "offline", ...(config.settings ?? {}) })] },
+              card("immergas-settings-card", { grid_options: { columns: 18 }, part: "online", ...(config.settings ?? {}) }),
+              card("immergas-settings-card", { grid_options: { columns: 18 }, part: "offline", ...(config.settings ?? {}) })] },
           ],
         },
       ],
