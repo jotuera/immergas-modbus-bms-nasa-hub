@@ -164,18 +164,29 @@ export abstract class HubCard extends LitElement {
   }
 
   /** compact setting row: label, −/+ stepper using the entity's step/min/max, value with unit */
+  /** a declared boiler parameter (Dominus) has a value - they start empty until copied from the boiler menu */
+  protected isSet(k: Key) { return !!this.eid(k) && !this.bad(k); }
+  /** all given parameters are set */
+  protected allSet(...ks: Key[]) { return ks.every((k) => this.isSet(k)); }
+  /** typical value offered as the starting point of an empty declared parameter */
+  protected suggested(k: Key): unknown { return this.attr(k, "suggested"); }
+
   protected numRow(k: Key, icon: string, label: string, d = 1, unit?: string) {
     const so = this.so(k);
     if (!so) return nothing;
     const a = so.attributes ?? {}, v = parseFloat(so.state), step = a.step ?? 1, u = unit ?? a.unit_of_measurement ?? "";
+    const sug = parseFloat(String(a.suggested ?? "")), empty = isNaN(v) && !isNaN(sug);
     const set = (dir: number) => {
+      // an empty declared parameter: the first tap writes the suggested value as the starting point
+      if (empty) return this.call("number", "set_value", k, { value: sug });
       if (isNaN(v)) return;
       const nv = Math.round(Math.min(a.max ?? 1e9, Math.max(a.min ?? -1e9, v + dir * step)) * 1e4) / 1e4;
       this.call("number", "set_value", k, { value: nv });
     };
-    return html`<div class="nr"><ha-icon icon=${icon}></ha-icon><span class="nl" @click=${() => this.moreInfo(k)}>${label}</span>
+    return html`<div class="nr" style=${empty ? "opacity:.55" : ""}><ha-icon icon=${icon}></ha-icon><span class="nl" @click=${() => this.moreInfo(k)}>${label}${empty
+        ? html`<span class="unset">${this.t("nie ustawione – wpisz z pieca", "not set – enter it from the boiler")}</span>` : nothing}</span>
       <div class="btn xs" @click=${() => set(-1)}><ha-icon icon="mdi:minus"></ha-icon></div>
-      <span class="nv">${this.f(v, d, d)}${u ? " " + u : ""}</span>
+      <span class="nv" style=${empty ? "opacity:.45;font-weight:600" : ""}>${this.f(empty ? sug : v, d, d)}${u ? " " + u : ""}</span>
       <div class="btn xs" @click=${() => set(1)}><ha-icon icon="mdi:plus"></ha-icon></div></div>`;
   }
 
@@ -358,6 +369,7 @@ export abstract class HubCard extends LitElement {
     .nr { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 12px; }
     .nr > ha-icon { --mdc-icon-size: 16px; opacity: .55; flex: none; }
     .nl { cursor: pointer; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .unset { display: block; font-size: 10px; font-weight: 600; color: var(--ih-yellow); white-space: normal; }
     .nv { min-width: 78px; text-align: center; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
     .btn.xs { width: 24px; height: 24px; border-radius: 8px; }
     .btn.xs ha-icon { --mdc-icon-size: 14px; }

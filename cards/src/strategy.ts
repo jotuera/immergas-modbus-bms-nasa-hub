@@ -50,7 +50,7 @@ class ImmergasDominusStrategy {
             { type: "grid", cards: [card("immergas-now-card", config.now ?? {}), card("immergas-setpoints-card", config.setpoints ?? {})] },
             { type: "grid", cards: [card("immergas-mode-card", config.mode ?? {}), card("immergas-links-card"),
               card("immergas-settings-card", config.settings ?? {})] },
-            { type: "grid", cards: [card("immergas-schedule-card", config.schedule ?? {})] },
+            { type: "grid", cards: [card("immergas-schedule-card", config.schedule ?? {}), card("immergas-curve-card", config.curve ?? {})] },
             { type: "grid", column_span: 3, cards: [card("immergas-calibration-card", config.calibration ?? {})] },
             { type: "grid", column_span: 3, cards: [card("immergas-charts-card", config.charts ?? {})] },
           ],

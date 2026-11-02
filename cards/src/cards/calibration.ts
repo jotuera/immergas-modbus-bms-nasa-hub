@@ -846,14 +846,26 @@ class ImmergasCalibrationCard extends HubCard {
     const uRec = isNaN(dev) || isNaN(uv) || !enough ? uv : dev > 0.5 ? clamp(uv - step) : dev < -0.5 ? clamp(uv + step) : uv;
     out.push({ k: "u03", code: "U03", name: ["Offset krzywej grzewczej", "Heating curve offset"], unit: "°C", d: 1, kind: "number", group: "ch",
       model: this.t("pokój ±0,5 K od zadanej", "room within ±0.5 K of the target"),
-      why: ["przesuwa całą krzywą: +1 = cieplejsza woda przy każdej temperaturze zewnętrznej", "shifts the whole curve: +1 = warmer water at every outdoor temperature"],
+      why: this.allSet("dom_r02", "dom_r03", "r04", "r05") && !isNaN(this.n("outdoor"))
+        ? (() => {
+          // same curve as the Curve card: flat R04 below R02, linear to R05 at R03, flat above; U03 adds its value in °C
+          const xa = this.n("dom_r02"), xb = this.n("dom_r03"), hi = this.n("r04"), lo = this.n("r05"), out = this.n("outdoor"), off = isNaN(uv) ? 0 : uv;
+          const raw = out <= xa ? hi : out >= xb ? lo : hi + (lo - hi) * (out - xa) / (xb - xa);
+          const flow = Math.max(lo, Math.min(hi, raw + off)), up = Math.max(lo, Math.min(hi, raw + off + step));
+          return [`+1 U03 = +1 °C wody; przy ${f1(out)} °C na zewnątrz zasilanie ${f1(flow)} → ${f1(up)} °C (krzywa R02–R05)`,
+            `+1 U03 = +1 °C of water; at ${f1(out)} °C outdoor the flow goes ${f1(flow)} → ${f1(up)} °C (curve R02–R05)`] as [string, string];
+        })()
+        : ["przesuwa całą krzywą: +1 = cieplejsza woda przy każdej temperaturze zewnętrznej (wpisz R02–R05, by zobaczyć ile)", "shifts the whole curve: +1 = warmer water at every outdoor temperature (enter R02–R05 to see how much)"],
       rec: uRec, reason: isNaN(dev) ? ["brak danych o odchyłce (statystyki Dominusa 1.3.0)", "no deviation data (Dominus 1.3.0 statistics)"]
         : [`pokój ${dev > 0 ? "+" : ""}${f1(dev)} K od zadanej (średnia 1 h)${isNaN(share) ? "" : `, grzanie ${this.f(share, 0)} % doby`}${enough ? "" : " – za mało grzania, by ocenić krzywą"}`,
           `room ${dev > 0 ? "+" : ""}${f1(dev)} K from the target (1 h mean)${isNaN(share) ? "" : `, heating ${this.f(share, 0)} % of the day`}${enough ? "" : " – too little heating to judge the curve"}`] });
     // cycling of the boiler from the heating-demand edges
     const sh = this.n("dom_starts_h"), st = this.n("dom_starts_today"), many = sh > 3;
     if (this.eid("dom_starts_h")) out.push({ code: "", name: ["Taktowanie: starty grzania na godzinę", "Cycling: heating starts per hour"], unit: "/h", d: 0, kind: "info", group: "cyc",
-      model: "≤ 3 /h", why: ["kocioł gazowy: mniej startów = mniej strat i zużycia", "gas boiler: fewer starts = fewer losses and less wear"], value: sh, ok: !many,
+      model: "≤ 3 /h", why: this.isSet("dom_t05")
+        ? [`mniej startów = mniej strat i zużycia; minutnik T05 ${this.f(this.n("dom_t05"), 0)} min (maks. ~${this.f(60 / Math.max(1, this.n("dom_t05")), 0)} startów/h)`,
+          `fewer starts = fewer losses and less wear; start timer T05 ${this.f(this.n("dom_t05"), 0)} min (max. ~${this.f(60 / Math.max(1, this.n("dom_t05")), 0)} starts/h)`] as [string, string]
+        : ["kocioł gazowy: mniej startów = mniej strat i zużycia", "gas boiler: fewer starts = fewer losses and less wear"], value: sh, ok: !many,
       rec: many ? this.t("za często – obniż offset (U03) albo zadaną zasilania", "too often – lower the offset (U03) or the flow setpoint") : this.t("✓ w normie", "✓ fine"),
       reason: [`dziś ${isNaN(st) ? "–" : this.f(st, 0)} startów`, `${isNaN(st) ? "–" : this.f(st, 0)} starts today`] });
     // DHW cycles

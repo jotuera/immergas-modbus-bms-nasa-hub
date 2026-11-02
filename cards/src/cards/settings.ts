@@ -3,6 +3,7 @@
 // (U12 / U13 are not on any bus: options night_start / night_stop point to input_datetime helpers, edited here ±15 min).
 // Option: expanded: true (open by default).
 import { HubCard, html, css, nothing, register } from "../base";
+import { Key } from "../names";
 
 class ImmergasSettingsCard extends HubCard {
   private open: boolean | null = null;
@@ -11,16 +12,19 @@ class ImmergasSettingsCard extends HubCard {
     const st = entity ? this.hass.states[entity] : undefined;
     if (!st) return nothing;
     const v = /^\d\d:\d\d/.test(st.state) ? st.state.slice(0, 5) : "–";
+    // an empty declared time (Dominus): show the suggested one faintly, the first tap writes it
+    const sug = String(st.attributes?.suggested ?? ""), empty = v === "–" && /^\d\d:\d\d/.test(sug);
     const bump = (d: number) => {
+      if (empty) return this.hass.callService("time", "set_value", { entity_id: entity, time: sug });
       if (v === "–") return;
       const m = ((+v.slice(0, 2) * 60 + +v.slice(3, 5) + d) % 1440 + 1440) % 1440;
       const t = String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0") + ":00";
       if (entity!.startsWith("time.")) this.hass.callService("time", "set_value", { entity_id: entity, time: t });
       else this.hass.callService("input_datetime", "set_datetime", { entity_id: entity, time: t });
     };
-    return html`<div class="nr"><ha-icon icon=${icon}></ha-icon>
-      <span class="nl" @click=${() => this.dispatchEvent(new CustomEvent("hass-more-info", { detail: { entityId: entity }, bubbles: true, composed: true }))}>${label}</span>
-      <div class="btn xs" @click=${() => bump(-15)}><ha-icon icon="mdi:minus"></ha-icon></div><span class="nv">${v}</span>
+    return html`<div class="nr" style=${empty ? "opacity:.55" : ""}><ha-icon icon=${icon}></ha-icon>
+      <span class="nl" @click=${() => this.dispatchEvent(new CustomEvent("hass-more-info", { detail: { entityId: entity }, bubbles: true, composed: true }))}>${label}${this.unsetNote(empty)}</span>
+      <div class="btn xs" @click=${() => bump(-15)}><ha-icon icon="mdi:minus"></ha-icon></div><span class="nv" style=${empty ? "opacity:.45;font-weight:600" : ""}>${empty ? sug.slice(0, 5) : v}</span>
       <div class="btn xs" @click=${() => bump(15)}><ha-icon icon="mdi:plus"></ha-icon></div></div>`;
   }
 
@@ -29,11 +33,52 @@ class ImmergasSettingsCard extends HubCard {
     const st = entity ? this.hass.states[entity] : undefined;
     if (!entity || !st || !/^(input_)?select\./.test(entity)) return nothing;
     const dom = entity.startsWith("select.") ? "select" : "input_select";
-    const step = (d: number) => this.hass.callService(dom, d < 0 ? "select_previous" : "select_next", { entity_id: entity, cycle: true });
-    return html`<div class="nr"><ha-icon icon=${icon}></ha-icon>
-      <span class="nl" @click=${() => this.dispatchEvent(new CustomEvent("hass-more-info", { detail: { entityId: entity }, bubbles: true, composed: true }))}>${label}</span>
-      <div class="btn xs" @click=${() => step(-1)}><ha-icon icon="mdi:minus"></ha-icon></div><span class="nv">${this.hass.formatEntityState?.(st) ?? st.state}</span>
+    const sug = st.attributes?.suggested, empty = !(st.attributes?.options ?? []).includes(st.state) && sug !== undefined;
+    const step = (d: number) => empty ? this.hass.callService(dom, "select_option", { entity_id: entity, option: sug })
+      : this.hass.callService(dom, d < 0 ? "select_previous" : "select_next", { entity_id: entity, cycle: true });
+    return html`<div class="nr" style=${empty ? "opacity:.55" : ""}><ha-icon icon=${icon}></ha-icon>
+      <span class="nl" @click=${() => this.dispatchEvent(new CustomEvent("hass-more-info", { detail: { entityId: entity }, bubbles: true, composed: true }))}>${label}${this.unsetNote(empty)}</span>
+      <div class="btn xs" @click=${() => step(-1)}><ha-icon icon="mdi:minus"></ha-icon></div><span class="nv" style=${empty ? "opacity:.45;font-weight:600" : ""}>${empty
+        ? this.hass.formatEntityState?.(st, sug) ?? sug : this.hass.formatEntityState?.(st) ?? st.state}</span>
       <div class="btn xs" @click=${() => step(1)}><ha-icon icon="mdi:plus"></ha-icon></div></div>`;
+  }
+
+  private unsetNote(empty: boolean) {
+    return empty ? html`<span class="unset">${this.t("nie ustawione – wpisz z pieca", "not set – enter it from the boiler")}</span>` : nothing;
+  }
+
+  /** Immergas Dominus 1.5.0: boiler menu values declared by the user (empty until copied from the boiler); a group whose
+   *  values are missing says so - the feature it drives stays off until they are entered */
+  private domParams() {
+    if (!this.eid("dom_r02")) return nothing;
+    const g = (title: string, need: string[], rows: unknown) => html`<div class="grp">${title}${need.length
+      ? html` <span class="need">· ${this.t("nieaktywne – uzupełnij", "inactive – fill in")} ${need.join(", ")}</span>` : nothing}</div>${rows}`;
+    const miss = (ks: [string, Key][]) => ks.filter(([, k]) => this.eid(k) && !this.isSet(k)).map(([n]) => n);
+    return html`
+      ${g(this.t("Krzywa grzewcza (menu R)", "Heating curve (menu R)"), miss([["R02", "dom_r02"], ["R03", "dom_r03"], ["R04", "r04"], ["R05", "r05"]]), html`
+        ${this.numRow("dom_r02", "mdi:thermometer-low", this.t("R02 · temp. zewn. przy maks. zasilaniu", "R02 · outdoor at max. flow"), 0)}
+        ${this.numRow("dom_r03", "mdi:thermometer-high", this.t("R03 · temp. zewn. przy min. zasilaniu", "R03 · outdoor at min. flow"), 0)}
+        ${this.numRow("r04", "mdi:thermometer-chevron-up", this.t("R04 · maks. zasilanie CO", "R04 · max. CH flow"), 0)}
+        ${this.numRow("r05", "mdi:thermometer-chevron-down", this.t("R05 · min. zasilanie CO", "R05 · min. CH flow"), 0)}`)}
+      ${g(this.t("Krzywa chłodzenia (menu R)", "Cooling curve (menu R)"), miss([["R10", "dom_r10"], ["R11", "dom_r11"], ["R12", "r12"], ["R13", "r13"]]), html`
+        ${this.numRow("dom_r10", "mdi:thermometer-high", this.t("R10 · temp. zewn. przy min. zasilaniu", "R10 · outdoor at min. flow"), 0)}
+        ${this.numRow("dom_r11", "mdi:thermometer-low", this.t("R11 · temp. zewn. przy maks. zasilaniu", "R11 · outdoor at max. flow"), 0)}
+        ${this.numRow("r12", "mdi:snowflake-thermometer", this.t("R12 · min. zasilanie chłodzenia", "R12 · min. cooling flow"), 0)}
+        ${this.numRow("r13", "mdi:snowflake", this.t("R13 · maks. zasilanie chłodzenia", "R13 · max. cooling flow"), 0)}`)}
+      ${g(this.t("Ciepła woda i ogrzewanie (menu T)", "Hot water and heating (menu T)"), [], html`
+        ${this.numRow("dom_t02", "mdi:water-thermometer", this.t("T02 · termostat CWU (start przy nastawa − T02)", "T02 · DHW thermostat (starts at setpoint − T02)"), 0)}
+        ${this.numRow("dom_t05", "mdi:timer-lock-outline", this.t("T05 · minutnik startów CO", "T05 · CH start timer"), 0)}`)}
+      ${g(this.t("Integracja kotła (menu I, Magis Combo)", "Boiler integration (menu I, Magis Combo)"),
+        this.on("dom_int_ch") ? miss([["I04", "dom_i04"], ["I10", "dom_i10"]]) : [], html`
+        ${this.switchRow("dom_int_ch", "mdi:fire", "peach", this.t("Integracja kotła CO · I02", "CH boiler integration · I02"),
+          this.t("ustawiona na piecu – kocioł dołącza do pompy", "set on the boiler – the boiler joins the heat pump"))}
+        ${this.switchRow("dom_int_dhw", "mdi:water-boiler", "peach", this.t("Integracja kotła CWU · I01", "DHW boiler integration · I01"),
+          this.t("ustawiona na piecu", "set on the boiler"))}
+        ${this.numRow("dom_i04", "mdi:timer-play-outline", this.t("I04 · maks. czas oczekiwania na kocioł (CO)", "I04 · max. wait for the boiler (CH)"), 0)}
+        ${this.numRow("dom_i10", "mdi:snowflake-thermometer", this.t("I10 · temp. zewn. aktywacji kotła", "I10 · boiler activation outdoor temp."), 0)}`)}
+      ${g(this.t("Instalacja", "Installation"), [], html`
+        ${this.selRow(this.eid("dom_a31"), this.t("A31 · sterowanie pokojowe", "A31 · room control"), "mdi:home-thermometer-outline")}
+        ${this.numRow("dom_p07", "mdi:thermometer-plus", this.t("P07 · korekta sondy zewnętrznej", "P07 · outdoor probe correction"), 0)}`)}`;
   }
 
   /** Immergas Dominus 1.3.0: vacation, automatic summer / winter, alerts (all writes off by default) */
@@ -50,6 +95,7 @@ class ImmergasSettingsCard extends HubCard {
         ${this.selRow(this.eid("p17"), this.t("Dzień · P17", "Day · P17"), "mdi:calendar-week")}
         ${this.timeRow(this.eid("p16"), "START · P16", "mdi:bacteria-outline")}
         ${this.numRow("p13", "mdi:timer-sand", this.t("Czas · P13", "Duration · P13"), 0)}` : nothing}
+      ${this.domParams()}
       ${this.eid("dom_vacation") ? html`<div class="grp">${this.t("Tryb wyjazdowy", "Vacation")}</div>
         ${this.switchRow("dom_vacation", "mdi:bag-suitcase-outline", "sky", this.t("Tryb wyjazdowy", "Vacation mode"),
           this.t("obniża zadaną Strefy 1, po powrocie przywraca", "lowers the zone 1 target, restores it on return"))}
@@ -74,7 +120,7 @@ class ImmergasSettingsCard extends HubCard {
     return html`
       <div class="sh" @click=${() => { this.open = !open; this.requestUpdate(); }}>
         <ha-icon icon="mdi:cog-outline"></ha-icon><span class="ttl">${this.dominus ? this.t("Ustawienia", "Settings") : this.t("Ustawienia huba", "Hub settings")}</span>
-        <span class="sum">${open ? "" : this.dominus ? this.t("tryb nocny, legionella, wyjazd, Lato/Zima, alarmy, język błędów", "night mode, legionella, vacation, summer/winter, alerts, fault language") : this.t("ceny, zasobnik, tryb nocny, legionella…", "prices, cylinder, night mode, legionella…")}</span>
+        <span class="sum">${open ? "" : this.dominus ? this.t("parametry pieca, tryb nocny, legionella, wyjazd, Lato/Zima, alarmy, język błędów", "boiler parameters, night mode, legionella, vacation, summer/winter, alerts, fault language") : this.t("ceny, zasobnik, tryb nocny, legionella…", "prices, cylinder, night mode, legionella…")}</span>
         <ha-icon class="chev" icon=${open ? "mdi:chevron-up" : "mdi:chevron-down"}></ha-icon></div>
       ${open && !this.dominus ? html`
         <div class="grp">${this.t("Ceny energii", "Energy prices")}</div>
@@ -111,6 +157,7 @@ class ImmergasSettingsCard extends HubCard {
     .langs { cursor: pointer; margin-left: auto; padding: 4px 8px; border-radius: 8px; font: inherit; font-size: 12px; font-weight: 700; color: inherit;
       border: 1px solid rgba(var(--ih-teal-rgb), .45); background: rgba(var(--ih-teal-rgb), .1); }
     .langs option { color: #1e1e2e; }
+    .need { text-transform: none; letter-spacing: 0; font-weight: 700; color: var(--ih-yellow); opacity: 1; }
   `];
 }
 

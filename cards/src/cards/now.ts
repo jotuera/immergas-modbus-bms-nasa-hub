@@ -185,6 +185,13 @@ class ImmergasNowCard extends HubCard {
 
   /** Dominus timers: CH demand period vs. its typical length, DHW rhythm, disinfection countdown (card options) and
    *  the last 6 h strip - from the heating-demand and DHW-request flags and the cylinder temperature */
+  /** declared T02: the DHW cycle starts when the cylinder drops to the setpoint minus T02 */
+  private dhwThreshold(tank: number) {
+    const t02 = this.n("dom_t02"), set = this.n("dhw_set");
+    if (isNaN(t02) || isNaN(set)) return "";
+    return " · " + this.t(`cykl CWU przy ≤ ${this.f(set - t02, 0)} °C, teraz ${this.f(tank, 1, 1)} °C`, `DHW cycle at ≤ ${this.f(set - t02, 0)} °C, now ${this.f(tank, 1, 1)} °C`);
+  }
+
   private domTimers() {
     const now = Date.now(), chS = this.s("dom_ch_demand"), rqS = this.s("dom_dhw_request");
     const h = this.dHist, ch = h?.ch ?? [], rq = h?.rq ?? [], lc = ch[ch.length - 1], lr = rq[rq.length - 1];
@@ -205,6 +212,20 @@ class ImmergasNowCard extends HubCard {
       : this.t("dłużej niż zwykle o ", "longer than usual by ") + dur(el - typ);
     rows.push(this.bar("dom_ch_demand", on ? "mdi:radiator" : "mdi:pause-circle-outline", col,
       on ? this.t("Grzanie CO", "CH heating") : this.t("Przerwa CO", "CH pause"), el, typ, this.t("od ", "since ") + clock(start, pl) + " · " + sub));
+    // T05 (declared): after a heating demand ends the boiler blocks the next CH start for T05 minutes
+    const t05 = this.n("dom_t05") * 60e3;
+    if (!on && t05 > 0 && el < t05)
+      rows.push(this.bar("dom_t05", "mdi:timer-lock-outline", "overlay2", this.t("Blokada startu CO (T05)", "CH start lock (T05)"), el, t05,
+        this.t("start możliwy ~", "start possible ~") + clock(start + t05, pl), this.t("jeszcze ", "") + dur(t05 - el) + this.t("", " left")));
+    // gas boiler integration (declared I02 + I04): the boiler may join after I04 minutes of one heating demand
+    const i04 = this.n("dom_i04") * 60e3, i10 = this.n("dom_i10"), outT = this.n("outdoor");
+    if (on && this.on("dom_int_ch") && i04 > 0) {
+      const cold = !isNaN(i10) && outT < i10;
+      rows.push(this.bar("dom_i04", "mdi:fire", "yellow", this.t("Dołączenie kotła (I04)", "Boiler joining (I04)"), el, i04,
+        (cold ? this.t(`poniżej ${this.f(i10, 0)} °C (I10) grzeje kocioł · `, `below ${this.f(i10, 0)} °C (I10) the boiler heats · `) : "")
+          + (el < i04 ? this.t("kocioł może dołączyć ~", "the boiler may join ~") + clock(start + i04, pl) : this.t("czas I04 minął – kocioł może grzać razem z pompą", "I04 has passed – the boiler may heat with the pump")),
+        el < i04 ? this.t("za ", "in ") + dur(i04 - el) : this.t("teraz", "now")));
+    }
 
     // 2) DHW: a running cycle vs. the typical cycle, else the rhythm between cycle starts
     if (dhwNow && cur && now - cur.t1 < 5 * 60e3) {
@@ -216,13 +237,15 @@ class ImmergasNowCard extends HubCard {
       const ls = starts[starts.length - 1];
       rows.push(this.bar("tank", "mdi:water-sync", "yellow", this.t("Rytm CWU", "DHW rhythm"), now - ls, iv,
         this.t("ostatnie ", "last at ") + clock(ls, pl) + (iv > 0 ? (now - ls <= iv ? this.t(" · następne ~", " · next ~") + clock(ls + iv, pl)
-          : this.t(" · następne już po czasie", " · next is overdue")) + this.t(" (typowo co ", " (usually every ") + dur(iv) + ")" : ""),
+          : this.t(" · następne już po czasie", " · next is overdue")) + this.t(" (typowo co ", " (usually every ") + dur(iv) + ")" : "") + this.dhwThreshold(tv),
         dur(now - ls) + this.t(" temu", " ago")));
+    } else if (this.dhwThreshold(tv)) {
+      rows.push(this.bar("dom_t02", "mdi:water-sync", "yellow", this.t("Próg CWU (T02)", "DHW threshold (T02)"), 0, 0, this.dhwThreshold(tv).slice(3), "–"));
     }
 
     // 3) night function declared on the boiler (switch on): elapsed inside the U12-U13 window, else time to the start
     const a0 = this.timeOpt("night_start"), a1 = this.timeOpt("night_stop");
-    if (this.on("u11") && a0 !== null && a1 !== null) {
+    if (this.on("u11") && this.allSet("u12", "u13") && a0 !== null && a1 !== null) {
       const len = ((a1 - a0 + 1440) % 1440 || 1440) * 60000, nxs = nextAt(a0, now), ws = nxs - 86400e3;
       if (now < ws + len) rows.push(this.bar("u11", "mdi:weather-night", "lavender", this.t("Tryb nocny", "Night mode"), now - ws, len,
         this.t("od ", "since ") + clock(ws, pl) + this.t(" · koniec ~", " · ends ~") + clock(ws + len, pl) + this.t(" · zostało ", " · ") + dur(ws + len - now) + this.t("", " left")));
@@ -231,7 +254,7 @@ class ImmergasNowCard extends HubCard {
     }
 
     // 4) disinfection countdown while anti-legionella is declared on the boiler (switch on; not readable over TCP)
-    const nx = this.on("p15") ? this.nextLeg(now) : NaN;
+    const nx = this.on("p15") && this.allSet("p16", "p17") ? this.nextLeg(now) : NaN;
     if (nx > 0) {
       const prev = nx - ((this.dayOpt("legionella_day") ?? -1) < 0 ? 1 : 7) * 86400e3;
       const day = (t: number) => new Date(t).toLocaleDateString(pl, { weekday: "short", day: "numeric", month: "numeric" }) + " " + clock(t, pl);

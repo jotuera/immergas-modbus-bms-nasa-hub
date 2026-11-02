@@ -101,7 +101,10 @@ class ImmergasCurveCard extends HubCard {
   // ---------------- tabs ----------------
   private heat() {
     this.ax = { X0: -20, X1: 30, Y0: 15, Y1: 60, xs: 5, ys: 10 };
-    const xa = this.config.r02 ?? -12, xb = this.config.r03 ?? 20;
+    if (this.dominus && !this.allSet("dom_r02", "dom_r03", "r04", "r05"))
+      return this.domSetup([["dom_r02", "R02 · temp. zewn. przy maks. zasilaniu", "R02 · outdoor at max. flow"], ["dom_r03", "R03 · temp. zewn. przy min. zasilaniu", "R03 · outdoor at min. flow"],
+        ["r04", "R04 · maks. zasilanie CO", "R04 · max. CH flow"], ["r05", "R05 · min. zasilanie CO", "R05 · min. CH flow"]], true);
+    const xa = this.pt("r02", "dom_r02", -12), xb = this.pt("r03", "dom_r03", 20);
     const hi = this.n("r04"), lo = this.n("r05"), out = this.n("outdoor"), flow = this.n("flow_d20");
     const offRaw = this.n("u03"), off = isNaN(offRaw) ? 0 : offRaw, d04raw = this.n("d04"), d04 = d04raw > 5 && !this.cooling ? d04raw : NaN;
     const zad = this.n("zone1_set"), room = this.n("zone1");
@@ -125,12 +128,17 @@ class ImmergasCurveCard extends HubCard {
       <div class="row">
         ${this.ctl("r04", hi, Math.max(25, lo + 1), 60, this.t("R04 · maks. zasilanie", "R04 · max. flow"), this.t(`od R02 = ${xa} °C w dół`, `from R02 = ${xa} °C down`), "peach")}
         ${this.ctl("r05", lo, 20, Math.min(45, hi - 1), this.t("R05 · min. zasilanie", "R05 · min. flow"), this.t(`od R03 = ${xb} °C w górę`, `from R03 = ${xb} °C up`), "peach")}
-        ${this.ctl("u03", offRaw, -10, 10, this.t("U03 · offset krzywej", "U03 · curve offset"), this.t("przesuwa całą krzywą (D+/D-)", "shifts the whole curve (D+/D-)"), "peach")}
+        ${this.ctl("u03", offRaw, -10, 10, this.t("U03 · offset krzywej", "U03 · curve offset"), this.dominus
+          ? this.t("przesuwa całą krzywą (zapis przez Dominusa)", "shifts the whole curve (written through Dominus)") : this.t("przesuwa całą krzywą (D+/D-)", "shifts the whole curve (D+/D-)"), "peach")}
       </div>
       <div class="legend">${this.leg("peach", this.t("krzywa Immergas", "Immergas curve"))}
         ${off ? html`<span><i style="border-top:2px dashed ${c("yellow")};height:0"></i>${this.t(`z offsetem ${off > 0 ? "+" : ""}${off} °C (działająca)`, `with offset ${off > 0 ? "+" : ""}${off} °C (in effect)`)}</span>` : nothing}
-        <span>${this.t("● zadane D04 (piec) · ○ faktyczne zasilanie", "● D04 setpoint (boiler) · ○ actual flow")}</span></div>
-      <div class="note">${this.t(`Przeciągnij punkt albo użyj −/+ (krok 1 °C). R02 ${xa} °C / R03 ${xb} °C to opcje karty (nie ma ich na magistrali). R04/R05 → T-/T+, U03 → D+/D-.`,
+        <span>${this.dominus ? this.t("● zasilanie wyliczone z krzywej (Dominus nie czyta zasilania)", "● flow computed from the curve (Dominus does not read the flow)")
+          : this.t("● zadane D04 (piec) · ○ faktyczne zasilanie", "● D04 setpoint (boiler) · ○ actual flow")}</span></div>
+      <div class="note">${this.dominus
+        ? this.t(`R02–R05 to kopia menu R pieca (zmiana tutaj nie trafia do kotła – zmień też na piecu). U03 zapisuje się do kotła. +1 U03 = +1 °C wody przy każdej temperaturze zewnętrznej.`,
+          `R02–R05 are a copy of the boiler's menu R (a change here does not reach the boiler – change it there too). U03 is written to the boiler. +1 U03 = +1 °C of water at every outdoor temperature.`)
+        : this.t(`Przeciągnij punkt albo użyj −/+ (krok 1 °C). R02 ${xa} °C / R03 ${xb} °C to opcje karty (nie ma ich na magistrali). R04/R05 → T-/T+, U03 → D+/D-.`,
         `Drag a point or use −/+ (1 °C step). R02 ${xa} °C / R03 ${xb} °C are card options (not on any bus). R04/R05 → T-/T+, U03 → D+/D-.`)}</div>`;
   }
 
@@ -138,7 +146,10 @@ class ImmergasCurveCard extends HubCard {
 
   private cool() {
     this.ax = { X0: 18, X1: 42, Y0: 5, Y1: 25, xs: 3, ys: 5 };
-    const xa = this.config.r11 ?? 25, xb = this.config.r10 ?? 35;
+    if (this.dominus && !this.allSet("dom_r10", "dom_r11", "r12", "r13"))
+      return this.domSetup([["dom_r10", "R10 · temp. zewn. przy min. zasilaniu", "R10 · outdoor at min. flow"], ["dom_r11", "R11 · temp. zewn. przy maks. zasilaniu", "R11 · outdoor at max. flow"],
+        ["r12", "R12 · min. zasilanie chłodzenia", "R12 · min. cooling flow"], ["r13", "R13 · maks. zasilanie chłodzenia", "R13 · max. cooling flow"]], false);
+    const xa = this.pt("r11", "dom_r11", 25), xb = this.pt("r10", "dom_r10", 35);
     const hi = this.n("r13"), lo = this.n("r12"), out = this.n("outdoor"), flow = this.n("flow_d20");
     const d04 = this.cooling ? this.n("d04") : NaN;
     const dew = this.config.dew_point_entity ? parseFloat(this.hass.states[this.config.dew_point_entity]?.state) : NaN;
@@ -157,7 +168,8 @@ class ImmergasCurveCard extends HubCard {
       </div>
       <div class="legend">${this.leg("sky", this.t("krzywa chłodzenia Immergas", "Immergas cooling curve"))}
         ${this.config.dew_point_entity ? html`<span><i style="border-top:2px dotted ${c("red")};height:0"></i>${this.t("punkt rosy (czerwone tło = rosa + 2 °C)", "dew point (red band = dew point + 2 °C)")}</span>` : nothing}
-        <span>${this.t("● zadane D04 (tylko w trybie Chłodzenie) · ○ faktyczne zasilanie", "● D04 setpoint (cooling mode only) · ○ actual flow")}</span></div>
+        <span>${this.dominus ? this.t("● zasilanie wyliczone z krzywej", "● flow computed from the curve")
+          : this.t("● zadane D04 (tylko w trybie Chłodzenie) · ○ faktyczne zasilanie", "● D04 setpoint (cooling mode only) · ○ actual flow")}</span></div>
       <div class="note">${this.t(`R11 ${xa} °C / R10 ${xb} °C to opcje karty (nie ma ich na magistrali). R13/R12 → T-/T+. Przy chłodzeniu podłogowym pilnuj punktu rosy.`,
         `R11 ${xa} °C / R10 ${xb} °C are card options (not on any bus). R13/R12 → T-/T+. With floor cooling watch the dew point.`)}</div>`;
   }
@@ -172,10 +184,10 @@ class ImmergasCurveCard extends HubCard {
     this.ax = heat ? { X0: -20, X1: 30, Y0: 10, Y1: 50, xs: 5, ys: 10 } : { X0: 18, X1: 42, Y0: 5, Y1: 30, xs: 4, ys: 5 };
     let norm: ((x: number) => number) | null = null;
     if (heat) {
-      const hi = this.n("r04"), lo = this.n("r05"), off = this.n("u03") || 0, xa = this.config.r02 ?? -12, xb = this.config.r03 ?? 20;
+      const hi = this.n("r04"), lo = this.n("r05"), off = this.n("u03") || 0, xa = this.pt("r02", "dom_r02", -12), xb = this.pt("r03", "dom_r03", 20);
       if (!isNaN(hi) && !isNaN(lo)) norm = (x) => Math.max(lo, Math.min(hi, curve(x, xa, hi, xb, lo) + off));
     } else {
-      const hi = this.n("r13"), lo = this.n("r12"), xa = this.config.r11 ?? 25, xb = this.config.r10 ?? 35;
+      const hi = this.n("r13"), lo = this.n("r12"), xa = this.pt("r11", "dom_r11", 25), xb = this.pt("r10", "dom_r10", 35);
       if (!isNaN(hi) && !isNaN(lo)) norm = (x) => Math.max(lo, Math.min(hi, curve(x, xa, hi, xb, lo)));
     }
     const wyK: Key = heat ? "fsv5013" : "fsv5011", wy = this.n(wyK);
@@ -229,10 +241,30 @@ class ImmergasCurveCard extends HubCard {
   }
 
   private info(out: number, mid: unknown, d04: number, tgt: number, flow: number) {
+    if (this.dominus) return html`<div class="tr" style="margin-top:8px">
+      <span>${this.t("teraz", "now")} <b>${this.f(out)} °C</b></span>${mid}
+      <span>${this.t("z krzywej", "from the curve")} <b style="color:${c("yellow")}">${this.f(tgt)} °C</b></span></div>`;
     return html`<div class="tr" style="margin-top:8px">
       <span>${this.t("teraz", "now")} <b>${this.f(out)} °C</b></span>${mid}
       <span @click=${() => this.moreInfo("d04")} style="cursor:pointer">${this.t("zadane D04", "setpoint D04")} <b style="color:${c("yellow")}">${this.f(isNaN(d04) ? tgt : d04)} °C</b>${!isNaN(d04) && !isNaN(tgt) && Math.abs(tgt - d04) >= 0.5 ? html` <span style="opacity:.55">(${this.t("krzywa", "curve")} ${this.f(tgt)})</span>` : nothing}</span>
       <span @click=${() => this.moreInfo("flow_d20")} style="cursor:pointer">${this.t("zasilanie", "flow")} <b style="color:${c("red")}">${this.f(flow)} °C</b></span></div>`;
+  }
+  /** curve point: the card option, else the value declared in Immergas Dominus, else the default */
+  private pt(opt: string, k: Key, def: number) {
+    const o = this.config[opt];
+    if (o !== undefined) return +o;
+    const v = this.n(k);
+    return isNaN(v) ? def : v;
+  }
+  /** Dominus: the curve values are not readable over TCP - until all are copied from the boiler, ask for them */
+  private domSetup(rows: [Key, string, string][], heat: boolean) {
+    return html`<div class="setup">
+      <div class="st">${heat ? this.t("Krzywa grzewcza nie jest jeszcze ustawiona", "The heating curve is not set yet")
+        : this.t("Krzywa chłodzenia nie jest jeszcze ustawiona", "The cooling curve is not set yet")}</div>
+      <div class="sd">${this.t("Dominus nie czyta menu R pieca. Przepisz te wartości z pieca raz – karta narysuje krzywą, gdy będą komplet.",
+        "Dominus cannot read the boiler's menu R. Copy these values from the boiler once – the card draws the curve when all are set.")}</div>
+      ${rows.map(([k, pl, en]) => this.numRow(k, heat ? "mdi:fire" : "mdi:snowflake", this.t(pl, en), 0))}
+      ${heat ? this.numRow("u03", "mdi:chart-bell-curve-cumulative", this.t("U03 · offset krzywej (zapis do kotła)", "U03 · curve offset (written to the boiler)"), 0) : nothing}</div>`;
   }
   private leg(col: string, l: string) { return html`<span><i style="background:${c(col)}"></i>${l}</span>`; }
 
@@ -243,20 +275,25 @@ class ImmergasCurveCard extends HubCard {
     const head = out ? ["mdi:bag-suitcase-outline", act ? "teal" : base === "heat" ? "peach" : "sky",
         base === "heat" ? this.t("Krzywa · wyjazd · grzanie", "Curve · outing · heating") : this.t("Krzywa · wyjazd · chłodzenie", "Curve · outing · cooling"),
         this.t("nastawy wyjazdowe F1/F2 (FSV 5011–5019)", "F1/F2 outing setpoints (FSV 5011–5019)") + (act ? this.t(" · tryb wyjazdowy AKTYWNY", " · outing mode ACTIVE") : "")]
-      : base === "heat" ? ["mdi:chart-bell-curve-cumulative", "peach", this.t("Krzywa grzewcza", "Heating curve"), this.t("Strefa 1 · R04 / R05 (T-/T+) · U03 (D+/D-)", "Zone 1 · R04 / R05 (T-/T+) · U03 (D+/D-)")]
-      : ["mdi:snowflake-thermometer", "sky", this.t("Krzywa chłodzenia", "Cooling curve"), this.t("Strefa 1 · R13 / R12 (T-/T+)", "Zone 1 · R13 / R12 (T-/T+)")];
+      : base === "heat" ? ["mdi:chart-bell-curve-cumulative", "peach", this.t("Krzywa grzewcza", "Heating curve"), this.dominus
+          ? this.t("Strefa 1 · R02–R05 (kopia z pieca) · U03", "Zone 1 · R02–R05 (copy from the boiler) · U03") : this.t("Strefa 1 · R04 / R05 (T-/T+) · U03 (D+/D-)", "Zone 1 · R04 / R05 (T-/T+) · U03 (D+/D-)")]
+      : ["mdi:snowflake-thermometer", "sky", this.t("Krzywa chłodzenia", "Cooling curve"), this.dominus
+          ? this.t("Strefa 1 · R10–R13 (kopia z pieca)", "Zone 1 · R10–R13 (copy from the boiler)") : this.t("Strefa 1 · R13 / R12 (T-/T+)", "Zone 1 · R13 / R12 (T-/T+)")];
     return html`
       <div class="top">
         <div class="tl"><ha-icon icon=${head[0]} style="color:${c(head[1])}"></ha-icon><div><div class="ttl">${head[2]}</div><div class="tsub" style=${act && out ? `color:${c("teal")};opacity:.9` : ""}>${head[3]}</div></div></div>
         <div class="tabs">
           ${this.chipTab("heat", "mdi:fire", this.t("Grzanie", "Heating"), "peach", base, (v) => (this.tab = v))}
           ${this.chipTab("cool", "mdi:snowflake", this.t("Chłodzenie", "Cooling"), "sky", base, (v) => (this.tab = v))}
-          ${this.chipTab("outing", "mdi:bag-suitcase-outline", this.t("Wyjazd", "Outing"), "teal", out ? "outing" : "", () => (this.out = !out))}</div></div>
-      ${out ? this.outing() : base === "heat" ? this.heat() : this.cool()}`;
+          ${this.dominus ? nothing : this.chipTab("outing", "mdi:bag-suitcase-outline", this.t("Wyjazd", "Outing"), "teal", out ? "outing" : "", () => (this.out = !out))}</div></div>
+      ${out && !this.dominus ? this.outing() : base === "heat" ? this.heat() : this.cool()}`;
   }
 
   static styles = [HubCard.styles, css`
     .top { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .setup { margin-top: 10px; padding: 10px 12px; border-radius: 12px; border: 1px dashed rgba(var(--ih-yellow-rgb), .4); background: rgba(var(--ih-yellow-rgb), .05); }
+    .setup .st { font-size: 12.5px; font-weight: 800; color: var(--ih-yellow); }
+    .setup .sd { font-size: 11px; opacity: .65; margin: 3px 0 6px; line-height: 1.35; }
     .tl { display: flex; align-items: center; gap: 8px; }
     .tl ha-icon { --mdc-icon-size: 22px; }
     .ttl { font-size: 10.5px; font-weight: 800; opacity: .55; letter-spacing: .08em; text-transform: uppercase; }

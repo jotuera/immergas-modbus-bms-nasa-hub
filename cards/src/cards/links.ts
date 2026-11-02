@@ -70,13 +70,18 @@ class ImmergasLinksCard extends HubCard {
       // zone 1 room temperature: Dominus does not measure it - it comes from a zone panel on D+/D- (physical, or
       // emulated by the hub); TCP has no panel firmware register, so physical and emulated look the same here
       const room = this.n("zone1");
+      // A31 (declared): who gives the room temperature and who gives the heating demand
+      const a31 = this.isSet("dom_a31") ? this.s("dom_a31") : "";
+      const how = a31 === "rp" ? this.t("A31 RP: panel daje temperaturę i żądanie", "A31 RP: the panel gives the temperature and the demand")
+        : a31 === "rpt" ? this.t("A31 RPT: panel daje temperaturę i nastawę, termostat pokojowy włącza/wyłącza grzanie", "A31 RPT: the panel gives the temperature and setpoint, the room thermostat switches heating on/off")
+        : a31 === "rt" ? this.t("A31 RT: tylko termostat pokojowy – bez temperatury pokoju po TCP", "A31 RT: room thermostat only – no room temperature over TCP") : "";
       out.push({ k: "zone1", icon: "mdi:tablet-dashboard", name: ["Panel Strefy 1", "Zone 1 panel"], bus: "D+/D- 0x29",
         st: isNaN(room) ? "off" : "ok",
         label: isNaN(room) ? this.t("brak czujnika pokojowego", "no room sensor") : this.t("Jest temperatura", "Temperature present"),
         detail: isNaN(room)
-          ? this.t("Dominus nie mierzy temperatury – potrzebny panel strefy (fizyczny albo emulowany przez hub)",
-            "Dominus does not measure it – a zone panel is needed (physical or emulated by the hub)")
-          : `${this.f(room, 1, 1)} °C · ` + this.t("fizyczny lub emulowany", "physical or emulated") });
+          ? (a31 === "rt" ? how : this.t("Dominus nie mierzy temperatury – potrzebny panel strefy (fizyczny albo emulowany przez hub)",
+            "Dominus does not measure it – a zone panel is needed (physical or emulated by the hub)"))
+          : `${this.f(room, 1, 1)} °C · ` + this.t("fizyczny lub emulowany", "physical or emulated") + (how ? " · " + how : "") });
     }
 
     const wifi = this.n("hub_wifi");

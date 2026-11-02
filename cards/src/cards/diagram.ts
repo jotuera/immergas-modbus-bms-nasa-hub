@@ -98,11 +98,15 @@ class ImmergasDiagramCard extends HubCard {
     const tankFill = isNaN(tank) ? 0 : Math.max(0, Math.min(1, (tank - 20) / 45)), tankCol = tank >= 45 ? "peach" : tank >= 35 ? "yellow" : "sky";
     const flame = err ? "red" : dw ? "yellow" : heat ? "peach" : "overlay1";
     const g: unknown[] = [this.note()];
+    // declared boiler values (Dominus 1.5.0) - each hint only when its values are set
+    const p07 = this.isSet("dom_p07") ? this.n("dom_p07") : 0, t02 = this.n("dom_t02"), i10 = this.n("dom_i10");
+    const intOn = this.on("dom_int_ch") && !isNaN(i10);
     // outdoor
     g.push(svg`<g @click=${this.tap("outdoor")} class="hit"><rect x="16" y="150" width="230" height="170" rx="18" class="panel"/>
       ${this.label(34, 178, this.t("NA ZEWNĄTRZ", "OUTDOOR"), "", 9, "start")}
       ${this.label(34, 236, isNaN(out) ? "–" : this.f(out, 1, 1) + "°", "sky", 28, "start")}
-      ${isNaN(mean) ? nothing : this.label(34, 280, this.t("średnia 24 h ", "24 h mean ") + this.f(mean, 1, 1) + "°", "", 10.5, "start", 600)}</g>`);
+      ${isNaN(mean) ? nothing : this.label(34, 280, this.t("średnia 24 h ", "24 h mean ") + this.f(mean, 1, 1) + "°", "", 10.5, "start", 600)}
+      ${p07 ? this.label(34, 302, this.t(`korekta sondy P07 ${p07 > 0 ? "+" : ""}${this.f(p07, 0)} °C – już wliczona`, `probe correction P07 ${p07 > 0 ? "+" : ""}${this.f(p07, 0)} °C – already applied`), "yellow", 9, "start", 600) : nothing}</g>`);
     // operating mode, curve offset, vacation and alerts
     const vac = this.on("dom_vacation"), auto = this.on("dom_auto_season"), alarm = this.on("dom_frost") || this.on("dom_offline");
     g.push(svg`<g @click=${this.tap("mode")} class="hit"><rect x="16" y="334" width="230" height="150" rx="18" class="panel"/>
@@ -118,7 +122,8 @@ class ImmergasDiagramCard extends HubCard {
           fill=${c(flame)} fill-rule="evenodd" style=${act ? `filter:drop-shadow(0 0 6px ${c(flame)});animation:ih-pulse 1.2s ease-in-out infinite` : ""}/></g>
       ${this.label(390, 186, this.t("Kocioł Magis", "Magis boiler"), "", 11, "middle", 800)}
       ${this.label(390, 322, err ? this.t("AWARIA", "FAULT") : dw ? this.t("grzeje CWU", "heats DHW") : heat ? this.t("grzeje CO", "heats CH") : this.t("czuwanie", "standby"), flame, 12)}
-      ${this.label(390, 346, this.t("pompa / gaz – nie widać po TCP", "heat pump / gas – not visible over TCP"), "", 8, "middle", 600)}`);
+      ${this.label(390, 346, intOn ? this.t(`poniżej ${this.f(i10, 0)} °C (I10): kocioł`, `below ${this.f(i10, 0)} °C (I10): boiler`)
+        : this.t("pompa / gaz – nie widać po TCP", "heat pump / gas – not visible over TCP"), intOn && out < i10 ? "yellow" : "", 8, "middle", 600)}`);
     // CH loop to the house
     g.push(this.pipe("M 480 236 L 600 236 L 600 120 L 680 120", HOT, heat, 1.4));
     g.push(this.pipe("M 680 200 L 630 200 L 630 270 L 480 270", COLD, heat, 1.4));
@@ -144,6 +149,9 @@ class ImmergasDiagramCard extends HubCard {
         <rect x=${cx + 3} y=${296 + 187 * (1 - tankFill) + 3} width="144" height=${Math.max(0, 187 * tankFill - 3)} rx="17" fill=${ca(tankCol, 0.22)}/>
         <path d="M ${cx + 30} 404 q 45 0 45 10 q 0 10 -45 10 q -45 0 -45 10 q 0 10 45 10" fill="none" transform="translate(45 -6)"
           stroke=${c(dw ? "yellow" : "overlay1")} stroke-width="2.5" style=${dw ? `filter:drop-shadow(0 0 4px ${ca("yellow", 0.7)})` : "opacity:.5"}/>
+        ${isNaN(t02) || isNaN(ds) ? nothing : svg`<line x1=${cx - 6} x2=${cx + 16} y1=${296 + 187 * (1 - Math.max(0, Math.min(1, (ds - t02 - 20) / 45))) + 3}
+          y2=${296 + 187 * (1 - Math.max(0, Math.min(1, (ds - t02 - 20) / 45))) + 3} stroke=${c("yellow")} stroke-width="2.5"/>
+          ${this.label(cx - 10, 296 + 187 * (1 - Math.max(0, Math.min(1, (ds - t02 - 20) / 45))) + 7, this.t("start ", "start ") + this.f(ds - t02, 0) + "°", "yellow", 9, "end", 700)}`}
         ${this.label(cx + 75, 340, isNaN(tank) ? "–" : this.f(tank, 1, 1) + "°", tankCol, 22)}
         ${this.label(cx + 75, 362, this.t("nastawa ", "set ") + this.f(ds, 0) + "°" + (dph ? " · " + dph : ""), "", 9.5, "middle", 600)}
         ${isNaN(cyc) ? nothing : this.label(cx + 75, 474, this.t("dziś ", "today ") + this.f(cyc, 0) + "×" + (isNaN(ld) ? "" : this.t(" · ost. ", " · last ") + this.f(ld, 0) + " min"), "", 9.5, "middle", 600)}</g>

@@ -104,7 +104,7 @@ export const NAMES = {{
 }} as const satisfies Record<string, readonly [string, readonly string[]]>;
 // keys found only on the Immergas Dominus integration (see hub.ts)
 export type Key = keyof typeof NAMES | "dom_ch_demand" | "dom_dhw_request" | "dom_last_read" | "dom_failed" | "dom_hum_target" | "dom_flow_target"
-  | "dom_ch_time_today" | "dom_ch_share" | "dom_dhw_cycles" | "dom_dhw_last_dur" | "dom_dhw_last_rise" | "dom_starts_h" | "dom_starts_today" | "dom_room_dev" | "dom_ttt" | "dom_dd_today" | "dom_dd_month" | "dom_h_per_dd" | "dom_frost" | "dom_offline" | "dom_vac_temp" | "dom_win_below" | "dom_sum_above" | "dom_frost_thr" | "dom_off_min" | "dom_vacation" | "dom_auto_season" | "dom_vac_until";
+  | "dom_ch_time_today" | "dom_ch_share" | "dom_dhw_cycles" | "dom_dhw_last_dur" | "dom_dhw_last_rise" | "dom_starts_h" | "dom_starts_today" | "dom_room_dev" | "dom_ttt" | "dom_dd_today" | "dom_dd_month" | "dom_h_per_dd" | "dom_frost" | "dom_offline" | "dom_vac_temp" | "dom_win_below" | "dom_sum_above" | "dom_frost_thr" | "dom_off_min" | "dom_vacation" | "dom_auto_season" | "dom_vac_until" | "dom_r02" | "dom_r03" | "dom_r10" | "dom_r11" | "dom_t02" | "dom_t05" | "dom_i04" | "dom_i10" | "dom_int_ch" | "dom_int_dhw" | "dom_a31" | "dom_p07";
 """
 open(path, "w", encoding="utf-8", newline="\n").write(ts)
 print(f"{len(out)} keys, {len(missing)} without a language source (PL / EN only): {', '.join(missing)}")
