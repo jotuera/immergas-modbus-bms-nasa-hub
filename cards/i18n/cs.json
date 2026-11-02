@@ -1038,5 +1038,14 @@
  "R10 · outdoor at min. cooling flow": "R10 · venku při min. výstupu chlazení",
  "R11 · outdoor at max. cooling flow": "R11 · venku při max. výstupu chlazení",
  "Cheaper tariff hours": "Hodiny levného tarifu",
- "single rate": "jednotarif"
+ "single rate": "jednotarif",
+ "U12 · night function start": "U12 · začátek noční funkce",
+ "U13 · night function end": "U13 · konec noční funkce",
+ "P17 · cycle day": "P17 · den cyklu",
+ "P16 · start time": "P16 · čas startu",
+ "P13 · max. cycle duration": "P13 · max. doba cyklu",
+ "Installation and tariff": "Instalace a tarif",
+ "Floor flow limit (hub warning)": "Limit výstupu podlahy (varování hubu)",
+ "U11 · night function": "U11 · noční funkce",
+ "ON on the boiler – night bar in the Now card": "ZAP na kotli – pruh noční funkce v kartě Nyní"
 }

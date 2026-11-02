@@ -1038,5 +1038,14 @@
  "R10 · outdoor at min. cooling flow": "R10 · exterior con impulsión refrigeración mín.",
  "R11 · outdoor at max. cooling flow": "R11 · exterior con impulsión refrigeración máx.",
  "Cheaper tariff hours": "Horas de tarifa barata",
- "single rate": "tarifa única"
+ "single rate": "tarifa única",
+ "U12 · night function start": "U12 · inicio función nocturna",
+ "U13 · night function end": "U13 · fin función nocturna",
+ "P17 · cycle day": "P17 · día del ciclo",
+ "P16 · start time": "P16 · hora de inicio",
+ "P13 · max. cycle duration": "P13 · duración máx. del ciclo",
+ "Installation and tariff": "Instalación y tarifa",
+ "Floor flow limit (hub warning)": "Límite de impulsión suelo (aviso del hub)",
+ "U11 · night function": "U11 · función nocturna",
+ "ON on the boiler – night bar in the Now card": "ON en la caldera – barra nocturna en la tarjeta Ahora"
 }

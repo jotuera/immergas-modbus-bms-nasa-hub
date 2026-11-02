@@ -1038,5 +1038,14 @@
  "R10 · outdoor at min. cooling flow": "R10 · extérieur au départ rafraîchissement min.",
  "R11 · outdoor at max. cooling flow": "R11 · extérieur au départ rafraîchissement max.",
  "Cheaper tariff hours": "Heures du tarif réduit",
- "single rate": "tarif unique"
+ "single rate": "tarif unique",
+ "U12 · night function start": "U12 · début fonction nuit",
+ "U13 · night function end": "U13 · fin fonction nuit",
+ "P17 · cycle day": "P17 · jour du cycle",
+ "P16 · start time": "P16 · heure de début",
+ "P13 · max. cycle duration": "P13 · durée max. du cycle",
+ "Installation and tariff": "Installation et tarif",
+ "Floor flow limit (hub warning)": "Limite départ plancher (alerte du hub)",
+ "U11 · night function": "U11 · fonction nuit",
+ "ON on the boiler – night bar in the Now card": "ON sur la chaudière – barre de nuit dans la carte Maintenant"
 }

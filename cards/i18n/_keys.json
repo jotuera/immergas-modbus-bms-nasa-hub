@@ -1572,8 +1572,7 @@
   "en": "Floor flow limit",
   "pl": "Limit zasilania podłogi",
   "files": [
-   "calibration.ts",
-   "settings.ts"
+   "calibration.ts"
   ]
  },
  {
@@ -3568,8 +3567,7 @@
   "en": "Day",
   "pl": "Doba",
   "files": [
-   "charts.ts",
-   "settings.ts"
+   "charts.ts"
   ]
  },
  {
@@ -6726,6 +6724,20 @@
   ]
  },
  {
+  "en": "U12 · night function start",
+  "pl": "U12 · start funkcji nocnej",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "U13 · night function end",
+  "pl": "U13 · koniec funkcji nocnej",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
   "en": "Anti-legionella P15",
   "pl": "Anty-legionella P15",
   "files": [
@@ -6733,15 +6745,22 @@
   ]
  },
  {
-  "en": "Day · P17",
-  "pl": "Dzień · P17",
+  "en": "P17 · cycle day",
+  "pl": "P17 · dzień cyklu",
   "files": [
    "settings.ts"
   ]
  },
  {
-  "en": "Duration · P13",
-  "pl": "Czas · P13",
+  "en": "P16 · start time",
+  "pl": "P16 · godzina startu",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "P13 · max. cycle duration",
+  "pl": "P13 · maks. czas cyklu",
   "files": [
    "settings.ts"
   ]
@@ -6999,6 +7018,34 @@
   ]
  },
  {
+  "en": "Installation and tariff",
+  "pl": "Instalacja i taryfa",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Floor flow limit (hub warning)",
+  "pl": "Limit zasilania podłogi (ostrzeżenie huba)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Cheaper tariff hours",
+  "pl": "Tańsza taryfa – godziny",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "single rate",
+  "pl": "jedna taryfa",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
   "en": "Night mode U11 (reminder – set on the boiler)",
   "pl": "Tryb nocny U11 (przypomnienie – ustawia się na piecu)",
   "files": [
@@ -7006,15 +7053,22 @@
   ]
  },
  {
-  "en": "Anti-legionella P15 (reminder – set on the boiler)",
-  "pl": "Anty-legionella P15 (przypomnienie – ustawia się na piecu)",
+  "en": "U11 · night function",
+  "pl": "U11 · funkcja nocna",
   "files": [
    "settings.ts"
   ]
  },
  {
-  "en": "Time",
-  "pl": "Godzina",
+  "en": "ON on the boiler – night bar in the Now card",
+  "pl": "ON na piecu – pasek trybu nocnego w karcie Teraz",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Anti-legionella P15 (reminder – set on the boiler)",
+  "pl": "Anty-legionella P15 (przypomnienie – ustawia się na piecu)",
   "files": [
    "settings.ts"
   ]
@@ -7050,20 +7104,6 @@
  {
   "en": "R11 · outdoor at max. cooling flow",
   "pl": "R11 · temp. zewn. przy maks. zasilaniu chłodzenia",
-  "files": [
-   "settings.ts"
-  ]
- },
- {
-  "en": "Cheaper tariff hours",
-  "pl": "Tańsza taryfa – godziny",
-  "files": [
-   "settings.ts"
-  ]
- },
- {
-  "en": "single rate",
-  "pl": "jedna taryfa",
   "files": [
    "settings.ts"
   ]

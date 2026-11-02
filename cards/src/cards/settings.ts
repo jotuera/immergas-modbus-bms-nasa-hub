@@ -86,12 +86,12 @@ class ImmergasSettingsCard extends HubCard {
   private domOffline() {
     return html`
       ${this.eid("u11") ? html`<div class="grp">${this.t("Tryb nocny U11", "Night mode U11")}</div>
-        ${this.timeRow(this.eid("u12"), "START · U12")}
-        ${this.timeRow(this.eid("u13"), "STOP · U13")}` : nothing}
+        ${this.timeRow(this.eid("u12"), this.t("U12 · start funkcji nocnej", "U12 · night function start"))}
+        ${this.timeRow(this.eid("u13"), this.t("U13 · koniec funkcji nocnej", "U13 · night function end"))}` : nothing}
       ${this.eid("p15") ? html`<div class="grp">${this.t("Anty-legionella P15", "Anti-legionella P15")}</div>
-        ${this.selRow(this.eid("p17"), this.t("Dzień · P17", "Day · P17"), "mdi:calendar-week")}
-        ${this.timeRow(this.eid("p16"), "START · P16", "mdi:bacteria-outline")}
-        ${this.numRow("p13", "mdi:timer-sand", this.t("Czas · P13", "Duration · P13"), 0)}` : nothing}
+        ${this.selRow(this.eid("p17"), this.t("P17 · dzień cyklu", "P17 · cycle day"), "mdi:calendar-week")}
+        ${this.timeRow(this.eid("p16"), this.t("P16 · godzina startu", "P16 · start time"), "mdi:bacteria-outline")}
+        ${this.numRow("p13", "mdi:timer-sand", this.t("P13 · maks. czas cyklu", "P13 · max. cycle duration"), 0)}` : nothing}
       ${this.domParams()}`;
   }
 
@@ -173,12 +173,12 @@ class ImmergasSettingsCard extends HubCard {
         ${night || this.eid("u11_set") ? html`<div class="grp">${this.t("Tryb nocny U11 (przypomnienie – ustawia się na piecu)", "Night mode U11 (reminder – set on the boiler)")}</div>
           ${this.eid("u11_set") ? this.switchRow("u11_set", "mdi:weather-night", "lavender", this.t("U11 · funkcja nocna", "U11 · night function"),
             this.t("ON na piecu – pasek trybu nocnego w karcie Teraz", "ON on the boiler – night bar in the Now card")) : nothing}
-          ${this.timeRow(this.opt("night_start"), "START · U12")}
-          ${this.timeRow(this.opt("night_stop"), "STOP · U13")}` : nothing}
+          ${this.timeRow(this.opt("night_start"), this.t("U12 · start funkcji nocnej", "U12 · night function start"))}
+          ${this.timeRow(this.opt("night_stop"), this.t("U13 · koniec funkcji nocnej", "U13 · night function end"))}` : nothing}
         ${leg ? html`<div class="grp">${this.t("Anty-legionella P15 (przypomnienie – ustawia się na piecu)", "Anti-legionella P15 (reminder – set on the boiler)")}</div>
-          ${this.selRow(this.opt("legionella_day"), this.t("Dzień", "Day"), "mdi:calendar-week")}
-          ${this.timeRow(this.opt("legionella_time"), this.t("Godzina", "Time"), "mdi:bacteria-outline")}
-          ${this.numRow("p13", "mdi:timer-sand", this.t("Czas · P13", "Duration · P13"), 0)}` : nothing}
+          ${this.selRow(this.opt("legionella_day"), this.t("P17 · dzień cyklu", "P17 · cycle day"), "mdi:calendar-week")}
+          ${this.timeRow(this.opt("legionella_time"), this.t("P16 · godzina startu", "P16 · start time"), "mdi:bacteria-outline")}
+          ${this.numRow("p13", "mdi:timer-sand", this.t("P13 · maks. czas cyklu", "P13 · max. cycle duration"), 0)}` : nothing}
         ${this.eid("hub_r02") || this.eid("hub_r10") ? html`<div class="grp">${this.t("Krzywe (menu R)", "Curves (menu R)")}</div>
           ${this.numRow("hub_r02", "mdi:thermometer-low", this.t("R02 · temp. zewn. przy maks. zasilaniu CO", "R02 · outdoor at max. CH flow"), 0)}
           ${this.numRow("hub_r03", "mdi:thermometer-high", this.t("R03 · temp. zewn. przy min. zasilaniu CO", "R03 · outdoor at min. CH flow"), 0)}

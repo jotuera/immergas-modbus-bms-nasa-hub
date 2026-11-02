@@ -1038,5 +1038,14 @@
  "R10 · outdoor at min. cooling flow": "R10 · außen bei min. Kühlvorlauf",
  "R11 · outdoor at max. cooling flow": "R11 · außen bei max. Kühlvorlauf",
  "Cheaper tariff hours": "Zeiten des günstigen Tarifs",
- "single rate": "Einheitstarif"
+ "single rate": "Einheitstarif",
+ "U12 · night function start": "U12 · Beginn Nachtfunktion",
+ "U13 · night function end": "U13 · Ende Nachtfunktion",
+ "P17 · cycle day": "P17 · Zyklustag",
+ "P16 · start time": "P16 · Startzeit",
+ "P13 · max. cycle duration": "P13 · max. Zyklusdauer",
+ "Installation and tariff": "Anlage und Tarif",
+ "Floor flow limit (hub warning)": "Vorlaufgrenze Fußboden (Hub-Warnung)",
+ "U11 · night function": "U11 · Nachtfunktion",
+ "ON on the boiler – night bar in the Now card": "EIN am Kessel – Nachtbalken in der Karte Jetzt"
 }
