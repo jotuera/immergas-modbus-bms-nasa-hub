@@ -81,21 +81,30 @@ class ImmergasSettingsCard extends HubCard {
         ${this.numRow("dom_p07", "mdi:thermometer-plus", this.t("P07 · korekta sondy zewnętrznej", "P07 · outdoor probe correction"), 0)}`)}`;
   }
 
-  /** Immergas Dominus 1.3.0: vacation, automatic summer / winter, alerts (all writes off by default) */
+  /** Immergas Dominus, offline part: copies of the boiler menu (U11, P15, curves, T, I, A31, P07) - nothing is read
+   *  from or written to the boiler, they drive the timer bars, the curve and the hints */
+  private domOffline() {
+    return html`
+      ${this.eid("u11") ? html`<div class="grp">${this.t("Tryb nocny U11", "Night mode U11")}</div>
+        ${this.timeRow(this.eid("u12"), "START · U12")}
+        ${this.timeRow(this.eid("u13"), "STOP · U13")}` : nothing}
+      ${this.eid("p15") ? html`<div class="grp">${this.t("Anty-legionella P15", "Anti-legionella P15")}</div>
+        ${this.selRow(this.eid("p17"), this.t("Dzień · P17", "Day · P17"), "mdi:calendar-week")}
+        ${this.timeRow(this.eid("p16"), "START · P16", "mdi:bacteria-outline")}
+        ${this.numRow("p13", "mdi:timer-sand", this.t("Czas · P13", "Duration · P13"), 0)}` : nothing}
+      ${this.domParams()}`;
+  }
+
+  /** Immergas Dominus 1.3.0, online part: vacation, automatic summer / winter, alerts (all writes off by default) */
   private domRows() {
     const until = this.so("dom_vac_until"), u = until && !["unknown", "unavailable", ""].includes(until.state)
       ? new Date(until.state).toLocaleString(this.loc, { dateStyle: "medium", timeStyle: "short" }) : this.t("do wyłączenia", "until switched off");
     const season = this.so("dom_auto_season")?.attributes ?? {}, mean = parseFloat(season.outdoor_mean_24h), hrs = parseFloat(season.hours_of_data);
     const alert = (k: "dom_frost" | "dom_offline") => this.bad(k) ? "–" : this.on(k) ? this.t("ALARM", "ALERT") : this.t("ok", "ok");
     return html`
-      ${this.eid("u11") ? html`<div class="grp">${this.t("Tryb nocny U11 (ustawia się na piecu)", "Night mode U11 (set on the boiler)")}</div>
-        ${this.timeRow(this.eid("u12"), "START · U12")}
-        ${this.timeRow(this.eid("u13"), "STOP · U13")}` : nothing}
-      ${this.eid("p15") ? html`<div class="grp">${this.t("Anty-legionella P15 (ustawia się na piecu)", "Anti-legionella P15 (set on the boiler)")}</div>
-        ${this.selRow(this.eid("p17"), this.t("Dzień · P17", "Day · P17"), "mdi:calendar-week")}
-        ${this.timeRow(this.eid("p16"), "START · P16", "mdi:bacteria-outline")}
-        ${this.numRow("p13", "mdi:timer-sand", this.t("Czas · P13", "Duration · P13"), 0)}` : nothing}
-      ${this.domParams()}
+      ${this.eid("dom_flow_target") || this.eid("dom_hum_target") ? html`<div class="grp">${this.t("Nastawy Strefy 1", "Zone 1 settings")}</div>
+        ${this.numRow("dom_flow_target", "mdi:thermometer-water", this.t("Zadana zasilania", "Flow setpoint"), 0)}
+        ${this.numRow("dom_hum_target", "mdi:water-percent", this.t("Zadana wilgotności", "Humidity setpoint"), 0)}` : nothing}
       ${this.eid("dom_vacation") ? html`<div class="grp">${this.t("Tryb wyjazdowy", "Vacation")}</div>
         ${this.switchRow("dom_vacation", "mdi:bag-suitcase-outline", "sky", this.t("Tryb wyjazdowy", "Vacation mode"),
           this.t("obniża zadaną Strefy 1, po powrocie przywraca", "lowers the zone 1 target, restores it on return"))}
@@ -117,11 +126,26 @@ class ImmergasSettingsCard extends HubCard {
     const open = this.open ?? !!this.config.expanded;
     const lang = this.so("err_lang"), opts: string[] = lang?.attributes?.options ?? [];
     const night = this.opt("night_start") || this.opt("night_stop"), leg = this.opt("legionella_day") || this.opt("legionella_time");
+    // Dominus: option part = "online" (works live: vacation, summer / winter, alerts, fault language) or "offline"
+    // (copies of the boiler menu typed in by hand); without it both parts in one card
+    const part: string = this.dominus ? this.config.part ?? "all" : "all", on = part !== "offline", off = part !== "online";
+    const ttl = !this.dominus ? this.t("Ustawienia huba", "Hub settings")
+      : part === "online" ? this.t("Ustawienia online", "Online settings")
+      : part === "offline" ? this.t("Parametry pieca (offline)", "Boiler parameters (offline)") : this.t("Ustawienia", "Settings");
+    const sum = !this.dominus ? this.t("ceny, zasobnik, tryb nocny, legionella…", "prices, cylinder, night mode, legionella…")
+      : part === "online" ? this.t("zasilanie, wilgotność, wyjazd, Lato/Zima, alarmy, język błędów", "flow, humidity, vacation, summer/winter, alerts, fault language")
+      : part === "offline" ? this.t("U11, P15, krzywe R, T02/T05, integracja I, A31, P07", "U11, P15, R curves, T02/T05, I integration, A31, P07")
+      : this.t("parametry pieca, tryb nocny, legionella, wyjazd, Lato/Zima, alarmy, język błędów", "boiler parameters, night mode, legionella, vacation, summer/winter, alerts, fault language");
+    const note = part === "online" ? this.t("Działają od razu: nastawy strefy, wyjazd i Lato/Zima zapisują do kotła przez Dominusa, alarmy i język liczy Home Assistant.",
+        "Work right away: zone setpoints, vacation and summer/winter write to the boiler through Dominus, alerts and language run in Home Assistant.")
+      : part === "offline" ? this.t("Dominus nie czyta tych ustawień – przepisz je raz z menu pieca. Nic nie trafia do kotła; służą paskom czasu, krzywej i podpowiedziom.",
+        "Dominus cannot read these – copy them once from the boiler menu. Nothing is sent to the boiler; they drive the timer bars, the curve and the hints.") : "";
     return html`
       <div class="sh" @click=${() => { this.open = !open; this.requestUpdate(); }}>
-        <ha-icon icon="mdi:cog-outline"></ha-icon><span class="ttl">${this.dominus ? this.t("Ustawienia", "Settings") : this.t("Ustawienia huba", "Hub settings")}</span>
-        <span class="sum">${open ? "" : this.dominus ? this.t("parametry pieca, tryb nocny, legionella, wyjazd, Lato/Zima, alarmy, język błędów", "boiler parameters, night mode, legionella, vacation, summer/winter, alerts, fault language") : this.t("ceny, zasobnik, tryb nocny, legionella…", "prices, cylinder, night mode, legionella…")}</span>
+        <ha-icon icon=${part === "offline" ? "mdi:clipboard-text-outline" : part === "online" ? "mdi:cloud-sync-outline" : "mdi:cog-outline"}></ha-icon><span class="ttl">${ttl}</span>
+        <span class="sum">${open ? "" : sum}</span>
         <ha-icon class="chev" icon=${open ? "mdi:chevron-up" : "mdi:chevron-down"}></ha-icon></div>
+      ${open && note ? html`<div class="note">${note}</div>` : nothing}
       ${open && !this.dominus ? html`
         <div class="grp">${this.t("Ceny energii", "Energy prices")}</div>
         ${this.numRow("price_elec", "mdi:flash", this.t("Cena prądu", "Electricity price"), 3)}
@@ -139,8 +163,9 @@ class ImmergasSettingsCard extends HubCard {
           ${this.selRow(this.opt("legionella_day"), this.t("Dzień", "Day"), "mdi:calendar-week")}
           ${this.timeRow(this.opt("legionella_time"), this.t("Godzina", "Time"), "mdi:bacteria-outline")}` : nothing}
       ` : nothing}
-      ${open && this.dominus ? this.domRows() : nothing}
-      ${open && lang ? html`<div class="grp">${this.t("Opisy błędów", "Fault descriptions")}</div>
+      ${open && this.dominus && off ? this.domOffline() : nothing}
+      ${open && this.dominus && on ? this.domRows() : nothing}
+      ${open && lang && on ? html`<div class="grp">${this.t("Opisy błędów", "Fault descriptions")}</div>
           <div class="nr"><ha-icon icon="mdi:translate"></ha-icon><span class="nl">${this.t("Język", "Language")}</span>
             <select class="langs" .value=${lang.state} @change=${(e: Event) => { const o = (e.target as HTMLSelectElement).value; if (o !== lang.state) this.call("select", "select_option", "err_lang", { option: o }); }}>
               ${opts.map((o) => html`<option value=${o} ?selected=${o === lang.state}>${this.hass.formatEntityState?.(lang, o) ?? o}</option>`)}</select></div>` : nothing}`;
@@ -153,6 +178,7 @@ class ImmergasSettingsCard extends HubCard {
     .ttl { font-size: 10.5px; font-weight: 800; opacity: .55; letter-spacing: .08em; text-transform: uppercase; }
     .sum { flex: 1; font-size: 10.5px; opacity: .4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .chev { margin-left: auto; }
+    .note { font-size: 11px; opacity: .6; line-height: 1.35; margin: 6px 0 2px; }
     .grp { font-size: 9.5px; font-weight: 800; opacity: .45; letter-spacing: .06em; text-transform: uppercase; margin: 10px 0 2px; }
     .langs { cursor: pointer; margin-left: auto; padding: 4px 8px; border-radius: 8px; font: inherit; font-size: 12px; font-weight: 700; color: inherit;
       border: 1px solid rgba(var(--ih-teal-rgb), .45); background: rgba(var(--ih-teal-rgb), .1); }

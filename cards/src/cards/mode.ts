@@ -121,25 +121,15 @@ class ImmergasModeCard extends HubCard {
       [["auto", "mdi:calendar-clock", "blue", "AUTO"], ["manual", "mdi:hand-back-right-outline", "peach", "MANUAL"]], cur, set, bad);
   }
 
-  /** Dominus: the zone 1 program phase (no AUTO / MANUAL select there) and the boiler-side zone settings */
-  private domRows(cooling: boolean) {
+  /** Dominus: the zone 1 program phase (no AUTO / MANUAL select there); flow / humidity setpoints are in the online Settings */
+  private domRows(_cooling: boolean) {
     const ph = this.bad("zone1_phase") ? "" : this.txt("zone1_phase")!, raw = this.s("zone1_phase") ?? "";
     const col = raw === "comfort" ? "peach" : raw === "economy" ? "teal" : "overlay2";
     return html`${ph ? html`<div class="night" style=${box(col, raw === "comfort" || raw === "economy")} @click=${() => this.moreInfo("zone1_phase")}>
         <ha-icon icon="mdi:calendar-clock" style="color:${c(col)}"></ha-icon>
         <div class="cx"><div class="nt">${this.t("Program czasowy CO Strefy 1", "Zone 1 CH time program")}</div>
           <div class="ns" style="color:${c(col)}">${raw === "manual" ? this.t("ręczny – stała nastawa", "manual – fixed setpoint") : this.t("wg harmonogramu · teraz: ", "by the schedule · now: ") + ph}</div></div></div>` : nothing}
-      ${this.domZone(cooling)}`;
-  }
-
-  /** Dominus: zone 1 settings the Setpoints card does not show (it shows the Comfort / Eco pair of the current mode) */
-  // U03 is on the Curve card, Comfort / Eco on the Setpoints card - only what has no other place stays here
-  private domZone(_cooling: boolean) {
-    const rows = [
-      this.numRow("dom_flow_target", "mdi:thermometer-water", this.t("Zadana zasilania", "Flow setpoint"), 0),
-      this.numRow("dom_hum_target", "mdi:water-percent", this.t("Zadana wilgotności", "Humidity setpoint"), 0),
-    ].filter((r) => r !== nothing);
-    return rows.length ? html`<div class="setp"><div class="st">${this.t("Nastawy Strefy 1", "Zone 1 settings")}</div>${rows}</div>` : nothing;
+      `;
   }
 
   protected body() {
