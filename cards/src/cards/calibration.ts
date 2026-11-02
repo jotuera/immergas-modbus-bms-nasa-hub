@@ -338,14 +338,21 @@ class ImmergasCalibrationCard extends HubCard {
     const starts = this.n("starts"), later = !isNaN(wait) ? this.t(" (najpierw oceń zmianę krzywej po dobie)", " (first judge the curve change after a day)") : "";
     const cycTxt: [string, string] = S.coPerH > 3 ? ["podnieś R05 o 2 K i T05 do 20 min", "raise R05 by 2 K and T05 to 20 min"]
       : short ? ["cieplejsza woda: R05 +2 K (dłuższe cykle)", "warmer water: R05 +2 K (longer cycles)"] : ["w normie", "fine"];
+    // the cycling rows name R05 (+2 K) and T05 (20 min): give them a Set button when the entities exist (after a recent
+    // curve change the text still says to wait - the button stays, the user decides and confirms)
+    const r05up = this.eid("r05") && !isNaN(r05) && cap(r05 + 2, 20, 28) !== r05 ? cap(r05 + 2, 20, 28) : NaN;
+    const setR05 = (t05too: boolean) => isNaN(r05up) ? undefined : () => {
+      this.call("number", "set_value", "r05", { value: r05up });
+      if (t05too && this.eid("t05") && !isNaN(t05) && t05 < 20) this.call("number", "set_value", "t05", { value: 20 });
+    };
     const info: Row[] = [
       { code: "", name: ["Taktowanie: starty CO na godzinę", "Cycling: CH starts per hour"], unit: "/h", d: 1, kind: "info",
         model: "≤ 1,5 /h", why: ["mniej startów = dłuższa żywotność sprężarki i lepszy COP", "fewer starts = longer compressor life and better COP"],
-        value: S.coPerH, ok: !(S.coPerH > 1.5), rec: (S.coPerH > 1.5 ? "" : "✓ ") + this.t(cycTxt[0], cycTxt[1]) + later,
+        value: S.coPerH, ok: !(S.coPerH > 1.5), setFn: S.coPerH > 3 ? setR05(true) : short ? setR05(false) : undefined, rec: (S.coPerH > 1.5 ? "" : "✓ ") + this.t(cycTxt[0], cycTxt[1]) + later,
         reason: [`średnio z ${S.n} startów CO w 24 h`, `average of ${S.n} CH starts in 24 h`] },
       { code: "", name: ["Taktowanie: długość cyklu CO", "Cycling: CH cycle length"], unit: "min", d: 1, kind: "info",
         model: "≥ 10 min", why: ["sprężarka rozgrzewa się i modulując pracuje wydajnie", "the compressor warms up and runs efficiently modulating"],
-        value: S.coRun, ok: !(S.coRun < 10), rec: S.coRun < 10 ? this.t("R05 +2 K – woda za blisko temperatury powrotu", "R05 +2 K – water too close to the return temperature") + later : this.t("✓ w normie", "✓ fine"),
+        value: S.coRun, ok: !(S.coRun < 10), setFn: S.coRun < 10 ? setR05(false) : undefined, rec: S.coRun < 10 ? this.t("R05 +2 K – woda za blisko temperatury powrotu", "R05 +2 K – water too close to the return temperature") + later : this.t("✓ w normie", "✓ fine"),
         reason: ["mediana cykli pompy w CO z 24 h", "median of the heat-pump CH cycles in 24 h"] },
       ...(!isNaN(starts) ? [{ code: "", name: ["Starty sprężarki dziś", "Compressor starts today"], unit: "×", d: 0, kind: "info",
         model: "≤ 30", why: ["łącznie CO i CWU od północy", "CH and DHW together since midnight"],
