@@ -34,6 +34,30 @@ class ImmergasSettingsCard extends HubCard {
       <div class="btn xs" @click=${() => step(1)}><ha-icon icon="mdi:plus"></ha-icon></div></div>`;
   }
 
+  /** Immergas Dominus 1.3.0: vacation, automatic summer / winter, alerts (all writes off by default) */
+  private domRows() {
+    const until = this.so("dom_vac_until"), u = until && !["unknown", "unavailable", ""].includes(until.state)
+      ? new Date(until.state).toLocaleString(this.loc, { dateStyle: "medium", timeStyle: "short" }) : this.t("do wyłączenia", "until switched off");
+    const season = this.so("dom_auto_season")?.attributes ?? {}, mean = parseFloat(season.outdoor_mean_24h), hrs = parseFloat(season.hours_of_data);
+    const alert = (k: "dom_frost" | "dom_offline") => this.bad(k) ? "–" : this.on(k) ? this.t("ALARM", "ALERT") : this.t("ok", "ok");
+    return html`
+      ${this.eid("dom_vacation") ? html`<div class="grp">${this.t("Tryb wyjazdowy", "Vacation")}</div>
+        ${this.switchRow("dom_vacation", "mdi:bag-suitcase-outline", "sky", this.t("Tryb wyjazdowy", "Vacation mode"),
+          this.t("obniża zadaną Strefy 1, po powrocie przywraca", "lowers the zone 1 target, restores it on return"))}
+        ${this.numRow("dom_vac_temp", "mdi:thermometer-low", this.t("Temperatura na wyjazd", "Vacation temperature"), 1)}
+        <div class="nr"><ha-icon icon="mdi:calendar-end"></ha-icon><span class="nl" @click=${() => this.moreInfo("dom_vac_until")}>${this.t("Wyjazd do", "Away until")}</span>
+          <span class="nv" style="min-width:auto">${u}</span></div>` : nothing}
+      ${this.eid("dom_auto_season") ? html`<div class="grp">${this.t("Automatyczne Lato / Zima", "Automatic summer / winter")}</div>
+        ${this.switchRow("dom_auto_season", "mdi:sun-snowflake-variant", "teal", this.t("Automatyczne Lato / Zima", "Automatic summer / winter"),
+          isNaN(mean) ? this.t("średnia zewnętrzna z 24 h – zbieram dane", "24 h outdoor mean – collecting data")
+            : this.t(`średnia 24 h ${this.f(mean, 1, 1)} °C z ${this.f(hrs, 0)} h danych`, `24 h mean ${this.f(mean, 1, 1)} °C from ${this.f(hrs, 0)} h of data`))}
+        ${this.numRow("dom_win_below", "mdi:snowflake", this.t("Zima poniżej (średnia 24 h)", "Winter below (24 h mean)"), 1)}
+        ${this.numRow("dom_sum_above", "mdi:weather-sunny", this.t("Lato powyżej (średnia 24 h)", "Summer above (24 h mean)"), 1)}` : nothing}
+      ${this.eid("dom_frost") || this.eid("dom_offline") ? html`<div class="grp">${this.t("Alarmy", "Alerts")}</div>
+        ${this.numRow("dom_frost_thr", "mdi:snowflake-alert", this.t("Ryzyko zamarznięcia poniżej", "Frost risk below") + ` · ${alert("dom_frost")}`, 1)}
+        ${this.numRow("dom_off_min", "mdi:lan-disconnect", this.t("Moduł offline po", "Module offline after") + ` · ${alert("dom_offline")}`, 0)}` : nothing}`;
+  }
+
   protected body() {
     const open = this.open ?? !!this.config.expanded;
     const lang = this.so("err_lang"), opts: string[] = lang?.attributes?.options ?? [];
@@ -41,7 +65,7 @@ class ImmergasSettingsCard extends HubCard {
     return html`
       <div class="sh" @click=${() => { this.open = !open; this.requestUpdate(); }}>
         <ha-icon icon="mdi:cog-outline"></ha-icon><span class="ttl">${this.dominus ? this.t("Ustawienia", "Settings") : this.t("Ustawienia huba", "Hub settings")}</span>
-        <span class="sum">${open ? "" : this.dominus ? this.t("język opisów błędów", "fault description language") : this.t("ceny, zasobnik, tryb nocny, legionella…", "prices, cylinder, night mode, legionella…")}</span>
+        <span class="sum">${open ? "" : this.dominus ? this.t("wyjazd, Lato/Zima, alarmy, język błędów", "vacation, summer/winter, alerts, fault language") : this.t("ceny, zasobnik, tryb nocny, legionella…", "prices, cylinder, night mode, legionella…")}</span>
         <ha-icon class="chev" icon=${open ? "mdi:chevron-up" : "mdi:chevron-down"}></ha-icon></div>
       ${open && !this.dominus ? html`
         <div class="grp">${this.t("Ceny energii", "Energy prices")}</div>
@@ -60,6 +84,7 @@ class ImmergasSettingsCard extends HubCard {
           ${this.selRow(this.opt("legionella_day"), this.t("Dzień", "Day"), "mdi:calendar-week")}
           ${this.timeRow(this.opt("legionella_time"), this.t("Godzina", "Time"), "mdi:bacteria-outline")}` : nothing}
       ` : nothing}
+      ${open && this.dominus ? this.domRows() : nothing}
       ${open && lang ? html`<div class="grp">${this.t("Opisy błędów", "Fault descriptions")}</div>
           <div class="nr"><ha-icon icon="mdi:translate"></ha-icon><span class="nl">${this.t("Język", "Language")}</span>
             <select class="langs" .value=${lang.state} @change=${(e: Event) => { const o = (e.target as HTMLSelectElement).value; if (o !== lang.state) this.call("select", "select_option", "err_lang", { option: o }); }}>

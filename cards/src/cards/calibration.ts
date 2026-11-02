@@ -834,6 +834,52 @@ class ImmergasCalibrationCard extends HubCard {
     return out;
   }
 
+  /** Immergas Dominus: what the module reads over TCP plus the integration's statistics (1.3.0) - the curve offset first */
+  private domRows(): Row[] {
+    const out: Row[] = [], f1 = (v: number) => this.f(v, 1, 1);
+    // U03 from the 1 h room deviation while the zone asks for heat
+    const u = this.so("u03"), uv = this.n("u03"), step = u?.attributes?.step ?? 1, dev = this.n("dom_room_dev"), share = this.n("dom_ch_share");
+    const clamp = (v: number) => Math.min(u?.attributes?.max ?? 10, Math.max(u?.attributes?.min ?? -10, v));
+    // judge the curve only when the boiler really heats (>= 10 % of the day): a warm room with the burner idle is not
+    // the curve's fault, and the 1 h mean right after a restart is too short
+    const enough = share >= 10;
+    const uRec = isNaN(dev) || isNaN(uv) || !enough ? uv : dev > 0.5 ? clamp(uv - step) : dev < -0.5 ? clamp(uv + step) : uv;
+    out.push({ k: "u03", code: "U03", name: ["Offset krzywej grzewczej", "Heating curve offset"], unit: "°C", d: 1, kind: "number", group: "ch",
+      model: this.t("pokój ±0,5 K od zadanej", "room within ±0.5 K of the target"),
+      why: ["przesuwa całą krzywą: +1 = cieplejsza woda przy każdej temperaturze zewnętrznej", "shifts the whole curve: +1 = warmer water at every outdoor temperature"],
+      rec: uRec, reason: isNaN(dev) ? ["brak danych o odchyłce (statystyki Dominusa 1.3.0)", "no deviation data (Dominus 1.3.0 statistics)"]
+        : [`pokój ${dev > 0 ? "+" : ""}${f1(dev)} K od zadanej (średnia 1 h)${isNaN(share) ? "" : `, grzanie ${this.f(share, 0)} % doby`}${enough ? "" : " – za mało grzania, by ocenić krzywą"}`,
+          `room ${dev > 0 ? "+" : ""}${f1(dev)} K from the target (1 h mean)${isNaN(share) ? "" : `, heating ${this.f(share, 0)} % of the day`}${enough ? "" : " – too little heating to judge the curve"}`] });
+    // cycling of the boiler from the heating-demand edges
+    const sh = this.n("dom_starts_h"), st = this.n("dom_starts_today"), many = sh > 3;
+    if (this.eid("dom_starts_h")) out.push({ code: "", name: ["Taktowanie: starty grzania na godzinę", "Cycling: heating starts per hour"], unit: "/h", d: 0, kind: "info", group: "cyc",
+      model: "≤ 3 /h", why: ["kocioł gazowy: mniej startów = mniej strat i zużycia", "gas boiler: fewer starts = fewer losses and less wear"], value: sh, ok: !many,
+      rec: many ? this.t("za często – obniż offset (U03) albo zadaną zasilania", "too often – lower the offset (U03) or the flow setpoint") : this.t("✓ w normie", "✓ fine"),
+      reason: [`dziś ${isNaN(st) ? "–" : this.f(st, 0)} startów`, `${isNaN(st) ? "–" : this.f(st, 0)} starts today`] });
+    // DHW cycles
+    const dc = this.n("dom_dhw_cycles"), dd = this.n("dom_dhw_last_dur"), dr = this.n("dom_dhw_last_rise"), dmany = dc > 3;
+    if (this.eid("dom_dhw_cycles")) out.push({ code: "", name: ["Cykle CWU dziś", "DHW cycles today"], unit: "×", d: 0, kind: "info", group: "dhw",
+      model: "≤ 3", why: ["każdy cykl CWU to przerwa w grzaniu domu", "every DHW cycle pauses the space heating"], value: dc, ok: !dmany,
+      rec: dmany ? this.t("dużo – obniż nastawę CWU albo skróć kalendarz CWU", "many – lower the DHW setpoint or shorten the DHW calendar") : this.t("✓ w normie", "✓ fine"),
+      reason: [`ostatni cykl ${isNaN(dd) ? "–" : this.f(dd, 0)} min, zasobnik +${isNaN(dr) ? "–" : f1(dr)} K`, `last cycle ${isNaN(dd) ? "–" : this.f(dd, 0)} min, cylinder +${isNaN(dr) ? "–" : f1(dr)} K`] });
+    // Comfort - Eco gap from the time to reach the target
+    const ttt = this.n("dom_ttt"), ce = this.n("comfort_heat"), ee = this.n("eco_heat"), gap = ce - ee, slow = ttt > 60 && gap > 0.5;
+    if (this.eid("eco_heat")) out.push({ k: "eco_heat", code: "", name: ["Program CO: Eko grzanie", "CH program: Eco heating"], unit: "°C", d: 1, kind: "number", group: "use",
+      model: this.t("zadana w ≤ 60 min po fazie Komfort", "target within ≤ 60 min after Comfort starts"),
+      why: ["duża różnica Komfort–Eko = długie dogrzewanie rano", "a large Comfort–Eco gap = long reheating in the morning"],
+      rec: slow ? ee + 0.5 : ee,
+      reason: [`dojście do zadanej ${isNaN(ttt) ? "–" : this.f(ttt, 0)} min, różnica Komfort–Eko ${isNaN(gap) ? "–" : f1(gap)} K`,
+        `reached the target in ${isNaN(ttt) ? "–" : this.f(ttt, 0)} min, Comfort–Eco gap ${isNaN(gap) ? "–" : f1(gap)} K`] });
+    // efficiency (informative)
+    const hdd = this.n("dom_h_per_dd"), ddm = this.n("dom_dd_month");
+    if (this.eid("dom_h_per_dd")) out.push({ code: "", name: ["Godziny grzania na stopniodzień", "Heating hours per degree day"], unit: "h/°C·d", d: 2, kind: "info", group: "other",
+      model: this.t("porównuj przed i po zmianie", "compare before and after a change"),
+      why: ["mniej godzin na stopniodzień = dom potrzebuje mniej grzania", "fewer hours per degree day = the house needs less heating"], value: hdd, ok: true,
+      rec: this.t("informacyjnie", "informative"),
+      reason: [`w tym miesiącu ${isNaN(ddm) ? "–" : f1(ddm)} stopniodni`, `${isNaN(ddm) ? "–" : f1(ddm)} degree days this month`] });
+    return out;
+  }
+
   private cur(r: Row): number | string {
     if (r.kind === "info" || r.kind === "custom") return r.value ?? NaN;
     if (r.entity) return parseFloat(this.hass.states[r.entity]?.state);
@@ -856,18 +902,19 @@ class ImmergasCalibrationCard extends HubCard {
   }
 
   protected body() {
-    if (!this.hist || Date.now() - this.hist.at > 10 * 60e3) this.load();
-    if (!this.effLoading && (!this.eff || Date.now() - this.eff.at > 30 * 60e3)) this.loadEff();
+    const dom = this.dominus;
+    if (!dom && (!this.hist || Date.now() - this.hist.at > 10 * 60e3)) this.load();
+    if (!dom && !this.effLoading && (!this.eff || Date.now() - this.eff.at > 30 * 60e3)) this.loadEff();
     const gOf = (r: Row) => r.group ?? (r.kind === "info" && !r.code && !/harmonogram|schedule/i.test(r.name[0]) ? "cyc"
       : /^(źródło ciepła|harmonogram|nastawa co w pokojach)/i.test(r.name[0]) || ["U11", "FR", "P15"].includes(r.code) ? "use"
       : ["dhw_set", "t02"].includes(r.k as string) ? "dhw" : ["i10"].includes(r.k as string) ? "int" : r.k === "dew_corr" ? "cool" : "ch");
     const order = GROUPS.map((g) => g[0]);
     // Magis Pro has no gas boiler: no boiler integration (I..) and no heat pump vs gas choice
     const gas = this.hasGas, boilerRow = (r: Row) => gOf(r) === "int" || /^I\d\d$/.test(r.code ?? "") || /^(źródło ciepła)/i.test(r.name[0]);
-    const rows = this.rows().filter((r) => r.kind === "info" || r.kind === "custom" || r.entity || this.eid(r.k!)).filter((r) => gas || !boilerRow(r))
+    const rows = (dom ? this.domRows() : this.rows()).filter((r) => r.kind === "info" || r.kind === "custom" || r.entity || this.eid(r.k!)).filter((r) => gas || !boilerRow(r))
       .map((r, i) => ({ r: { ...r, group: gOf(r) }, i })).sort((a, b) => order.indexOf(a.r.group!) - order.indexOf(b.r.group!) || a.i - b.i).map((x) => x.r);
     const diff = (r: Row) => { if (r.kind === "info") return !r.ok; const a = this.cur(r), b = r.rec; return typeof a === "number" && typeof b === "number" ? !isNaN(b) && !isNaN(a) && Math.abs(a - b) > 0.01 : a !== b && b !== "" && b !== undefined; };
-    const nDiff = rows.filter(diff).length, S = this.stats();
+    const nDiff = rows.filter(diff).length, S = dom ? null : this.stats();
     // the most important finding (first one to change, in group order) for the diagram card
     const top = rows.find(diff);
     hubNote.rec = top ? {
@@ -895,11 +942,13 @@ class ImmergasCalibrationCard extends HubCard {
               ${d && (r.kind !== "info" || r.setFn) ? html`<div class="set" style="${conf ? `outline:2px solid ${c("peach")}` : ""}" @click=${() => this.confirm(tag, () => this.apply(r))}>
                 <ha-icon icon="mdi:check-bold"></ha-icon>${conf ? this.t("Potwierdź", "Confirm") : this.t("Ustaw", "Set")}</div>` : nothing}</div>`;
         })}
-        ${this.effView()}
+        ${dom ? nothing : this.effView()}
       </div>
-      <div class="note">${this.t("Rekomendacje liczone z ostatnich 24 h", "Recommendations from the last 24 h")}: ${this.f(S.coPerH, 1, 1)} ${this.t("startu CO/h", "CH starts/h")},
+      ${dom || !S ? html`<div class="note">${this.t("Rekomendacje liczone ze statystyk integracji Immergas Dominus (ostatnia godzina i doba).",
+        "Recommendations from the Immergas Dominus statistics (last hour and day).")}
+        ${this.t("Zmieniaj po jednym parametrze i oceniaj po dobie.", "Change one parameter at a time and judge after a day.")}</div>` : html`<div class="note">${this.t("Rekomendacje liczone z ostatnich 24 h", "Recommendations from the last 24 h")}: ${this.f(S.coPerH, 1, 1)} ${this.t("startu CO/h", "CH starts/h")},
         ${this.t("cykl", "cycle")} ~${this.f(S.coRun, 1, 0)} min${this.rooms().length ? this.t(`, ${this.rooms().length} termostatów pokojowych`, `, ${this.rooms().length} room thermostats`) : ""}.
-        ${this.t("Zmieniaj po jednym parametrze i oceniaj po dobie.", "Change one parameter at a time and judge after a day.")}</div>`;
+        ${this.t("Zmieniaj po jednym parametrze i oceniaj po dobie.", "Change one parameter at a time and judge after a day.")}</div>`}`;
   }
 
   static styles = [HubCard.styles, css`

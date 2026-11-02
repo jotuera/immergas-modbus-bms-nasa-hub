@@ -245,7 +245,16 @@ class ImmergasNowCard extends HubCard {
         ${this.tile("tank", "mdi:water-boiler", this.t("Zasobnik CWU", "DHW cylinder"), this.f(tank, 1, 1) + " °C", tank >= 45 ? "peach" : tank >= 35 ? "yellow" : "sky", (tank - 20) / 45 * 100)}
         ${this.tile("dom_ch_demand", ch ? "mdi:fire" : "mdi:fire-off", this.t("Żądanie CO", "CH demand"), ch ? this.t("tak", "yes") : this.t("nie", "no"), ch ? "peach" : "overlay1")}
       </div>
-      <div class="chips2"><div class="span2">${this.faultChip()}</div></div>`;
+      ${this.eid("dom_ch_time_today") ? html`<div class="chips2">
+        ${this.chip("dom_ch_time_today", "mdi:radiator", "peach", this.t("Grzanie CO dziś", "CH heating today"),
+          `${this.f(this.n("dom_ch_time_today"), 1, 1)} h · ${this.f(this.n("dom_starts_today"), 0)} ${this.t("startów", "starts")}`, false)}
+        ${this.chip("dom_dhw_cycles", "mdi:water-boiler", "yellow", this.t("Cykle CWU dziś", "DHW cycles today"), this.f(this.n("dom_dhw_cycles"), 0), false)}</div>` : nothing}
+      <div class="chips2">
+        ${this.on("dom_frost") ? html`<div class="span2">${this.chip("dom_frost", "mdi:snowflake-alert", "red", this.t("Ryzyko zamarznięcia", "Frost risk"),
+          this.t("pokój poniżej progu", "room below the threshold"), true)}</div>` : nothing}
+        ${this.on("dom_offline") ? html`<div class="span2">${this.chip("dom_offline", "mdi:lan-disconnect", "red", this.t("Moduł Dominus offline", "Dominus module offline"),
+          this.t("brak odczytu", "no reading"), true)}</div>` : nothing}
+        <div class="span2">${this.faultChip()}</div></div>`;
   }
 
   protected body() {
