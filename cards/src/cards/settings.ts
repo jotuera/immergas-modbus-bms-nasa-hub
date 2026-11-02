@@ -128,15 +128,22 @@ class ImmergasSettingsCard extends HubCard {
     const night = this.opt("night_start") || this.opt("night_stop"), leg = this.opt("legionella_day") || this.opt("legionella_time");
     // Dominus: option part = "online" (works live: vacation, summer / winter, alerts, fault language) or "offline"
     // (copies of the boiler menu typed in by hand); without it both parts in one card
-    const part: string = this.dominus ? this.config.part ?? "all" : "all", on = part !== "offline", off = part !== "online";
-    const ttl = !this.dominus ? this.t("Ustawienia huba", "Hub settings")
+    // hub: the same option - "online" (prices, cylinder, gas estimate, fault language), "offline" (boiler menu values the
+    // buses do not carry: U12/U13, P16/P17/P13, floor limit, cheaper tariff, curve points R02/R03/R10/R11, P07)
+    const part: string = this.config.part ?? "all", on = part !== "offline", off = part !== "online";
+    const ttl = !this.dominus ? (part === "online" ? this.t("Ustawienia huba (online)", "Hub settings (online)")
+        : part === "offline" ? this.t("Parametry pieca (offline)", "Boiler parameters (offline)") : this.t("Ustawienia huba", "Hub settings"))
       : part === "online" ? this.t("Ustawienia online", "Online settings")
       : part === "offline" ? this.t("Parametry pieca (offline)", "Boiler parameters (offline)") : this.t("Ustawienia", "Settings");
-    const sum = !this.dominus ? this.t("ceny, zasobnik, tryb nocny, legionella…", "prices, cylinder, night mode, legionella…")
+    const sum = !this.dominus ? (part === "online" ? this.t("ceny, zasobnik, szacowanie gazu, język błędów", "prices, cylinder, gas estimate, fault language")
+        : part === "offline" ? this.t("U12/U13, P16/P17/P13, limit podłogi, tania taryfa, R02/R03, R10/R11, P07", "U12/U13, P16/P17/P13, floor limit, cheap tariff, R02/R03, R10/R11, P07")
+        : this.t("ceny, zasobnik, tryb nocny, legionella…", "prices, cylinder, night mode, legionella…"))
       : part === "online" ? this.t("zasilanie, wilgotność, wyjazd, Lato/Zima, alarmy, język błędów", "flow, humidity, vacation, summer/winter, alerts, fault language")
       : part === "offline" ? this.t("U11, P15, krzywe R, T02/T05, integracja I, A31, P07", "U11, P15, R curves, T02/T05, I integration, A31, P07")
       : this.t("parametry pieca, tryb nocny, legionella, wyjazd, Lato/Zima, alarmy, język błędów", "boiler parameters, night mode, legionella, vacation, summer/winter, alerts, fault language");
-    const note = part === "online" ? this.t("Działają od razu: nastawy strefy, wyjazd i Lato/Zima zapisują do kotła przez Dominusa, alarmy i język liczy Home Assistant.",
+    const note = !this.dominus ? (part === "offline" ? this.t("Hub nie czyta tych ustawień z magistral – przepisz je raz z menu pieca; służą paskom czasu, krzywej i kalibracji.",
+        "The hub cannot read these from the buses – copy them once from the boiler menu; they drive the timer bars, the curve and the calibration.") : "")
+      : part === "online" ? this.t("Działają od razu: nastawy strefy, wyjazd i Lato/Zima zapisują do kotła przez Dominusa, alarmy i język liczy Home Assistant.",
         "Work right away: zone setpoints, vacation and summer/winter write to the boiler through Dominus, alerts and language run in Home Assistant.")
       : part === "offline" ? this.t("Dominus nie czyta tych ustawień – przepisz je raz z menu pieca. Nic nie trafia do kotła; służą paskom czasu, krzywej i podpowiedziom.",
         "Dominus cannot read these – copy them once from the boiler menu. Nothing is sent to the boiler; they drive the timer bars, the curve and the hints.") : "";
@@ -146,7 +153,7 @@ class ImmergasSettingsCard extends HubCard {
         <span class="sum">${open ? "" : sum}</span>
         <ha-icon class="chev" icon=${open ? "mdi:chevron-up" : "mdi:chevron-down"}></ha-icon></div>
       ${open && note ? html`<div class="note">${note}</div>` : nothing}
-      ${open && !this.dominus ? html`
+      ${open && !this.dominus && on ? html`
         <div class="grp">${this.t("Ceny energii", "Energy prices")}</div>
         ${this.numRow("price_elec", "mdi:flash", this.t("Cena prądu", "Electricity price"), 3)}
         ${this.numRow("price_gas", "mdi:fire", this.t("Cena gazu", "Gas price"), 2)}
@@ -156,12 +163,26 @@ class ImmergasSettingsCard extends HubCard {
         <div class="grp">${this.t("Szacowanie gazu", "Gas estimate")}</div>
         ${this.numRow("gas_cal_co", "mdi:radiator", this.t("Zużycie gazu CO", "Gas use CH"), 2)}
         ${this.numRow("gas_cal_dhw", "mdi:water-thermometer", this.t("Zużycie gazu CWU", "Gas use DHW"), 2)}
+      ` : nothing}
+      ${open && !this.dominus && off ? html`
         ${night ? html`<div class="grp">${this.t("Tryb nocny U11 (przypomnienie – ustawia się na piecu)", "Night mode U11 (reminder – set on the boiler)")}</div>
           ${this.timeRow(this.opt("night_start"), "START · U12")}
           ${this.timeRow(this.opt("night_stop"), "STOP · U13")}` : nothing}
         ${leg ? html`<div class="grp">${this.t("Anty-legionella P15 (przypomnienie – ustawia się na piecu)", "Anti-legionella P15 (reminder – set on the boiler)")}</div>
           ${this.selRow(this.opt("legionella_day"), this.t("Dzień", "Day"), "mdi:calendar-week")}
-          ${this.timeRow(this.opt("legionella_time"), this.t("Godzina", "Time"), "mdi:bacteria-outline")}` : nothing}
+          ${this.timeRow(this.opt("legionella_time"), this.t("Godzina", "Time"), "mdi:bacteria-outline")}
+          ${this.numRow("p13", "mdi:timer-sand", this.t("Czas · P13", "Duration · P13"), 0)}` : nothing}
+        ${this.eid("hub_r02") || this.eid("hub_r10") ? html`<div class="grp">${this.t("Krzywe (menu R)", "Curves (menu R)")}</div>
+          ${this.numRow("hub_r02", "mdi:thermometer-low", this.t("R02 · temp. zewn. przy maks. zasilaniu CO", "R02 · outdoor at max. CH flow"), 0)}
+          ${this.numRow("hub_r03", "mdi:thermometer-high", this.t("R03 · temp. zewn. przy min. zasilaniu CO", "R03 · outdoor at min. CH flow"), 0)}
+          ${this.numRow("hub_r10", "mdi:thermometer-high", this.t("R10 · temp. zewn. przy min. zasilaniu chłodzenia", "R10 · outdoor at min. cooling flow"), 0)}
+          ${this.numRow("hub_r11", "mdi:thermometer-low", this.t("R11 · temp. zewn. przy maks. zasilaniu chłodzenia", "R11 · outdoor at max. cooling flow"), 0)}` : nothing}
+        <div class="grp">${this.t("Instalacja", "Installation")}</div>
+        ${this.numRow("floor_max", "mdi:heating-coil", this.t("Limit zasilania podłogi", "Floor flow limit"), 0)}
+        ${this.numRow("hub_p07", "mdi:thermometer-plus", this.t("P07 · korekta sondy zewnętrznej", "P07 · outdoor probe correction"), 0)}
+        ${this.eid("cheap_hours") ? html`<div class="nr"><ha-icon icon="mdi:cash-clock"></ha-icon>
+          <span class="nl" @click=${() => this.moreInfo("cheap_hours")}>${this.t("Tańsza taryfa – godziny", "Cheaper tariff hours")}</span>
+          <span class="nv" style="min-width:auto;cursor:pointer" @click=${() => this.moreInfo("cheap_hours")}>${this.s("cheap_hours") || this.t("jedna taryfa", "single rate")}</span></div>` : nothing}
       ` : nothing}
       ${open && this.dominus && off ? this.domOffline() : nothing}
       ${open && this.dominus && on ? this.domRows() : nothing}

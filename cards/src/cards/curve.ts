@@ -253,7 +253,8 @@ class ImmergasCurveCard extends HubCard {
   private pt(opt: string, k: Key, def: number) {
     const o = this.config[opt];
     if (o !== undefined) return +o;
-    const v = this.n(k);
+    // Dominus: the declared copies; hub: its config numbers hub_r02 / hub_r03 / hub_r10 / hub_r11 (package hub_boiler_params)
+    const v = this.n(this.dominus ? k : (`hub_${opt}` as Key));
     return isNaN(v) ? def : v;
   }
   /** Dominus: the curve values are not readable over TCP - until all are copied from the boiler, ask for them */

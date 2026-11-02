@@ -307,6 +307,12 @@ class ImmergasCalibrationCard extends HubCard {
     const floorE = this.opt("max_floor_entity"), floor = floorE ? parseFloat(this.hass.states[floorE]?.state) : NaN;
     const cap = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
     const f = (v: number, d = 1) => this.f(v, d, 0);
+    // what +1 of a curve parameter does to the water at the current outdoor temperature (curve points R02 / R03 from the
+    // hub config numbers, as on the Curve card): U03 shifts all of it, R05 weighs in when mild, R04 when cold
+    const cxa = this.n("hub_r02"), cxb = this.n("hub_r03"), cOut = this.n("outdoor");
+    const cfrac = isNaN(cxa) || isNaN(cxb) || isNaN(cOut) || cxb <= cxa ? NaN : cap((cOut - cxa) / (cxb - cxa), 0, 1);
+    const perOne = (why: [string, string], dv: number): [string, string] => isNaN(cfrac) ? why
+      : [`${why[0]} · +1 = +${f(dv, 1)} °C wody przy ${f(cOut, 1)} °C na zewnątrz`, `${why[1]} · +1 = +${f(dv, 1)} °C of water at ${f(cOut, 1)} °C outdoor`];
 
     // CH curve foot (R05): short cycles with cold rooms -> warmer water; long cycles with warm rooms -> cooler
     const r05rec = isNaN(r05) || !isNaN(wait) ? r05 : short && cold ? cap(r05 + 2, 20, 28) : long && warm ? cap(r05 - 1, 20, 28) : r05;
@@ -468,6 +474,14 @@ class ImmergasCalibrationCard extends HubCard {
     // FR - compressor frequency limit (F1/F2): lower Hz = better COP and quieter, but less power;
     // it does not limit DHW. Off when it is cold, the rooms lag behind or the compressor already runs most of the time.
     const extra: Row[] = [];
+    // P07 - outdoor probe correction copied from the boiler menu (hub config number): informative
+    if (this.eid("hub_p07")) {
+      const p07 = this.n("hub_p07"), sg = p07 > 0 ? "+" : "";
+      extra.push({ k: "hub_p07", code: "P07", name: ["Korekta sondy zewnętrznej", "Outdoor probe correction"], unit: "K", d: 0, kind: "info", group: "other",
+        model: "0 K", why: ["korekta przesuwa całą krzywą – lepiej dobrze umieścić sondę", "a correction shifts the whole curve – better place the probe well"], value: p07, ok: !(p07 !== 0),
+        rec: isNaN(p07) || p07 === 0 ? this.t("✓ bez korekty", "✓ no correction") : this.t(`sonda skorygowana o ${sg}${this.f(p07, 0)} K – sprawdź jej umiejscowienie`, `probe corrected by ${sg}${this.f(p07, 0)} K – check its placement`),
+        reason: ["kopia z menu pieca; temperatura zewnętrzna (D06) jest już skorygowana", "copy of the boiler menu; the outdoor temperature (D06) is already corrected"] });
+    }
     if (this.eid("f_fr")) {
       const frOn = this.on("f_fr"), lim = this.n("f_lim");
       const short2 = deficit > 0.5 || S.coShare > 0.7 || (!isNaN(outNow) && outNow < 2);
@@ -517,12 +531,12 @@ class ImmergasCalibrationCard extends HubCard {
       ...sched,
       ...extra,
       { k: "r05", code: "R05", name: ["Minimalne zasilanie CO (stopa krzywej)", "Minimum CH flow (curve foot)"], unit: "°C", d: 0,
-        model: 25, why: ["podłogówka: ~25 °C przy cieple na zewnątrz", "underfloor: ~25 °C in mild weather"], rec: r05rec, reason: r05why },
+        model: 25, why: perOne(["podłogówka: ~25 °C przy cieple na zewnątrz", "underfloor: ~25 °C in mild weather"], cfrac), rec: r05rec, reason: r05why },
       { k: "r04", code: "R04", name: ["Maksymalne zasilanie CO (szczyt krzywej)", "Maximum CH flow (curve top)"], unit: "°C", d: 0,
-        model: isNaN(floor) ? 35 : Math.min(35, floor - 5), why: ["podłogówka: 35 °C w mrozy, z zapasem do limitu podłogi", "underfloor: 35 °C in frost, with margin to the floor limit"],
+        model: isNaN(floor) ? 35 : Math.min(35, floor - 5), why: perOne(["podłogówka: 35 °C w mrozy, z zapasem do limitu podłogi", "underfloor: 35 °C in frost, with margin to the floor limit"], 1 - cfrac),
         rec: r04rec, reason: !isNaN(wait) ? r05why : [`ok. 10 K nad stopą krzywej${isNaN(floor) ? "" : `, max ${f(r04hi, 0)} °C (limit podłogi ${f(floor, 0)} − 5)`}`, `about 10 K above the curve foot${isNaN(floor) ? "" : `, max ${f(r04hi, 0)} °C (floor limit ${f(floor, 0)} − 5)`}`] },
       { k: "u03", code: "U03", name: ["Przesunięcie krzywej", "Curve offset"], unit: "K", d: 0,
-        model: 0, why: ["krzywą stroi się R04 / R05, offset zostaje 0", "tune the curve with R04 / R05, keep the offset at 0"],
+        model: 0, why: perOne(["krzywą stroi się R04 / R05, offset zostaje 0", "tune the curve with R04 / R05, keep the offset at 0"], 1),
         rec: 0, reason: ["0 – korekta przez R05", "0 – correct with R05"] },
       { k: "room_mod", code: "", name: ["Modulacja z sondą pokojową", "Room probe modulation"], unit: "", kind: "select",
         model: thermostats ? modOpts[0] ?? "NIE" : modOpts[1] ?? "TAK", why: thermostats ? ["pokoje regulują własne termostaty – panel nie może zaniżać zasilania", "rooms have own thermostats – the panel must not lower the flow"]

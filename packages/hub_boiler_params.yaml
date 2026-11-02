@@ -1,6 +1,7 @@
 # IMMERGAS Modbus BMS NASA Hub - package "hub_boiler_params"
 # Settings the cards need that none of the three buses carries. Boiler menu: night function window (U12/U13), anti-legionella start
-# time, day and maximum duration (P16/P17/P13) and the flow limit of an underfloor circuit. They do NOT change anything
+# time, day and maximum duration (P16/P17/P13), the flow limit of an underfloor circuit, the outdoor points of the
+# heating and cooling curves (R02/R03, R10/R11) and the outdoor probe correction (P07). They do NOT change anything
 # in the boiler: set them once to the same values as in the boiler menu, the cards use them to show the night window,
 # the next anti-legionella cycle and the floor limit on the curve. Calibration card: cheaper tariff hours and the
 # start of the before / after comparison. Remembered after a restart.
@@ -86,6 +87,76 @@ number:
     optimistic: true
     restore_value: true
     initial_value: 45
+  # boiler menu R / P values the buses do not carry (copied once from the boiler; the curve card and Calibration use them)
+  - platform: template
+    id: hub_r02_outdoor_max_flow
+    name: "${n_hub_r02}"
+    icon: mdi:thermometer-low
+    entity_category: config
+    unit_of_measurement: "°C"
+    device_class: temperature
+    min_value: -30
+    max_value: 10
+    step: 1
+    mode: box
+    optimistic: true
+    restore_value: true
+    initial_value: -12
+  - platform: template
+    id: hub_r03_outdoor_min_flow
+    name: "${n_hub_r03}"
+    icon: mdi:thermometer-high
+    entity_category: config
+    unit_of_measurement: "°C"
+    device_class: temperature
+    min_value: 0
+    max_value: 30
+    step: 1
+    mode: box
+    optimistic: true
+    restore_value: true
+    initial_value: 20
+  - platform: template
+    id: hub_r10_outdoor_min_cool
+    name: "${n_hub_r10}"
+    icon: mdi:thermometer-high
+    entity_category: config
+    unit_of_measurement: "°C"
+    device_class: temperature
+    min_value: 20
+    max_value: 45
+    step: 1
+    mode: box
+    optimistic: true
+    restore_value: true
+    initial_value: 35
+  - platform: template
+    id: hub_r11_outdoor_max_cool
+    name: "${n_hub_r11}"
+    icon: mdi:thermometer-low
+    entity_category: config
+    unit_of_measurement: "°C"
+    device_class: temperature
+    min_value: 15
+    max_value: 40
+    step: 1
+    mode: box
+    optimistic: true
+    restore_value: true
+    initial_value: 25
+  - platform: template
+    id: hub_p07_probe_correction
+    name: "${n_hub_p07}"
+    icon: mdi:thermometer-plus
+    entity_category: config
+    unit_of_measurement: "°C"
+    min_value: -9
+    max_value: 9
+    step: 1
+    mode: box
+    optimistic: true
+    restore_value: true
+    initial_value: 0
 
 # --- for the Calibration card: cheaper tariff hours and the start of the before / after comparison ---------------------
 text:
