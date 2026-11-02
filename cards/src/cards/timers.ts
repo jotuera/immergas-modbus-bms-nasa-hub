@@ -1,6 +1,6 @@
 // Cycle timers for the "Teraz / Now" card: phase segments from recorder history (hub "Operating state" + U11),
 // typical durations (median of the last complete segments) and small formatting helpers.
-export type Seg = { s: string; t0: number; t1: number };
+export type Seg = { s: string; t0: number; t1: number; cut?: boolean };
 
 // Hub "Operating state" texts in all hub languages (lang/hub_xx.yaml t_hub_*): "<source>: <what>" or a bare word.
 // Matched as whole words, so the cards work whatever language the hub is flashed with.
@@ -49,16 +49,20 @@ export const isCoolMode = (s?: string | null) => MODE_COOL.has((s ?? "").trim().
 
 export const BAD = (s?: string) => !s || s === "unavailable" || s === "unknown" || NODATA.has(s.toLowerCase());
 
-/** history points -> merged segments; unavailable/unknown gaps (reboots, flashing) are bridged by the previous state */
+/** history points -> merged segments; unavailable/unknown gaps (reboots, flashing) are bridged by the previous state.
+ *  When the state differs across a gap, both neighbours are marked cut: the real switch time is unknown (after an OTA the
+ *  hub starts from "idle" while the compressor may still run), so they are not used for cycle lengths. */
 export function segments(list: any[], end: number): Seg[] {
   const out: Seg[] = [];
+  let gap = false;
   for (const x of list) {
     const s = x.s ?? x.state, t = Math.round((x.lc ?? x.lu ?? 0) * 1000);
-    if (BAD(s)) continue;
+    if (BAD(s)) { gap = true; continue; }
     const last = out[out.length - 1];
-    if (last && last.s === s) continue;
-    if (last) last.t1 = t;
-    out.push({ s, t0: t, t1: end });
+    if (last && last.s === s) { gap = false; continue; }
+    if (last) { last.t1 = t; if (gap) last.cut = true; }
+    out.push(gap && last ? { s, t0: t, t1: end, cut: true } : { s, t0: t, t1: end });
+    gap = false;
   }
   return out;
 }
@@ -70,7 +74,7 @@ export const median = (v: number[]) => {
 
 /** median duration of the last n complete segments matching test (first segment is cut by the window, last one is open) */
 export const typical = (segs: Seg[], test: (s: string) => boolean, minMs = 20e3, n = 8) => {
-  const d = segs.slice(1, -1).filter((g) => test(g.s) && g.t1 - g.t0 >= minMs).slice(-n).map((g) => g.t1 - g.t0);
+  const d = segs.slice(1, -1).filter((g) => test(g.s) && !g.cut && g.t1 - g.t0 >= minMs).slice(-n).map((g) => g.t1 - g.t0);
   return d.length >= 2 ? median(d) : NaN;
 };
 

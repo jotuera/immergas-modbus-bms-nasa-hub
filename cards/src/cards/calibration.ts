@@ -313,13 +313,14 @@ class ImmergasCalibrationCard extends HubCard {
 
   private stats() {
     const st = this.hist?.st ?? [], now = Date.now(), t0 = now - 24 * H;
-    const co = st.filter((g) => g.t0 > t0 && hpHeating(g.s));
+    // CH right after DHW is the same compressor run (no new start); cycles cut by a hub reboot have no real length
+    const co = st.filter((g, i) => g.t0 > t0 && hpHeating(g.s) && !(i > 0 && isDhw(st[i - 1].s)));
     // one DHW cycle = DHW segments closer than 15 min (a short status flicker splits a cycle into several segments)
     let dhwN = 0, lastEnd = -Infinity;
     for (const g of st) if (g.t0 > t0 && isDhw(g.s)) { if (g.t0 - lastEnd > 15 * 60e3) dhwN++; lastEnd = g.t1; }
     const span = Math.max(1, (now - Math.max(t0, st[0]?.t0 ?? t0)) / H);
     const coShare = co.reduce((a, g) => a + (Math.min(g.t1, now) - g.t0), 0) / (span * H);
-    return { coShare, coPerH: co.length / span, coRun: median(co.slice(0, -1).map((g) => (g.t1 - g.t0) / 60000)), dhwPerDay: dhwN * 24 / span, n: co.length };
+    return { coShare, coPerH: co.length / span, coRun: median(co.slice(0, -1).filter((g) => !g.cut).map((g) => (g.t1 - g.t0) / 60000)), dhwPerDay: dhwN * 24 / span, n: co.length };
   }
 
   private rows(): Row[] {
