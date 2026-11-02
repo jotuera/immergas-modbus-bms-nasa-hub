@@ -1047,5 +1047,13 @@
  "Installation and tariff": "Rendszer és tarifa",
  "Floor flow limit (hub warning)": "Padlófűtés előremenő határ (hub figyelmeztetés)",
  "U11 · night function": "U11 · éjszakai funkció",
- "ON on the boiler – night bar in the Now card": "BE a kazánon – éjszakai sáv a Most kártyán"
+ "ON on the boiler – night bar in the Now card": "BE a kazánon – éjszakai sáv a Most kártyán",
+ "{0} heats {1}% of the day – do not reduce the flow": "{0} a nap {1}%-ában fűt – ne csökkentsd a térfogatáramot",
+ "CH ΔT {0} K at {1} kW – normal at low output": "Fűtési ΔT {0} K {1} kW-nál – alacsony teljesítménynél normális",
+ " at {0} kW{1}": " {0} kW-nál{1}",
+ "3–5 K at full output": "3–5 K teljes teljesítménynél",
+ "at low compressor output the same flow gives a smaller ΔT": "alacsony kompresszor-teljesítménynél ugyanaz a térfogatáram kisebb ΔT-t ad",
+ "keep A04 – {0} heats {1}% of the day, it lacks water": "hagyd az A04-et – {0} a nap {1}%-ában fűt, kevés a víz",
+ "✓ low output – a small ΔT is normal": "✓ alacsony teljesítmény – a kis ΔT normális",
+ "median while the heat pump heats CH, 24 h{0}": "medián a HSZ fűtése közben, 24 h{0}"
 }

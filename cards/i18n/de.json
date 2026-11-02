@@ -1047,5 +1047,13 @@
  "Installation and tariff": "Anlage und Tarif",
  "Floor flow limit (hub warning)": "Vorlaufgrenze Fußboden (Hub-Warnung)",
  "U11 · night function": "U11 · Nachtfunktion",
- "ON on the boiler – night bar in the Now card": "EIN am Kessel – Nachtbalken in der Karte Jetzt"
+ "ON on the boiler – night bar in the Now card": "EIN am Kessel – Nachtbalken in der Karte Jetzt",
+ "{0} heats {1}% of the day – do not reduce the flow": "{0} heizt {1}% des Tages – Durchfluss nicht verringern",
+ "CH ΔT {0} K at {1} kW – normal at low output": "ΔT Heizung {0} K bei {1} kW – bei niedriger Leistung normal",
+ " at {0} kW{1}": " bei {0} kW{1}",
+ "3–5 K at full output": "3–5 K bei voller Leistung",
+ "at low compressor output the same flow gives a smaller ΔT": "bei niedriger Verdichterleistung ergibt derselbe Durchfluss ein kleineres ΔT",
+ "keep A04 – {0} heats {1}% of the day, it lacks water": "A04 lassen – {0} heizt {1}% des Tages, ihm fehlt Wasser",
+ "✓ low output – a small ΔT is normal": "✓ niedrige Leistung – kleines ΔT ist normal",
+ "median while the heat pump heats CH, 24 h{0}": "Median im Heizbetrieb der Wärmepumpe, 24 h{0}"
 }

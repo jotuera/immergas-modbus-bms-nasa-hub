@@ -40,8 +40,11 @@ type Hidden = {
   dischargeMax: number;                   // highest discharge temperature (D73) while running, °C
 };
 
+/** a room thermostat that heated most of the last 24 h and still only holds its target: its loop gets too little water */
+type Starved = { id: string; share: number };
+
 class ImmergasCalibrationCard extends HubCard {
-  private hist: { at: number; st: Seg[]; night?: Night | null; dT?: number; flow?: number; x?: Hidden } | null = null;
+  private hist: { at: number; st: Seg[]; night?: Night | null; dT?: number; flow?: number; pw?: number; lpm?: number; starved?: Starved[]; x?: Hidden } | null = null;
   private eff: { at: number; split: number; t0: number; before: Period; after: Period } | null = null;
   private effLoading = false;
   private loading = false;
@@ -52,19 +55,25 @@ class ImmergasCalibrationCard extends HubCard {
     if (this.loading || !this.idx) return;
     this.loading = true;
     try {
-      const end = Date.now(), id = this.eid("state"), i1 = this.eid("tw1"), i2 = this.eid("tw2");
+      const end = Date.now(), id = this.eid("state"), i1 = this.eid("tw1"), i2 = this.eid("tw2"), ip = this.eid("heat_power"), iq = this.eid("d14");
       const r = id ? await this.hass.callWS({ type: "history/history_during_period", start_time: new Date(end - 24 * H).toISOString(),
-        end_time: new Date(end).toISOString(), entity_ids: [id, i1, i2].filter(Boolean), minimal_response: true, no_attributes: true, significant_changes_only: false }) : {};
+        end_time: new Date(end).toISOString(), entity_ids: [id, i1, i2, ip, iq].filter(Boolean), minimal_response: true, no_attributes: true, significant_changes_only: false }) : {};
       const st = segments(r[id ?? ""] ?? [], end);
       // flow - return while the heat pump heats CH, skipping the first minute of every run
       const num = (e?: string) => (r[e ?? ""] ?? []).map((x: any) => [Math.round((x.lc ?? x.lu ?? 0) * 1000), parseFloat(x.s)] as [number, number]).filter((x: [number, number]) => !isNaN(x[1]));
-      const p1 = num(i1), p2 = num(i2);
+      const p1 = num(i1), p2 = num(i2), pp = num(ip), pq = num(iq);
       const at = (pts: [number, number][], t: number) => { let v = NaN; for (const [tt, vv] of pts) { if (tt <= t) v = vv; else break; } return v; };
-      const dts: number[] = [], fls: number[] = [];
+      const dts: number[] = [], fls: number[] = [], pws: number[] = [], lps: number[] = [];
       for (const g of st) if (hpHeating(g.s))
-        for (let t = g.t0 + 60e3; t < g.t1; t += 30e3) { const a = at(p2, t), b = at(p1, t); if (!isNaN(a) && !isNaN(b)) { dts.push(a - b); fls.push(a); } }
+        for (let t = g.t0 + 60e3; t < g.t1; t += 30e3) {
+          const a = at(p2, t), b = at(p1, t), w = at(pp, t), q = at(pq, t);
+          if (!isNaN(a) && !isNaN(b)) { dts.push(a - b); fls.push(a); }
+          if (w > 0) pws.push(w);
+          if (q > 0) lps.push(q);
+        }
       const x = await this.loadHidden(end, st).catch(() => undefined);
-      this.hist = { at: end, st, night: await this.lastNight(end, st).catch(() => null), dT: dts.length ? median(dts) : NaN, flow: fls.length ? median(fls) : NaN, x };
+      this.hist = { at: end, st, night: await this.lastNight(end, st).catch(() => null), dT: dts.length ? median(dts) : NaN, flow: fls.length ? median(fls) : NaN,
+        pw: pws.length ? median(pws) : NaN, lpm: lps.length ? median(lps) : NaN, starved: await this.starved(end).catch(() => []), x };
     } catch { this.hist = { at: Date.now(), st: [] }; }
     this.loading = false;
     this.requestUpdate();
@@ -274,6 +283,24 @@ class ImmergasCalibrationCard extends HubCard {
   }
 
   /** rooms with own thermostats: option `rooms`, else climate entities that heat (not the hub's own, target >= 19 °C) */
+  /** rooms whose thermostat heated >= 85 % of the last 24 h and are not above the target now (hvac_action history) */
+  private async starved(end: number): Promise<Starved[]> {
+    const rooms = this.rooms();
+    if (!rooms.length) return [];
+    const from = end - 24 * H;
+    const r = await this.hass.callWS({ type: "history/history_during_period", start_time: new Date(from).toISOString(), end_time: new Date(end).toISOString(),
+      entity_ids: rooms.map((x) => x.id), minimal_response: false, no_attributes: false, significant_changes_only: false }) as Record<string, any[]>;
+    return rooms.map((room) => {
+      const list = r[room.id] ?? [];
+      let on = 0;
+      list.forEach((x, i) => {
+        const t0 = Math.max(from, Math.round((x.lu ?? x.lc ?? 0) * 1000)), t1 = i + 1 < list.length ? Math.round((list[i + 1].lu ?? list[i + 1].lc ?? 0) * 1000) : end;
+        if ((x.a ?? x.attributes)?.hvac_action === "heating") on += Math.max(0, t1 - t0);
+      });
+      return { id: room.id, share: on / (24 * H), ok: room.t - room.set <= 0.3 };
+    }).filter((x) => x.share >= 0.85 && x.ok).map(({ id, share }) => ({ id, share })).sort((a, b) => b.share - a.share);
+  }
+
   private rooms() {
     const ids: string[] = this.config.rooms ?? Object.keys(this.hass.states).filter((e) => {
       if (!e.startsWith("climate.") || e.includes("immergas")) return false;
@@ -581,10 +608,27 @@ class ImmergasCalibrationCard extends HubCard {
     const a04 = this.n("a04"), dT = this.hist?.dT ?? NaN, short = S.coRun > 0 && S.coRun < 5;
     if (short) return { rec: 100, reason: ["krótkie cykle – nie zmniejszaj przepływu", "short cycles – do not reduce the flow"] };
     if (isNaN(a04) || isNaN(dT)) return { rec: a04, reason: ["bez zmian", "keep"] };
-    const f1 = this.f(dT, 1, 1);
-    if (dT < 2) return { rec: Math.max(60, a04 - 10), reason: [`ΔT w CO ${f1} K – przepływ za duży`, `CH ΔT ${f1} K – too much flow`] };
+    const f1 = this.f(dT, 1, 1), low = this.dtLow(), sv = this.hist?.starved ?? [];
+    if (dT < low && sv.length) {
+      const nm = this.roomName(sv[0].id), pc = Math.round(sv[0].share * 100);
+      return { rec: a04, reason: [`${nm} grzeje ${pc}% doby – przepływu nie zmniejszaj`, `${nm} heats ${pc}% of the day – do not reduce the flow`] };
+    }
+    if (dT < low) return { rec: Math.max(60, a04 - 10), reason: [`ΔT w CO ${f1} K – przepływ za duży`, `CH ΔT ${f1} K – too much flow`] };
     if (dT > 6) return { rec: Math.min(100, a04 + 10), reason: [`ΔT w CO ${f1} K – przepływ za mały`, `CH ΔT ${f1} K – too little flow`] };
+    if (dT < 2) {
+      const kw = this.f((this.hist?.pw ?? NaN) / 1000, 1, 1);
+      return { rec: a04, reason: [`ΔT w CO ${f1} K przy ${kw} kW – przy niskiej mocy normalna`, `CH ΔT ${f1} K at ${kw} kW – normal at low output`] };
+    }
     return { rec: a04, reason: [`ΔT w CO ${f1} K – w normie`, `CH ΔT ${f1} K – fine`] };
+  }
+  /** lowest healthy ΔT: 2 K at 5 kW of heat and more, proportionally less when the compressor modulates low (min 0,8 K) -
+   *  the same flow carries less heat, so a small ΔT at 2 kW is not too much flow */
+  private dtLow() {
+    const pw = this.hist?.pw ?? NaN;
+    return isNaN(pw) ? 2 : Math.min(2, Math.max(0.8, 2 * pw / 5000));
+  }
+  private roomName(id: string) {
+    return String(this.hass.states[id]?.attributes?.friendly_name ?? id).replace(/^(regulator|termostat|thermostat)\s+/i, "");
   }
 
   /** settings that are only on other cards: DHW Comfort / Eco, outing targets, force boiler, gas estimate,
@@ -743,13 +787,17 @@ class ImmergasCalibrationCard extends HubCard {
     // flow - return while heating
     const dT = this.hist?.dT ?? NaN;
     if (!isNaN(dT)) {
-      const short = S.coRun > 0 && S.coRun < 5, a04 = this.n("a04"), aRec = this.a04Rec(S).rec;
+      const short = S.coRun > 0 && S.coRun < 5, a04 = this.n("a04"), aRec = this.a04Rec(S).rec, low = this.dtLow(), sv = this.hist?.starved ?? [];
+      const pw = this.hist?.pw ?? NaN, lph = this.hist?.lpm ?? NaN;
+      const at = isNaN(pw) ? ["", ""] : [` przy ${this.f(pw / 1000, 1, 1)} kW${isNaN(lph) ? "" : ` i ${this.f(lph, 0, 0)} l/h`}`, ` at ${this.f(pw / 1000, 1, 1)} kW${isNaN(lph) ? "" : ` and ${this.f(lph, 0, 0)} l/h`}`];
       out.push({ code: "", name: ["ΔT zasilanie – powrót w pracy CO", "Flow – return ΔT while heating"], unit: "K", d: 1, kind: "info", group: "pump",
-        model: "3–5 K", why: ["przepływ dopasowany do mocy sprężarki", "flow matched to the compressor power"], value: dT, ok: dT >= 2 && dT <= 6,
-        rec: dT < 2 ? (short ? this.t("przepływ duży, ale przy krótkich cyklach zostaw – najpierw krzywa", "high flow, but keep it while cycles are short – the curve first")
+        model: this.t("3–5 K przy pełnej mocy", "3–5 K at full output"), why: ["przy niskiej mocy sprężarki ten sam przepływ daje mniejszą ΔT", "at low compressor output the same flow gives a smaller ΔT"], value: dT, ok: dT >= low && dT <= 6,
+        rec: dT < low ? (short ? this.t("przepływ duży, ale przy krótkich cyklach zostaw – najpierw krzywa", "high flow, but keep it while cycles are short – the curve first")
+            : sv.length ? this.t(`zostaw A04 – ${this.roomName(sv[0].id)} grzeje ${Math.round(sv[0].share * 100)}% doby, brakuje mu wody`, `keep A04 – ${this.roomName(sv[0].id)} heats ${Math.round(sv[0].share * 100)}% of the day, it lacks water`)
             : this.t(`zmniejsz A04 do ${Math.max(60, a04 - 10)} %`, `lower A04 to ${Math.max(60, a04 - 10)} %`))
+          : dT < 2 ? this.t("✓ niska moc – mała ΔT jest normalna", "✓ low output – a small ΔT is normal")
           : dT > 6 ? this.t("za mały przepływ – podnieś A03 / A04, sprawdź filtr", "too little flow – raise A03 / A04, check the filter") : this.t("✓ w normie", "✓ fine"),
-        reason: ["mediana z pracy pompy w CO, 24 h", "median while the heat pump heats CH, 24 h"],
+        reason: [`mediana z pracy pompy w CO, 24 h${at[0]}`, `median while the heat pump heats CH, 24 h${at[1]}`],
         // the same change as the A04 row: Set writes the recommended A04
         setFn: this.eid("a04") && !isNaN(aRec) && aRec !== a04 ? () => this.call("number", "set_value", "a04", { value: aRec }) : undefined });
     }

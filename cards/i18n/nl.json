@@ -1047,5 +1047,13 @@
  "Installation and tariff": "Installatie en tarief",
  "Floor flow limit (hub warning)": "Aanvoerlimiet vloer (hub-waarschuwing)",
  "U11 · night function": "U11 · nachtfunctie",
- "ON on the boiler – night bar in the Now card": "AAN op de ketel – nachtbalk in de kaart Nu"
+ "ON on the boiler – night bar in the Now card": "AAN op de ketel – nachtbalk in de kaart Nu",
+ "{0} heats {1}% of the day – do not reduce the flow": "{0} verwarmt {1}% van de dag – debiet niet verlagen",
+ "CH ΔT {0} K at {1} kW – normal at low output": "ΔT CV {0} K bij {1} kW – normaal bij laag vermogen",
+ " at {0} kW{1}": " bij {0} kW{1}",
+ "3–5 K at full output": "3–5 K bij vol vermogen",
+ "at low compressor output the same flow gives a smaller ΔT": "bij laag compressorvermogen geeft hetzelfde debiet een kleinere ΔT",
+ "keep A04 – {0} heats {1}% of the day, it lacks water": "A04 laten – {0} verwarmt {1}% van de dag, er is te weinig water",
+ "✓ low output – a small ΔT is normal": "✓ laag vermogen – kleine ΔT is normaal",
+ "median while the heat pump heats CH, 24 h{0}": "mediaan tijdens verwarmen met de WP, 24 h{0}"
 }

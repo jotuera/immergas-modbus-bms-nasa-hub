@@ -1619,6 +1619,13 @@
   ]
  },
  {
+  "en": "{0} heats {1}% of the day – do not reduce the flow",
+  "pl": "{0} grzeje {1}% doby – przepływu nie zmniejszaj",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
   "en": "CH ΔT {0} K – too much flow",
   "pl": "ΔT w CO {0} K – przepływ za duży",
   "files": [
@@ -1628,6 +1635,13 @@
  {
   "en": "CH ΔT {0} K – too little flow",
   "pl": "ΔT w CO {0} K – przepływ za mały",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "CH ΔT {0} K at {1} kW – normal at low output",
+  "pl": "ΔT w CO {0} K przy {1} kW – przy niskiej mocy normalna",
   "files": [
    "calibration.ts"
   ]
@@ -2348,6 +2362,13 @@
   ]
  },
  {
+  "en": " at {0} kW{1}",
+  "pl": " przy {0} kW{1}",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
   "en": "Flow – return ΔT while heating",
   "pl": "ΔT zasilanie – powrót w pracy CO",
   "files": [
@@ -2355,8 +2376,15 @@
   ]
  },
  {
-  "en": "flow matched to the compressor power",
-  "pl": "przepływ dopasowany do mocy sprężarki",
+  "en": "3–5 K at full output",
+  "pl": "3–5 K przy pełnej mocy",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "at low compressor output the same flow gives a smaller ΔT",
+  "pl": "przy niskiej mocy sprężarki ten sam przepływ daje mniejszą ΔT",
   "files": [
    "calibration.ts"
   ]
@@ -2369,8 +2397,22 @@
   ]
  },
  {
+  "en": "keep A04 – {0} heats {1}% of the day, it lacks water",
+  "pl": "zostaw A04 – {0} grzeje {1}% doby, brakuje mu wody",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
   "en": "lower A04 to {0} %",
   "pl": "zmniejsz A04 do {0} %",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "✓ low output – a small ΔT is normal",
+  "pl": "✓ niska moc – mała ΔT jest normalna",
   "files": [
    "calibration.ts"
   ]
@@ -2383,8 +2425,8 @@
   ]
  },
  {
-  "en": "median while the heat pump heats CH, 24 h",
-  "pl": "mediana z pracy pompy w CO, 24 h",
+  "en": "median while the heat pump heats CH, 24 h{0}",
+  "pl": "mediana z pracy pompy w CO, 24 h{0}",
   "files": [
    "calibration.ts"
   ]

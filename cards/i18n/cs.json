@@ -1047,5 +1047,13 @@
  "Installation and tariff": "Instalace a tarif",
  "Floor flow limit (hub warning)": "Limit výstupu podlahy (varování hubu)",
  "U11 · night function": "U11 · noční funkce",
- "ON on the boiler – night bar in the Now card": "ZAP na kotli – pruh noční funkce v kartě Nyní"
+ "ON on the boiler – night bar in the Now card": "ZAP na kotli – pruh noční funkce v kartě Nyní",
+ "{0} heats {1}% of the day – do not reduce the flow": "{0} topí {1}% dne – průtok nesnižujte",
+ "CH ΔT {0} K at {1} kW – normal at low output": "ΔT ÚT {0} K při {1} kW – při nízkém výkonu normální",
+ " at {0} kW{1}": " při {0} kW{1}",
+ "3–5 K at full output": "3–5 K při plném výkonu",
+ "at low compressor output the same flow gives a smaller ΔT": "při nízkém výkonu kompresoru dává stejný průtok menší ΔT",
+ "keep A04 – {0} heats {1}% of the day, it lacks water": "ponechte A04 – {0} topí {1}% dne, chybí mu voda",
+ "✓ low output – a small ΔT is normal": "✓ nízký výkon – malé ΔT je normální",
+ "median while the heat pump heats CH, 24 h{0}": "medián při vytápění tepelným čerpadlem, 24 h{0}"
 }

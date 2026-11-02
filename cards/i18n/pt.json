@@ -1047,5 +1047,13 @@
  "Installation and tariff": "Instalação e tarifa",
  "Floor flow limit (hub warning)": "Limite de ida pavimento (aviso do hub)",
  "U11 · night function": "U11 · função noturna",
- "ON on the boiler – night bar in the Now card": "ON na caldeira – barra noturna no cartão Agora"
+ "ON on the boiler – night bar in the Now card": "ON na caldeira – barra noturna no cartão Agora",
+ "{0} heats {1}% of the day – do not reduce the flow": "{0} aquece {1}% do dia – não reduza o caudal",
+ "CH ΔT {0} K at {1} kW – normal at low output": "ΔT aquecimento {0} K a {1} kW – normal com baixa potência",
+ " at {0} kW{1}": " a {0} kW{1}",
+ "3–5 K at full output": "3–5 K à potência máxima",
+ "at low compressor output the same flow gives a smaller ΔT": "com baixa potência do compressor o mesmo caudal dá um ΔT menor",
+ "keep A04 – {0} heats {1}% of the day, it lacks water": "mantenha A04 – {0} aquece {1}% do dia, falta-lhe água",
+ "✓ low output – a small ΔT is normal": "✓ baixa potência – um ΔT pequeno é normal",
+ "median while the heat pump heats CH, 24 h{0}": "mediana com a BC em aquecimento, 24 h{0}"
 }
