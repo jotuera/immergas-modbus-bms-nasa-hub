@@ -56,10 +56,19 @@
   ]
  },
  {
-  "en": "Looking for the Immergas hub… (device with the “Immergas Hub - Operating state” entity)",
-  "pl": "Szukam huba Immergas… (urządzenie z encją „Immergas Hub - Stan pracy”)",
+  "en": "Looking for the Immergas hub… (device with the “Immergas Hub - Operating state” entity) or the Immergas Dominus integration",
+  "pl": "Szukam huba Immergas… (urządzenie z encją „Immergas Hub - Stan pracy”) albo integracji Immergas Dominus",
   "files": [
    "base.ts"
+  ]
+ },
+ {
+  "en": "not set – enter it from the boiler",
+  "pl": "nie ustawione – wpisz z pieca",
+  "files": [
+   "base.ts",
+   "calibration.ts",
+   "settings.ts"
   ]
  },
  {
@@ -67,7 +76,8 @@
   "pl": "brak odczytu",
   "files": [
    "base.ts",
-   "mode.ts"
+   "mode.ts",
+   "now.ts"
   ]
  },
  {
@@ -265,7 +275,8 @@
   "en": "Vacation mode",
   "pl": "Tryb urlopowy",
   "files": [
-   "automations.ts"
+   "automations.ts",
+   "settings.ts"
   ]
  },
  {
@@ -419,7 +430,8 @@
   "en": "today ",
   "pl": "dziś ",
   "files": [
-   "automations.ts"
+   "automations.ts",
+   "diagram.ts"
   ]
  },
  {
@@ -504,7 +516,9 @@
   "pl": "Ciepła woda",
   "files": [
    "calibration.ts",
+   "charts.ts",
    "diagram.ts",
+   "now.ts",
    "setpoints.ts",
    "settings.ts"
   ]
@@ -731,6 +745,13 @@
   ]
  },
  {
+  "en": "{0} · +1 = +{1} °C of water at {2} °C outdoor",
+  "pl": "{0} · +1 = +{1} °C wody przy {2} °C na zewnątrz",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
   "en": "the curve changed {0} h ago – judge after a day",
   "pl": "krzywą zmieniono {0} h temu – oceń po dobie",
   "files": [
@@ -902,7 +923,9 @@
   "en": "Boiler",
   "pl": "Kotłem",
   "files": [
-   "calibration.ts"
+   "calibration.ts",
+   "links.ts",
+   "strategy.ts"
   ]
  },
  {
@@ -1158,6 +1181,41 @@
  {
   "en": "last night: outdoor {0} °C, rooms {1}, compressor {2} % of the window · set on the boiler (U11–U13)",
   "pl": "ostatnia noc: zewn. {0} °C, pokoje {1}, sprężarka {2} % okna · ustawia się na piecu (U11–U13)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Outdoor probe correction",
+  "pl": "Korekta sondy zewnętrznej",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "a correction shifts the whole curve – better place the probe well",
+  "pl": "korekta przesuwa całą krzywą – lepiej dobrze umieścić sondę",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "✓ no correction",
+  "pl": "✓ bez korekty",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "probe corrected by {0}{1} K – check its placement",
+  "pl": "sonda skorygowana o {0}{1} K – sprawdź jej umiejscowienie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "copy of the boiler menu; the outdoor temperature (D06) is already corrected",
+  "pl": "kopia z menu pieca; temperatura zewnętrzna (D06) jest już skorygowana",
   "files": [
    "calibration.ts"
   ]
@@ -1443,6 +1501,7 @@
   "pl": "Nastawa CWU",
   "files": [
    "calibration.ts",
+   "now.ts",
    "schedule.ts"
   ]
  },
@@ -1513,7 +1572,8 @@
   "en": "Floor flow limit",
   "pl": "Limit zasilania podłogi",
   "files": [
-   "calibration.ts"
+   "calibration.ts",
+   "settings.ts"
   ]
  },
  {
@@ -2632,6 +2692,476 @@
   ]
  },
  {
+  "en": "Heating curve offset",
+  "pl": "Offset krzywej grzewczej",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "room within ±0.5 K of the target",
+  "pl": "pokój ±0,5 K od zadanej",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "+1 U03 = +1 °C of water; at {0} °C outdoor the flow goes {1} → {2} °C (curve R02–R05)",
+  "pl": "+1 U03 = +1 °C wody; przy {0} °C na zewnątrz zasilanie {1} → {2} °C (krzywa R02–R05)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "shifts the whole curve: +1 = warmer water at every outdoor temperature (enter R02–R05 to see how much)",
+  "pl": "przesuwa całą krzywą: +1 = cieplejsza woda przy każdej temperaturze zewnętrznej (wpisz R02–R05, by zobaczyć ile)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "no deviation data (Dominus 1.3.0 statistics)",
+  "pl": "brak danych o odchyłce (statystyki Dominusa 1.3.0)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "room {0}{1} K from the target (1 h mean){2}{3}",
+  "pl": "pokój {0}{1} K od zadanej (średnia 1 h){2}{3}",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": " – change it in the boiler menu R, the entity is only the copy",
+  "pl": " – zmień w menu R pieca, encja to tylko kopia",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Dominus does not read the menu R – copy the value from the boiler",
+  "pl": "Dominus nie czyta menu R – przepisz wartość z pieca",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "no deviation data",
+  "pl": "brak danych o odchyłce",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "room {0}{1} K from the target, heating {2} % of the day, outdoor {3} °C{4}",
+  "pl": "pokój {0}{1} K od zadanej, grzanie {2} % doby, na zewnątrz {3} °C{4}",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "underfloor: ~25 °C in mild weather; matters when it is mild outside",
+  "pl": "podłogówka: ~25 °C przy cieple na zewnątrz; liczy się, gdy na zewnątrz łagodnie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "underfloor: 35 °C in frost; matters when it is cold outside",
+  "pl": "podłogówka: 35 °C w mrozy; liczy się, gdy na zewnątrz zimno",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Curve points (outdoor temperatures)",
+  "pl": "Punkty krzywej (temp. zewnętrzne)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": " (informative – outside the cooling season)",
+  "pl": " (informacyjnie – poza sezonem chłodzenia)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Cooling curve points (outdoor temperatures)",
+  "pl": "Punkty krzywej chłodzenia (temp. zewnętrzne)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Zone 1 flow setpoint",
+  "pl": "Zadana zasilania strefy 1",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "underfloor: water not warmer than the curve top R04 (+2 K)",
+  "pl": "podłogówka: woda nie cieplejsza niż szczyt krzywej R04 (+2 K)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0} °C is above {1} °C – written to the boiler",
+  "pl": "{0} °C to więcej niż {1} °C – zapis idzie do kotła",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "dew-point protection with floor cooling",
+  "pl": "ochrona przed rosą przy chłodzeniu podłogowym",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "outside 45–65 %",
+  "pl": "poza zakresem 45–65 %",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Cycling: heating starts per hour",
+  "pl": "Taktowanie: starty grzania na godzinę",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "fewer starts = fewer losses and less wear; start timer T05 {0} min (max. ~{1} starts/h)",
+  "pl": "mniej startów = mniej strat i zużycia; minutnik T05 {0} min (maks. ~{1} startów/h)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "gas boiler: fewer starts = fewer losses and less wear",
+  "pl": "kocioł gazowy: mniej startów = mniej strat i zużycia",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "too often – lower the offset (U03) or the flow setpoint",
+  "pl": "za często – obniż offset (U03) albo zadaną zasilania",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0} starts today",
+  "pl": "dziś {0} startów",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "DHW cycles today",
+  "pl": "Cykle CWU dziś",
+  "files": [
+   "calibration.ts",
+   "now.ts"
+  ]
+ },
+ {
+  "en": "every DHW cycle pauses the space heating",
+  "pl": "każdy cykl CWU to przerwa w grzaniu domu",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "many – lower the DHW setpoint or shorten the DHW calendar",
+  "pl": "dużo – obniż nastawę CWU albo skróć kalendarz CWU",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "last cycle {0} min, cylinder +{1} K",
+  "pl": "ostatni cykl {0} min, zasobnik +{1} K",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "CH program: Eco heating",
+  "pl": "Program CO: Eko grzanie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "target within ≤ 60 min after Comfort starts",
+  "pl": "zadana w ≤ 60 min po fazie Komfort",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "a large Comfort–Eco gap = long reheating in the morning",
+  "pl": "duża różnica Komfort–Eko = długie dogrzewanie rano",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "reached the target in {0} min, Comfort–Eco gap {1} K",
+  "pl": "dojście do zadanej {0} min, różnica Komfort–Eko {1} K",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": " – change it in the boiler menu, the entity is only the copy",
+  "pl": " – zmień w menu pieca, encja to tylko kopia",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Dominus cannot read this setting – copy it from the boiler menu (Boiler parameters card)",
+  "pl": "Dominus nie czyta tego ustawienia – przepisz je z menu pieca (karta Parametry pieca)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "DHW thermostat (hysteresis)",
+  "pl": "Termostat CWU (histereza)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "heat pump: a wider hysteresis = fewer, longer DHW cycles",
+  "pl": "pompa ciepła: szersza histereza = rzadsze, dłuższe cykle CWU",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0} DHW cycles today with T02 {1} K – a cycle starts already at {2} °C",
+  "pl": "{0} cykli CWU dziś przy T02 {1} K – cykl startuje już przy {2} °C",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "a DHW cycle starts at ≤ {0} °C · {1} cycles today",
+  "pl": "cykl CWU startuje przy ≤ {0} °C · dziś {1} cykli",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "CH start timer",
+  "pl": "Minutnik startów CO",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "the minimum pause between CH starts – longer = less cycling",
+  "pl": "minimalna przerwa między startami CO – dłuższa = mniej taktowania",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0} starts/h, the timer allows ~{1}/h",
+  "pl": "{0} startów/h, minutnik pozwala na ~{1}/h",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "limits the power at night: quieter and cheaper, but in frost the house cools down",
+  "pl": "ogranicza moc nocą: ciszej i oszczędniej, ale w mrozy dom wychładza się",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0} {1} °C · window {2}–{3}",
+  "pl": "{0} {1} °C · okno {2}–{3}",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "DHW setpoint {0} °C – below 55 °C disinfection is needed",
+  "pl": "nastawa CWU {0} °C – poniżej 55 °C dezynfekcja jest potrzebna",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "DHW setpoint {0} °C – the water is disinfected anyway",
+  "pl": "nastawa CWU {0} °C – woda i tak jest dezynfekowana",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "slot {0} outside the cheap tariff ({1}) – move START P16",
+  "pl": "termin {0} poza tanią taryfą ({1}) – przesuń START P16",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "DHW setpoint {0} °C · slot {1}",
+  "pl": "nastawa CWU {0} °C · termin {1}",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Anti-legionella: cycle duration",
+  "pl": "Anty-legionella: czas cyklu",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "a longer cycle costs energy with no extra benefit",
+  "pl": "dłuższy cykl to więcej energii bez dodatkowego efektu",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "cycle from {0} for {1} h",
+  "pl": "cykl od {0} przez {1} h",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Max. wait for the boiler (CH)",
+  "pl": "Maks. czas oczekiwania na kocioł (CO)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "shorter = the boiler helps the heat pump sooner when the house lags in frost",
+  "pl": "krócej = kocioł szybciej pomaga pompie, gdy w mrozy dom nie nadąża",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "room {0} K from the target at {1} °C outdoor, heating {2} % of the day",
+  "pl": "pokój {0} K od zadanej przy {1} °C na zewnątrz, grzanie {2} % doby",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "the house keeps up – no change",
+  "pl": "dom nadąża – bez zmian",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Boiler activation temperature",
+  "pl": "Temperatura aktywacji kotła",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "below this outdoor temperature the boiler heats (Magis Combo)",
+  "pl": "poniżej tej temperatury zewnętrznej grzeje kocioł (Magis Combo)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "informative",
+  "pl": "informacyjnie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Dominus knows no COP or prices – the hub compares gas and heat-pump cost",
+  "pl": "Dominus nie zna COP ani cen – opłacalność gazu i pompy policzy hub",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Room control",
+  "pl": "Sterowanie pokojowe",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "the zone panel gives the room temperature – without it the curve calibration cannot work",
+  "pl": "panel strefy daje temperaturę pokoju – bez niej kalibracja krzywej nie działa",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "RT with no room temperature – connect a zone panel (RPT)",
+  "pl": "RT bez temperatury pokoju – podłącz panel strefy (RPT)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "the temperature over TCP is already corrected",
+  "pl": "temperatura po TCP jest już skorygowana",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Heating hours per degree day",
+  "pl": "Godziny grzania na stopniodzień",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "compare before and after a change",
+  "pl": "porównuj przed i po zmianie",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "fewer hours per degree day = the house needs less heating",
+  "pl": "mniej godzin na stopniodzień = dom potrzebuje mniej grzania",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0} degree days this month",
+  "pl": "w tym miesiącu {0} stopniodni",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
   "en": "on",
   "pl": "wł.",
   "files": [
@@ -2704,6 +3234,20 @@
   ]
  },
  {
+  "en": "Recommendations from the Immergas Dominus statistics (last hour and day).",
+  "pl": "Rekomendacje liczone ze statystyk integracji Immergas Dominus (ostatnia godzina i doba).",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Change one parameter at a time and judge after a day.",
+  "pl": "Zmieniaj po jednym parametrze i oceniaj po dobie.",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
   "en": "Recommendations from the last 24 h",
   "pl": "Rekomendacje liczone z ostatnich 24 h",
   "files": [
@@ -2727,13 +3271,6 @@
  {
   "en": ", {0} room thermostats",
   "pl": ", {0} termostatów pokojowych",
-  "files": [
-   "calibration.ts"
-  ]
- },
- {
-  "en": "Change one parameter at a time and judge after a day.",
-  "pl": "Zmieniaj po jednym parametrze i oceniaj po dobie.",
   "files": [
    "calibration.ts"
   ]
@@ -2918,6 +3455,104 @@
  {
   "en": "30 days",
   "pl": "30 dni",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "Target",
+  "pl": "Zadana",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "Zone 1",
+  "pl": "Strefa 1",
+  "files": [
+   "charts.ts",
+   "diagram.ts",
+   "now.ts"
+  ]
+ },
+ {
+  "en": "DHW target",
+  "pl": "Zadana CWU",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "heating demand",
+  "pl": "żądanie grzania",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "Comfort phase",
+  "pl": "faza Komfort",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "Eco phase",
+  "pl": "faza Eko",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "DHW request",
+  "pl": "żądanie CWU",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "cycles",
+  "pl": "cykli",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "Demand hours per day",
+  "pl": "Godziny żądań na dobę",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "7 days",
+  "pl": "7 dni",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "CH heating",
+  "pl": "Grzanie CO",
+  "files": [
+   "charts.ts",
+   "now.ts"
+  ]
+ },
+ {
+  "en": "DHW",
+  "pl": "CWU",
+  "files": [
+   "charts.ts",
+   "curve.ts",
+   "diagram.ts",
+   "now.ts",
+   "schedule.ts"
+  ]
+ },
+ {
+  "en": "Daily mean outdoor temperature",
+  "pl": "Średnia temperatura zewnętrzna na dobę",
   "files": [
    "charts.ts"
   ]
@@ -3290,6 +3925,38 @@
   ]
  },
  {
+  "en": "R02 · outdoor at max. flow",
+  "pl": "R02 · temp. zewn. przy maks. zasilaniu",
+  "files": [
+   "curve.ts",
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "R03 · outdoor at min. flow",
+  "pl": "R03 · temp. zewn. przy min. zasilaniu",
+  "files": [
+   "curve.ts",
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "R04 · max. CH flow",
+  "pl": "R04 · maks. zasilanie CO",
+  "files": [
+   "curve.ts",
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "R05 · min. CH flow",
+  "pl": "R05 · min. zasilanie CO",
+  "files": [
+   "curve.ts",
+   "settings.ts"
+  ]
+ },
+ {
   "en": "comfort ✓",
   "pl": "komfort ✓",
   "files": [
@@ -3388,6 +4055,13 @@
   ]
  },
  {
+  "en": "shifts the whole curve (written through Dominus)",
+  "pl": "przesuwa całą krzywą (zapis przez Dominusa)",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
   "en": "shifts the whole curve (D+/D-)",
   "pl": "przesuwa całą krzywą (D+/D-)",
   "files": [
@@ -3409,8 +4083,22 @@
   ]
  },
  {
+  "en": "● flow computed from the curve (Dominus does not read the flow)",
+  "pl": "● zasilanie wyliczone z krzywej (Dominus nie czyta zasilania)",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
   "en": "● D04 setpoint (boiler) · ○ actual flow",
   "pl": "● zadane D04 (piec) · ○ faktyczne zasilanie",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "R02–R05 are a copy of the boiler's menu R (a change here does not reach the boiler – change it there too). U03 is written to the boiler. +1 U03 = +1 °C of water at every outdoor temperature.",
+  "pl": "R02–R05 to kopia menu R pieca (zmiana tutaj nie trafia do kotła – zmień też na piecu). U03 zapisuje się do kotła. +1 U03 = +1 °C wody przy każdej temperaturze zewnętrznej.",
   "files": [
    "curve.ts"
   ]
@@ -3420,6 +4108,38 @@
   "pl": "Przeciągnij punkt albo użyj −/+ (krok 1 °C). R02 {0} °C / R03 {1} °C to opcje karty (nie ma ich na magistrali). R04/R05 → T-/T+, U03 → D+/D-.",
   "files": [
    "curve.ts"
+  ]
+ },
+ {
+  "en": "R10 · outdoor at min. flow",
+  "pl": "R10 · temp. zewn. przy min. zasilaniu",
+  "files": [
+   "curve.ts",
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "R11 · outdoor at max. flow",
+  "pl": "R11 · temp. zewn. przy maks. zasilaniu",
+  "files": [
+   "curve.ts",
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "R12 · min. cooling flow",
+  "pl": "R12 · min. zasilanie chłodzenia",
+  "files": [
+   "curve.ts",
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "R13 · max. cooling flow",
+  "pl": "R13 · maks. zasilanie chłodzenia",
+  "files": [
+   "curve.ts",
+   "settings.ts"
   ]
  },
  {
@@ -3474,6 +4194,13 @@
  {
   "en": "dew point (red band = dew point + 2 °C)",
   "pl": "punkt rosy (czerwone tło = rosa + 2 °C)",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "● flow computed from the curve",
+  "pl": "● zasilanie wyliczone z krzywej",
   "files": [
    "curve.ts"
   ]
@@ -3579,15 +4306,6 @@
   ]
  },
  {
-  "en": "DHW",
-  "pl": "CWU",
-  "files": [
-   "curve.ts",
-   "diagram.ts",
-   "schedule.ts"
-  ]
- },
- {
   "en": "outing flow",
   "pl": "zasilanie na wyjeździe",
   "files": [
@@ -3630,6 +4348,13 @@
   ]
  },
  {
+  "en": "from the curve",
+  "pl": "z krzywej",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
   "en": "setpoint D04",
   "pl": "zadane D04",
   "files": [
@@ -3646,6 +4371,34 @@
  {
   "en": "flow",
   "pl": "zasilanie",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "The heating curve is not set yet",
+  "pl": "Krzywa grzewcza nie jest jeszcze ustawiona",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "The cooling curve is not set yet",
+  "pl": "Krzywa chłodzenia nie jest jeszcze ustawiona",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "Dominus cannot read the boiler's menu R. Copy these values from the boiler once – the card draws the curve when all are set.",
+  "pl": "Dominus nie czyta menu R pieca. Przepisz te wartości z pieca raz – karta narysuje krzywą, gdy będą komplet.",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "U03 · curve offset (written to the boiler)",
+  "pl": "U03 · offset krzywej (zapis do kotła)",
   "files": [
    "curve.ts"
   ]
@@ -3686,6 +4439,13 @@
   ]
  },
  {
+  "en": "Zone 1 · R02–R05 (copy from the boiler) · U03",
+  "pl": "Strefa 1 · R02–R05 (kopia z pieca) · U03",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
   "en": "Zone 1 · R04 / R05 (T-/T+) · U03 (D+/D-)",
   "pl": "Strefa 1 · R04 / R05 (T-/T+) · U03 (D+/D-)",
   "files": [
@@ -3695,6 +4455,13 @@
  {
   "en": "Cooling curve",
   "pl": "Krzywa chłodzenia",
+  "files": [
+   "curve.ts"
+  ]
+ },
+ {
+  "en": "Zone 1 · R10–R13 (copy from the boiler)",
+  "pl": "Strefa 1 · R10–R13 (kopia z pieca)",
   "files": [
    "curve.ts"
   ]
@@ -3711,6 +4478,7 @@
   "pl": "Grzanie",
   "files": [
    "curve.ts",
+   "now.ts",
    "setpoints.ts"
   ]
  },
@@ -3891,6 +4659,150 @@
   ]
  },
  {
+  "en": "OUTDOOR",
+  "pl": "NA ZEWNĄTRZ",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "24 h mean ",
+  "pl": "średnia 24 h ",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "probe correction P07 {0}{1} °C – already applied",
+  "pl": "korekta sondy P07 {0}{1} °C – już wliczona",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "OPERATING MODE",
+  "pl": "TRYB PRACY",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "vacation: on",
+  "pl": "wyjazd: włączony",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "vacation: off",
+  "pl": "wyjazd: wył.",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "alert!",
+  "pl": "alarm!",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "alerts: none",
+  "pl": "alarmy: brak",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "Magis boiler",
+  "pl": "Kocioł Magis",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "FAULT",
+  "pl": "AWARIA",
+  "files": [
+   "diagram.ts",
+   "now.ts"
+  ]
+ },
+ {
+  "en": "heats DHW",
+  "pl": "grzeje CWU",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "heats CH",
+  "pl": "grzeje CO",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "standby",
+  "pl": "czuwanie",
+  "files": [
+   "diagram.ts",
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "below {0} °C (I10): boiler",
+  "pl": "poniżej {0} °C (I10): kocioł",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "heat pump / gas – not visible over TCP",
+  "pl": "pompa / gaz – nie widać po TCP",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "CH",
+  "pl": "CO",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "set ",
+  "pl": "zadana ",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": " starts",
+  "pl": " startów",
+  "files": [
+   "diagram.ts",
+   "now.ts"
+  ]
+ },
+ {
+  "en": "start ",
+  "pl": "start ",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": " · last ",
+  "pl": " · ost. ",
+  "files": [
+   "diagram.ts",
+   "now.ts"
+  ]
+ },
+ {
   "en": "OUTDOOR UNIT",
   "pl": "JEDNOSTKA ZEWNĘTRZNA",
   "files": [
@@ -3950,22 +4862,8 @@
   ]
  },
  {
-  "en": "CH",
-  "pl": "CO",
-  "files": [
-   "diagram.ts"
-  ]
- },
- {
   "en": "Buffer",
   "pl": "Bufor",
-  "files": [
-   "diagram.ts"
-  ]
- },
- {
-  "en": "set ",
-  "pl": "zadana ",
   "files": [
    "diagram.ts"
   ]
@@ -4310,6 +5208,91 @@
   ]
  },
  {
+  "en": "Wi-Fi · TCP",
+  "pl": "Wi-Fi · TCP",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "no reading yet",
+  "pl": "jeszcze bez odczytu",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "last read ",
+  "pl": "ostatni odczyt ",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": " · failed polls ",
+  "pl": " · nieudane odpytania ",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "mode ",
+  "pl": "tryb ",
+  "files": [
+   "links.ts",
+   "now.ts"
+  ]
+ },
+ {
+  "en": "A31 RP: the panel gives the temperature and the demand",
+  "pl": "A31 RP: panel daje temperaturę i żądanie",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "A31 RPT: the panel gives the temperature and setpoint, the room thermostat switches heating on/off",
+  "pl": "A31 RPT: panel daje temperaturę i nastawę, termostat pokojowy włącza/wyłącza grzanie",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "A31 RT: room thermostat only – no room temperature over TCP",
+  "pl": "A31 RT: tylko termostat pokojowy – bez temperatury pokoju po TCP",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "no room sensor",
+  "pl": "brak czujnika pokojowego",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Temperature present",
+  "pl": "Jest temperatura",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Dominus does not measure it – a zone panel is needed (physical or emulated by the hub)",
+  "pl": "Dominus nie mierzy temperatury – potrzebny panel strefy (fizyczny albo emulowany przez hub)",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "physical or emulated",
+  "pl": "fizyczny lub emulowany",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
   "en": "signal ",
   "pl": "sygnał ",
   "files": [
@@ -4422,10 +5405,25 @@
   ]
  },
  {
+  "en": "not set – enter the day, time and duration from the boiler",
+  "pl": "nie ustawione – wpisz z pieca dzień, godzinę i czas",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
   "en": "disinfection running · ",
   "pl": "dezynfekcja trwa · ",
   "files": [
    "mode.ts"
+  ]
+ },
+ {
+  "en": "set on the boiler",
+  "pl": "ustawiona na piecu",
+  "files": [
+   "mode.ts",
+   "settings.ts"
   ]
  },
  {
@@ -4436,10 +5434,53 @@
   ]
  },
  {
+  "en": "not set on the boiler",
+  "pl": "nieustawiona na piecu",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
   "en": "DAY · P17",
   "pl": "DZIEŃ · P17",
   "files": [
    "mode.ts"
+  ]
+ },
+ {
+  "en": "not set – enter the hours from the boiler (U12 / U13)",
+  "pl": "nie ustawione – wpisz godziny z pieca (U12 / U13)",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "set on the boiler · ",
+  "pl": "ustawiona na piecu · ",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "active now",
+  "pl": "aktywna teraz",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "outside the window",
+  "pl": "poza oknem",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "Night mode",
+  "pl": "Tryb nocny",
+  "files": [
+   "mode.ts",
+   "now.ts"
   ]
  },
  {
@@ -4492,6 +5533,20 @@
   ]
  },
  {
+  "en": "manual – fixed setpoint",
+  "pl": "ręczny – stała nastawa",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "by the schedule · now: ",
+  "pl": "wg harmonogramu · teraz: ",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
   "en": "active outside the entered hours – check U12/U13 on the boiler",
   "pl": "aktywny poza wpisanymi godzinami – sprawdź U12/U13 na piecu",
   "files": [
@@ -4503,14 +5558,6 @@
   "pl": "we wpisanych godzinach, ale nieaktywny – sprawdź U11 na piecu",
   "files": [
    "mode.ts"
-  ]
- },
- {
-  "en": "Night mode",
-  "pl": "Tryb nocny",
-  "files": [
-   "mode.ts",
-   "now.ts"
   ]
  },
  {
@@ -4635,6 +5682,13 @@
  {
   "en": "No Error",
   "pl": "No error",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "No faults",
+  "pl": "No Error",
   "files": [
    "now.ts"
   ]
@@ -4808,13 +5862,6 @@
   ]
  },
  {
-  "en": " · last ",
-  "pl": " · ostatnia ",
-  "files": [
-   "now.ts"
-  ]
- },
- {
   "en": "last disinfection ",
   "pl": "ostatnia dezynfekcja ",
   "files": [
@@ -4836,13 +5883,6 @@
   ]
  },
  {
-  "en": " starts",
-  "pl": " startów",
-  "files": [
-   "now.ts"
-  ]
- },
- {
   "en": "on ~",
   "pl": "praca ~",
   "files": [
@@ -4859,6 +5899,90 @@
  {
   "en": "Last 6 h",
   "pl": "Ostatnie 6 h",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "DHW cycle at ≤ {0} °C, now {1} °C",
+  "pl": "cykl CWU przy ≤ {0} °C, teraz {1} °C",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "next heating ~",
+  "pl": "następne grzanie ~",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "CH pause",
+  "pl": "Przerwa CO",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "CH start lock (T05)",
+  "pl": "Blokada startu CO (T05)",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "start possible ~",
+  "pl": "start możliwy ~",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Boiler joining (I04)",
+  "pl": "Dołączenie kotła (I04)",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "below {0} °C (I10) the boiler heats · ",
+  "pl": "poniżej {0} °C (I10) grzeje kocioł · ",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "the boiler may join ~",
+  "pl": "kocioł może dołączyć ~",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "I04 has passed – the boiler may heat with the pump",
+  "pl": "czas I04 minął – kocioł może grzać razem z pompą",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "DHW threshold (T02)",
+  "pl": "Próg CWU (T02)",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": " CH starts",
+  "pl": " startów CO",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": " × DHW",
+  "pl": " × CWU",
   "files": [
    "now.ts"
   ]
@@ -4934,8 +6058,85 @@
   ]
  },
  {
-  "en": "FAULT",
-  "pl": "AWARIA",
+  "en": "Standby",
+  "pl": "Czuwanie",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "program ",
+  "pl": "program ",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "CH also waiting",
+  "pl": "CO też czeka",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "BOILER FAULT",
+  "pl": "BŁĄD KOTŁA",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "zone 1 CH setpoint",
+  "pl": "nastawa CO strefy 1",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "CH demand",
+  "pl": "Żądanie CO",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "yes",
+  "pl": "tak",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "no",
+  "pl": "nie",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "CH heating today",
+  "pl": "Grzanie CO dziś",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Frost risk",
+  "pl": "Ryzyko zamarznięcia",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "room below the threshold",
+  "pl": "pokój poniżej progu",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Dominus module offline",
+  "pl": "Moduł Dominus offline",
   "files": [
    "now.ts"
   ]
@@ -4943,13 +6144,6 @@
  {
   "en": "Space heating",
   "pl": "Ogrzewanie CO",
-  "files": [
-   "now.ts"
-  ]
- },
- {
-  "en": "Standby",
-  "pl": "Czuwanie",
   "files": [
    "now.ts"
   ]
@@ -5081,13 +6275,6 @@
   ]
  },
  {
-  "en": "Zone 1",
-  "pl": "Strefa 1",
-  "files": [
-   "now.ts"
-  ]
- },
- {
   "en": "Electrical",
   "pl": "Moc elektr.",
   "files": [
@@ -5188,6 +6375,13 @@
   ]
  },
  {
+  "en": "Calendar hours are hidden: enable the “Heating schedule” device of the Immergas Dominus integration (Settings → Devices).",
+  "pl": "Godziny kalendarzy są ukryte: włącz urządzenie „Heating schedule” integracji Immergas Dominus (Ustawienia → Urządzenia).",
+  "files": [
+   "schedule.ts"
+  ]
+ },
+ {
   "en": "Comfort / Eco by the DHW schedule",
   "pl": "Komfort / Eko wg harmonogramu CWU",
   "files": [
@@ -5238,6 +6432,13 @@
   ]
  },
  {
+  "en": "economy",
+  "pl": "comfort",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
   "en": "CH · zone 1",
   "pl": "CO · strefa 1",
   "files": [
@@ -5254,13 +6455,6 @@
  {
   "en": "heating",
   "pl": "grzeje",
-  "files": [
-   "setpoints.ts"
-  ]
- },
- {
-  "en": "standby",
-  "pl": "czuwa",
   "files": [
    "setpoints.ts"
   ]
@@ -5350,6 +6544,342 @@
   ]
  },
  {
+  "en": "inactive – fill in",
+  "pl": "nieaktywne – uzupełnij",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Heating curve (menu R)",
+  "pl": "Krzywa grzewcza (menu R)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "dom_r02",
+  "pl": "R02",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "dom_r03",
+  "pl": "R03",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "r04",
+  "pl": "R04",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "r05",
+  "pl": "R05",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Cooling curve (menu R)",
+  "pl": "Krzywa chłodzenia (menu R)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "dom_r10",
+  "pl": "R10",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "dom_r11",
+  "pl": "R11",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "r12",
+  "pl": "R12",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "r13",
+  "pl": "R13",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Hot water and heating (menu T)",
+  "pl": "Ciepła woda i ogrzewanie (menu T)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "T02 · DHW thermostat (starts at setpoint − T02)",
+  "pl": "T02 · termostat CWU (start przy nastawa − T02)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "T05 · CH start timer",
+  "pl": "T05 · minutnik startów CO",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Boiler integration (menu I, Magis Combo)",
+  "pl": "Integracja kotła (menu I, Magis Combo)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "dom_i04",
+  "pl": "I04",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "dom_i10",
+  "pl": "I10",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "CH boiler integration · I02",
+  "pl": "Integracja kotła CO · I02",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "set on the boiler – the boiler joins the heat pump",
+  "pl": "ustawiona na piecu – kocioł dołącza do pompy",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "DHW boiler integration · I01",
+  "pl": "Integracja kotła CWU · I01",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "I04 · max. wait for the boiler (CH)",
+  "pl": "I04 · maks. czas oczekiwania na kocioł (CO)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "I10 · boiler activation outdoor temp.",
+  "pl": "I10 · temp. zewn. aktywacji kotła",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Installation",
+  "pl": "Instalacja",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "A31 · room control",
+  "pl": "A31 · sterowanie pokojowe",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "P07 · outdoor probe correction",
+  "pl": "P07 · korekta sondy zewnętrznej",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Night mode U11",
+  "pl": "Tryb nocny U11",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Anti-legionella P15",
+  "pl": "Anty-legionella P15",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Day · P17",
+  "pl": "Dzień · P17",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Duration · P13",
+  "pl": "Czas · P13",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "until switched off",
+  "pl": "do wyłączenia",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "ALERT",
+  "pl": "ALARM",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Zone 1 settings",
+  "pl": "Nastawy Strefy 1",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Flow setpoint",
+  "pl": "Zadana zasilania",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Humidity setpoint",
+  "pl": "Zadana wilgotności",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Vacation",
+  "pl": "Tryb wyjazdowy",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "lowers the zone 1 target, restores it on return",
+  "pl": "obniża zadaną Strefy 1, po powrocie przywraca",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Vacation temperature",
+  "pl": "Temperatura na wyjazd",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Away until",
+  "pl": "Wyjazd do",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Automatic summer / winter",
+  "pl": "Automatyczne Lato / Zima",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "24 h outdoor mean – collecting data",
+  "pl": "średnia zewnętrzna z 24 h – zbieram dane",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "24 h mean {0} °C from {1} h of data",
+  "pl": "średnia 24 h {0} °C z {1} h danych",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Winter below (24 h mean)",
+  "pl": "Zima poniżej (średnia 24 h)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Summer above (24 h mean)",
+  "pl": "Lato powyżej (średnia 24 h)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Alerts",
+  "pl": "Alarmy",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Frost risk below",
+  "pl": "Ryzyko zamarznięcia poniżej",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Module offline after",
+  "pl": "Moduł offline po",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Hub settings (online)",
+  "pl": "Ustawienia huba (online)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Boiler parameters (offline)",
+  "pl": "Parametry pieca (offline)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
   "en": "Hub settings",
   "pl": "Ustawienia huba",
   "files": [
@@ -5357,8 +6887,78 @@
   ]
  },
  {
+  "en": "Online settings",
+  "pl": "Ustawienia online",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Settings",
+  "pl": "Ustawienia",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "prices, cylinder, gas estimate, fault language",
+  "pl": "ceny, zasobnik, szacowanie gazu, język błędów",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "U12/U13, P16/P17/P13, floor limit, cheap tariff, R02/R03, R10/R11, P07",
+  "pl": "U12/U13, P16/P17/P13, limit podłogi, tania taryfa, R02/R03, R10/R11, P07",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
   "en": "prices, cylinder, night mode, legionella…",
   "pl": "ceny, zasobnik, tryb nocny, legionella…",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "flow, humidity, vacation, summer/winter, alerts, fault language",
+  "pl": "zasilanie, wilgotność, wyjazd, Lato/Zima, alarmy, język błędów",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "U11, P15, R curves, T02/T05, I integration, A31, P07",
+  "pl": "U11, P15, krzywe R, T02/T05, integracja I, A31, P07",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "boiler parameters, night mode, legionella, vacation, summer/winter, alerts, fault language",
+  "pl": "parametry pieca, tryb nocny, legionella, wyjazd, Lato/Zima, alarmy, język błędów",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "The hub cannot read these from the buses – copy them once from the boiler menu; they drive the timer bars, the curve and the calibration.",
+  "pl": "Hub nie czyta tych ustawień z magistral – przepisz je raz z menu pieca; służą paskom czasu, krzywej i kalibracji.",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Work right away: zone setpoints, vacation and summer/winter write to the boiler through Dominus, alerts and language run in Home Assistant.",
+  "pl": "Działają od razu: nastawy strefy, wyjazd i Lato/Zima zapisują do kotła przez Dominusa, alarmy i język liczy Home Assistant.",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Dominus cannot read these – copy them once from the boiler menu. Nothing is sent to the boiler; they drive the timer bars, the curve and the hints.",
+  "pl": "Dominus nie czyta tych ustawień – przepisz je raz z menu pieca. Nic nie trafia do kotła; służą paskom czasu, krzywej i podpowiedziom.",
   "files": [
    "settings.ts"
   ]
@@ -5415,6 +7015,55 @@
  {
   "en": "Time",
   "pl": "Godzina",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Curves (menu R)",
+  "pl": "Krzywe (menu R)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "R02 · outdoor at max. CH flow",
+  "pl": "R02 · temp. zewn. przy maks. zasilaniu CO",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "R03 · outdoor at min. CH flow",
+  "pl": "R03 · temp. zewn. przy min. zasilaniu CO",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "R10 · outdoor at min. cooling flow",
+  "pl": "R10 · temp. zewn. przy min. zasilaniu chłodzenia",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "R11 · outdoor at max. cooling flow",
+  "pl": "R11 · temp. zewn. przy maks. zasilaniu chłodzenia",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Cheaper tariff hours",
+  "pl": "Tańsza taryfa – godziny",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "single rate",
+  "pl": "jedna taryfa",
   "files": [
    "settings.ts"
   ]

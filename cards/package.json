@@ -1,6 +1,6 @@
 {
   "name": "immergas-hub-cards",
-  "version": "0.46.0",
+  "version": "0.47.0",
   "description": "Lovelace cards for the Immergas Magis Pro / Combo V2 DFT HUB (ESPHome)",
   "private": true,
   "type": "module",
