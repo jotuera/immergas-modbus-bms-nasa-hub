@@ -859,6 +859,52 @@ class ImmergasCalibrationCard extends HubCard {
       rec: uRec, reason: isNaN(dev) ? ["brak danych o odchyłce (statystyki Dominusa 1.3.0)", "no deviation data (Dominus 1.3.0 statistics)"]
         : [`pokój ${dev > 0 ? "+" : ""}${f1(dev)} K od zadanej (średnia 1 h)${isNaN(share) ? "" : `, grzanie ${this.f(share, 0)} % doby`}${enough ? "" : " – za mało grzania, by ocenić krzywą"}`,
           `room ${dev > 0 ? "+" : ""}${f1(dev)} K from the target (1 h mean)${isNaN(share) ? "" : `, heating ${this.f(share, 0)} % of the day`}${enough ? "" : " – too little heating to judge the curve"}`] });
+    // heating curve R04 / R05 (declared copy of the boiler menu R): the same 1 h room deviation and >= 10 % heating
+    // rule as U03; in mild weather the foot R05 carries the flow, in the cold the top R04
+    const cooling = this.s("mode") === "cooling", out_ = this.n("outdoor");
+    const xa = this.n("dom_r02"), xb = this.n("dom_r03"), mid = isNaN(xa) || isNaN(xb) ? 5 : (xa + xb) / 2, mild = !isNaN(out_) && out_ > mid;
+    const menuR: [string, string] = [" – zmień w menu R pieca, encja to tylko kopia", " – change it in the boiler menu R, the entity is only the copy"];
+    const unset = (k: Key, code: string, name: [string, string], group: string): Row => ({ k, code, name, unit: "", kind: "info", group, value: "–", ok: true,
+      model: "–", why: ["Dominus nie czyta menu R – przepisz wartość z pieca", "Dominus does not read the menu R – copy the value from the boiler"],
+      rec: this.t("nie ustawione – wpisz z pieca", "not set – enter it from the boiler"), reason: ["", ""] });
+    const curveRow = (k: Key, code: string, name: [string, string], model: number, why: [string, string], move: number, txt: [string, string]): Row =>
+      this.isSet(k) ? { k, code, name, unit: "°C", d: 0, kind: "number", group: "ch", model, why, rec: this.n(k) + move,
+        reason: [txt[0] + (move ? menuR[0] : ""), txt[1] + (move ? menuR[1] : "")] } : unset(k, code, name, "ch");
+    const devTxt: [string, string] = isNaN(dev) ? ["brak danych o odchyłce", "no deviation data"]
+      : [`pokój ${dev > 0 ? "+" : ""}${f1(dev)} K od zadanej, grzanie ${isNaN(share) ? "–" : this.f(share, 0)} % doby, na zewnątrz ${f1(out_)} °C${enough ? "" : " – za mało grzania, by ocenić"}`,
+        `room ${dev > 0 ? "+" : ""}${f1(dev)} K from the target, heating ${isNaN(share) ? "–" : this.f(share, 0)} % of the day, outdoor ${f1(out_)} °C${enough ? "" : " – too little heating to judge"}`];
+    const curveMove = !enough || isNaN(dev) ? 0 : dev > 0.5 ? -1 : dev < -0.5 ? 1 : 0;
+    out.push(curveRow("r05", "R05", ["Minimalne zasilanie CO (stopa krzywej)", "Minimum CH flow (curve foot)"], 25,
+      ["podłogówka: ~25 °C przy cieple na zewnątrz; liczy się, gdy na zewnątrz łagodnie", "underfloor: ~25 °C in mild weather; matters when it is mild outside"],
+      mild ? curveMove : 0, devTxt));
+    out.push(curveRow("r04", "R04", ["Maksymalne zasilanie CO (szczyt krzywej)", "Maximum CH flow (curve top)"], 35,
+      ["podłogówka: 35 °C w mrozy; liczy się, gdy na zewnątrz zimno", "underfloor: 35 °C in frost; matters when it is cold outside"],
+      mild ? 0 : curveMove, devTxt));
+    if (!this.allSet("dom_r02", "dom_r03")) out.push(unset("dom_r02", "R02/R03", ["Punkty krzywej (temp. zewnętrzne)", "Curve points (outdoor temperatures)"], "ch"));
+    // cooling curve R12 / R13 (declared), like the hub cooling rows; outside the cooling season only informative
+    const r12 = this.n("r12"), r13 = this.n("r13"), offTxt: [string, string] = [" (informacyjnie – poza sezonem chłodzenia)", " (informative – outside the cooling season)"];
+    const coolRow = (k: Key, code: string, name: [string, string], model: number, why: [string, string], rec: number, reason: [string, string]): Row =>
+      this.isSet(k) ? { k, code, name, unit: "°C", d: 0, kind: "number", group: "cool", model, why, rec: cooling ? rec : this.n(k),
+        reason: cooling ? [reason[0] + (rec !== this.n(k) ? menuR[0] : ""), reason[1] + (rec !== this.n(k) ? menuR[1] : "")] : [reason[0] + offTxt[0], reason[1] + offTxt[1]] }
+        : unset(k, code, name, "cool");
+    out.push(coolRow("r12", "R12", ["Minimalne zasilanie chłodzenia", "Minimum cooling flow"], 18, ["podłoga: nie zimniej niż ~18 °C (rosa)", "floor: not colder than ~18 °C (dew)"],
+      r12 < 18 ? 18 : r12, [r12 < 18 ? "ryzyko wykroplenia" : "w porządku", r12 < 18 ? "condensation risk" : "fine"]));
+    out.push(coolRow("r13", "R13", ["Maksymalne zasilanie chłodzenia", "Maximum cooling flow"], 22, ["przy umiarkowanym upale wystarczy cieplejsza woda", "warmer water is enough in moderate heat"],
+      r13 < Math.max(r12, 18) + 2 ? Math.max(r12, 18) + 4 : r13, ["min. 2 K nad R12", "at least 2 K above R12"]));
+    if (!this.allSet("dom_r10", "dom_r11")) out.push(unset("dom_r10", "R10/R11", ["Punkty krzywej chłodzenia (temp. zewnętrzne)", "Cooling curve points (outdoor temperatures)"], "cool"));
+    // flow setpoint 2217 (written to the boiler over TCP): underfloor <= 35 °C, not above the curve top R04 + 2
+    const fl = this.n("dom_flow_target"), cap = this.isSet("r04") ? Math.min(35, this.n("r04") + 2) : 35;
+    if (this.eid("dom_flow_target")) out.push({ k: "dom_flow_target", code: "", name: ["Zadana zasilania strefy 1", "Zone 1 flow setpoint"], unit: "°C", d: 0, kind: "number", group: "ch",
+      model: `≤ ${this.f(cap, 0)} °C`,
+      why: ["podłogówka: woda nie cieplejsza niż szczyt krzywej R04 (+2 K)", "underfloor: water not warmer than the curve top R04 (+2 K)"],
+      rec: fl > cap ? cap : fl,
+      reason: fl > cap ? [`${this.f(fl, 0)} °C to więcej niż ${this.f(cap, 0)} °C – zapis idzie do kotła`, `${this.f(fl, 0)} °C is above ${this.f(cap, 0)} °C – written to the boiler`] : ["w porządku", "fine"] });
+    // humidity setpoint 2216: dew-point protection in cooling, model 50-60 %, outside 45-65 % move into range
+    const hu = this.n("dom_hum_target"), huRec = hu < 45 ? 50 : hu > 65 ? 60 : hu;
+    if (this.eid("dom_hum_target")) out.push({ k: "dom_hum_target", code: "", name: ["Zadana wilgotności strefy 1", "Zone 1 humidity setpoint"], unit: "%", d: 0, kind: "number", group: "cool",
+      model: "50–60 %", why: ["ochrona przed rosą przy chłodzeniu podłogowym", "dew-point protection with floor cooling"],
+      rec: cooling ? huRec : hu,
+      reason: cooling ? (huRec !== hu ? ["poza zakresem 45–65 %", "outside 45–65 %"] : ["w porządku", "fine"]) : [offTxt[0].trim(), offTxt[1].trim()] });
     // cycling of the boiler from the heating-demand edges
     const sh = this.n("dom_starts_h"), st = this.n("dom_starts_today"), many = sh > 3;
     if (this.eid("dom_starts_h")) out.push({ code: "", name: ["Taktowanie: starty grzania na godzinę", "Cycling: heating starts per hour"], unit: "/h", d: 0, kind: "info", group: "cyc",

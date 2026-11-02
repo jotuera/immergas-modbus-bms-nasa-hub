@@ -133,14 +133,9 @@ class ImmergasModeCard extends HubCard {
   }
 
   /** Dominus: zone 1 settings the Setpoints card does not show (it shows the Comfort / Eco pair of the current mode) */
-  private domZone(cooling: boolean) {
+  // U03 is on the Curve card, Comfort / Eco on the Setpoints card - only what has no other place stays here
+  private domZone(_cooling: boolean) {
     const rows = [
-      this.numRow("u03", "mdi:chart-bell-curve-cumulative", this.t("Offset krzywej (U03)", "Curve offset (U03)"), 1),
-      ...(cooling
-        ? [this.numRow("comfort_heat", "mdi:fire", this.t("Komfort grzanie", "Comfort heating"), 1),
-          this.numRow("eco_heat", "mdi:leaf", this.t("Eko grzanie", "Eco heating"), 1)]
-        : [this.numRow("comfort_cool", "mdi:snowflake", this.t("Komfort chłodzenie", "Comfort cooling"), 1),
-          this.numRow("eco_cool", "mdi:snowflake-thermometer", this.t("Eko chłodzenie", "Eco cooling"), 1)]),
       this.numRow("dom_flow_target", "mdi:thermometer-water", this.t("Zadana zasilania", "Flow setpoint"), 0),
       this.numRow("dom_hum_target", "mdi:water-percent", this.t("Zadana wilgotności", "Humidity setpoint"), 0),
     ].filter((r) => r !== nothing);
