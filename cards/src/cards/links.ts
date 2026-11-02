@@ -72,12 +72,11 @@ class ImmergasLinksCard extends HubCard {
       const room = this.n("zone1");
       out.push({ k: "zone1", icon: "mdi:tablet-dashboard", name: ["Panel Strefy 1", "Zone 1 panel"], bus: "D+/D- 0x29",
         st: isNaN(room) ? "off" : "ok",
-        label: isNaN(room) ? this.t("brak czujnika pokojowego", "no room sensor") : this.t("temperatura pokoju", "room temperature"),
+        label: isNaN(room) ? this.t("brak czujnika pokojowego", "no room sensor") : this.t("Jest temperatura", "Temperature present"),
         detail: isNaN(room)
           ? this.t("Dominus nie mierzy temperatury – potrzebny panel strefy (fizyczny albo emulowany przez hub)",
             "Dominus does not measure it – a zone panel is needed (physical or emulated by the hub)")
-          : `${this.f(room, 1, 1)} °C · ` + this.t("panel fizyczny albo emulowany (po TCP nie do rozróżnienia)",
-            "physical or emulated panel (not distinguishable over TCP)") });
+          : `${this.f(room, 1, 1)} °C · ` + this.t("fizyczny lub emulowany", "physical or emulated") });
     }
 
     const wifi = this.n("hub_wifi");
@@ -110,7 +109,7 @@ class ImmergasLinksCard extends HubCard {
     return html`
       ${this.head("mdi:lan", this.t("Łączność", "Connectivity"), nBad ? html`<span style="color:${c("red")}">${this.t("problemy: ", "problems: ")}${nBad}</span>`
         : this.t("wszystko połączone", "all connected"))}
-      <div class="links" style=${this.dominus ? "grid-template-columns:repeat(2, minmax(0, 1fr))" : ""}>${pairs.map((pair) => html`<div class=${pair.length > 1 ? "pair" : "pair one"}>${pair.map((l) => {
+      <div class="links" style=${this.dominus ? "grid-template-columns:repeat(2, minmax(0, 1fr));grid-auto-rows:auto" : ""}>${pairs.map((pair) => html`<div class=${pair.length > 1 ? "pair" : "pair one"}>${pair.map((l) => {
         const [col, txt0, icon] = meta[l.st], txt = l.label ?? txt0;
         return html`<div class="lk" style=${box(col, l.st === "bad")} @click=${() => this.moreInfo(l.k)}>
           <ha-icon icon=${l.icon} style="color:${c(col)}"></ha-icon>
