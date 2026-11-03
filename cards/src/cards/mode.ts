@@ -93,12 +93,63 @@ class ImmergasModeCard extends HubCard {
         <div class="kn" style="left:${on ? 23 : 3}px;background:${on ? c("lavender") : c("overlay1")}"></div></div></div>`;
   }
 
-  /** Zone 1 time program (DD select, options [manual, auto]) as two buttons AUTO / MANUAL, two-tap confirm */
+  /** calendar p (1-4) covers the whole day with its ranges (null = not read yet) */
+  private calWhole(p: number): boolean | null {
+    const m = (s?: string) => { if (!s || !/^\d\d:\d\d/.test(s)) return null; const v = +s.slice(0, 2) * 60 + +s.slice(3, 5); return v >= 1439 ? 1440 : v; };
+    const spans: [number, number][] = [];
+    for (let f = 1; f <= 4; f++) {
+      const a = m(this.s(`k${p}z${f}on` as any)), b = m(this.s(`k${p}z${f}off` as any));
+      if (a === null || b === null) return null;
+      if (b > a) spans.push([a, b]);
+    }
+    let reach = 0;
+    for (const [a, b] of spans.sort((x, y) => x[0] - y[0])) { if (a > reach) break; reach = Math.max(reach, b); }
+    return reach >= 1440;
+  }
+  /** zone 1 day -> calendar (1-4) for Mon..Sun, null when not read */
+  private coDays(): number[] | null {
+    const d = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"].map((x) => {
+      const o: string[] = this.attr(`co_${x}` as any, "options") ?? [];
+      const i = o.indexOf(this.s(`co_${x}` as any) ?? "");
+      return i >= 0 ? i + 1 : NaN;
+    });
+    return d.some((x) => isNaN(x)) ? null : d;
+  }
+
+  /** Zone 1 time program as two buttons AUTO / MANUAL, two-tap confirm. One rule on both dashboards: MANUAL = the panel
+   *  program is off, or every day sits on a calendar covering the whole day (a fixed setpoint 24 h); AUTO otherwise.
+   *  Hub: MANUAL switches the panel program off; AUTO switches it on and moves days off a whole-day calendar.
+   *  Dominus: the integration's select does the same on the calendars (the module cannot reach the panel program). */
   private progRow() {
     if (!this.eid("prog_mode")) return nothing;
     const opts: string[] = this.attr("prog_mode", "options") ?? [], bad = this.bad("prog_mode") || opts.length !== 2;
-    const cur = this.s("prog_mode") === opts[1] ? "auto" : "manual";
-    const set = (m: string) => this.call("select", "select_option", "prog_mode", { option: opts[m === "auto" ? 1 : 0] });
+    const days = this.coDays(), allWhole = !!days && new Set(days).size === 1 && this.calWhole(days[0]) === true;
+    const cur = this.dominus ? (this.s("prog_mode") === opts[1] ? "auto" : "manual")
+      : this.s("prog_mode") !== opts[1] || allWhole ? "manual" : "auto";
+    const wd = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+    const dayTo = (i: number, cal: number) => {
+      const o: string[] = this.attr(`co_${wd[i]}` as any, "options") ?? [];
+      if (o[cal - 1] && days && days[i] !== cal) this.call("select", "select_option", `co_${wd[i]}` as any, { option: o[cal - 1] });
+    };
+    const set = (m: string) => {
+      this.call("select", "select_option", "prog_mode", { option: opts[m === "auto" ? 1 : 0] });
+      if (this.dominus || !days) return;
+      if (m === "auto") {
+        // a day on a whole-day calendar would still mean a fixed setpoint - move it to the first real calendar
+        const real = [1, 2, 3, 4].find((p) => this.calWhole(p) === false);
+        if (real) wd.forEach((_, i) => { if (this.calWhole(days[i]) !== false) dayTo(i, real); });
+        return;
+      }
+      // MANUAL also puts every day on a whole-day calendar (calendar 4 = 00:00-23:59 when none covers the day): the
+      // boiler does not report the panel program over TCP, so this is what the Dominus integration can see
+      let whole = [1, 2, 3, 4].find((p) => this.calWhole(p) === true);
+      if (!whole) {
+        whole = 4;
+        this.call("time", "set_value", "k4z1on" as any, { time: "00:00:00" });
+        this.call("time", "set_value", "k4z1off" as any, { time: "23:59:00" });
+      }
+      wd.forEach((_, i) => dayTo(i, whole!));
+    };
     // the boiler's own report (DD 2090: manual / comfort / eco) shows the phase the schedule is in right now
     const ph = !this.bad("program") ? this.s("program")! : !this.bad("zone1_phase") ? this.txt("zone1_phase")! : "";
     const sub = bad ? this.t("brak odczytu", "no reading") : cur === "auto" ? this.t("wg harmonogramu", "by the schedule") + (ph ? this.t(" · teraz: ", " · now: ") + ph : "")
