@@ -1105,5 +1105,6 @@
  "Room deviation from target": "Szoba eltérése a célértéktől",
  "weighted: heating hours/degree day 40 %, room deviation 30 %, starts/day 20 %, run length 10 %": "súlyozva: fűtési órák/hőfoknap 40 %, szobaeltérés 30 %, indítás/nap 20 %, futamidő 10 %",
  "Without a change date (option optimized_since): the last 7 days against the 7 before.": "Változtatási dátum nélkül (optimized_since opció): az utolsó 7 nap az előző 7-tel szemben.",
- "Dominus does not measure energy – the comparison uses heating time; add a power / gas meter with the energy_entity / gas_entity options.": "A Dominus nem mér energiát – az összevetés a fűtési időn alapul; áram- / gázmérőt az energy_entity / gas_entity opcióval adhat hozzá."
+ "Dominus does not measure energy – the comparison uses heating time; add a power / gas meter with the energy_entity / gas_entity options.": "A Dominus nem mér energiát – az összevetés a fűtési időn alapul; áram- / gázmérőt az energy_entity / gas_entity opcióval adhat hozzá.",
+ "DHW by the boiler (I03 = 1 min) – a high threshold means always gas, keep": "HMV kazánnal (I03 = 1 min) – magas küszöb = mindig gáz, változatlan"
 }

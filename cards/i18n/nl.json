@@ -1105,5 +1105,6 @@
  "Room deviation from target": "Afwijking kamer van setpoint",
  "weighted: heating hours/degree day 40 %, room deviation 30 %, starts/day 20 %, run length 10 %": "gewogen: stookuren/graaddag 40 %, kamerafwijking 30 %, starts/dag 20 %, looptijd 10 %",
  "Without a change date (option optimized_since): the last 7 days against the 7 before.": "Zonder wijzigingsdatum (optie optimized_since): de laatste 7 dagen tegen de 7 ervoor.",
- "Dominus does not measure energy – the comparison uses heating time; add a power / gas meter with the energy_entity / gas_entity options.": "Dominus meet geen energie – de vergelijking gebruikt de stooktijd; voeg een stroom- / gasmeter toe met de opties energy_entity / gas_entity."
+ "Dominus does not measure energy – the comparison uses heating time; add a power / gas meter with the energy_entity / gas_entity options.": "Dominus meet geen energie – de vergelijking gebruikt de stooktijd; voeg een stroom- / gasmeter toe met de opties energy_entity / gas_entity.",
+ "DHW by the boiler (I03 = 1 min) – a high threshold means always gas, keep": "SWW via de ketel (I03 = 1 min) – hoge drempel = altijd gas, ongewijzigd"
 }

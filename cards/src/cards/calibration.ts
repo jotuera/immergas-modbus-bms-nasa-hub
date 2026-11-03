@@ -867,7 +867,12 @@ class ImmergasCalibrationCard extends HubCard {
         rec: this.n("i03"), reason: i01on ? ["ustawiane przyciskiem źródła CWU", "set by the DHW source buttons"] : ["I01 OFF (CWU pompą) – bez wpływu", "I01 OFF (DHW by heat pump) – no effect"] },
       { k: "i09", code: "I09", name: ["CWU kotłem poniżej temp. zewn.", "DHW by boiler below outdoor temp."], unit: "°C", d: 0, group: "dhw",
         model: -5, why: ["jak I10: przy mrozie CWU taniej z gazu" + noEff(i01on)[0], "like I10: in frost DHW is cheaper from gas" + noEff(i01on)[1]],
-        rec: i01on ? -5 : this.n("i09"), reason: i01on ? ["integracja CWU włączona – próg jak dla CO", "DHW integration on – same threshold as CH"] : ["I01 OFF – bez wpływu", "I01 OFF – no effect"] },
+        // DHW chosen "by the boiler" (I03 = 1 min): the threshold only decides whether the heat pump even starts first -
+        // a high I09 (e.g. 30 °C) is the intended "always gas", so it is kept
+        rec: !i01on ? this.n("i09") : this.dhwSource().cur === "boiler" ? this.n("i09") : -5,
+        reason: !i01on ? ["I01 OFF – bez wpływu", "I01 OFF – no effect"]
+          : this.dhwSource().cur === "boiler" ? ["CWU kotłem (I03 = 1 min) – wysoki próg = zawsze gaz, bez zmian", "DHW by the boiler (I03 = 1 min) – a high threshold means always gas, keep"]
+          : ["integracja CWU włączona – próg jak dla CO", "DHW integration on – same threshold as CH"] },
       { k: "a03", code: "A03", name: ["Pompa obiegowa – minimalna prędkość", "Circulation pump – minimum speed"], unit: "%", d: 0, group: "pump",
         model: 55, why: ["dolna granica modulacji pompy", "lower limit of the pump modulation"], rec: this.n("a03"), reason: ["bez zmian", "keep"] },
       { k: "a04", code: "A04", name: ["Pompa obiegowa – maksymalna prędkość", "Circulation pump – maximum speed"], unit: "%", d: 0, group: "pump",

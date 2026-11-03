@@ -1105,5 +1105,6 @@
  "Room deviation from target": "Desvio da divisão face ao setpoint",
  "weighted: heating hours/degree day 40 %, room deviation 30 %, starts/day 20 %, run length 10 %": "ponderado: horas de aquecimento/grau-dia 40 %, desvio da divisão 30 %, arranques/dia 20 %, duração 10 %",
  "Without a change date (option optimized_since): the last 7 days against the 7 before.": "Sem data da alteração (opção optimized_since): os últimos 7 dias face aos 7 anteriores.",
- "Dominus does not measure energy – the comparison uses heating time; add a power / gas meter with the energy_entity / gas_entity options.": "O Dominus não mede energia – a comparação usa o tempo de aquecimento; adicione um contador de eletricidade / gás com as opções energy_entity / gas_entity."
+ "Dominus does not measure energy – the comparison uses heating time; add a power / gas meter with the energy_entity / gas_entity options.": "O Dominus não mede energia – a comparação usa o tempo de aquecimento; adicione um contador de eletricidade / gás com as opções energy_entity / gas_entity.",
+ "DHW by the boiler (I03 = 1 min) – a high threshold means always gas, keep": "AQS pela caldeira (I03 = 1 min) – limiar alto = sempre gás, sem alterações"
 }

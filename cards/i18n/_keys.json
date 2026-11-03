@@ -2318,15 +2318,22 @@
   ]
  },
  {
-  "en": "DHW integration on – same threshold as CH",
-  "pl": "integracja CWU włączona – próg jak dla CO",
+  "en": "I01 OFF – no effect",
+  "pl": "I01 OFF – bez wpływu",
   "files": [
    "calibration.ts"
   ]
  },
  {
-  "en": "I01 OFF – no effect",
-  "pl": "I01 OFF – bez wpływu",
+  "en": "DHW by the boiler (I03 = 1 min) – a high threshold means always gas, keep",
+  "pl": "CWU kotłem (I03 = 1 min) – wysoki próg = zawsze gaz, bez zmian",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "DHW integration on – same threshold as CH",
+  "pl": "integracja CWU włączona – próg jak dla CO",
   "files": [
    "calibration.ts"
   ]

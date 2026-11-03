@@ -1105,5 +1105,6 @@
  "Room deviation from target": "Desviación de la estancia respecto a la consigna",
  "weighted: heating hours/degree day 40 %, room deviation 30 %, starts/day 20 %, run length 10 %": "ponderado: horas de calefacción/grado-día 40 %, desviación de la estancia 30 %, arranques/día 20 %, duración 10 %",
  "Without a change date (option optimized_since): the last 7 days against the 7 before.": "Sin fecha de cambio (opción optimized_since): los últimos 7 días frente a los 7 anteriores.",
- "Dominus does not measure energy – the comparison uses heating time; add a power / gas meter with the energy_entity / gas_entity options.": "Dominus no mide energía – la comparación usa el tiempo de calefacción; añade un contador de luz / gas con las opciones energy_entity / gas_entity."
+ "Dominus does not measure energy – the comparison uses heating time; add a power / gas meter with the energy_entity / gas_entity options.": "Dominus no mide energía – la comparación usa el tiempo de calefacción; añade un contador de luz / gas con las opciones energy_entity / gas_entity.",
+ "DHW by the boiler (I03 = 1 min) – a high threshold means always gas, keep": "ACS con la caldera (I03 = 1 min) – umbral alto = siempre gas, sin cambios"
 }
