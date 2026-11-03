@@ -1593,7 +1593,8 @@
   "en": "Floor screed type",
   "pl": "Rodzaj posadzki",
   "files": [
-   "calibration.ts"
+   "calibration.ts",
+   "settings.ts"
   ]
  },
  {
@@ -6901,6 +6902,13 @@
  {
   "en": "P07 · outdoor probe correction",
   "pl": "P07 · korekta sondy zewnętrznej",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Heated floor area",
+  "pl": "Powierzchnia ogrzewana",
   "files": [
    "settings.ts"
   ]
