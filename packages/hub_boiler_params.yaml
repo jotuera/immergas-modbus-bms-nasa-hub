@@ -1,6 +1,6 @@
 # IMMERGAS Modbus BMS NASA Hub - package "hub_boiler_params"
 # Settings the cards need that none of the three buses carries. Boiler menu: night function window (U12/U13), anti-legionella start
-# time, day and maximum duration (P16/P17/P13), the flow limit of an underfloor circuit, the outdoor points of the
+# time, day and maximum duration (P16/P17/P13), the flow limit and the screed type of an underfloor circuit, the outdoor points of the
 # heating and cooling curves (R02/R03, R10/R11) and the outdoor probe correction (P07). They do NOT change anything
 # in the boiler: set them once to the same values as in the boiler menu, the cards use them to show the night window,
 # the next anti-legionella cycle and the floor limit on the curve. Calibration card: cheaper tariff hours and the
@@ -58,6 +58,17 @@ select:
     restore_value: true
     options: ["${t_hub_day0}", "${t_hub_day1}", "${t_hub_day2}", "${t_hub_day3}", "${t_hub_day4}", "${t_hub_day5}", "${t_hub_day6}", "${t_hub_day7}"]
     initial_option: "${t_hub_day7}"
+  # option index: 0 = cement screed, 1 = anhydrite screed, 2 = dry system (the cards read the index): how fast the floor
+  # takes and gives back heat - Calibration uses it for the floor limit, setbacks, the CH schedule and I04
+  - platform: template
+    id: hub_floor_type
+    name: "${n_hub_floor_type}"
+    icon: mdi:layers-triple-outline
+    entity_category: config
+    optimistic: true
+    restore_value: true
+    options: ["${t_hub_floor0}", "${t_hub_floor1}", "${t_hub_floor2}"]
+    initial_option: "${t_hub_floor0}"
 
 number:
   - platform: template

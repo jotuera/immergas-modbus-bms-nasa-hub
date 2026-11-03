@@ -57,6 +57,7 @@ substitutions:
   n_hub_p17: "${hub_name_prefix} - P17 Legionella elleni nap"
   n_hub_p13: "${hub_name_prefix} - P13 Legionella elleni max. időtartam"
   n_hub_floor_max: "${hub_name_prefix} - Padlófűtés előremenő határ"
+  n_hub_floor_type: "${hub_name_prefix} - Esztrich típusa"
   n_hub_r02: "${hub_name_prefix} - R02 Külső hőm. max. fűtési előremenőnél"
   n_hub_r03: "${hub_name_prefix} - R03 Külső hőm. min. fűtési előremenőnél"
   n_hub_r10: "${hub_name_prefix} - R10 Külső hőm. min. hűtési előremenőnél"
@@ -71,6 +72,9 @@ substitutions:
   t_hub_day5: "Péntek"
   t_hub_day6: "Szombat"
   t_hub_day7: "Vasárnap"
+  t_hub_floor0: "Cementesztrich"
+  t_hub_floor1: "Anhidritesztrich"
+  t_hub_floor2: "Száraz rendszer"
   # tariff and before / after comparison for the Calibration card (hub_boiler_params)
   n_hub_cheap_hours: "${hub_name_prefix} - Kedvezményes tarifa – órák"
   n_hub_compare_since: "${hub_name_prefix} - Összehasonlítás ettől"

@@ -1056,5 +1056,19 @@
  "keep A04 – {0} heats {1}% of the day, it lacks water": "lascia A04 – {0} riscalda il {1}% del giorno, gli manca acqua",
  "✓ low output – a small ΔT is normal": "✓ bassa potenza – un ΔT piccolo è normale",
  "median while the heat pump heats CH, 24 h{0}": "mediana con la PdC in riscaldamento, 24 h{0}",
- "DHW heating – the water goes to the cylinder, not on the curve": "riscaldamento ACS – l'acqua va al bollitore, non sulla curva"
+ "DHW heating – the water goes to the cylinder, not on the curve": "riscaldamento ACS – l'acqua va al bollitore, non sulla curva",
+ "a dry system reacts fast, but the rooms have thermostats – set setbacks in them": "un sistema a secco reagisce in fretta, ma le stanze hanno termostati – imposta le riduzioni in essi",
+ "anhydrite reacts faster but stores little, and the rooms have thermostats – a fixed setpoint, in them at most short 2–3 h setbacks of ≤ 1 K": "l'anidrite reagisce più in fretta ma accumula poco, e le stanze hanno termostati – setpoint fisso, in essi al massimo brevi riduzioni di 2–3 h di ≤ 1 K",
+ "Comfort / Eco by time of day, Eco at most 2 K lower (a dry system reheats fast)": "Comfort / Eco secondo l'ora, Eco al massimo 2 K in meno (un sistema a secco si riscalda in fretta)",
+ "Eco {0} K lower – raise Eco to Comfort − {1} K": "Eco {0} K più basso – alza Eco a Comfort − {1} K",
+ "a night setback up to {0} K saves without morning cycling": "una riduzione notturna fino a {0} K fa risparmiare senza cicli al mattino",
+ "Floor screed type": "Tipo di massetto",
+ "how fast the floor takes and gives back heat: floor limit, setbacks, CH schedule and I04": "quanto in fretta il pavimento assorbe e cede calore: limite pavimento, riduzioni, programma riscaldamento e I04",
+ "set it to how the floor is built": "impostalo in base a come è costruito il pavimento",
+ "dry system (boards, panels): up to ~40 °C": "sistema a secco (lastre, pannelli): fino a ~40 °C",
+ "cement screed: up to ~45 °C (the floor finish decides)": "massetto cementizio: fino a ~45 °C (decide la finitura)",
+ "above ~{0} °C for this screed": "sopra ~{0} °C per questo massetto",
+ "at most 2 K under Comfort – a dry system reheats fast": "al massimo 2 K sotto Comfort – un sistema a secco si riscalda in fretta",
+ "a dry system reacts fast – the boiler may join earlier": "un sistema a secco reagisce in fretta – la caldaia può intervenire prima",
+ "anhydrite reacts faster than cement – do not call the boiler too early": "l'anidrite reagisce più in fretta del cemento – non chiamare la caldaia troppo presto"
 }

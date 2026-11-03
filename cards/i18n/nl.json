@@ -1056,5 +1056,19 @@
  "keep A04 – {0} heats {1}% of the day, it lacks water": "A04 laten – {0} verwarmt {1}% van de dag, er is te weinig water",
  "✓ low output – a small ΔT is normal": "✓ laag vermogen – kleine ΔT is normaal",
  "median while the heat pump heats CH, 24 h{0}": "mediaan tijdens verwarmen met de WP, 24 h{0}",
- "DHW heating – the water goes to the cylinder, not on the curve": "SWW-verwarming – het water gaat naar de boiler, niet op de curve"
+ "DHW heating – the water goes to the cylinder, not on the curve": "SWW-verwarming – het water gaat naar de boiler, niet op de curve",
+ "a dry system reacts fast, but the rooms have thermostats – set setbacks in them": "een droog systeem reageert snel, maar de kamers hebben thermostaten – stel verlagingen daarin in",
+ "anhydrite reacts faster but stores little, and the rooms have thermostats – a fixed setpoint, in them at most short 2–3 h setbacks of ≤ 1 K": "anhydriet reageert sneller maar slaat weinig op, en de kamers hebben thermostaten – vaste setpoint, daarin hooguit korte verlagingen van 2–3 h met ≤ 1 K",
+ "Comfort / Eco by time of day, Eco at most 2 K lower (a dry system reheats fast)": "Comfort / Eco volgens tijdstip, Eco hooguit 2 K lager (een droog systeem warmt snel op)",
+ "Eco {0} K lower – raise Eco to Comfort − {1} K": "Eco {0} K lager – verhoog Eco naar Comfort − {1} K",
+ "a night setback up to {0} K saves without morning cycling": "een nachtverlaging tot {0} K bespaart zonder pendelen 's ochtends",
+ "Floor screed type": "Type dekvloer",
+ "how fast the floor takes and gives back heat: floor limit, setbacks, CH schedule and I04": "hoe snel de vloer warmte opneemt en afgeeft: vloerlimiet, verlagingen, CV-programma en I04",
+ "set it to how the floor is built": "stel in volgens de opbouw van de vloer",
+ "dry system (boards, panels): up to ~40 °C": "droog systeem (platen, panelen): tot ~40 °C",
+ "cement screed: up to ~45 °C (the floor finish decides)": "cementdekvloer: tot ~45 °C (de vloerafwerking bepaalt)",
+ "above ~{0} °C for this screed": "boven ~{0} °C voor deze dekvloer",
+ "at most 2 K under Comfort – a dry system reheats fast": "hooguit 2 K onder Comfort – een droog systeem warmt snel op",
+ "a dry system reacts fast – the boiler may join earlier": "een droog systeem reageert snel – de ketel mag eerder bijschakelen",
+ "anhydrite reacts faster than cement – do not call the boiler too early": "anhydriet reageert sneller dan cement – roep de ketel niet te vroeg"
 }

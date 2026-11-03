@@ -57,6 +57,7 @@ substitutions:
   n_hub_p17: "${hub_name_prefix} - P17 Dzień anty-legionelli"
   n_hub_p13: "${hub_name_prefix} - P13 Maks. czas anty-legionelli"
   n_hub_floor_max: "${hub_name_prefix} - Limit zasilania podłogi"
+  n_hub_floor_type: "${hub_name_prefix} - Rodzaj posadzki"
   n_hub_r02: "${hub_name_prefix} - R02 Temp. zewn. przy maks. zasilaniu CO"
   n_hub_r03: "${hub_name_prefix} - R03 Temp. zewn. przy min. zasilaniu CO"
   n_hub_r10: "${hub_name_prefix} - R10 Temp. zewn. przy min. zasilaniu chłodzenia"
@@ -71,6 +72,9 @@ substitutions:
   t_hub_day5: "Piątek"
   t_hub_day6: "Sobota"
   t_hub_day7: "Niedziela"
+  t_hub_floor0: "Cementowa"
+  t_hub_floor1: "Anhydrytowa"
+  t_hub_floor2: "System suchy"
   # tariff and before / after comparison for the Calibration card (hub_boiler_params)
   n_hub_cheap_hours: "${hub_name_prefix} - Tania taryfa – godziny"
   n_hub_compare_since: "${hub_name_prefix} - Porównanie od"

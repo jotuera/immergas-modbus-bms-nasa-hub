@@ -1056,5 +1056,19 @@
  "keep A04 – {0} heats {1}% of the day, it lacks water": "hagyd az A04-et – {0} a nap {1}%-ában fűt, kevés a víz",
  "✓ low output – a small ΔT is normal": "✓ alacsony teljesítmény – a kis ΔT normális",
  "median while the heat pump heats CH, 24 h{0}": "medián a HSZ fűtése közben, 24 h{0}",
- "DHW heating – the water goes to the cylinder, not on the curve": "HMV-fűtés – a víz a tárolóba megy, nem a görbére"
+ "DHW heating – the water goes to the cylinder, not on the curve": "HMV-fűtés – a víz a tárolóba megy, nem a görbére",
+ "a dry system reacts fast, but the rooms have thermostats – set setbacks in them": "a száraz rendszer gyorsan reagál, de a szobákat termosztátok szabályozzák – a csökkentést bennük állítsa",
+ "anhydrite reacts faster but stores little, and the rooms have thermostats – a fixed setpoint, in them at most short 2–3 h setbacks of ≤ 1 K": "az anhidrit gyorsabban reagál, de keveset tárol, és a szobákat termosztátok szabályozzák – állandó alapjel, bennük legfeljebb rövid, 2–3 órás, ≤ 1 K csökkentés",
+ "Comfort / Eco by time of day, Eco at most 2 K lower (a dry system reheats fast)": "Komfort / Eco napszak szerint, Eco legfeljebb 2 K-nel alacsonyabb (a száraz rendszer gyorsan felfűt)",
+ "Eco {0} K lower – raise Eco to Comfort − {1} K": "Eco {0} K-nel alacsonyabb – emelje az Eco-t Komfort − {1} K-re",
+ "a night setback up to {0} K saves without morning cycling": "az éjszakai, legfeljebb {0} K-es csökkentés reggeli ciklizálás nélkül takarít meg",
+ "Floor screed type": "Esztrich típusa",
+ "how fast the floor takes and gives back heat: floor limit, setbacks, CH schedule and I04": "milyen gyorsan veszi fel és adja le a padló a hőt: padlóhatár, csökkentések, fűtési program és I04",
+ "set it to how the floor is built": "állítsa be a padló felépítése szerint",
+ "dry system (boards, panels): up to ~40 °C": "száraz rendszer (lapok, panelek): ~40 °C-ig",
+ "cement screed: up to ~45 °C (the floor finish decides)": "cementesztrich: ~45 °C-ig (a burkolat dönt)",
+ "above ~{0} °C for this screed": "~{0} °C felett ehhez az esztrichhez",
+ "at most 2 K under Comfort – a dry system reheats fast": "legfeljebb 2 K-nel a Komfort alatt – a száraz rendszer gyorsan felfűt",
+ "a dry system reacts fast – the boiler may join earlier": "a száraz rendszer gyorsan reagál – a kazán korábban bekapcsolhat",
+ "anhydrite reacts faster than cement – do not call the boiler too early": "az anhidrit gyorsabban reagál, mint a cement – ne hívja túl korán a kazánt"
 }

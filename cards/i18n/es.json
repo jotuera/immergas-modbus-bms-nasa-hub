@@ -1056,5 +1056,19 @@
  "keep A04 – {0} heats {1}% of the day, it lacks water": "deja A04 – {0} calienta el {1}% del día, le falta agua",
  "✓ low output – a small ΔT is normal": "✓ baja potencia – un ΔT pequeño es normal",
  "median while the heat pump heats CH, 24 h{0}": "mediana con la bomba de calor en calefacción, 24 h{0}",
- "DHW heating – the water goes to the cylinder, not on the curve": "calentando ACS – el agua va al depósito, no a la curva"
+ "DHW heating – the water goes to the cylinder, not on the curve": "calentando ACS – el agua va al depósito, no a la curva",
+ "a dry system reacts fast, but the rooms have thermostats – set setbacks in them": "un sistema seco reacciona rápido, pero las estancias tienen termostatos – programa las reducciones en ellos",
+ "anhydrite reacts faster but stores little, and the rooms have thermostats – a fixed setpoint, in them at most short 2–3 h setbacks of ≤ 1 K": "la anhidrita reacciona más rápido pero acumula poco, y las estancias tienen termostatos – consigna fija, en ellos como mucho reducciones cortas de 2–3 h de ≤ 1 K",
+ "Comfort / Eco by time of day, Eco at most 2 K lower (a dry system reheats fast)": "Confort / Eco según la hora, Eco como mucho 2 K menos (un sistema seco se recalienta rápido)",
+ "Eco {0} K lower – raise Eco to Comfort − {1} K": "Eco {0} K más bajo – sube Eco a Confort − {1} K",
+ "a night setback up to {0} K saves without morning cycling": "una reducción nocturna de hasta {0} K ahorra sin ciclos por la mañana",
+ "Floor screed type": "Tipo de solera",
+ "how fast the floor takes and gives back heat: floor limit, setbacks, CH schedule and I04": "lo rápido que el suelo toma y cede calor: límite del suelo, reducciones, programa de calefacción e I04",
+ "set it to how the floor is built": "ajústalo según cómo está construido el suelo",
+ "dry system (boards, panels): up to ~40 °C": "sistema seco (placas, paneles): hasta ~40 °C",
+ "cement screed: up to ~45 °C (the floor finish decides)": "mortero de cemento: hasta ~45 °C (decide el acabado del suelo)",
+ "above ~{0} °C for this screed": "por encima de ~{0} °C para esta solera",
+ "at most 2 K under Comfort – a dry system reheats fast": "como mucho 2 K por debajo de Confort – un sistema seco se recalienta rápido",
+ "a dry system reacts fast – the boiler may join earlier": "un sistema seco reacciona rápido – la caldera puede entrar antes",
+ "anhydrite reacts faster than cement – do not call the boiler too early": "la anhidrita reacciona más rápido que el cemento – no llames a la caldera demasiado pronto"
 }

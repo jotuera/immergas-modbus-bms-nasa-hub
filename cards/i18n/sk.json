@@ -1056,5 +1056,19 @@
  "keep A04 – {0} heats {1}% of the day, it lacks water": "ponechajte A04 – {0} kúri {1}% dňa, chýba mu voda",
  "✓ low output – a small ΔT is normal": "✓ nízky výkon – malé ΔT je normálne",
  "median while the heat pump heats CH, 24 h{0}": "medián pri vykurovaní tepelným čerpadlom, 24 h{0}",
- "DHW heating – the water goes to the cylinder, not on the curve": "ohrev TÚV – voda ide do zásobníka, nie na krivku"
+ "DHW heating – the water goes to the cylinder, not on the curve": "ohrev TÚV – voda ide do zásobníka, nie na krivku",
+ "a dry system reacts fast, but the rooms have thermostats – set setbacks in them": "suchý systém reaguje rýchlo, ale miestnosti riadia termostaty – útlmy nastavujte v nich",
+ "anhydrite reacts faster but stores little, and the rooms have thermostats – a fixed setpoint, in them at most short 2–3 h setbacks of ≤ 1 K": "anhydrit reaguje rýchlejšie, ale málo akumuluje, a miestnosti riadia termostaty – pevná teplota, v nich najviac krátke útlmy 2–3 h o ≤ 1 K",
+ "Comfort / Eco by time of day, Eco at most 2 K lower (a dry system reheats fast)": "Komfort / Eko podľa dennej doby, Eko najviac o 2 K nižšie (suchý systém sa rýchlo prehreje)",
+ "Eco {0} K lower – raise Eco to Comfort − {1} K": "Eko o {0} K nižšie – zvýšte Eko na Komfort − {1} K",
+ "a night setback up to {0} K saves without morning cycling": "nočný útlm do {0} K šetrí bez ranného taktovania",
+ "Floor screed type": "Typ podlahového poteru",
+ "how fast the floor takes and gives back heat: floor limit, setbacks, CH schedule and I04": "ako rýchlo podlaha prijíma a odovzdáva teplo: limit podlahy, útlmy, program ÚK a I04",
+ "set it to how the floor is built": "nastavte podľa skladby podlahy",
+ "dry system (boards, panels): up to ~40 °C": "suchý systém (dosky, panely): do ~40 °C",
+ "cement screed: up to ~45 °C (the floor finish decides)": "cementový poter: do ~45 °C (rozhoduje nášľapná vrstva)",
+ "above ~{0} °C for this screed": "nad ~{0} °C pre tento poter",
+ "at most 2 K under Comfort – a dry system reheats fast": "najviac 2 K pod Komfortom – suchý systém sa rýchlo prehreje",
+ "a dry system reacts fast – the boiler may join earlier": "suchý systém reaguje rýchlo – kotol sa môže pripojiť skôr",
+ "anhydrite reacts faster than cement – do not call the boiler too early": "anhydrit reaguje rýchlejšie ako cement – nevolajte kotol príliš skoro"
 }

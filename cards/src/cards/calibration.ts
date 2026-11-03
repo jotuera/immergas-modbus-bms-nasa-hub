@@ -446,15 +446,18 @@ class ImmergasCalibrationCard extends HubCard {
     if (this.eid("prog_mode")) {
       const po: string[] = this.attr("prog_mode", "options") ?? [], pAuto = po.length === 2 && this.s("prog_mode") === po[1];
       const ce = this.n("comfort_heat") - this.n("eco_heat");
-      const recAuto = !thermostats;
+      const recAuto = !thermostats, ft = this.floorType(), sbK = this.setbackK();
       sched.push({ k: "prog_mode", code: "", name: ["Harmonogram CO (program czasowy)", "CH schedule (time program)"], unit: "", kind: "select",
         model: thermostats ? po[0] ?? "MANUAL" : po[1] ?? "AUTO",
-        why: thermostats ? ["podłogówka jest wolna, a pokoje regulują termostaty – stała nastawa bez obniżeń", "a floor is slow and the rooms have thermostats – a fixed setpoint without setbacks"]
+        why: thermostats ? (ft === "dry" ? ["system suchy reaguje szybko, ale pokoje regulują termostaty – obniżki ustawiaj w nich", "a dry system reacts fast, but the rooms have thermostats – set setbacks in them"]
+            : ft === "anhydrite" ? ["anhydryt reaguje szybciej, ale mało magazynuje, a pokoje regulują termostaty – stała nastawa, w nich najwyżej krótkie obniżki 2–3 h o ≤ 1 K", "anhydrite reacts faster but stores little, and the rooms have thermostats – a fixed setpoint, in them at most short 2–3 h setbacks of ≤ 1 K"]
+            : ["podłogówka jest wolna, a pokoje regulują termostaty – stała nastawa bez obniżeń", "a floor is slow and the rooms have thermostats – a fixed setpoint without setbacks"])
+          : ft === "dry" ? ["Komfort / Eko wg pory dnia, Eko najwyżej 2 K niżej (system suchy szybko się nagrzewa)", "Comfort / Eco by time of day, Eco at most 2 K lower (a dry system reheats fast)"]
           : ["Komfort / Eko wg pory dnia, Eko najwyżej 1 K niżej (podłoga długo się nagrzewa)", "Comfort / Eco by time of day, Eco at most 1 K lower (a floor reheats slowly)"],
         rec: recAuto ? po[1] ?? "Auto" : po[0] ?? "Ręcznie",
         reason: thermostats ? [`${rooms.length} termostatów pokojowych – harmonogram ustawiaj w nich`, `${rooms.length} room thermostats – schedule them instead`]
-          : pAuto && ce > 1.5 ? [`Eko o ${this.f(ce, 1, 1)} K niżej – podnieś Eko do Komfort − 1 K`, `Eco ${this.f(ce, 1, 1)} K lower – raise Eco to Comfort − 1 K`]
-          : ["obniżka nocna do 1 K oszczędza bez taktowania rano", "a night setback up to 1 K saves without morning cycling"] });
+          : pAuto && ce > sbK + 0.5 ? [`Eko o ${this.f(ce, 1, 1)} K niżej – podnieś Eko do Komfort − ${sbK} K`, `Eco ${this.f(ce, 1, 1)} K lower – raise Eco to Comfort − ${sbK} K`]
+          : [`obniżka nocna do ${sbK} K oszczędza bez taktowania rano`, `a night setback up to ${sbK} K saves without morning cycling`] });
     }
     const dhwCals = DAYS.map((d) => calOf("cwu_" + d)).filter((n) => n > 0);
     if (dhwCals.length) {
@@ -595,8 +598,17 @@ class ImmergasCalibrationCard extends HubCard {
       { k: "i10", code: "I10", name: ["Kocioł CO poniżej temp. zewn.", "Boiler CH below outdoor temp."], unit: "°C", d: 0,
         model: -5, why: ["punkt biwalentny: poniżej COP pompy < progu opłacalności gazu", "bivalent point: below it the COP falls under the gas break-even"],
         rec: this.n("i10"), reason: ["ustalone z cen prądu i gazu – bez zmian", "set from electricity and gas prices – keep"] },
-      ...(floorE && this.hass.states[floorE] ? [{ entity: floorE, code: "", name: ["Limit zasilania podłogi", "Floor flow limit"], unit: "°C", d: 0,
-        model: 45, why: ["jastrych anhydrytowy: do ~45 °C", "anhydrite screed: up to ~45 °C"], rec: floor, reason: ["bez zmian", "keep"] } as Row] : []),
+      ...(this.eid("floor_type") ? [{ k: "floor_type", code: "", name: ["Rodzaj posadzki", "Floor screed type"], unit: "", kind: "select", group: "ch",
+        model: this.s("floor_type") ?? "", why: ["jak szybko podłoga przyjmuje i oddaje ciepło: limit podłogi, obniżki, harmonogram CO i I04", "how fast the floor takes and gives back heat: floor limit, setbacks, CH schedule and I04"],
+        rec: this.s("floor_type") ?? "", reason: ["ustaw zgodnie z budową podłogi", "set it to how the floor is built"] } as Row] : []),
+      ...(floorE && this.hass.states[floorE] ? [(() => {
+        const ft = this.floorType(), fm = ft === "dry" ? 40 : 45;
+        const why: [string, string] = ft === "dry" ? ["system suchy (płyty, panele): do ~40 °C", "dry system (boards, panels): up to ~40 °C"]
+          : ft === "cement" ? ["jastrych cementowy: do ~45 °C (decyduje wykończenie podłogi)", "cement screed: up to ~45 °C (the floor finish decides)"]
+          : ["jastrych anhydrytowy: do ~45 °C", "anhydrite screed: up to ~45 °C"];
+        return { entity: floorE, code: "", name: ["Limit zasilania podłogi", "Floor flow limit"], unit: "°C", d: 0, model: fm, why,
+          rec: floor > fm ? fm : floor, reason: floor > fm ? [`powyżej ~${fm} °C dla tej posadzki`, `above ~${fm} °C for this screed`] : ["bez zmian", "keep"] } as Row;
+      })()] : []),
       ...this.moreRows(S, thermostats, r05),
       { k: "dew_corr", code: "", name: ["Korekcja punktu rosy", "Dew point correction"], unit: "", kind: "switch",
         model: "on", why: ["chroni podłogę przed wykropleniem przy chłodzeniu", "protects the floor from condensation when cooling"], rec: "on", reason: ["zawsze włączona", "always on"] },
@@ -628,6 +640,14 @@ class ImmergasCalibrationCard extends HubCard {
     const pw = this.hist?.pw ?? NaN;
     return isNaN(pw) ? 2 : Math.min(2, Math.max(0.8, 2 * pw / 5000));
   }
+  /** screed type from the hub select (option index 0 cement, 1 anhydrite, 2 dry system); "" when not set */
+  private floorType(): "" | "cement" | "anhydrite" | "dry" {
+    const o: string[] = this.attr("floor_type", "options") ?? [], i = o.indexOf(this.s("floor_type") ?? "");
+    return i === 0 ? "cement" : i === 1 ? "anhydrite" : i === 2 ? "dry" : "";
+  }
+  /** largest setback a floor tolerates without a long reheat (K) */
+  private setbackK() { return this.floorType() === "dry" ? 2 : 1; }
+
   private roomName(id: string) {
     return String(this.hass.states[id]?.attributes?.friendly_name ?? id).replace(/^(regulator|termostat|thermostat)\s+/i, "");
   }
@@ -690,6 +710,8 @@ class ImmergasCalibrationCard extends HubCard {
     const r01o: string[] = this.attr("r01", "options") ?? [];
     const i01on = this.on("i01");
     const ch = this.n("comfort_heat"), eh = this.n("eco_heat"), cc = this.n("comfort_cool"), ec = this.n("eco_cool");
+    // screed: largest setback and how long the heat pump runs alone before the boiler joins (I04, min)
+    const sbK = this.setbackK(), i04m = { dry: 60, anhydrite: 90, cement: 120, "": 120 }[this.floorType()];
     const r12 = this.n("r12"), r13 = this.n("r13");
     const noEff = (on: boolean): [string, string] => on ? ["", ""] : [" (teraz bez wpływu)", " (no effect now)"];
     const rows: Row[] = [
@@ -707,8 +729,9 @@ class ImmergasCalibrationCard extends HubCard {
         model: 21, why: ["temperatura komfortu w programie AUTO", "comfort temperature in the AUTO program"], rec: isNaN(ch) ? NaN : ch < 20 || ch > 22 ? 21 : ch,
         reason: [ch < 20 || ch > 22 ? "poza zakresem 20–22 °C" : "w zakresie 20–22 °C", ch < 20 || ch > 22 ? "outside 20–22 °C" : "within 20–22 °C"] },
       { k: "eco_heat", code: "", name: ["Eko – grzanie", "Eco – heating"], unit: "°C", d: 1, group: "ch",
-        model: isNaN(ch) ? 20 : ch - 1, why: ["najwyżej 1 K poniżej Komfortu – podłoga długo się nagrzewa", "at most 1 K under Comfort – a floor reheats slowly"],
-        rec: isNaN(ch) || isNaN(eh) ? eh : ch - eh > 1.5 ? ch - 1 : eh, reason: [`różnica ${this.f(ch - eh, 1, 1)} K`, `difference ${this.f(ch - eh, 1, 1)} K`] },
+        model: isNaN(ch) ? 21 - sbK : ch - sbK, why: this.floorType() === "dry" ? ["najwyżej 2 K poniżej Komfortu – system suchy szybko się nagrzewa", "at most 2 K under Comfort – a dry system reheats fast"]
+          : ["najwyżej 1 K poniżej Komfortu – podłoga długo się nagrzewa", "at most 1 K under Comfort – a floor reheats slowly"],
+        rec: isNaN(ch) || isNaN(eh) ? eh : ch - eh > sbK + 0.5 ? ch - sbK : eh, reason: [`różnica ${this.f(ch - eh, 1, 1)} K`, `difference ${this.f(ch - eh, 1, 1)} K`] },
       { k: "temp_src", code: "", name: ["Źródło temperatury strefy 1", "Zone 1 temperature source"], unit: "", kind: "select", group: "ch",
         model: this.t("piętro najwolniej się grzejące", "the slowest-heating floor"),
         why: ["temperatura strefy dla panelu i modulacji; przy termostatach pokojowych tylko informacyjnie", "zone temperature for the panel and modulation; with room thermostats informative only"],
@@ -730,8 +753,10 @@ class ImmergasCalibrationCard extends HubCard {
       { k: "i02", code: "I02", name: ["Integracja z kotłem (CO)", "Boiler integration (CH)"], unit: "", kind: "switch", group: "int",
         model: "on", why: ["kocioł jako zapas w mrozy (I10)", "the boiler as a backup in frost (I10)"], rec: "on", reason: ["bez kotła pompa sama w mrozy", "without the boiler the heat pump is alone in frost"] },
       { k: "i04", code: "I04", name: ["Kocioł dołącza do CO po", "Boiler joins CH after"], unit: "min", d: 0, group: "int",
-        model: 120, why: ["podłoga jest wolna – nie wołaj kotła za wcześnie", "a floor is slow – do not call the boiler too early"], rec: this.n("i04") < 60 ? 120 : this.n("i04"),
-        reason: [this.n("i04") < 60 ? "za szybko jak na podłogówkę" : "w porządku dla podłogówki", this.n("i04") < 60 ? "too quick for underfloor" : "fine for underfloor"] },
+        model: i04m, why: this.floorType() === "dry" ? ["system suchy reaguje szybko – kocioł może dołączyć wcześniej", "a dry system reacts fast – the boiler may join earlier"]
+          : this.floorType() === "anhydrite" ? ["anhydryt reaguje szybciej niż cement – nie wołaj kotła za wcześnie", "anhydrite reacts faster than cement – do not call the boiler too early"]
+          : ["podłoga jest wolna – nie wołaj kotła za wcześnie", "a floor is slow – do not call the boiler too early"], rec: this.n("i04") < i04m / 2 ? i04m : this.n("i04"),
+        reason: [this.n("i04") < i04m / 2 ? "za szybko jak na tę podłogę" : "w porządku dla tej podłogi", this.n("i04") < i04m / 2 ? "too quick for this floor" : "fine for this floor"] },
       { k: "i05", code: "I05", name: ["Tryb aktywacji integracji", "Integration activation mode"], unit: "", kind: "select", group: "int",
         model: (this.attr("i05", "options") ?? [])[1] ?? "MA", why: ["ręczny próg I10 z cen prądu i gazu", "manual I10 threshold from the prices"], rec: (this.attr("i05", "options") ?? [])[1] ?? this.s("i05") ?? "", reason: ["próg I10 ustalony świadomie", "I10 set on purpose"] },
       { k: "i07", code: "I07", name: ["Przedział aktywacji", "Activation band"], unit: "K", d: 0, group: "int",

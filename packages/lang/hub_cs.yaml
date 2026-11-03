@@ -57,6 +57,7 @@ substitutions:
   n_hub_p17: "${hub_name_prefix} - P17 Den antilegionely"
   n_hub_p13: "${hub_name_prefix} - P13 Max. doba antilegionely"
   n_hub_floor_max: "${hub_name_prefix} - Limit výstupu podlahy"
+  n_hub_floor_type: "${hub_name_prefix} - Typ podlahového potěru"
   n_hub_r02: "${hub_name_prefix} - R02 Venkovní teplota při max. výstupu ÚT"
   n_hub_r03: "${hub_name_prefix} - R03 Venkovní teplota při min. výstupu ÚT"
   n_hub_r10: "${hub_name_prefix} - R10 Venkovní teplota při min. výstupu chlazení"
@@ -71,6 +72,9 @@ substitutions:
   t_hub_day5: "Pátek"
   t_hub_day6: "Sobota"
   t_hub_day7: "Neděle"
+  t_hub_floor0: "Cementový potěr"
+  t_hub_floor1: "Anhydritový potěr"
+  t_hub_floor2: "Suchý systém"
   # tariff and before / after comparison for the Calibration card (hub_boiler_params)
   n_hub_cheap_hours: "${hub_name_prefix} - Levný tarif – hodiny"
   n_hub_compare_since: "${hub_name_prefix} - Porovnání od"

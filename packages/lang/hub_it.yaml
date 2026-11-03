@@ -57,6 +57,7 @@ substitutions:
   n_hub_p17: "${hub_name_prefix} - P17 Giorno antilegionella"
   n_hub_p13: "${hub_name_prefix} - P13 Durata max antilegionella"
   n_hub_floor_max: "${hub_name_prefix} - Limite mandata pavimento"
+  n_hub_floor_type: "${hub_name_prefix} - Tipo di massetto"
   n_hub_r02: "${hub_name_prefix} - R02 Temp. esterna a mandata risc. max"
   n_hub_r03: "${hub_name_prefix} - R03 Temp. esterna a mandata risc. min"
   n_hub_r10: "${hub_name_prefix} - R10 Temp. esterna a mandata raffr. min"
@@ -71,6 +72,9 @@ substitutions:
   t_hub_day5: "Venerdì"
   t_hub_day6: "Sabato"
   t_hub_day7: "Domenica"
+  t_hub_floor0: "Massetto cementizio"
+  t_hub_floor1: "Massetto anidritico"
+  t_hub_floor2: "Sistema a secco"
   # tariff and before / after comparison for the Calibration card (hub_boiler_params)
   n_hub_cheap_hours: "${hub_name_prefix} - Fascia economica – orari"
   n_hub_compare_since: "${hub_name_prefix} - Confronto da"
