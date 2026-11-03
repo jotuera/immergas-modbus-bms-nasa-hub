@@ -1077,5 +1077,6 @@
  "at {0} °C about {1} kW": "pri {0} °C asi {1} kW",
  "collecting data": "zbieram dáta",
  "{0} heating days, R² {1} – power needed at the design temperature": "{0} vykurovacích dní, R² {1} – výkon potrebný pri výpočtovej teplote",
- "{0}/10 heating days, temperature spread {1}/5 K": "{0}/10 vykurovacích dní, rozptyl teplôt {1}/5 K"
+ "{0}/10 heating days, temperature spread {1}/5 K": "{0}/10 vykurovacích dní, rozptyl teplôt {1}/5 K",
+ " ({0} W/m², {1} m²)": " ({0} W/m², {1} m²)"
 }

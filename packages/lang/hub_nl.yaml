@@ -58,6 +58,7 @@ substitutions:
   n_hub_p13: "${hub_name_prefix} - P13 Max. duur antilegionella"
   n_hub_floor_max: "${hub_name_prefix} - Aanvoerlimiet vloer"
   n_hub_floor_type: "${hub_name_prefix} - Type dekvloer"
+  n_hub_heated_area: "${hub_name_prefix} - Verwarmde oppervlakte"
   n_hub_r02: "${hub_name_prefix} - R02 Buitentemp. bij max. CV-aanvoer"
   n_hub_r03: "${hub_name_prefix} - R03 Buitentemp. bij min. CV-aanvoer"
   n_hub_r10: "${hub_name_prefix} - R10 Buitentemp. bij min. koelaanvoer"

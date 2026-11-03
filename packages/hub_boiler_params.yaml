@@ -98,6 +98,20 @@ number:
     optimistic: true
     restore_value: true
     initial_value: 45
+  # heated floor area of the house (m2, 0 = not set): Calibration shows the heat loss per m2
+  - platform: template
+    id: hub_heated_area
+    name: "${n_hub_heated_area}"
+    icon: mdi:floor-plan
+    entity_category: config
+    unit_of_measurement: "m²"
+    min_value: 0
+    max_value: 2000
+    step: 1
+    mode: box
+    optimistic: true
+    restore_value: true
+    initial_value: 0
   # boiler menu R / P values the buses do not carry (copied once from the boiler; the curve card and Calibration use them)
   - platform: template
     id: hub_r02_outdoor_max_flow

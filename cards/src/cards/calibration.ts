@@ -963,12 +963,14 @@ class ImmergasCalibrationCard extends HubCard {
       const sst = lp.reduce((a, p) => a + (p[1] - my) ** 2, 0), sse = lp.reduce((a, p) => a + (p[1] - (my + b * (p[0] - mx))) ** 2, 0);
       const r2 = sst > 0 ? 1 - sse / sst : NaN, spread = n ? Math.max(...lp.map((p) => p[0])) - Math.min(...lp.map((p) => p[0])) : 0;
       const ready = n >= 10 && spread >= 5 && b > 0 && r2 >= 0.5, ua = b * 1000 / 24;
-      const dsg = Number(this.config.design_outdoor ?? -18), tin = isNaN(this.n("zone1_set")) ? 21 : this.n("zone1_set"), kw = ua * (tin - dsg) / 1000;
+      const area = this.n("heated_area"), dsg = Number(this.config.design_outdoor ?? -18), tin = isNaN(this.n("zone1_set")) ? 21 : this.n("zone1_set"), kw = ua * (tin - dsg) / 1000;
       out.push({ code: "", name: ["Straty ciepła budynku", "Building heat loss"], unit: "W/K", d: 0, kind: "info", group: "ch",
         model: this.t("z danych", "from data"), why: ["ciepło pompy i kotła na dobę względem różnicy dom − zewnątrz (60 dni); im mniej, tym lepiej ocieplony dom",
           "heat-pump and boiler heat per day against indoor − outdoor (60 days); lower = better insulated"],
+        // W/m2 at the design temperature: ~40 well insulated, 60-80 typical older house, 100+ poorly insulated
         value: ready ? Math.round(ua) : "…", ok: true,
-        rec: ready ? this.t(`przy ${dsg} °C ok. ${this.f(kw, 1, 1)} kW`, `at ${dsg} °C about ${this.f(kw, 1, 1)} kW`) : this.t("zbieram dane", "collecting data"),
+        rec: ready ? this.t(`przy ${dsg} °C ok. ${this.f(kw, 1, 1)} kW`, `at ${dsg} °C about ${this.f(kw, 1, 1)} kW`)
+          + (area > 0 ? this.t(` (${this.f(kw * 1000 / area, 0)} W/m², ${this.f(area, 0)} m²)`, ` (${this.f(kw * 1000 / area, 0)} W/m², ${this.f(area, 0)} m²)`) : "") : this.t("zbieram dane", "collecting data"),
         reason: ready ? [`${n} dni grzania, R² ${this.f(r2, 2, 2)} – moc potrzebna przy temperaturze projektowej`, `${n} heating days, R² ${this.f(r2, 2, 2)} – power needed at the design temperature`]
           : [`${n}/10 dni grzania, rozrzut temperatur ${this.f(spread, 0)}/5 K`, `${n}/10 heating days, temperature spread ${this.f(spread, 0)}/5 K`] });
     }

@@ -2845,6 +2845,13 @@
   ]
  },
  {
+  "en": " ({0} W/m², {1} m²)",
+  "pl": " ({0} W/m², {1} m²)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
   "en": "collecting data",
   "pl": "zbieram dane",
   "files": [

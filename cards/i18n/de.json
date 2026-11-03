@@ -1077,5 +1077,6 @@
  "at {0} °C about {1} kW": "bei {0} °C etwa {1} kW",
  "collecting data": "sammle Daten",
  "{0} heating days, R² {1} – power needed at the design temperature": "{0} Heiztage, R² {1} – benötigte Leistung bei Auslegungstemperatur",
- "{0}/10 heating days, temperature spread {1}/5 K": "{0}/10 Heiztage, Temperaturspanne {1}/5 K"
+ "{0}/10 heating days, temperature spread {1}/5 K": "{0}/10 Heiztage, Temperaturspanne {1}/5 K",
+ " ({0} W/m², {1} m²)": " ({0} W/m², {1} m²)"
 }

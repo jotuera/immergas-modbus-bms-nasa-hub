@@ -58,6 +58,7 @@ substitutions:
   n_hub_p13: "${hub_name_prefix} - P13 Max. doba antilegionely"
   n_hub_floor_max: "${hub_name_prefix} - Limit výstupu podlahy"
   n_hub_floor_type: "${hub_name_prefix} - Typ podlahového potěru"
+  n_hub_heated_area: "${hub_name_prefix} - Vytápěná plocha"
   n_hub_r02: "${hub_name_prefix} - R02 Venkovní teplota při max. výstupu ÚT"
   n_hub_r03: "${hub_name_prefix} - R03 Venkovní teplota při min. výstupu ÚT"
   n_hub_r10: "${hub_name_prefix} - R10 Venkovní teplota při min. výstupu chlazení"
