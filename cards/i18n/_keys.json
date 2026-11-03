@@ -6907,13 +6907,6 @@
   ]
  },
  {
-  "en": "Heated floor area",
-  "pl": "Powierzchnia ogrzewana",
-  "files": [
-   "settings.ts"
-  ]
- },
- {
   "en": "Night mode U11",
   "pl": "Tryb nocny U11",
   "files": [
@@ -6993,6 +6986,20 @@
  {
   "en": "Humidity setpoint",
   "pl": "Zadana wilgotności",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Building",
+  "pl": "Budynek",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Heated floor area",
+  "pl": "Powierzchnia ogrzewana",
   "files": [
    "settings.ts"
   ]
@@ -7117,8 +7124,8 @@
   ]
  },
  {
-  "en": "prices, cylinder, gas estimate, fault language",
-  "pl": "ceny, zasobnik, szacowanie gazu, język błędów",
+  "en": "prices, cylinder, gas estimate, screed, floor area, fault language",
+  "pl": "ceny, zasobnik, szacowanie gazu, posadzka, powierzchnia, język błędów",
   "files": [
    "settings.ts"
   ]
@@ -7138,8 +7145,8 @@
   ]
  },
  {
-  "en": "flow, humidity, vacation, summer/winter, alerts, fault language",
-  "pl": "zasilanie, wilgotność, wyjazd, Lato/Zima, alarmy, język błędów",
+  "en": "flow, humidity, screed, floor area, vacation, summer/winter, alerts, fault language",
+  "pl": "zasilanie, wilgotność, posadzka, powierzchnia, wyjazd, Lato/Zima, alarmy, język błędów",
   "files": [
    "settings.ts"
   ]

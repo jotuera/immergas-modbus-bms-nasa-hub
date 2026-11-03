@@ -1079,5 +1079,8 @@
  "{0} heating days, R² {1} – power needed at the design temperature": "{0} Heiztage, R² {1} – benötigte Leistung bei Auslegungstemperatur",
  "{0}/10 heating days, temperature spread {1}/5 K": "{0}/10 Heiztage, Temperaturspanne {1}/5 K",
  " ({0} W/m², {1} m²)": " ({0} W/m², {1} m²)",
- "Heated floor area": "Beheizte Wohnfläche"
+ "Heated floor area": "Beheizte Wohnfläche",
+ "Building": "Gebäude",
+ "prices, cylinder, gas estimate, screed, floor area, fault language": "Preise, Speicher, Gasschätzung, Estrich, Fläche, Fehlersprache",
+ "flow, humidity, screed, floor area, vacation, summer/winter, alerts, fault language": "Vorlauf, Feuchte, Estrich, Fläche, Urlaub, Sommer/Winter, Alarme, Fehlersprache"
 }

@@ -78,9 +78,7 @@ class ImmergasSettingsCard extends HubCard {
         ${this.numRow("dom_i10", "mdi:snowflake-thermometer", this.t("I10 · temp. zewn. aktywacji kotła", "I10 · boiler activation outdoor temp."), 0)}`)}
       ${g(this.t("Instalacja", "Installation"), [], html`
         ${this.selRow(this.eid("dom_a31"), this.t("A31 · sterowanie pokojowe", "A31 · room control"), "mdi:home-thermometer-outline")}
-        ${this.numRow("dom_p07", "mdi:thermometer-plus", this.t("P07 · korekta sondy zewnętrznej", "P07 · outdoor probe correction"), 0)}
-        ${this.selRow(this.eid("floor_type"), this.t("Rodzaj posadzki", "Floor screed type"), "mdi:layers-triple-outline")}
-        ${this.numRow("heated_area", "mdi:floor-plan", this.t("Powierzchnia ogrzewana", "Heated floor area"), 0)}`)}`;
+        ${this.numRow("dom_p07", "mdi:thermometer-plus", this.t("P07 · korekta sondy zewnętrznej", "P07 · outdoor probe correction"), 0)}`)}`;
   }
 
   /** Immergas Dominus, offline part: copies of the boiler menu (U11, P15, curves, T, I, A31, P07) - nothing is read
@@ -107,6 +105,9 @@ class ImmergasSettingsCard extends HubCard {
       ${this.eid("dom_flow_target") || this.eid("dom_hum_target") ? html`<div class="grp">${this.t("Nastawy Strefy 1", "Zone 1 settings")}</div>
         ${this.numRow("dom_flow_target", "mdi:thermometer-water", this.t("Zadana zasilania", "Flow setpoint"), 0)}
         ${this.numRow("dom_hum_target", "mdi:water-percent", this.t("Zadana wilgotności", "Humidity setpoint"), 0)}` : nothing}
+      ${this.eid("floor_type") || this.eid("heated_area") ? html`<div class="grp">${this.t("Budynek", "Building")}</div>
+        ${this.selRow(this.eid("floor_type"), this.t("Rodzaj posadzki", "Floor screed type"), "mdi:layers-triple-outline")}
+        ${this.numRow("heated_area", "mdi:floor-plan", this.t("Powierzchnia ogrzewana", "Heated floor area"), 0)}` : nothing}
       ${this.eid("dom_vacation") ? html`<div class="grp">${this.t("Tryb wyjazdowy", "Vacation")}</div>
         ${this.switchRow("dom_vacation", "mdi:bag-suitcase-outline", "sky", this.t("Tryb wyjazdowy", "Vacation mode"),
           this.t("obniża zadaną Strefy 1, po powrocie przywraca", "lowers the zone 1 target, restores it on return"))}
@@ -137,10 +138,10 @@ class ImmergasSettingsCard extends HubCard {
         : part === "offline" ? this.t("Parametry pieca (offline)", "Boiler parameters (offline)") : this.t("Ustawienia huba", "Hub settings"))
       : part === "online" ? this.t("Ustawienia online", "Online settings")
       : part === "offline" ? this.t("Parametry pieca (offline)", "Boiler parameters (offline)") : this.t("Ustawienia", "Settings");
-    const sum = !this.dominus ? (part === "online" ? this.t("ceny, zasobnik, szacowanie gazu, język błędów", "prices, cylinder, gas estimate, fault language")
+    const sum = !this.dominus ? (part === "online" ? this.t("ceny, zasobnik, szacowanie gazu, posadzka, powierzchnia, język błędów", "prices, cylinder, gas estimate, screed, floor area, fault language")
         : part === "offline" ? this.t("U12/U13, P16/P17/P13, limit podłogi, tania taryfa, R02/R03, R10/R11, P07", "U12/U13, P16/P17/P13, floor limit, cheap tariff, R02/R03, R10/R11, P07")
         : this.t("ceny, zasobnik, tryb nocny, legionella…", "prices, cylinder, night mode, legionella…"))
-      : part === "online" ? this.t("zasilanie, wilgotność, wyjazd, Lato/Zima, alarmy, język błędów", "flow, humidity, vacation, summer/winter, alerts, fault language")
+      : part === "online" ? this.t("zasilanie, wilgotność, posadzka, powierzchnia, wyjazd, Lato/Zima, alarmy, język błędów", "flow, humidity, screed, floor area, vacation, summer/winter, alerts, fault language")
       : part === "offline" ? this.t("U11, P15, krzywe R, T02/T05, integracja I, A31, P07", "U11, P15, R curves, T02/T05, I integration, A31, P07")
       : this.t("parametry pieca, tryb nocny, legionella, wyjazd, Lato/Zima, alarmy, język błędów", "boiler parameters, night mode, legionella, vacation, summer/winter, alerts, fault language");
     const note = !this.dominus ? (part === "offline" ? this.t("Hub nie czyta tych ustawień z magistral – przepisz je raz z menu pieca; służą paskom czasu, krzywej i kalibracji.",

@@ -1079,5 +1079,8 @@
  "{0} heating days, R² {1} – power needed at the design temperature": "{0} vykurovacích dní, R² {1} – výkon potrebný pri výpočtovej teplote",
  "{0}/10 heating days, temperature spread {1}/5 K": "{0}/10 vykurovacích dní, rozptyl teplôt {1}/5 K",
  " ({0} W/m², {1} m²)": " ({0} W/m², {1} m²)",
- "Heated floor area": "Vykurovaná plocha"
+ "Heated floor area": "Vykurovaná plocha",
+ "Building": "Budova",
+ "prices, cylinder, gas estimate, screed, floor area, fault language": "ceny, zásobník, odhad plynu, poter, plocha, jazyk porúch",
+ "flow, humidity, screed, floor area, vacation, summer/winter, alerts, fault language": "výstup, vlhkosť, poter, plocha, dovolenka, leto/zima, alarmy, jazyk porúch"
 }

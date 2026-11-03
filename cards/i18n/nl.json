@@ -1079,5 +1079,8 @@
  "{0} heating days, R² {1} – power needed at the design temperature": "{0} stookdagen, R² {1} – benodigd vermogen bij de ontwerptemperatuur",
  "{0}/10 heating days, temperature spread {1}/5 K": "{0}/10 stookdagen, temperatuurspreiding {1}/5 K",
  " ({0} W/m², {1} m²)": " ({0} W/m², {1} m²)",
- "Heated floor area": "Verwarmde oppervlakte"
+ "Heated floor area": "Verwarmde oppervlakte",
+ "Building": "Gebouw",
+ "prices, cylinder, gas estimate, screed, floor area, fault language": "prijzen, boiler, gasschatting, dekvloer, oppervlakte, storingstaal",
+ "flow, humidity, screed, floor area, vacation, summer/winter, alerts, fault language": "aanvoer, vochtigheid, dekvloer, oppervlakte, vakantie, zomer/winter, alarmen, storingstaal"
 }

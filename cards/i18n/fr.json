@@ -1079,5 +1079,8 @@
  "{0} heating days, R² {1} – power needed at the design temperature": "{0} jours de chauffe, R² {1} – puissance nécessaire à la température de base",
  "{0}/10 heating days, temperature spread {1}/5 K": "{0}/10 jours de chauffe, écart de températures {1}/5 K",
  " ({0} W/m², {1} m²)": " ({0} W/m², {1} m²)",
- "Heated floor area": "Surface chauffée"
+ "Heated floor area": "Surface chauffée",
+ "Building": "Bâtiment",
+ "prices, cylinder, gas estimate, screed, floor area, fault language": "prix, ballon, estimation du gaz, chape, surface, langue des défauts",
+ "flow, humidity, screed, floor area, vacation, summer/winter, alerts, fault language": "départ, humidité, chape, surface, vacances, été/hiver, alertes, langue des défauts"
 }

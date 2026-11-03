@@ -1079,5 +1079,8 @@
  "{0} heating days, R² {1} – power needed at the design temperature": "{0} fűtési nap, R² {1} – szükséges teljesítmény a méretezési hőmérsékleten",
  "{0}/10 heating days, temperature spread {1}/5 K": "{0}/10 fűtési nap, hőmérséklet-szórás {1}/5 K",
  " ({0} W/m², {1} m²)": " ({0} W/m², {1} m²)",
- "Heated floor area": "Fűtött alapterület"
+ "Heated floor area": "Fűtött alapterület",
+ "Building": "Épület",
+ "prices, cylinder, gas estimate, screed, floor area, fault language": "árak, tároló, gázbecslés, esztrich, alapterület, hibák nyelve",
+ "flow, humidity, screed, floor area, vacation, summer/winter, alerts, fault language": "előremenő, páratartalom, esztrich, alapterület, szabadság, nyár/tél, riasztások, hibák nyelve"
 }

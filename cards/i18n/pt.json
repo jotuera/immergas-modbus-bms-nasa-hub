@@ -1079,5 +1079,8 @@
  "{0} heating days, R² {1} – power needed at the design temperature": "{0} dias de aquecimento, R² {1} – potência necessária à temperatura de projeto",
  "{0}/10 heating days, temperature spread {1}/5 K": "{0}/10 dias de aquecimento, dispersão de temperaturas {1}/5 K",
  " ({0} W/m², {1} m²)": " ({0} W/m², {1} m²)",
- "Heated floor area": "Área aquecida"
+ "Heated floor area": "Área aquecida",
+ "Building": "Edifício",
+ "prices, cylinder, gas estimate, screed, floor area, fault language": "preços, depósito, estimativa de gás, betonilha, área, idioma das avarias",
+ "flow, humidity, screed, floor area, vacation, summer/winter, alerts, fault language": "ida, humidade, betonilha, área, férias, verão/inverno, alarmes, idioma das avarias"
 }
