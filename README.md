@@ -16,6 +16,11 @@ Assistant — and a set of Lovelace cards that turn them into one readable dashb
 > Other Immergas units with the same D+/D-, T-/T+ and F1/F2 buses (Magis Pro V2 and others) are likely to work —
 > the hub logs what it sees, so a model that differs can be tuned from the logs.
 
+| Confirmed model | Confirmed by | Buses |
+|---|---|---|
+| Magis Combo 9 Plus V2 + Audax Pro 9 V2 | author | D+/D-, T-/T+, F1/F2 |
+| Magis Hercules Pro 9 | user | D+/D- (Dominus and zone 1 panel emulation, heating and cooling) |
+
 ![System diagram](docs/images/en/card-diagram.png)
 
 | Bus | What the hub does there | What you get in Home Assistant |
@@ -85,6 +90,8 @@ degree day, COP, starts per hour and cycle length before and after your change, 
 | [M5Stack AtomS3 Lite](https://docs.m5stack.com/en/core/AtomS3%20Lite) | ESP32-S3 |
 | M5Stack ATOMIC PortABC base | three Grove ports: A, B, C |
 | 3× M5Stack Isolated RS485 Unit | galvanic isolation, automatic direction (no DE pin) |
+
+Also reported working by users: a **Waveshare ESP32-S3-RS485-CAN** (DIN rail) with its own pin settings.
 
 | Port | Bus | GPIO RX / TX | Serial | 120 Ω termination |
 |---|---|---|---|---|

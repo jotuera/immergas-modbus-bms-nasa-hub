@@ -16,6 +16,11 @@ Jedno urządzenie ESPHome, które łączy z Home Assistantem **wszystkie trzy ma
 > (Samsung EHS). Inne urządzenia Immergas z tymi samymi magistralami D+/D-, T-/T+ i F1/F2 (Magis Pro V2 i inne)
 > najpewniej też zadziałają – hub loguje to, co widzi, więc model, który się różni, da się dostroić na podstawie logów.
 
+| Potwierdzony model | Kto potwierdził | Magistrale |
+|---|---|---|
+| Magis Combo 9 Plus V2 + Audax Pro 9 V2 | autor | D+/D-, T-/T+, F1/F2 |
+| Magis Hercules Pro 9 | użytkownik | D+/D- (emulacja Dominusa i panelu strefy 1, grzanie i chłodzenie) |
+
 ![Schemat instalacji](docs/images/card-diagram.png)
 
 | Magistrala | Co robi na niej hub | Co dostajesz w Home Assistant |
@@ -86,6 +91,8 @@ zmianie naciśnij w hubie *Porównanie od teraz*, a karta zmierzy efekt.
 | [M5Stack AtomS3 Lite](https://docs.m5stack.com/en/core/AtomS3%20Lite) | ESP32-S3 |
 | podstawka M5Stack ATOMIC PortABC | trzy porty Grove: A, B, C |
 | 3× M5Stack Isolated RS485 Unit | izolacja galwaniczna, automatyczny kierunek (bez pinu DE) |
+
+Użytkownicy zgłaszają też działanie na **Waveshare ESP32-S3-RS485-CAN** (na szynę DIN) z własnymi ustawieniami pinów.
 
 | Port | Magistrala | GPIO RX / TX | Transmisja | Terminacja 120 Ω |
 |---|---|---|---|---|
