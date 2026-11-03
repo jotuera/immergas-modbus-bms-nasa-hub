@@ -100,7 +100,7 @@ class ImmergasModeCard extends HubCard {
     const cur = this.s("prog_mode") === opts[1] ? "auto" : "manual";
     const set = (m: string) => this.call("select", "select_option", "prog_mode", { option: opts[m === "auto" ? 1 : 0] });
     // the boiler's own report (DD 2090: manual / comfort / eco) shows the phase the schedule is in right now
-    const ph = this.bad("program") ? "" : this.s("program")!;
+    const ph = !this.bad("program") ? this.s("program")! : !this.bad("zone1_phase") ? this.txt("zone1_phase")! : "";
     const sub = bad ? this.t("brak odczytu", "no reading") : cur === "auto" ? this.t("wg harmonogramu", "by the schedule") + (ph ? this.t(" · teraz: ", " · now: ") + ph : "")
       : this.t("stała nastawa, bez harmonogramu", "fixed setpoint, no schedule");
     return this.srcBlock("prog", this.t("Program czasowy CO Strefy 1", "Zone 1 CH time program"), sub,
@@ -169,7 +169,7 @@ class ImmergasModeCard extends HubCard {
       <div class="modes">${this.modes()}</div>
       ${this.config.show_source === false ? nothing : html`${modeIdx === 3 ? this.sourceRow() : nothing}${modeIdx >= 1 ? this.dhwSourceRow() : nothing}`}
       ${this.eid("u11") ? night : nothing}
-      ${this.dominus ? this.domRows(modeIdx === 2) : nothing}
+      ${this.dominus && !this.eid("prog_mode") ? this.domRows(modeIdx === 2) : nothing}
       ${this.legRow(tchip, hm)}
       ${this.config.show_f1f2 === false ? nothing : this.f1f2Rows()}
       ${this.progRow()}

@@ -30,7 +30,7 @@ const DOMINUS: Record<string, Key> = {
   curve_r02: "dom_r02", curve_r03: "dom_r03", curve_r04: "r04", curve_r05: "r05", curve_r10: "dom_r10", curve_r11: "dom_r11",
   curve_r12: "r12", curve_r13: "r13", dhw_hysteresis: "dom_t02", ch_restart_minutes: "dom_t05", integration_ch_wait: "dom_i04",
   integration_activation_temp: "dom_i10", boiler_integration: "dom_int_ch", dhw_integration: "dom_int_dhw",
-  room_control_mode: "dom_a31", outdoor_probe_correction: "dom_p07", floor_type: "floor_type", heated_area: "heated_area",
+  room_control_mode: "dom_a31", outdoor_probe_correction: "dom_p07", floor_type: "floor_type", zone1_time_program: "prog_mode", heated_area: "heated_area",
   // 1.3.0: statistics, vacation, auto season, alerts
   ch_heating_time_today: "dom_ch_time_today", ch_heating_share_24h: "dom_ch_share", dhw_cycles_today: "dom_dhw_cycles", last_dhw_cycle_duration: "dom_dhw_last_dur", last_dhw_cycle_rise: "dom_dhw_last_rise", ch_starts_per_hour: "dom_starts_h", ch_starts_today: "dom_starts_today", room_deviation: "dom_room_dev", time_to_target: "dom_ttt", degree_days_today: "dom_dd_today", degree_days_month: "dom_dd_month", heating_hours_per_degree_day: "dom_h_per_dd", frost_risk: "dom_frost", module_offline: "dom_offline", vacation_temperature: "dom_vac_temp", season_winter_below: "dom_win_below", season_summer_above: "dom_sum_above", frost_threshold: "dom_frost_thr", offline_minutes: "dom_off_min", vacation_mode: "dom_vacation", alert_notifications: "dom_notify", auto_season: "dom_auto_season", vacation_until: "dom_vac_until",
 };
