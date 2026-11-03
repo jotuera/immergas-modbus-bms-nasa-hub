@@ -420,6 +420,142 @@
   ]
  },
  {
+  "en": "24 h outdoor mean below the threshold → winter (CH + DHW), above → summer (DHW); never touches standby or cooling",
+  "pl": "średnia zewnętrzna z 24 h poniżej progu → Zima (CO + CWU), powyżej → Lato (CWU); nie rusza Czuwania ani Chłodzenia",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "Winter below",
+  "pl": "Zima poniżej",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "Summer above",
+  "pl": "Lato powyżej",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "24 h mean {0} °C",
+  "pl": "średnia 24 h {0} °C",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "lowers the zone 1 target to the vacation temperature; restores it at “Away until” or when switched off",
+  "pl": "obniża zadaną Strefy 1 do temperatury wyjazdowej; po „Wyjazd do” albo wyłączeniu przywraca poprzednią",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "temperature",
+  "pl": "temperatura",
+  "files": [
+   "automations.ts",
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "until ",
+  "pl": "do ",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "DHW Comfort / Eco by schedule",
+  "pl": "CWU Komfort / Eko wg harmonogramu",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "Comfort setpoint inside the DHW schedule hours, Eco outside",
+  "pl": "w godzinach harmonogramu CWU nastawa Komfort, poza nimi Eko",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "Alert notifications",
+  "pl": "Powiadomienia o alarmach",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "frost risk, module offline or a boiler fault → a Home Assistant notification; cleared when the alert ends",
+  "pl": "ryzyko zamarznięcia, moduł offline albo błąd kotła → powiadomienie w Home Assistant; znika, gdy alarm minie",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "Frost risk",
+  "pl": "Ryzyko zamarznięcia",
+  "files": [
+   "automations.ts",
+   "now.ts"
+  ]
+ },
+ {
+  "en": "zone 1 temperature below the threshold",
+  "pl": "temperatura Strefy 1 poniżej progu",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "threshold",
+  "pl": "próg",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "Dominus module offline",
+  "pl": "Moduł Dominus offline",
+  "files": [
+   "automations.ts",
+   "now.ts"
+  ]
+ },
+ {
+  "en": "the module has not answered for longer than the set time",
+  "pl": "moduł nie odpowiada dłużej niż ustawiony czas",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "after",
+  "pl": "po",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "Boiler fault",
+  "pl": "Błąd kotła",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
+  "en": "a fault code reported by the boiler",
+  "pl": "kod błędu zgłoszony przez kocioł",
+  "files": [
+   "automations.ts"
+  ]
+ },
+ {
   "en": "has not fired yet",
   "pl": "jeszcze nie zadziałała",
   "files": [
@@ -449,13 +585,6 @@
   ]
  },
  {
-  "en": "threshold",
-  "pl": "próg",
-  "files": [
-   "automations.ts"
-  ]
- },
- {
   "en": "not needed since hub v23 – writing is always armed",
   "pl": "zbędna od huba v23 – zapis jest stale uzbrojony",
   "files": [
@@ -467,6 +596,14 @@
   "pl": "automatyzacja wyłączona w HA",
   "files": [
    "automations.ts"
+  ]
+ },
+ {
+  "en": "ALERT",
+  "pl": "ALARM",
+  "files": [
+   "automations.ts",
+   "settings.ts"
   ]
  },
  {
@@ -563,29 +700,50 @@
   ]
  },
  {
-  "en": "{0}/°C·d",
-  "pl": "costHdd",
+  "en": "h/°C·d",
+  "pl": "hHdd",
   "files": [
    "calibration.ts"
   ]
  },
  {
-  "en": "Heating cost per degree day",
-  "pl": "Koszt ogrzewania na stopniodzień",
+  "en": "Heating hours per degree day",
+  "pl": "Godziny grzania na stopniodzień",
   "files": [
    "calibration.ts"
   ]
  },
  {
-  "en": "{0}/kWh",
-  "pl": "costKwh",
+  "en": "/day",
+  "pl": "/dobę",
   "files": [
    "calibration.ts"
   ]
  },
  {
-  "en": "Cost of 1 kWh of heat (pump + gas)",
-  "pl": "Koszt 1 kWh ciepła (pompa + gaz)",
+  "en": "CH starts per day",
+  "pl": "Starty grzania CO na dobę",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Average CH run length",
+  "pl": "Średnia długość grzania CO",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Room deviation from target",
+  "pl": "Odchyłka pokoju od zadanej",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "DHW cycles per day",
+  "pl": "Cykle CWU na dobę",
   "files": [
    "calibration.ts"
   ]
@@ -619,27 +777,6 @@
   ]
  },
  {
-  "en": "Heat-pump COP (heat ÷ electricity)",
-  "pl": "COP pompy (ciepło ÷ prąd)",
-  "files": [
-   "calibration.ts"
-  ]
- },
- {
-  "en": "Compressor starts per hour",
-  "pl": "Starty sprężarki na godzinę",
-  "files": [
-   "calibration.ts"
-  ]
- },
- {
-  "en": "Average compressor cycle length",
-  "pl": "Średnia długość cyklu sprężarki",
-  "files": [
-   "calibration.ts"
-  ]
- },
- {
   "en": "Optimisation effectiveness",
   "pl": "Skuteczność optymalizacji",
   "files": [
@@ -668,20 +805,6 @@
   ]
  },
  {
-  "en": "too little gas for %",
-  "pl": "za mało gazu na %",
-  "files": [
-   "calibration.ts"
-  ]
- },
- {
-  "en": "heat is cheaper, but more of it was delivered (higher room targets)",
-  "pl": "ciepło tańsze, ale oddano go więcej (wyższe nastawy pokoi)",
-  "files": [
-   "calibration.ts"
-  ]
- },
- {
   "en": "Overall effectiveness",
   "pl": "Skuteczność łącznie",
   "files": [
@@ -689,8 +812,8 @@
   ]
  },
  {
-  "en": "weighted: cost/degree day 30 %, heat kWh cost 20 %, COP 20 %, starts/h 20 %, cycle length 10 %",
-  "pl": "ważona: koszt/stopniodzień 30 %, koszt kWh ciepła 20 %, COP 20 %, starty/h 20 %, długość cyklu 10 %",
+  "en": "weighted: heating hours/degree day 40 %, room deviation 30 %, starts/day 20 %, run length 10 %",
+  "pl": "ważona: godziny grzania/stopniodzień 40 %, odchyłka pokoju 30 %, starty/dobę 20 %, długość grzania 10 %",
   "files": [
    "calibration.ts"
   ]
@@ -724,8 +847,8 @@
   ]
  },
  {
-  "en": "Without the hub's “Compare from” date: the last 7 days against the 7 before.",
-  "pl": "Bez daty „Porównanie od” w hubie: ostatnie 7 dni wobec poprzednich 7.",
+  "en": "Without a change date (option optimized_since): the last 7 days against the 7 before.",
+  "pl": "Bez daty zmiany (opcja optimized_since): ostatnie 7 dni wobec poprzednich 7.",
   "files": [
    "calibration.ts"
   ]
@@ -733,6 +856,90 @@
  {
   "en": " Reliable after at least a day since the change.",
   "pl": " Wynik wiarygodny po co najmniej dobie od zmiany.",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Dominus does not measure energy – the comparison uses heating time; add a power / gas meter with the energy_entity / gas_entity options.",
+  "pl": "Dominus nie mierzy energii – porównanie z czasu grzania; licznik prądu / gazu dodasz opcjami energy_entity / gas_entity.",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0}/°C·d",
+  "pl": "costHdd",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Heating cost per degree day",
+  "pl": "Koszt ogrzewania na stopniodzień",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0}/kWh",
+  "pl": "costKwh",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Cost of 1 kWh of heat (pump + gas)",
+  "pl": "Koszt 1 kWh ciepła (pompa + gaz)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Heat-pump COP (heat ÷ electricity)",
+  "pl": "COP pompy (ciepło ÷ prąd)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Compressor starts per hour",
+  "pl": "Starty sprężarki na godzinę",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Average compressor cycle length",
+  "pl": "Średnia długość cyklu sprężarki",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "too little gas for %",
+  "pl": "za mało gazu na %",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "heat is cheaper, but more of it was delivered (higher room targets)",
+  "pl": "ciepło tańsze, ale oddano go więcej (wyższe nastawy pokoi)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "weighted: cost/degree day 30 %, heat kWh cost 20 %, COP 20 %, starts/h 20 %, cycle length 10 %",
+  "pl": "ważona: koszt/stopniodzień 30 %, koszt kWh ciepła 20 %, COP 20 %, starty/h 20 %, długość cyklu 10 %",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "Without the hub's “Compare from” date: the last 7 days against the 7 before.",
+  "pl": "Bez daty „Porównanie od” w hubie: ostatnie 7 dni wobec poprzednich 7.",
   "files": [
    "calibration.ts"
   ]
@@ -880,13 +1087,6 @@
  {
   "en": "hub counter",
   "pl": "licznik huba",
-  "files": [
-   "calibration.ts"
-  ]
- },
- {
-  "en": "DHW cycles per day",
-  "pl": "Cykle CWU na dobę",
   "files": [
    "calibration.ts"
   ]
@@ -3311,13 +3511,6 @@
  {
   "en": "the temperature over TCP is already corrected",
   "pl": "temperatura po TCP jest już skorygowana",
-  "files": [
-   "calibration.ts"
-  ]
- },
- {
-  "en": "Heating hours per degree day",
-  "pl": "Godziny grzania na stopniodzień",
   "files": [
    "calibration.ts"
   ]
@@ -5805,13 +5998,6 @@
   ]
  },
  {
-  "en": "temperature",
-  "pl": "temperatura",
-  "files": [
-   "mode.ts"
-  ]
- },
- {
   "en": "humidity",
   "pl": "wilgotność",
   "files": [
@@ -6309,22 +6495,8 @@
   ]
  },
  {
-  "en": "Frost risk",
-  "pl": "Ryzyko zamarznięcia",
-  "files": [
-   "now.ts"
-  ]
- },
- {
   "en": "room below the threshold",
   "pl": "pokój poniżej progu",
-  "files": [
-   "now.ts"
-  ]
- },
- {
-  "en": "Dominus module offline",
-  "pl": "Moduł Dominus offline",
   "files": [
    "now.ts"
   ]
@@ -6958,13 +7130,6 @@
  {
   "en": "until switched off",
   "pl": "do wyłączenia",
-  "files": [
-   "settings.ts"
-  ]
- },
- {
-  "en": "ALERT",
-  "pl": "ALARM",
   "files": [
    "settings.ts"
   ]

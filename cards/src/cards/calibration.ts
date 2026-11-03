@@ -24,6 +24,8 @@ type Row = {
 const H = 3600e3;
 /** totals of one comparison period from the hourly long-term statistics */
 type Period = { h: number; hdd: number; elec: number; gas: number; heat: number; starts: number; run: number; out: number };
+/** totals of one comparison period for Immergas Dominus (+ optional energy meters from the card options) */
+type DomPeriod = { h: number; hdd: number; out: number; chH: number; starts: number; dhw: number; dev: number; elec: number; gas: number };
 const GROUPS: [string, string, string][] = [
   ["cyc", "Taktowanie", "Cycling"], ["use", "Sposób pracy", "How it runs"], ["ch", "Ogrzewanie i krzywa", "Heating and curve"],
   ["dhw", "Ciepła woda", "Hot water"], ["pump", "Pompa obiegowa", "Circulation pump"], ["int", "Współpraca z kotłem", "Boiler integration"],
@@ -48,6 +50,8 @@ class ImmergasCalibrationCard extends HubCard {
   private hist: { at: number; st: Seg[]; night?: Night | null; dT?: number; flow?: number; pw?: number; lpm?: number; starved?: Starved[]; x?: Hidden } | null = null;
   private eff: { at: number; split: number; t0: number; before: Period; after: Period } | null = null;
   private effLoading = false;
+  /** Immergas Dominus before / after: no energy on the bus, so heating hours, starts and room deviation per period */
+  private effDom: { at: number; split: number; t0: number; before: DomPeriod; after: DomPeriod } | null = null;
   /** building heat loss: one point per full heating day [indoor - outdoor K, heat kWh] from the daily statistics */
   private loss: { at: number; pts: [number, number][] } | null = null;
   private lossLoading = false;
@@ -146,6 +150,96 @@ class ImmergasCalibrationCard extends HubCard {
     } catch { this.loss = { at: Date.now(), pts: [] }; }
     this.lossLoading = false;
     this.requestUpdate();
+  }
+
+  /** Immergas Dominus before / after: heating hours (ch_heating_time_today), CH starts, DHW cycles, room deviation and
+   *  the outdoor mean from hourly statistics; options energy_entity (kWh) / gas_entity (m3) add metered energy */
+  private async loadEffDom() {
+    if (this.effLoading || !this.idx || !this.eid("dom_ch_time_today")) return;
+    this.effLoading = true;
+    try {
+      const now = Date.now(), cfg = this.since();
+      const split = !isNaN(cfg) && cfg < now ? cfg : now - 7 * 24 * H, t0 = split - 7 * 24 * H;
+      const keys: Key[] = ["dom_ch_time_today", "dom_starts_today", "dom_dhw_cycles", "dom_room_dev", "dom_dd_today", "outdoor"];
+      const extra = [this.config.energy_entity, this.config.gas_entity].filter((x) => typeof x === "string" && x) as string[];
+      const ids = [...keys.map((k) => this.eid(k)).filter(Boolean) as string[], ...extra];
+      const r = await this.hass.callWS({ type: "recorder/statistics_during_period", start_time: new Date(t0).toISOString(), end_time: new Date(now).toISOString(),
+        statistic_ids: ids, period: "hour", types: ["change", "mean"], units: {} });
+      const per = (a: number, b: number): DomPeriod => {
+        const pts = (id?: string) => (r[id ?? ""] ?? []).filter((x: any) => { const t = typeof x.start === "number" ? x.start : Date.parse(x.start); return t >= a && t < b; });
+        const sum = (id?: string) => pts(id).reduce((acc: number, x: any) => acc + Math.max(0, x.change ?? 0), 0);
+        const means = (id?: string) => pts(id).filter((x: any) => x.mean !== null && x.mean !== undefined).map((x: any) => x.mean as number);
+        const outs = means(this.eid("outdoor")), devs = means(this.eid("dom_room_dev"));
+        return {
+          h: outs.length || (b - a) / H, out: outs.length ? outs.reduce((x, y) => x + y, 0) / outs.length : NaN,
+          // degree days from the outdoor mean; Dominus before 1.5.4 kept no outdoor statistics - then its own counter
+          hdd: outs.length ? outs.reduce((acc, m) => acc + Math.max(0, 18 - m) / 24, 0) : sum(this.eid("dom_dd_today")),
+          chH: sum(this.eid("dom_ch_time_today")), starts: sum(this.eid("dom_starts_today")), dhw: sum(this.eid("dom_dhw_cycles")),
+          dev: devs.length ? devs.reduce((x, y) => x + y, 0) / devs.length : NaN,
+          elec: this.config.energy_entity ? sum(this.config.energy_entity) : NaN, gas: this.config.gas_entity ? sum(this.config.gas_entity) : NaN,
+        };
+      };
+      this.effDom = { at: now, split, t0, before: per(t0, split), after: per(split, now) };
+    } catch { this.effDom = null; }
+    this.effLoading = false;
+    this.requestUpdate();
+  }
+
+  /** "Optimisation effectiveness" for Immergas Dominus: heating hours per degree day, CH starts, run length, room
+   *  deviation, DHW cycles and the optional metered energy per degree day */
+  private effDomView() {
+    const e = this.effDom;
+    if (!e || e.before.h < 6) return nothing;
+    const m = (p: DomPeriod) => {
+      const d = p.h / 24;
+      return {
+        hHdd: p.hdd > 0.5 ? p.chH / p.hdd : NaN, startsD: d > 0 ? p.starts / d : NaN, run: p.starts > 0 ? p.chH * 60 / p.starts : NaN,
+        dev: isNaN(p.dev) ? NaN : Math.abs(p.dev), dhwD: d > 0 ? p.dhw / d : NaN,
+        elecHdd: p.hdd > 0.5 && !isNaN(p.elec) ? p.elec / p.hdd : NaN, gasHdd: p.hdd > 0.5 && !isNaN(p.gas) ? p.gas / p.hdd : NaN,
+      };
+    };
+    const b = m(e.before), a = m(e.after);
+    const rows: [string, string, number, number, number, boolean, number, [string, string]][] = [
+      ["hHdd", "h/°C·d", 2, b.hHdd, a.hHdd, true, 0.4, ["Godziny grzania na stopniodzień", "Heating hours per degree day"]],
+      ["startsD", this.t("/dobę", "/day"), 1, b.startsD, a.startsD, true, 0.2, ["Starty grzania CO na dobę", "CH starts per day"]],
+      ["run", "min", 1, b.run, a.run, false, 0.1, ["Średnia długość grzania CO", "Average CH run length"]],
+      ["dev", "K", 2, b.dev, a.dev, true, 0.3, ["Odchyłka pokoju od zadanej", "Room deviation from target"]],
+      ["dhwD", this.t("/dobę", "/day"), 1, b.dhwD, a.dhwD, true, 0, ["Cykle CWU na dobę", "DHW cycles per day"]],
+      ...(this.config.energy_entity ? [["elecHdd", "kWh/°C·d", 2, b.elecHdd, a.elecHdd, true, 0, ["Prąd na stopniodzień", "Electricity per degree day"]] as [string, string, number, number, number, boolean, number, [string, string]]] : []),
+      ...(this.config.gas_entity ? [["gasHdd", "m³/°C·d", 3, b.gasHdd, a.gasHdd, true, 0, ["Gaz na stopniodzień", "Gas per degree day"]] as [string, string, number, number, number, boolean, number, [string, string]]] : []),
+    ];
+    let wsum = 0, score = 0;
+    const pct = (x: number, y: number, low: boolean) => isNaN(x) || isNaN(y) || x === 0 ? NaN : (low ? (x - y) / x : (y - x) / x) * 100;
+    const items = rows.map(([id, unit, d, x, y, low, w, name]) => {
+      // a deviation under 0,2 K is comfort either way: no percentage
+      const p = id === "dev" && Math.max(x, y) < 0.2 ? 0 : pct(x, y, low);
+      if (!isNaN(p) && w > 0) { score += w * Math.max(-100, Math.min(100, p)); wsum += w; }
+      return { id, unit, d, x, y, p, name };
+    });
+    const total = wsum > 0 ? score / wsum : NaN, hrs = e.after.h, enough = hrs >= 24 && e.after.hdd >= 1;
+    const day = (t: number) => new Date(t).toLocaleString(this.loc, { day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" });
+    const col = (p: number) => isNaN(p) ? "overlay1" : p > 2 ? "green" : p < -2 ? "red" : "yellow";
+    const sgn = (p: number) => isNaN(p) ? "–" : (p > 0 ? "+" : "") + this.f(p, 0) + " %";
+    return html`
+      <div class="grp">${this.t("Skuteczność optymalizacji", "Optimisation effectiveness")}</div>
+      <div class="th"></div><div class="th c">${this.t("Przed", "Before")}</div><div class="th c">${this.t("Po", "After")}</div><div class="th c">${this.t("Zmiana", "Change")}</div>
+      ${items.map((i) => html`
+        <div class="pn">${this.t(i.name[0], i.name[1])}</div>
+        <div class="cell"><div class="v">${isNaN(i.x) ? "–" : this.f(i.x, i.d, i.d) + (i.unit ? " " + i.unit : "")}</div></div>
+        <div class="cell"><div class="v">${isNaN(i.y) ? "–" : this.f(i.y, i.d, i.d) + (i.unit ? " " + i.unit : "")}</div></div>
+        <div class="cell rec" style="background:${ca(col(i.p), 0.1)};border-color:${ca(col(i.p), 0.35)}"><div class="v" style="color:${c(col(i.p))}">${sgn(i.p)}</div></div>`)}
+      <div class="pn" style="font-size:13px">${this.t("Skuteczność łącznie", "Overall effectiveness")}</div>
+      <div class="cell" style="grid-column: span 2"><div class="why">${this.t("ważona: godziny grzania/stopniodzień 40 %, odchyłka pokoju 30 %, starty/dobę 20 %, długość grzania 10 %",
+        "weighted: heating hours/degree day 40 %, room deviation 30 %, starts/day 20 %, run length 10 %")}</div></div>
+      <div class="cell rec" style="background:${ca(col(total), 0.18)};border-color:${ca(col(total), 0.6)}"><div class="v" style="font-size:18px;color:${c(col(total))}">${sgn(total)}</div>
+        ${enough ? nothing : html`<div class="why">${this.t("wstępnie – mało danych", "preliminary – little data")}</div>`}</div>
+      <div class="effn">${this.t("Przed", "Before")}: ${day(e.t0)} – ${day(e.split)} (${this.f(e.before.h / 24, 1, 1)} ${this.t("dnia", "days")}, ${this.f(e.before.out, 1, 1)} °C,
+        ${this.f(e.before.hdd, 1, 1)} ${this.t("stopniodni", "degree days")}) · ${this.t("Po", "After")}: ${this.t("od", "since")} ${day(e.split)} (${this.f(hrs, 0)} h, ${this.f(e.after.out, 1, 1)} °C,
+        ${this.f(e.after.hdd, 1, 1)} ${this.t("stopniodni", "degree days")}).
+        ${!isNaN(this.since()) ? "" : this.t("Bez daty zmiany (opcja optimized_since): ostatnie 7 dni wobec poprzednich 7.", "Without a change date (option optimized_since): the last 7 days against the 7 before.")}
+        ${enough ? "" : this.t(" Wynik wiarygodny po co najmniej dobie od zmiany.", " Reliable after at least a day since the change.")}
+        ${this.t("Dominus nie mierzy energii – porównanie z czasu grzania; licznik prądu / gazu dodasz opcjami energy_entity / gas_entity.",
+          "Dominus does not measure energy – the comparison uses heating time; add a power / gas meter with the energy_entity / gas_entity options.")}</div>`;
   }
 
   /** "Optimisation effectiveness": metrics before / after with % change and a weighted overall score */
@@ -1219,6 +1313,7 @@ class ImmergasCalibrationCard extends HubCard {
     const dom = this.dominus;
     if (!dom && (!this.hist || Date.now() - this.hist.at > 10 * 60e3)) this.load();
     if (!dom && !this.effLoading && (!this.eff || Date.now() - this.eff.at > 30 * 60e3)) this.loadEff();
+    if (dom && !this.effLoading && (!this.effDom || Date.now() - this.effDom.at > 30 * 60e3)) this.loadEffDom();
     if (!dom && !this.lossLoading && (!this.loss || Date.now() - this.loss.at > 6 * H)) this.loadLoss();
     const gOf = (r: Row) => r.group ?? (r.kind === "info" && !r.code && !/harmonogram|schedule/i.test(r.name[0]) ? "cyc"
       : /^(źródło ciepła|harmonogram|nastawa co w pokojach)/i.test(r.name[0]) || ["U11", "FR", "P15"].includes(r.code) ? "use"
@@ -1257,7 +1352,7 @@ class ImmergasCalibrationCard extends HubCard {
               ${d && (r.kind !== "info" || r.setFn) ? html`<div class="set" style="${conf ? `outline:2px solid ${c("peach")}` : ""}" @click=${() => this.confirm(tag, () => this.apply(r))}>
                 <ha-icon icon="mdi:check-bold"></ha-icon>${conf ? this.t("Potwierdź", "Confirm") : this.t("Ustaw", "Set")}</div>` : nothing}</div>`;
         })}
-        ${dom ? nothing : this.effView()}
+        ${dom ? this.effDomView() : this.effView()}
       </div>
       ${dom || !S ? html`<div class="note">${this.t("Rekomendacje liczone ze statystyk integracji Immergas Dominus (ostatnia godzina i doba).",
         "Recommendations from the Immergas Dominus statistics (last hour and day).")}

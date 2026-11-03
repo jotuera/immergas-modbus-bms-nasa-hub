@@ -1,13 +1,17 @@
 // "Automatyzacje / Automations": the heat-pump automations of Home Assistant in readable groups. Each row has the
 // enable switch (an input_boolean the automation checks), a wrapping description, when it last fired (automation
 // entity, last_triggered) and a live detail (vacation active, starts this hour, COP threshold −/+).
-// Rows whose switch does not exist are skipped. Option `items` replaces the default list:
+// Rows whose switch does not exist are skipped. With Immergas Dominus the card lists the integration's own automations
+// (automatic summer / winter, vacation, DHW Comfort / Eco schedule, alert notifications) and its alerts (frost, module
+// offline, boiler fault) shown as a live state instead of a switch. Option `items` replaces the default list:
 //   items: [{ toggle, automation, name, icon, desc, group, param, param_label, live, live_label }]
 //   group: control | alert | safety;  param: an input_number shown with −/+;  live: an entity whose state is shown.
 import { HubCard, html, css, nothing, c, ca, register } from "../base";
 
 type Item = { toggle: string; automation?: string; name: [string, string]; icon: string; desc: [string, string]; group: string;
-  param?: string; paramLabel?: [string, string]; live?: string; liveLabel?: [string, string]; noLast?: boolean };
+  param?: string; paramLabel?: [string, string]; live?: string; liveLabel?: [string, string]; noLast?: boolean;
+  /** more −/+ settings (Dominus) */ params?: [string, [string, string]][];
+  /** an alert without its own switch: `toggle` is the alert entity, shown as ALARM / OK */ status?: boolean; liveText?: string };
 
 const DEFAULT_ITEMS: Item[] = [
   { toggle: "input_boolean.auto_pompa_lato_zima", automation: "automation.automatyka_lato_zima_automatycznie_t_t", group: "control", icon: "mdi:sun-snowflake-variant",
@@ -52,9 +56,40 @@ const GROUPS: [string, string, string, string][] = [
 class ImmergasAutomationsCard extends HubCard {
   getCardSize() { return 6; }
 
+  /** Immergas Dominus: the integration's own automations and alerts (entities found by the card index) */
+  private domItems(): Item[] {
+    const id = (k: Parameters<HubCard["eid"]>[0]) => this.eid(k) ?? "";
+    const season = this.so("dom_auto_season")?.attributes ?? {}, mean = parseFloat(season.outdoor_mean_24h);
+    const until = this.so("dom_vac_until"), u = until && !["unknown", "unavailable", ""].includes(until.state)
+      ? new Date(until.state).toLocaleString(this.loc, { dateStyle: "medium", timeStyle: "short" }) : "";
+    const code = this.s("err_code");
+    return [
+      { toggle: id("dom_auto_season"), group: "control", icon: "mdi:sun-snowflake-variant", name: ["Lato / Zima automatycznie", "Summer / winter automatically"],
+        desc: ["średnia zewnętrzna z 24 h poniżej progu → Zima (CO + CWU), powyżej → Lato (CWU); nie rusza Czuwania ani Chłodzenia",
+          "24 h outdoor mean below the threshold → winter (CH + DHW), above → summer (DHW); never touches standby or cooling"],
+        params: [[id("dom_win_below"), ["Zima poniżej", "Winter below"]], [id("dom_sum_above"), ["Lato powyżej", "Summer above"]]],
+        liveText: isNaN(mean) ? "" : this.t(`średnia 24 h ${this.f(mean, 1, 1)} °C`, `24 h mean ${this.f(mean, 1, 1)} °C`) },
+      { toggle: id("dom_vacation"), group: "control", icon: "mdi:bag-suitcase", name: ["Tryb wyjazdowy", "Vacation mode"],
+        desc: ["obniża zadaną Strefy 1 do temperatury wyjazdowej; po „Wyjazd do” albo wyłączeniu przywraca poprzednią",
+          "lowers the zone 1 target to the vacation temperature; restores it at “Away until” or when switched off"],
+        params: [[id("dom_vac_temp"), ["temperatura", "temperature"]]], liveText: u ? this.t("do ", "until ") + u : "" },
+      { toggle: id("dhw_sched"), group: "control", icon: "mdi:calendar-clock", name: ["CWU Komfort / Eko wg harmonogramu", "DHW Comfort / Eco by schedule"],
+        desc: ["w godzinach harmonogramu CWU nastawa Komfort, poza nimi Eko", "Comfort setpoint inside the DHW schedule hours, Eco outside"] },
+      { toggle: id("dom_notify"), group: "alert", icon: "mdi:bell-ring-outline", name: ["Powiadomienia o alarmach", "Alert notifications"],
+        desc: ["ryzyko zamarznięcia, moduł offline albo błąd kotła → powiadomienie w Home Assistant; znika, gdy alarm minie",
+          "frost risk, module offline or a boiler fault → a Home Assistant notification; cleared when the alert ends"] },
+      { toggle: id("dom_frost"), status: true, group: "alert", icon: "mdi:snowflake-alert", name: ["Ryzyko zamarznięcia", "Frost risk"],
+        desc: ["temperatura Strefy 1 poniżej progu", "zone 1 temperature below the threshold"], params: [[id("dom_frost_thr"), ["próg", "threshold"]]] },
+      { toggle: id("dom_offline"), status: true, group: "alert", icon: "mdi:lan-disconnect", name: ["Moduł Dominus offline", "Dominus module offline"],
+        desc: ["moduł nie odpowiada dłużej niż ustawiony czas", "the module has not answered for longer than the set time"], params: [[id("dom_off_min"), ["po", "after"]]] },
+      { toggle: id("err_active"), status: true, group: "alert", icon: "mdi:alert-octagon", name: ["Błąd kotła", "Boiler fault"],
+        desc: ["kod błędu zgłoszony przez kocioł", "a fault code reported by the boiler"], liveText: code && code !== "0" ? code : "" },
+    ];
+  }
+
   private items(): Item[] {
     const cfg = this.config.items as any[] | undefined;
-    if (!cfg) return DEFAULT_ITEMS;
+    if (!cfg) return this.dominus ? this.domItems() : DEFAULT_ITEMS;
     return cfg.map((i) => ({ ...i, name: [i.name, i.name], desc: [i.desc ?? "", i.desc ?? ""], group: i.group ?? "alert", icon: i.icon ?? "mdi:robot",
       liveLabel: i.live_label ? [i.live_label, i.live_label] : undefined, noLast: !!i.hide_last, paramLabel: i.param_label ? [i.param_label, i.param_label] : undefined }));
   }
@@ -75,7 +110,7 @@ class ImmergasAutomationsCard extends HubCard {
     const st = this.hass.states[e];
     if (!st) return nothing;
     const a = st.attributes ?? {}, v = parseFloat(st.state), step = a.step ?? 0.1, d = String(step).split(".")[1]?.length ?? 0;
-    const set = (dir: number) => !isNaN(v) && this.hass.callService("input_number", "set_value",
+    const set = (dir: number) => !isNaN(v) && this.hass.callService(e.split(".")[0], "set_value",
       { entity_id: e, value: Math.round(Math.min(a.max ?? 1e9, Math.max(a.min ?? -1e9, v + dir * step)) * 1e4) / 1e4 });
     return html`<div class="prm" @click=${(ev: Event) => ev.stopPropagation()}>
       <span class="pl">${label ? this.t(label[0], label[1]) : this.t("próg", "threshold")}</span>
@@ -91,8 +126,9 @@ class ImmergasAutomationsCard extends HubCard {
     const obsolete = i.toggle.endsWith("f1f2_rozbroj") && !this.eid("f_arm");
     const live = i.live ? this.hass.states[i.live] : undefined;
     const ll = i.liveLabel ? this.t(i.liveLabel[0], i.liveLabel[1]) : "";
-    const liveTxt = !live ? "" : live.state === "on" ? ll : live.state === "off" ? "" : `${ll}: ${live.state}`;
-    const hot = !!live && live.state === "on";
+    const liveTxt = i.liveText ?? (!live ? "" : live.state === "on" ? ll : live.state === "off" ? "" : `${ll}: ${live.state}`);
+    const hot = i.status ? on : !!live && live.state === "on";
+    if (i.status) return this.statusRow(i, on, liveTxt);
     const cc = on && !obsolete ? col : "overlay1";
     return html`<div class="ar ${on ? "" : "off"}" style="${on && !obsolete ? `border-color:${ca(col, 0.35)};background:${ca(col, hot ? 0.16 : 0.06)}` : ""}"
       @click=${() => this.info(i.automation && au ? i.automation : i.toggle)}>
@@ -106,18 +142,34 @@ class ImmergasAutomationsCard extends HubCard {
             : au && !i.noLast ? html`<span class="tag"><ha-icon icon="mdi:history"></ha-icon>${this.when(au.attributes?.last_triggered)}</span>` : nothing}
           ${liveTxt ? html`<span class="tag" style="color:${c(hot ? col : "overlay2")}" @click=${(e: Event) => { e.stopPropagation(); this.info(i.live!); }}>● ${liveTxt}</span>` : nothing}
           ${i.param && on ? this.param(i.param, i.paramLabel) : nothing}
+          ${on ? (i.params ?? []).map(([e, l]) => this.param(e, l)) : nothing}
         </div></div>
       <div class="tgl" style="flex:none;background:${on ? ca(col, 0.35) : "rgba(255,255,255,.08)"};${on ? `box-shadow:0 0 6px ${ca(col, 0.5)}` : ""}"
-        @click=${(e: Event) => { e.stopPropagation(); this.hass.callService("input_boolean", "toggle", { entity_id: i.toggle }); }}>
+        @click=${(e: Event) => { e.stopPropagation(); this.hass.callService(i.toggle.split(".")[0] === "input_boolean" ? "input_boolean" : "homeassistant", "toggle", { entity_id: i.toggle }); }}>
         <div class="kn" style="left:${on ? 23 : 3}px;background:${on ? c(col) : c("overlay1")}"></div></div></div>`;
   }
 
+  /** an alert without a switch (Dominus): ALARM / OK instead of the toggle, its threshold always editable */
+  private statusRow(i: Item, alarm: boolean, liveTxt: string) {
+    const col = alarm ? "red" : "green";
+    return html`<div class="ar" style="border-color:${ca(col, alarm ? 0.5 : 0.2)};background:${ca(col, alarm ? 0.14 : 0.04)}" @click=${() => this.info(i.toggle)}>
+      <ha-icon class="ai" icon=${i.icon} style="color:${c(col)}"></ha-icon>
+      <div class="cx">
+        <div class="an">${this.t(i.name[0], i.name[1])}</div>
+        <div class="ad">${this.t(i.desc[0], i.desc[1])}</div>
+        <div class="as">
+          ${liveTxt ? html`<span class="tag" style="color:${c(col)}">● ${liveTxt}</span>` : nothing}
+          ${(i.params ?? []).map(([e, l]) => this.param(e, l))}
+        </div></div>
+      <span class="pill" style="color:${c(col)};border-color:${ca(col, 0.5)}">${alarm ? this.t("ALARM", "ALERT") : "OK"}</span></div>`;
+  }
+
   protected body() {
-    const its = this.items().filter((i) => this.hass.states[i.toggle]);
-    const on = its.filter((i) => this.hass.states[i.toggle].state === "on").length;
+    const its = this.items().filter((i) => i.toggle && this.hass.states[i.toggle]);
+    const on = its.filter((i) => !i.status && this.hass.states[i.toggle].state === "on").length, sw = its.filter((i) => !i.status).length;
     const cols: Record<string, string> = { control: "blue", alert: "yellow", safety: "mauve" };
     return html`
-      ${this.head("mdi:robot-outline", this.t("Automatyzacje", "Automations"), its.length ? this.t(`włączone ${on} z ${its.length}`, `${on} of ${its.length} on`) : "")}
+      ${this.head("mdi:robot-outline", this.t("Automatyzacje", "Automations"), sw ? this.t(`włączone ${on} z ${sw}`, `${on} of ${sw} on`) : "")}
       ${!its.length ? html`<div class="note">${this.t("Brak przełączników automatyzacji (input_boolean.auto_pompa_*) – podaj własne w opcji items.",
         "No automation switches (input_boolean.auto_pompa_*) – list your own in the items option.")}</div>` : nothing}
       ${GROUPS.map(([g, icon, pl, en]) => {
@@ -144,6 +196,7 @@ class ImmergasAutomationsCard extends HubCard {
     .pl { font-size: 10px; font-weight: 700; opacity: .6; }
     .pvv { font-size: 11px; font-weight: 800; min-width: 28px; text-align: center; font-variant-numeric: tabular-nums; }
     .ar .tgl { margin-top: 1px; }
+    .pill { flex: none; font-size: 10px; font-weight: 800; letter-spacing: .05em; padding: 2px 8px; border-radius: 9px; border: 1px solid; margin-top: 1px; }
   `];
 }
 

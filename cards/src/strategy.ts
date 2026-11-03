@@ -55,6 +55,7 @@ class ImmergasDominusStrategy {
               card("immergas-settings-card", { part: "offline", ...(config.settings ?? {}) })] },
             { type: "grid", cards: [card("immergas-schedule-card", config.schedule ?? {}), card("immergas-curve-card", config.curve ?? {})] },
             { type: "grid", column_span: 3, cards: [card("immergas-calibration-card", config.calibration ?? {})] },
+            { type: "grid", column_span: 3, cards: [card("immergas-automations-card", config.automations ?? {})] },
             { type: "grid", column_span: 3, cards: [card("immergas-charts-card", config.charts ?? {})] },
           ],
         },
