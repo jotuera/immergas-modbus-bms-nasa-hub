@@ -2141,6 +2141,32 @@ interval:
               return;
             }
 
+            // v2.2.0: a schedule change made in the Dominus app / Home Assistant Dominus integration reaches the boiler
+            // over TCP; the boiler then READS it from the physical Dominus (0x33) and WRITES it to the zone panels. With
+            // the panel emulated, those values were ignored and the hub kept serving the old ones - the boiler took
+            // them back within a minute. Take them into the HA entities too: a READ reply from a physical Dominus and a
+            // boiler write to an emulated panel (0x29 / 0x2A / 0x2B). Only a change of the value seen from the same
+            // source counts (the first value is just remembered), so a repeat of an old value never undoes a change
+            // just made in HA.
+            const bool panel_write = (func == 0x10 || func == 0x06) && (addr == 0x29 || addr == 0x2A || addr == 0x2B);
+            const bool dominus_read = source[0] == 'R' && addr == 0x33 && !emulator_33_enabled();
+            if (schedule_reg && chrono_is_schedule_reg(reg) && (panel_write || dominus_read)) {
+              static std::array<std::array<int32_t, 2497 - 2310>, 4> seen = [] {
+                std::array<std::array<int32_t, 2497 - 2310>, 4> a{};
+                for (auto &row : a) row.fill(INT32_MIN);
+                return a;
+              }();
+              const int slot = dominus_read ? 0 : addr == 0x29 ? 1 : addr == 0x2A ? 2 : 3;
+              int32_t &last = seen[slot][reg - 2310];
+              if (last == INT32_MIN) {
+                last = value;
+              } else if (last != value) {
+                last = value;
+                if (chrono_apply(reg, value, dominus_read ? "DOMINUS->HA" : "PANEL-W->HA")) chrono_learned[reg - 2310] = true;
+              }
+              if (panel_write) return;
+            }
+
             if (is_known_pdu(addr, reg)) {
               ESP_LOGD("dd_known", "%s known addr=0x%02X PDU %u = %d / 0x%04X", source, addr, reg, value, (uint16_t) value);
               return;
