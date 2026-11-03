@@ -1070,5 +1070,12 @@
  "above ~{0} °C for this screed": "nad ~{0} °C pro tento potěr",
  "at most 2 K under Comfort – a dry system reheats fast": "nanejvýš 2 K pod Komfortem – suchý systém se rychle prohřeje",
  "a dry system reacts fast – the boiler may join earlier": "suchý systém reaguje rychle – kotel se může připojit dřív",
- "anhydrite reacts faster than cement – do not call the boiler too early": "anhydrit reaguje rychleji než cement – nevolejte kotel příliš brzy"
+ "anhydrite reacts faster than cement – do not call the boiler too early": "anhydrit reaguje rychleji než cement – nevolejte kotel příliš brzy",
+ "Building heat loss": "Tepelné ztráty budovy",
+ "from data": "z dat",
+ "heat-pump and boiler heat per day against indoor − outdoor (60 days); lower = better insulated": "teplo čerpadla a kotle za den vůči rozdílu uvnitř − venku (60 dní); méně = lépe zateplený dům",
+ "at {0} °C about {1} kW": "při {0} °C asi {1} kW",
+ "collecting data": "sbírám data",
+ "{0} heating days, R² {1} – power needed at the design temperature": "{0} topných dní, R² {1} – výkon potřebný při výpočtové teplotě",
+ "{0}/10 heating days, temperature spread {1}/5 K": "{0}/10 topných dní, rozptyl teplot {1}/5 K"
 }

@@ -1070,5 +1070,12 @@
  "above ~{0} °C for this screed": "por encima de ~{0} °C para esta solera",
  "at most 2 K under Comfort – a dry system reheats fast": "como mucho 2 K por debajo de Confort – un sistema seco se recalienta rápido",
  "a dry system reacts fast – the boiler may join earlier": "un sistema seco reacciona rápido – la caldera puede entrar antes",
- "anhydrite reacts faster than cement – do not call the boiler too early": "la anhidrita reacciona más rápido que el cemento – no llames a la caldera demasiado pronto"
+ "anhydrite reacts faster than cement – do not call the boiler too early": "la anhidrita reacciona más rápido que el cemento – no llames a la caldera demasiado pronto",
+ "Building heat loss": "Pérdidas de calor del edificio",
+ "from data": "de los datos",
+ "heat-pump and boiler heat per day against indoor − outdoor (60 days); lower = better insulated": "calor de la bomba y la caldera por día frente a interior − exterior (60 días); menos = mejor aislado",
+ "at {0} °C about {1} kW": "a {0} °C unos {1} kW",
+ "collecting data": "recopilando datos",
+ "{0} heating days, R² {1} – power needed at the design temperature": "{0} días de calefacción, R² {1} – potencia necesaria a la temperatura de diseño",
+ "{0}/10 heating days, temperature spread {1}/5 K": "{0}/10 días de calefacción, dispersión de temperaturas {1}/5 K"
 }

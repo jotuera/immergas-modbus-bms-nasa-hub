@@ -4,7 +4,8 @@
 //  - rooms with their own thermostats (climate entities, option `rooms`, otherwise detected): how far below target.
 // A differing recommendation has a two-tap "Set" button. Options: max_floor_entity (shared with the curve card),
 // rooms, cheap_hours - cheaper tariff windows, e.g. "13:00-15:00,22:00-06:00" (G12), used for the DHW schedule
-// (default: the hub's "Cheap tariff hours"), optimized_since (default: the hub's "Compare from"), variant combo / pro.
+// (default: the hub's "Cheap tariff hours"), optimized_since (default: the hub's "Compare from"), variant combo / pro, design_outdoor
+// (design outdoor temperature for the building heat loss row, default -18).
 // Schedules: CH - with room thermostats a fixed setpoint (MANUAL) suits a slow floor best, otherwise AUTO with Eco at
 // most 1 K under Comfort; DHW - the calendar used on most days should heat inside the cheap windows (or in 1-2 short
 // windows when no tariff is given).
@@ -47,6 +48,9 @@ class ImmergasCalibrationCard extends HubCard {
   private hist: { at: number; st: Seg[]; night?: Night | null; dT?: number; flow?: number; pw?: number; lpm?: number; starved?: Starved[]; x?: Hidden } | null = null;
   private eff: { at: number; split: number; t0: number; before: Period; after: Period } | null = null;
   private effLoading = false;
+  /** building heat loss: one point per full heating day [indoor - outdoor K, heat kWh] from the daily statistics */
+  private loss: { at: number; pts: [number, number][] } | null = null;
+  private lossLoading = false;
   private loading = false;
 
   getCardSize() { return 8; }
@@ -116,6 +120,31 @@ class ImmergasCalibrationCard extends HubCard {
       this.eff = { at: now, split, t0, before: per(t0, split), after: per(split, now) };
     } catch { this.eff = null; }
     this.effLoading = false;
+    this.requestUpdate();
+  }
+
+  /** daily heat (heat pump + boiler gas) against indoor - outdoor for the last 60 days; days warmer than 15 °C outside,
+   *  the first (partial) day and today are left out */
+  private async loadLoss() {
+    if (this.lossLoading || !this.idx || !this.eid("heat_total") || !this.eid("outdoor")) return;
+    this.lossLoading = true;
+    try {
+      const now = Date.now(), keys: Key[] = ["heat_total", "gas_total", "outdoor", "zone1"];
+      const r = await this.hass.callWS({ type: "recorder/statistics_during_period", start_time: new Date(now - 60 * 24 * H).toISOString(),
+        end_time: new Date(now).toISOString(), statistic_ids: keys.map((k) => this.eid(k)).filter(Boolean), period: "day", types: ["change", "mean"], units: {} });
+      const by = (k: Key) => new Map<number, any>((r[this.eid(k) ?? ""] ?? []).map((x: any) => [typeof x.start === "number" ? x.start : Date.parse(x.start), x]));
+      const heat = by("heat_total"), gas = by("gas_total"), out = by("outdoor"), zone = by("zone1");
+      const pg = this.n("price_gas"), kg = this.n("gas_cost"), gasKwh = pg > 0 && kg > 0 ? pg / kg : 10.6;
+      const days = [...heat.keys()].sort((a, b) => a - b).slice(1).filter((t) => t + 24 * H <= now);
+      const pts: [number, number][] = [];
+      for (const t of days) {
+        const o = out.get(t)?.mean, tin = zone.get(t)?.mean ?? 21;
+        if (o === undefined || o === null || o > 15) continue;
+        pts.push([tin - o, (heat.get(t)?.change ?? 0) + (gas.get(t)?.change ?? 0) * gasKwh]);
+      }
+      this.loss = { at: now, pts };
+    } catch { this.loss = { at: Date.now(), pts: [] }; }
+    this.lossLoading = false;
     this.requestUpdate();
   }
 
@@ -926,6 +955,23 @@ class ImmergasCalibrationCard extends HubCard {
         rec: drop ? this.t("pokoje spadały w nocy – podnieś limit na piecu", "rooms dropped at night – raise the limit on the boiler") : this.t("✓ wystarcza", "✓ enough"),
         reason: nt ? [`ostatnia noc: pokoje ${nt.dRoom > 0 ? "+" : ""}${f1(nt.dRoom)} K`, `last night: rooms ${nt.dRoom > 0 ? "+" : ""}${f1(nt.dRoom)} K`] : ["brak danych z nocy", "no night data"] });
     }
+    // building heat loss coefficient: slope of daily heat against indoor - outdoor (the intercept takes DHW and gains)
+    const lp = this.loss?.pts ?? [];
+    if (this.loss) {
+      const n = lp.length, mx = n ? lp.reduce((a, p) => a + p[0], 0) / n : NaN, my = n ? lp.reduce((a, p) => a + p[1], 0) / n : NaN;
+      const sxx = lp.reduce((a, p) => a + (p[0] - mx) ** 2, 0), b = sxx > 0 ? lp.reduce((a, p) => a + (p[0] - mx) * (p[1] - my), 0) / sxx : NaN;
+      const sst = lp.reduce((a, p) => a + (p[1] - my) ** 2, 0), sse = lp.reduce((a, p) => a + (p[1] - (my + b * (p[0] - mx))) ** 2, 0);
+      const r2 = sst > 0 ? 1 - sse / sst : NaN, spread = n ? Math.max(...lp.map((p) => p[0])) - Math.min(...lp.map((p) => p[0])) : 0;
+      const ready = n >= 10 && spread >= 5 && b > 0 && r2 >= 0.5, ua = b * 1000 / 24;
+      const dsg = Number(this.config.design_outdoor ?? -18), tin = isNaN(this.n("zone1_set")) ? 21 : this.n("zone1_set"), kw = ua * (tin - dsg) / 1000;
+      out.push({ code: "", name: ["Straty ciepła budynku", "Building heat loss"], unit: "W/K", d: 0, kind: "info", group: "ch",
+        model: this.t("z danych", "from data"), why: ["ciepło pompy i kotła na dobę względem różnicy dom − zewnątrz (60 dni); im mniej, tym lepiej ocieplony dom",
+          "heat-pump and boiler heat per day against indoor − outdoor (60 days); lower = better insulated"],
+        value: ready ? Math.round(ua) : "…", ok: true,
+        rec: ready ? this.t(`przy ${dsg} °C ok. ${this.f(kw, 1, 1)} kW`, `at ${dsg} °C about ${this.f(kw, 1, 1)} kW`) : this.t("zbieram dane", "collecting data"),
+        reason: ready ? [`${n} dni grzania, R² ${this.f(r2, 2, 2)} – moc potrzebna przy temperaturze projektowej`, `${n} heating days, R² ${this.f(r2, 2, 2)} – power needed at the design temperature`]
+          : [`${n}/10 dni grzania, rozrzut temperatur ${this.f(spread, 0)}/5 K`, `${n}/10 heating days, temperature spread ${this.f(spread, 0)}/5 K`] });
+    }
     return out;
   }
 
@@ -1171,6 +1217,7 @@ class ImmergasCalibrationCard extends HubCard {
     const dom = this.dominus;
     if (!dom && (!this.hist || Date.now() - this.hist.at > 10 * 60e3)) this.load();
     if (!dom && !this.effLoading && (!this.eff || Date.now() - this.eff.at > 30 * 60e3)) this.loadEff();
+    if (!dom && !this.lossLoading && (!this.loss || Date.now() - this.loss.at > 6 * H)) this.loadLoss();
     const gOf = (r: Row) => r.group ?? (r.kind === "info" && !r.code && !/harmonogram|schedule/i.test(r.name[0]) ? "cyc"
       : /^(źródło ciepła|harmonogram|nastawa co w pokojach)/i.test(r.name[0]) || ["U11", "FR", "P15"].includes(r.code) ? "use"
       : ["dhw_set", "t02"].includes(r.k as string) ? "dhw" : ["i10"].includes(r.k as string) ? "int" : r.k === "dew_corr" ? "cool" : "ch");

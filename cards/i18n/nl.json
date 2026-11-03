@@ -1070,5 +1070,12 @@
  "above ~{0} °C for this screed": "boven ~{0} °C voor deze dekvloer",
  "at most 2 K under Comfort – a dry system reheats fast": "hooguit 2 K onder Comfort – een droog systeem warmt snel op",
  "a dry system reacts fast – the boiler may join earlier": "een droog systeem reageert snel – de ketel mag eerder bijschakelen",
- "anhydrite reacts faster than cement – do not call the boiler too early": "anhydriet reageert sneller dan cement – roep de ketel niet te vroeg"
+ "anhydrite reacts faster than cement – do not call the boiler too early": "anhydriet reageert sneller dan cement – roep de ketel niet te vroeg",
+ "Building heat loss": "Warmteverlies van het gebouw",
+ "from data": "uit gegevens",
+ "heat-pump and boiler heat per day against indoor − outdoor (60 days); lower = better insulated": "warmte van warmtepomp en ketel per dag tegen binnen − buiten (60 dagen); minder = beter geïsoleerd",
+ "at {0} °C about {1} kW": "bij {0} °C ongeveer {1} kW",
+ "collecting data": "gegevens verzamelen",
+ "{0} heating days, R² {1} – power needed at the design temperature": "{0} stookdagen, R² {1} – benodigd vermogen bij de ontwerptemperatuur",
+ "{0}/10 heating days, temperature spread {1}/5 K": "{0}/10 stookdagen, temperatuurspreiding {1}/5 K"
 }

@@ -2817,6 +2817,55 @@
   ]
  },
  {
+  "en": "Building heat loss",
+  "pl": "Straty ciepła budynku",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "from data",
+  "pl": "z danych",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "heat-pump and boiler heat per day against indoor − outdoor (60 days); lower = better insulated",
+  "pl": "ciepło pompy i kotła na dobę względem różnicy dom − zewnątrz (60 dni); im mniej, tym lepiej ocieplony dom",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "at {0} °C about {1} kW",
+  "pl": "przy {0} °C ok. {1} kW",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "collecting data",
+  "pl": "zbieram dane",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0} heating days, R² {1} – power needed at the design temperature",
+  "pl": "{0} dni grzania, R² {1} – moc potrzebna przy temperaturze projektowej",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "{0}/10 heating days, temperature spread {1}/5 K",
+  "pl": "{0}/10 dni grzania, rozrzut temperatur {1}/5 K",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
   "en": "Heating curve offset",
   "pl": "Offset krzywej grzewczej",
   "files": [

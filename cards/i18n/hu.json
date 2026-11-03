@@ -1070,5 +1070,12 @@
  "above ~{0} °C for this screed": "~{0} °C felett ehhez az esztrichhez",
  "at most 2 K under Comfort – a dry system reheats fast": "legfeljebb 2 K-nel a Komfort alatt – a száraz rendszer gyorsan felfűt",
  "a dry system reacts fast – the boiler may join earlier": "a száraz rendszer gyorsan reagál – a kazán korábban bekapcsolhat",
- "anhydrite reacts faster than cement – do not call the boiler too early": "az anhidrit gyorsabban reagál, mint a cement – ne hívja túl korán a kazánt"
+ "anhydrite reacts faster than cement – do not call the boiler too early": "az anhidrit gyorsabban reagál, mint a cement – ne hívja túl korán a kazánt",
+ "Building heat loss": "Épület hővesztesége",
+ "from data": "adatokból",
+ "heat-pump and boiler heat per day against indoor − outdoor (60 days); lower = better insulated": "a hőszivattyú és a kazán napi hője a belső − külső különbséghez képest (60 nap); kevesebb = jobban szigetelt",
+ "at {0} °C about {1} kW": "{0} °C-on kb. {1} kW",
+ "collecting data": "adatgyűjtés",
+ "{0} heating days, R² {1} – power needed at the design temperature": "{0} fűtési nap, R² {1} – szükséges teljesítmény a méretezési hőmérsékleten",
+ "{0}/10 heating days, temperature spread {1}/5 K": "{0}/10 fűtési nap, hőmérséklet-szórás {1}/5 K"
 }
