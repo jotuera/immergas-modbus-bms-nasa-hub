@@ -76,8 +76,9 @@ function otEntities(hass: any): Record<string, string> {
   return r;
 }
 
-/** OpenTherm: the same Dominus cards in the same style; only what OpenTherm has no data for is left out
- *  (schedules, heating curve, calibration / statistics, online and offline settings, automations, connectivity) */
+/** OpenTherm: the same Dominus cards in the same style; only what OpenTherm has no data for is left out (heating curve
+ *  of the Magis, calibration / statistics, offline settings, automations, connectivity). The schedules are the programs
+ *  the integration keeps in Home Assistant (Dominus 1.6). */
 function otDashboard(config: any, t: (a: string, b: string) => string) {
   const card = (type: string, extra: Record<string, unknown> = {}) => ({ type: "custom:" + type, grid_options: { columns: "full" }, source: "dominus", ...extra });
   return {
@@ -88,7 +89,8 @@ function otDashboard(config: any, t: (a: string, b: string) => string) {
         { type: "grid", column_span: 3, cards: [card("immergas-diagram-card", { stats: false, ...(config.diagram ?? {}) })] },
         { type: "grid", cards: [card("immergas-now-card", config.now ?? {})] },
         { type: "grid", cards: [card("immergas-setpoints-card", config.setpoints ?? {})] },
-        { type: "grid", cards: [card("immergas-mode-card", config.mode ?? {})] },
+        { type: "grid", cards: [card("immergas-mode-card", config.mode ?? {}), card("immergas-settings-card", { part: "online", ...(config.settings ?? {}) })] },
+        { type: "grid", column_span: 3, cards: [card("immergas-schedule-card", config.schedule ?? {})] },
         { type: "grid", column_span: 3, cards: [card("immergas-charts-card", config.charts ?? {})] },
       ],
     }],

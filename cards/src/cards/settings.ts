@@ -95,6 +95,32 @@ class ImmergasSettingsCard extends HubCard {
       ${this.domParams()}`;
   }
 
+  /** Dominus in the OpenTherm mode: the programs kept in Home Assistant and the regulator of the module (Data-ID 89) */
+  private otRows() {
+    if (!this.ot) return nothing;
+    return html`
+      ${this.eid("comfort_heat") ? html`<div class="grp">${this.t("Program CO i CWU (Home Assistant)", "CH and DHW program (Home Assistant)")}</div>
+        ${this.numRow("comfort_heat", "mdi:sofa-outline", this.t("Pokój · Komfort", "Room · Comfort"), 1)}
+        ${this.numRow("eco_heat", "mdi:leaf", this.t("Pokój · Eko", "Room · Eco"), 1)}
+        ${this.selRow(this.eid("ot_eco_action"), this.t("W fazie Eko", "In the Eco phase"), "mdi:leaf")}
+        ${this.numRow("dhw_comfort_dd", "mdi:sofa-outline", this.t("CWU · Komfort", "DHW · Comfort"), 0)}
+        ${this.numRow("dhw_eco_dd", "mdi:leaf", this.t("CWU · Eko", "DHW · Eco"), 0)}
+        ${this.selRow(this.eid("ot_leg"), this.t("Anty-legionella", "Anti-legionella"), "mdi:bacteria-outline")}
+        ${this.numRow("ot_leg_t", "mdi:thermometer-high", this.t("Temperatura anty-legionella", "Anti-legionella temperature"), 0)}` : nothing}
+      ${this.eid("ot_curve") ? html`<div class="grp">${this.t("Regulator Dominusa (jak menu CAR V2)", "Dominus regulator (like the CAR V2 menu)")}</div>
+        ${this.switchRow("ot_room_sensor", "mdi:home-thermometer-outline", "green", this.t("Czujnik pokojowy", "Room sensor"), this.t("AMB – regulacja wg temperatury pokoju", "AMB – control by the room temperature"))}
+        ${this.selRow(this.eid("ot_ntc"), this.t("Sonda Dominusa mierzy", "Dominus probe measures"), "mdi:thermometer-probe")}
+        ${this.switchRow("ot_out_sensor", "mdi:thermometer", "sky", this.t("Sonda zewnętrzna", "Outdoor sensor"), this.t("praca pogodowa wg krzywej", "weather compensation by the curve"))}
+        ${this.numRow("ot_curve", "mdi:chart-bell-curve-cumulative", this.t("Krzywa grzewcza", "Heating curve"), 1)}
+        ${this.numRow("ot_offset", "mdi:plus-minus-variant", this.t("Offset temperatury CO", "CH temperature offset"), 0)}
+        ${this.numRow("ot_ch_min", "mdi:thermometer-low", this.t("Min. temperatura CO", "Min. CH temperature"), 0)}
+        ${this.numRow("ot_inertia", "mdi:home-clock-outline", this.t("Bezwładność budynku (DIMENS)", "Building inertia (BUILD)"), 0)}
+        ${this.numRow("ot_hyst", "mdi:arrow-expand-vertical", this.t("Histereza pokojowa", "Room hysteresis"), 1)}
+        ${this.switchRow("ot_modul", "mdi:fire-circle", "peach", this.t("Modulacja", "Modulation"), this.t("MODUL – zasilanie wg różnicy pokój / zadana", "MODUL – flow by the room / setpoint difference"))}
+        ${this.switchRow("ot_frost", "mdi:snowflake-alert", "sky", this.t("Ochrona przed zamarzaniem", "Frost protection"), "")}
+        ${this.numRow("ot_frost_t", "mdi:snowflake-thermometer", this.t("Temperatura ochrony", "Protection temperature"), 1)}` : nothing}`;
+  }
+
   /** Immergas Dominus 1.3.0, online part: vacation, automatic summer / winter, alerts (all writes off by default) */
   private domRows() {
     const until = this.so("dom_vac_until"), u = until && !["unknown", "unavailable", ""].includes(until.state)
@@ -110,7 +136,8 @@ class ImmergasSettingsCard extends HubCard {
         ${this.numRow("heated_area", "mdi:floor-plan", this.t("Powierzchnia ogrzewana", "Heated floor area"), 0)}` : nothing}
       ${this.eid("dom_vacation") ? html`<div class="grp">${this.t("Tryb wyjazdowy", "Vacation")}</div>
         ${this.switchRow("dom_vacation", "mdi:bag-suitcase-outline", "sky", this.t("Tryb wyjazdowy", "Vacation mode"),
-          this.t("obniża zadaną Strefy 1, po powrocie przywraca", "lowers the zone 1 target, restores it on return"))}
+          this.ot ? this.t("wyłącza ogrzewanie (Lato), po powrocie przywraca tryb", "switches heating off (Summer), restores the mode on return")
+            : this.t("obniża zadaną Strefy 1, po powrocie przywraca", "lowers the zone 1 target, restores it on return"))}
         ${this.numRow("dom_vac_temp", "mdi:thermometer-low", this.t("Temperatura na wyjazd", "Vacation temperature"), 1)}
         <div class="nr"><ha-icon icon="mdi:calendar-end"></ha-icon><span class="nl" @click=${() => this.moreInfo("dom_vac_until")}>${this.t("Wyjazd do", "Away until")}</span>
           <span class="nv" style="min-width:auto">${u}</span></div>` : nothing}
@@ -193,7 +220,7 @@ class ImmergasSettingsCard extends HubCard {
           ${this.numRow("hub_p07", "mdi:thermometer-plus", this.t("P07 · korekta sondy zewnętrznej", "P07 · outdoor probe correction"), 0)}` : nothing}
       ` : nothing}
       ${open && this.dominus && off ? this.domOffline() : nothing}
-      ${open && this.dominus && on ? this.domRows() : nothing}
+      ${open && this.dominus && on ? html`${this.otRows()}${this.domRows()}` : nothing}
       ${open && lang && on ? html`<div class="grp">${this.t("Opisy błędów", "Fault descriptions")}</div>
           <div class="nr"><ha-icon icon="mdi:translate"></ha-icon><span class="nl">${this.t("Język", "Language")}</span>
             <select class="langs" .value=${lang.state} @change=${(e: Event) => { const o = (e.target as HTMLSelectElement).value; if (o !== lang.state) this.call("select", "select_option", "err_lang", { option: o }); }}>

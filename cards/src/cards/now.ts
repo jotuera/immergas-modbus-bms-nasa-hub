@@ -362,7 +362,8 @@ class ImmergasNowCard extends HubCard {
       </div>
       <div class="grid4">
         ${this.tile("outdoor", "mdi:thermometer", this.t("Na zewnątrz", "Outdoor"), this.f(out, 1, 1) + " °C", tempCol(out), (out + 15) / 50 * 100)}
-        ${ot ? this.tile("ot_flow", "mdi:thermometer-chevron-up", this.t("Zasilanie", "Flow"), this.f(fl, 1, 1) + " °C", tempCol(fl / 2), (fl - 20) / 60 * 100)
+        ${ot && this.eid("zone1") && !this.bad("zone1") ? this.tile("zone1", "mdi:home-thermometer", this.t("Pokój", "Room"), this.f(z1, 1, 1) + " °C", tempCol(z1), (z1 - 15) / 13 * 100)
+          : ot ? this.tile("ot_flow", "mdi:thermometer-chevron-up", this.t("Zasilanie", "Flow"), this.f(fl, 1, 1) + " °C", tempCol(fl / 2), (fl - 20) / 60 * 100)
           : this.tile("zone1", "mdi:home-thermometer", this.t("Strefa 1", "Zone 1"), this.f(z1, 1, 1) + " °C", tempCol(z1), (z1 - 15) / 13 * 100)}
         ${this.tile("tank", "mdi:water-boiler", ot ? this.t("Ciepła woda", "Hot water") : this.t("Zasobnik CWU", "DHW cylinder"), this.f(tank, 1, 1) + " °C", tank >= 45 ? "peach" : tank >= 35 ? "yellow" : "sky", (tank - 20) / 45 * 100)}
         ${ot ? this.tile("ot_mod", flame ? "mdi:fire" : "mdi:fire-off", this.t("Modulacja", "Modulation"), flame ? this.f(mod, 0) + " %" : this.t("płomień zgaszony", "no flame"), flame ? "peach" : "overlay1", flame ? mod : 0)

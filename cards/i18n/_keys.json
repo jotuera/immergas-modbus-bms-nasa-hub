@@ -1491,7 +1491,8 @@
   "files": [
    "calibration.ts",
    "mode.ts",
-   "now.ts"
+   "now.ts",
+   "settings.ts"
   ]
  },
  {
@@ -4857,7 +4858,8 @@
   "en": "Heating curve",
   "pl": "Krzywa grzewcza",
   "files": [
-   "curve.ts"
+   "curve.ts",
+   "settings.ts"
   ]
  },
  {
@@ -5974,7 +5976,8 @@
   "en": "Comfort / Eco by the DHW calendar",
   "pl": "Komfort / Eko wg kalendarza CWU",
   "files": [
-   "mode.ts"
+   "mode.ts",
+   "setpoints.ts"
   ]
  },
  {
@@ -6573,10 +6576,18 @@
   ]
  },
  {
+  "en": "Room",
+  "pl": "Pokój",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
   "en": "Modulation",
   "pl": "Modulacja",
   "files": [
-   "now.ts"
+   "now.ts",
+   "settings.ts"
   ]
  },
  {
@@ -6926,8 +6937,8 @@
   ]
  },
  {
-  "en": "CH · flow temperature",
-  "pl": "CO · temperatura zasilania",
+  "en": "CH · room",
+  "pl": "CO · pokój",
   "files": [
    "setpoints.ts"
   ]
@@ -6935,27 +6946,6 @@
  {
   "en": "heating",
   "pl": "grzeje",
-  "files": [
-   "setpoints.ts"
-  ]
- },
- {
-  "en": "setpoint = max flow temperature; with a CAR V2 remote the remote runs the heating curve",
-  "pl": "nastawa = maks. temperatura zasilania; z pilotem CAR V2 pilot prowadzi krzywą grzewczą",
-  "files": [
-   "setpoints.ts"
-  ]
- },
- {
-  "en": "CH · zone 1",
-  "pl": "CO · strefa 1",
-  "files": [
-   "setpoints.ts"
-  ]
- },
- {
-  "en": "cooling",
-  "pl": "chłodzi",
   "files": [
    "setpoints.ts"
   ]
@@ -6984,6 +6974,41 @@
  {
   "en": " · now ",
   "pl": " · teraz ",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "max. flow ",
+  "pl": "maks. zasilanie ",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "CH · flow temperature",
+  "pl": "CO · temperatura zasilania",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "setpoint = max flow temperature; with a CAR V2 remote the remote runs the heating curve",
+  "pl": "nastawa = maks. temperatura zasilania; z pilotem CAR V2 pilot prowadzi krzywą grzewczą",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "CH · zone 1",
+  "pl": "CO · strefa 1",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "cooling",
+  "pl": "chłodzi",
   "files": [
    "setpoints.ts"
   ]
@@ -7276,6 +7301,146 @@
   ]
  },
  {
+  "en": "CH and DHW program (Home Assistant)",
+  "pl": "Program CO i CWU (Home Assistant)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Room · Comfort",
+  "pl": "Pokój · Komfort",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Room · Eco",
+  "pl": "Pokój · Eko",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "In the Eco phase",
+  "pl": "W fazie Eko",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "DHW · Comfort",
+  "pl": "CWU · Komfort",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "DHW · Eco",
+  "pl": "CWU · Eko",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Anti-legionella temperature",
+  "pl": "Temperatura anty-legionella",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Dominus regulator (like the CAR V2 menu)",
+  "pl": "Regulator Dominusa (jak menu CAR V2)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Room sensor",
+  "pl": "Czujnik pokojowy",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "AMB – control by the room temperature",
+  "pl": "AMB – regulacja wg temperatury pokoju",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Dominus probe measures",
+  "pl": "Sonda Dominusa mierzy",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Outdoor sensor",
+  "pl": "Sonda zewnętrzna",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "weather compensation by the curve",
+  "pl": "praca pogodowa wg krzywej",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "CH temperature offset",
+  "pl": "Offset temperatury CO",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Min. CH temperature",
+  "pl": "Min. temperatura CO",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Building inertia (BUILD)",
+  "pl": "Bezwładność budynku (DIMENS)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Room hysteresis",
+  "pl": "Histereza pokojowa",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "MODUL – flow by the room / setpoint difference",
+  "pl": "MODUL – zasilanie wg różnicy pokój / zadana",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Frost protection",
+  "pl": "Ochrona przed zamarzaniem",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Protection temperature",
+  "pl": "Temperatura ochrony",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
   "en": "until switched off",
   "pl": "do wyłączenia",
   "files": [
@@ -7320,6 +7485,13 @@
  {
   "en": "Vacation",
   "pl": "Tryb wyjazdowy",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "switches heating off (Summer), restores the mode on return",
+  "pl": "wyłącza ogrzewanie (Lato), po powrocie przywraca tryb",
   "files": [
    "settings.ts"
   ]

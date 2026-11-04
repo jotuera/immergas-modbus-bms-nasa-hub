@@ -104,7 +104,15 @@ class ImmergasSetpointsCard extends HubCard {
     const auto = (() => { const o: string[] = this.attr("prog_mode", "options") ?? []; return o.length === 2 && this.s("prog_mode") === o[1]; })()
       || (this.dominus && ["comfort", "economy"].includes(this.s("zone1_phase") ?? ""));
     const phase = this.bad("zone1_phase") ? "" : this.txt("zone1_phase")!;
-    const ch = this.ot ? this.tileView({
+    const otRoom = this.ot && !!this.eid("ot_room_set"), zr = this.n("zone1");
+    const ch = otRoom ? this.tileView({
+      k: "ot_room_set", meas: this.eid("zone1") ? "zone1" : "ot_flow", icon: "mdi:radiator", col: tempCol(zr), title: this.t("Ogrzewanie", "Heating"),
+      sub: this.t("CO · pokój", "CH · room"), temp: this.eid("zone1") ? zr : this.n("ot_flow"),
+      status: chRun ? this.t("grzeje", "heating") : this.t("czuwa", "standby"), active: chRun,
+      profiles: this.eid("comfort_heat") ? [["eco", this.t("EKO", "ECO"), this.n("eco_heat")], ["comfort", this.t("KOMFORT", "COMFORT"), this.n("comfort_heat")]] : [],
+      hint: (auto ? this.t("program AUTO: nastawę zmienia harmonogram", "AUTO program: the schedule changes the setpoint") + (phase ? this.t(" · teraz ", " · now ") + phase : "") + " · " : "")
+        + this.t("maks. zasilanie ", "max. flow ") + this.f(this.n("ot_ch_set"), 0) + " °C",
+    }) : this.ot ? this.tileView({
       k: "ot_ch_set", meas: "ot_flow", icon: "mdi:radiator", col: "peach", title: this.t("Ogrzewanie", "Heating"), sub: this.t("CO · temperatura zasilania", "CH · flow temperature"),
       temp: this.n("ot_flow"), status: chRun ? this.t("grzeje", "heating") : this.t("czuwa", "standby"), active: chRun, profiles: [],
       hint: this.t("nastawa = maks. temperatura zasilania; z pilotem CAR V2 pilot prowadzi krzywą grzewczą", "setpoint = max flow temperature; with a CAR V2 remote the remote runs the heating curve"),
@@ -124,8 +132,10 @@ class ImmergasSetpointsCard extends HubCard {
     const dEco = dd ? this.n("dhw_eco_dd") : this.prof("dhw_eco", 45), dCom = dd ? this.n("dhw_comfort_dd") : this.prof("dhw_comfort", 55);
     const dhw = this.ot ? this.tileView({
       k: "dhw_set", meas: "tank", icon: "mdi:water-boiler", col: "peach", title: this.t("Ciepła woda", "Hot water"), sub: this.t("CWU", "DHW"), temp: tank,
-      status: dhwRun ? this.t("grzeje", "heating") : this.t("czuwa", "standby"), active: dhwRun, profiles: [],
-      hint: this.t("z pilotem CAR V2 nastawę CWU ustawia pokrętło pilota", "with a CAR V2 remote its dial sets the DHW setpoint"),
+      status: dhwRun ? this.t("grzeje", "heating") : this.t("czuwa", "standby"), active: dhwRun,
+      profiles: this.eid("dhw_comfort_dd") ? [["eco", this.t("EKO", "ECO"), this.n("dhw_eco_dd")], ["comfort", this.t("KOMFORT", "COMFORT"), this.n("dhw_comfort_dd")]] : [],
+      hint: this.on("dhw_sched") ? this.t("Komfort / Eko wg kalendarza CWU", "Comfort / Eco by the DHW calendar")
+        : this.t("z pilotem CAR V2 nastawę CWU ustawia pokrętło pilota", "with a CAR V2 remote its dial sets the DHW setpoint"),
     }) : this.tileView({
       k: "dhw_set", meas: "tank", icon: "mdi:water-boiler", col: "peach", title: this.t("Ciepła woda", "Hot water"), sub: this.t("CWU · zasobnik", "DHW · cylinder"), temp: tank,
       status: dhwRun ? this.t("grzeje", "heating") : this.t("czuwa", "standby"), active: dhwRun,
