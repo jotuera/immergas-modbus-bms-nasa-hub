@@ -196,6 +196,9 @@ sensor:
     state_class: measurement
     lambda: |-
       // v62: shows the room temp fed to the boiler (from HA, via the emulated panel 0x29).
+      // 1.2.1: with the physical panel (emulation off) the boiler gets the panel's own reading (PDU 2005) - show that
+      // one, otherwise this template and the engine publish two values every few seconds.
+      if (!id(dd_emulate_29_diag) && id(dd_zone1_temp_raw) > 0) return id(dd_zone1_temp_raw) / 10.0f;
       return id(dd_ha_room_temp_raw) / 10.0f;
     update_interval: 5s
 
