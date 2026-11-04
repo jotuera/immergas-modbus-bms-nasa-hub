@@ -95,6 +95,7 @@ substitutions:
   n_dd_number_dominus_eco_heat: "${dd_name_prefix} - Sollwert Eco Heizen Zone 1"
   n_dd_number_dominus_comfort_cool: "${dd_name_prefix} - Sollwert Komfort Kühlen Zone 1"
   n_dd_number_dominus_eco_cool: "${dd_name_prefix} - Sollwert Eco Kühlen Zone 1"
+  n_dd_number_ch_min_set: "${dd_name_prefix} - Min. Heizungssollwert Zone 1"
   n_dd_number_dominus_humidity: "${dd_name_prefix} - U07 Feuchtesollwert Zone 1"
   n_dd_number_dominus_set_flow: "${dd_name_prefix} - Vorlaufsollwert Zone 1"
   n_dd_sel_programy_czasowe: "${dd_name_prefix} - Zeitprogramme Zone 1"

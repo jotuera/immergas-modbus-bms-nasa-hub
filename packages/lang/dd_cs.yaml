@@ -95,6 +95,7 @@ substitutions:
   n_dd_number_dominus_eco_heat: "${dd_name_prefix} - Útlumové topení zóny 1"
   n_dd_number_dominus_comfort_cool: "${dd_name_prefix} - Komfortní chlazení zóny 1"
   n_dd_number_dominus_eco_cool: "${dd_name_prefix} - Útlumové chlazení zóny 1"
+  n_dd_number_ch_min_set: "${dd_name_prefix} - Min. nastavení vytápění zóny 1"
   n_dd_number_dominus_humidity: "${dd_name_prefix} - U07 Nastavení vlhkosti zóny 1"
   n_dd_number_dominus_set_flow: "${dd_name_prefix} - Žádaná teplota výstupu zóny 1"
   n_dd_sel_programy_czasowe: "${dd_name_prefix} - Časové programy zóny 1"

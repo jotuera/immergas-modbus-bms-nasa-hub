@@ -95,6 +95,7 @@ substitutions:
   n_dd_number_dominus_eco_heat: "${dd_name_prefix} - Setpoint eco aquecimento Zona 1"
   n_dd_number_dominus_comfort_cool: "${dd_name_prefix} - Setpoint conforto arrefecimento Zona 1"
   n_dd_number_dominus_eco_cool: "${dd_name_prefix} - Setpoint eco arrefecimento Zona 1"
+  n_dd_number_ch_min_set: "${dd_name_prefix} - Setpoint mín. aquecimento Zona 1"
   n_dd_number_dominus_humidity: "${dd_name_prefix} - U07 Definição humidade zona 1"
   n_dd_number_dominus_set_flow: "${dd_name_prefix} - Setpoint ida Zona 1"
   n_dd_sel_programy_czasowe: "${dd_name_prefix} - Programas horários Zona 1"

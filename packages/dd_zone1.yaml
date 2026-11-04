@@ -4,6 +4,25 @@
 # File and id names start with dd_ so this repo can be combined with the T-/T+ and F1/F2 repos on one device.
 
 number:
+  # 1.2.1: "CH min. set" of the zone 1 panel (PDU 2707) - served by the emulated panel, taken from a physical one
+  - platform: template
+    name: "${n_dd_number_ch_min_set}"
+    id: dd_number_ch_min_set
+    icon: mdi:thermometer-chevron-down
+    unit_of_measurement: "°C"
+    entity_category: config
+    min_value: 20
+    max_value: 45
+    step: 1
+    mode: box
+    optimistic: false
+    lambda: |-
+      return id(dd_ch_min_set_raw) / 10.0f;
+    set_action:
+      - lambda: |-
+          id(dd_ch_min_set_raw) = (int) round(x * 10.0f);
+          id(dd_number_ch_min_set).publish_state(x);
+
   # ------------------------------------------------------------
   # Zone 1 - active setpoint and U03/Offset
   # ------------------------------------------------------------

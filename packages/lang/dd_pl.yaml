@@ -95,6 +95,7 @@ substitutions:
   n_dd_number_dominus_eco_heat: "${dd_name_prefix} - Set Eco Heat Strefy 1"
   n_dd_number_dominus_comfort_cool: "${dd_name_prefix} - Set Comfort Cool Strefy 1"
   n_dd_number_dominus_eco_cool: "${dd_name_prefix} - Set Eco Cool Strefy 1"
+  n_dd_number_ch_min_set: "${dd_name_prefix} - Min. nastawa ogrzewania Strefy 1 (CH min. set)"
   n_dd_number_dominus_humidity: "${dd_name_prefix} - U07 Ustawienie wilgotności strefy 1"
   n_dd_number_dominus_set_flow: "${dd_name_prefix} - Set Flow Strefy 1"
   n_dd_sel_programy_czasowe: "${dd_name_prefix} - Programy czasowe Strefy 1"

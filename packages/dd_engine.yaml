@@ -544,6 +544,13 @@ globals:
     restore_value: yes
     initial_value: '250'
 
+  # 1.2.1: PDU 2707 = "CH min. set" of the zone panel (User menu, minimum heating flow setpoint) - confirmed by changing
+  # it on a physical panel (25 -> 26 °C); it was taken for an Eco Cool copy before
+  - id: dd_ch_min_set_raw
+    type: int
+    restore_value: yes
+    initial_value: '250'
+
   - id: dd_dominus_humidity_raw
     type: int
     restore_value: yes
@@ -889,7 +896,7 @@ interval:
           static const uint16_t REG_DHW_SETPOINT_COPY_1     = 2291;
           static const uint16_t REG_DHW_SETPOINT_COPY_2     = 2292;
           static const uint16_t REG_DHW_TEMP_COPY_2293      = 2293;
-          static const uint16_t REG_ECO_COOL                = 2707;
+          static const uint16_t REG_ECO_COOL                = 2707;  // 1.2.1: really "CH min. set" (name kept for the tables)
 
           static const uint16_t REG_OUTSIDE_TEMP            = 3002;
           static const uint16_t REG_ZONE1_TEMP_COPY         = 3009;
@@ -1175,7 +1182,7 @@ interval:
               case 2494: case 2495: case 2496:
                 return chrono_reg_value(reg);
 
-              case REG_ECO_COOL: return id(dd_dominus_eco_cool_raw);
+              case REG_ECO_COOL: return id(dd_ch_min_set_raw);  // 1.2.1: 2707 = CH min. set
               case REG_OUTSIDE_TEMP: return id(dd_outside_temp_raw) > 0 ? id(dd_outside_temp_raw) : 167;
               case 3003: return 0;
               case REG_ZONE1_TEMP_COPY: return id(dd_ha_room_temp_raw);  // v62: temp z HA (kopia 3009)
@@ -2051,6 +2058,15 @@ interval:
               return;
             }
 
+            if (reg == REG_ECO_COOL && addr == 0x29) {
+              // 1.2.1: CH min. set of the zone 1 panel
+              if (value >= 100 && value <= 600 && value != id(dd_ch_min_set_raw)) {
+                id(dd_ch_min_set_raw) = value;
+                id(dd_number_ch_min_set).publish_state(value / 10.0f);
+              }
+              ESP_LOGI("dd_value", "%s addr=0x29 CH min. set PDU 2707 = %d / %.1f°C", source, value, value / 10.0f);
+              return;
+            }
             if (reg == REG_ECO_COOL_COPY || reg == REG_ECO_COOL) {
               if (addr == 0x2A) { id(dd_dominus_eco_cool_z2_raw) = value; id(dd_number_dominus_eco_cool_z2).publish_state(value / 10.0f); }
               else if (addr == 0x2B) { id(dd_dominus_eco_cool_z3_raw) = value; id(dd_number_dominus_eco_cool_z3).publish_state(value / 10.0f); }
