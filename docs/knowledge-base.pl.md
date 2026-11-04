@@ -706,7 +706,7 @@ pracy), ale nie trafiają do HA.
 | `f1f2_transmit` | `"true"` | zapytania READ na F1/F2 (FSV); `"false"` = czysty nasłuch |
 | `dd_temp_src_2…5`, `dd_hum_src_2…5` | Twoje sensory HA | źródła temperatury/wilgotności strefy 1 (slot 1 = panel) |
 | `dd_temp_src_z2_*`, `dd_temp_src_z3_*`, `…hum…` | Twoje sensory HA | strefy 2 i 3 |
-| `dd_setpoint_step` | `0.5` | krok nastaw stref |
+| `dd_setpoint_step` | `0.1` | krok nastaw stref |
 | `hub_gas_heat_kwh_per_m3` | `10.6` | ciepło użytkowe z 1 m³ gazu |
 | `hub_currency` | `zł` | waluta w jednostkach cen i kosztów (karty używają tej samej) |
 

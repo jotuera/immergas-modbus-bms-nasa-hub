@@ -717,7 +717,7 @@ operating state), but do not reach HA.
 | `f1f2_transmit` | `"true"` | READ requests on F1/F2 (FSV); `"false"` = pure listening |
 | `dd_temp_src_2…5`, `dd_hum_src_2…5` | your HA sensors | zone 1 temperature/humidity sources (slot 1 = panel) |
 | `dd_temp_src_z2_*`, `dd_temp_src_z3_*`, `…hum…` | your HA sensors | zones 2 and 3 |
-| `dd_setpoint_step` | `0.5` | zone setpoint step |
+| `dd_setpoint_step` | `0.1` | zone setpoint step |
 | `hub_gas_heat_kwh_per_m3` | `10.6` | usable heat from 1 m³ of gas |
 | `hub_currency` | `zł` | currency in the price and cost units (the cards use the same one) |
 
