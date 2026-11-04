@@ -402,7 +402,8 @@
   "en": "Control",
   "pl": "Sterowanie",
   "files": [
-   "automations.ts"
+   "automations.ts",
+   "strategy.ts"
   ]
  },
  {
@@ -3598,7 +3599,8 @@
   "pl": "Obecnie",
   "files": [
    "calibration.ts",
-   "now.ts"
+   "now.ts",
+   "strategy.ts"
   ]
  },
  {
@@ -7496,6 +7498,41 @@
   "pl": "Język",
   "files": [
    "settings.ts"
+  ]
+ },
+ {
+  "en": "OpenTherm: mode, CH and DHW setpoint. With a **CAR V2 (Amico V2)** remote wired to the boiler the remote is in charge – the DHW setpoint cannot be changed and the weekly schedule runs on the remote. The Dominus module accepts **one connection at a time** – close the Dominus app before changing setpoints.",
+  "pl": "OpenTherm: tryb, nastawa CO i CWU. Gdy do kotła jest podłączony pilot **CAR V2 (Amico V2)**, to on steruje – nastawy CWU nie da się zmienić, a harmonogram tygodniowy prowadzi pilot. Moduł Dominus przyjmuje **jedno połączenie naraz** – przed zmianą nastaw zamknij aplikację Dominus.",
+  "files": [
+   "strategy.ts"
+  ]
+ },
+ {
+  "en": "History",
+  "pl": "Historia",
+  "files": [
+   "strategy.ts"
+  ]
+ },
+ {
+  "en": "Temperatures",
+  "pl": "Temperatury",
+  "files": [
+   "strategy.ts"
+  ]
+ },
+ {
+  "en": "Burner",
+  "pl": "Praca palnika",
+  "files": [
+   "strategy.ts"
+  ]
+ },
+ {
+  "en": "Pressure",
+  "pl": "Ciśnienie",
+  "files": [
+   "strategy.ts"
   ]
  }
 ]

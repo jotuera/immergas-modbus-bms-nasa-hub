@@ -1106,5 +1106,10 @@
  "weighted: heating hours/degree day 40 %, room deviation 30 %, starts/day 20 %, run length 10 %": "ponderado: horas de calefacción/grado-día 40 %, desviación de la estancia 30 %, arranques/día 20 %, duración 10 %",
  "Without a change date (option optimized_since): the last 7 days against the 7 before.": "Sin fecha de cambio (opción optimized_since): los últimos 7 días frente a los 7 anteriores.",
  "Dominus does not measure energy – the comparison uses heating time; add a power / gas meter with the energy_entity / gas_entity options.": "Dominus no mide energía – la comparación usa el tiempo de calefacción; añade un contador de luz / gas con las opciones energy_entity / gas_entity.",
- "DHW by the boiler (I03 = 1 min) – a high threshold means always gas, keep": "ACS con la caldera (I03 = 1 min) – umbral alto = siempre gas, sin cambios"
+ "DHW by the boiler (I03 = 1 min) – a high threshold means always gas, keep": "ACS con la caldera (I03 = 1 min) – umbral alto = siempre gas, sin cambios",
+ "History": "Historial",
+ "Temperatures": "Temperaturas",
+ "Burner": "Quemador",
+ "Pressure": "Presión",
+ "OpenTherm: mode, CH and DHW setpoint. With a **CAR V2 (Amico V2)** remote wired to the boiler the remote is in charge – the DHW setpoint cannot be changed and the weekly schedule runs on the remote. The Dominus module accepts **one connection at a time** – close the Dominus app before changing setpoints.": "OpenTherm: modo, consigna de calefacción y ACS. Con un mando **CAR V2 (Amico V2)** conectado a la caldera, el mando tiene el control – la consigna de ACS no se puede cambiar y la programación semanal está en el mando. El módulo Dominus acepta **una sola conexión a la vez** – cierre la app Dominus antes de cambiar consignas."
 }

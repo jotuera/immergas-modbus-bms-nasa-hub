@@ -1106,5 +1106,10 @@
  "weighted: heating hours/degree day 40 %, room deviation 30 %, starts/day 20 %, run length 10 %": "ponderado: horas de aquecimento/grau-dia 40 %, desvio da divisão 30 %, arranques/dia 20 %, duração 10 %",
  "Without a change date (option optimized_since): the last 7 days against the 7 before.": "Sem data da alteração (opção optimized_since): os últimos 7 dias face aos 7 anteriores.",
  "Dominus does not measure energy – the comparison uses heating time; add a power / gas meter with the energy_entity / gas_entity options.": "O Dominus não mede energia – a comparação usa o tempo de aquecimento; adicione um contador de eletricidade / gás com as opções energy_entity / gas_entity.",
- "DHW by the boiler (I03 = 1 min) – a high threshold means always gas, keep": "AQS pela caldeira (I03 = 1 min) – limiar alto = sempre gás, sem alterações"
+ "DHW by the boiler (I03 = 1 min) – a high threshold means always gas, keep": "AQS pela caldeira (I03 = 1 min) – limiar alto = sempre gás, sem alterações",
+ "History": "Histórico",
+ "Temperatures": "Temperaturas",
+ "Burner": "Queimador",
+ "Pressure": "Pressão",
+ "OpenTherm: mode, CH and DHW setpoint. With a **CAR V2 (Amico V2)** remote wired to the boiler the remote is in charge – the DHW setpoint cannot be changed and the weekly schedule runs on the remote. The Dominus module accepts **one connection at a time** – close the Dominus app before changing setpoints.": "OpenTherm: modo, setpoint de aquecimento e AQS. Com um comando **CAR V2 (Amico V2)** ligado à caldeira é o comando que controla – o setpoint de AQS não pode ser alterado e a programação semanal está no comando. O módulo Dominus aceita **uma ligação de cada vez** – feche a app Dominus antes de alterar setpoints."
 }

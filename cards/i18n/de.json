@@ -1106,5 +1106,10 @@
  "weighted: heating hours/degree day 40 %, room deviation 30 %, starts/day 20 %, run length 10 %": "gewichtet: Heizstunden/Gradtag 40 %, Raumabweichung 30 %, Starts/Tag 20 %, Laufzeit 10 %",
  "Without a change date (option optimized_since): the last 7 days against the 7 before.": "Ohne Änderungsdatum (Option optimized_since): die letzten 7 Tage gegen die 7 davor.",
  "Dominus does not measure energy – the comparison uses heating time; add a power / gas meter with the energy_entity / gas_entity options.": "Dominus misst keine Energie – der Vergleich nutzt die Heizzeit; einen Strom- / Gaszähler fügen Sie mit den Optionen energy_entity / gas_entity hinzu.",
- "DHW by the boiler (I03 = 1 min) – a high threshold means always gas, keep": "WW über den Kessel (I03 = 1 min) – hohe Schwelle = immer Gas, unverändert"
+ "DHW by the boiler (I03 = 1 min) – a high threshold means always gas, keep": "WW über den Kessel (I03 = 1 min) – hohe Schwelle = immer Gas, unverändert",
+ "History": "Verlauf",
+ "Temperatures": "Temperaturen",
+ "Burner": "Brenner",
+ "Pressure": "Druck",
+ "OpenTherm: mode, CH and DHW setpoint. With a **CAR V2 (Amico V2)** remote wired to the boiler the remote is in charge – the DHW setpoint cannot be changed and the weekly schedule runs on the remote. The Dominus module accepts **one connection at a time** – close the Dominus app before changing setpoints.": "OpenTherm: Betriebsart, Heizungs- und Warmwasser-Sollwert. Ist eine **CAR V2 (Amico V2)** Fernbedienung am Kessel angeschlossen, steuert sie – der Warmwasser-Sollwert lässt sich nicht ändern und das Wochenprogramm läuft auf der Fernbedienung. Das Dominus-Modul akzeptiert **nur eine Verbindung gleichzeitig** – schließen Sie die Dominus-App, bevor Sie Sollwerte ändern."
 }

@@ -1106,5 +1106,10 @@
  "weighted: heating hours/degree day 40 %, room deviation 30 %, starts/day 20 %, run length 10 %": "pondéré : heures de chauffe/degré-jour 40 %, écart de la pièce 30 %, démarrages/jour 20 %, durée 10 %",
  "Without a change date (option optimized_since): the last 7 days against the 7 before.": "Sans date de changement (option optimized_since) : les 7 derniers jours contre les 7 précédents.",
  "Dominus does not measure energy – the comparison uses heating time; add a power / gas meter with the energy_entity / gas_entity options.": "Dominus ne mesure pas l'énergie – la comparaison utilise le temps de chauffe ; ajoutez un compteur électrique / gaz avec les options energy_entity / gas_entity.",
- "DHW by the boiler (I03 = 1 min) – a high threshold means always gas, keep": "ECS par la chaudière (I03 = 1 min) – seuil élevé = toujours gaz, inchangé"
+ "DHW by the boiler (I03 = 1 min) – a high threshold means always gas, keep": "ECS par la chaudière (I03 = 1 min) – seuil élevé = toujours gaz, inchangé",
+ "History": "Historique",
+ "Temperatures": "Températures",
+ "Burner": "Brûleur",
+ "Pressure": "Pression",
+ "OpenTherm: mode, CH and DHW setpoint. With a **CAR V2 (Amico V2)** remote wired to the boiler the remote is in charge – the DHW setpoint cannot be changed and the weekly schedule runs on the remote. The Dominus module accepts **one connection at a time** – close the Dominus app before changing setpoints.": "OpenTherm : mode, consigne chauffage et ECS. Avec une commande **CAR V2 (Amico V2)** raccordée à la chaudière, c'est elle qui pilote – la consigne ECS ne peut pas être modifiée et la programmation hebdomadaire est dans la commande. Le module Dominus n'accepte **qu'une connexion à la fois** – fermez l'app Dominus avant de modifier les consignes."
 }

@@ -1106,5 +1106,10 @@
  "weighted: heating hours/degree day 40 %, room deviation 30 %, starts/day 20 %, run length 10 %": "gewogen: stookuren/graaddag 40 %, kamerafwijking 30 %, starts/dag 20 %, looptijd 10 %",
  "Without a change date (option optimized_since): the last 7 days against the 7 before.": "Zonder wijzigingsdatum (optie optimized_since): de laatste 7 dagen tegen de 7 ervoor.",
  "Dominus does not measure energy – the comparison uses heating time; add a power / gas meter with the energy_entity / gas_entity options.": "Dominus meet geen energie – de vergelijking gebruikt de stooktijd; voeg een stroom- / gasmeter toe met de opties energy_entity / gas_entity.",
- "DHW by the boiler (I03 = 1 min) – a high threshold means always gas, keep": "SWW via de ketel (I03 = 1 min) – hoge drempel = altijd gas, ongewijzigd"
+ "DHW by the boiler (I03 = 1 min) – a high threshold means always gas, keep": "SWW via de ketel (I03 = 1 min) – hoge drempel = altijd gas, ongewijzigd",
+ "History": "Geschiedenis",
+ "Temperatures": "Temperaturen",
+ "Burner": "Brander",
+ "Pressure": "Druk",
+ "OpenTherm: mode, CH and DHW setpoint. With a **CAR V2 (Amico V2)** remote wired to the boiler the remote is in charge – the DHW setpoint cannot be changed and the weekly schedule runs on the remote. The Dominus module accepts **one connection at a time** – close the Dominus app before changing setpoints.": "OpenTherm: modus, CV- en tapwater-setpoint. Met een **CAR V2 (Amico V2)** afstandsbediening aan de ketel heeft die de regie – het tapwater-setpoint kan niet worden gewijzigd en het weekprogramma draait op de afstandsbediening. De Dominus-module accepteert **één verbinding tegelijk** – sluit de Dominus-app voordat u setpoints wijzigt."
 }

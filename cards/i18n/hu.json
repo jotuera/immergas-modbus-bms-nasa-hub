@@ -1106,5 +1106,10 @@
  "weighted: heating hours/degree day 40 %, room deviation 30 %, starts/day 20 %, run length 10 %": "súlyozva: fűtési órák/hőfoknap 40 %, szobaeltérés 30 %, indítás/nap 20 %, futamidő 10 %",
  "Without a change date (option optimized_since): the last 7 days against the 7 before.": "Változtatási dátum nélkül (optimized_since opció): az utolsó 7 nap az előző 7-tel szemben.",
  "Dominus does not measure energy – the comparison uses heating time; add a power / gas meter with the energy_entity / gas_entity options.": "A Dominus nem mér energiát – az összevetés a fűtési időn alapul; áram- / gázmérőt az energy_entity / gas_entity opcióval adhat hozzá.",
- "DHW by the boiler (I03 = 1 min) – a high threshold means always gas, keep": "HMV kazánnal (I03 = 1 min) – magas küszöb = mindig gáz, változatlan"
+ "DHW by the boiler (I03 = 1 min) – a high threshold means always gas, keep": "HMV kazánnal (I03 = 1 min) – magas küszöb = mindig gáz, változatlan",
+ "History": "Előzmények",
+ "Temperatures": "Hőmérsékletek",
+ "Burner": "Égő",
+ "Pressure": "Nyomás",
+ "OpenTherm: mode, CH and DHW setpoint. With a **CAR V2 (Amico V2)** remote wired to the boiler the remote is in charge – the DHW setpoint cannot be changed and the weekly schedule runs on the remote. The Dominus module accepts **one connection at a time** – close the Dominus app before changing setpoints.": "OpenTherm: üzemmód, fűtési és HMV alapjel. Ha a kazánhoz **CAR V2 (Amico V2)** távvezérlő csatlakozik, az irányít – a HMV alapjel nem módosítható, a heti program a távvezérlőn fut. A Dominus modul **egyszerre csak egy kapcsolatot** fogad – az alapjelek módosítása előtt zárja be a Dominus alkalmazást."
 }

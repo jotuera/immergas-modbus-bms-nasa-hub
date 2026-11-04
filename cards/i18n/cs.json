@@ -1106,5 +1106,10 @@
  "weighted: heating hours/degree day 40 %, room deviation 30 %, starts/day 20 %, run length 10 %": "váženo: hodiny topení/denostupeň 40 %, odchylka místnosti 30 %, starty/den 20 %, délka topení 10 %",
  "Without a change date (option optimized_since): the last 7 days against the 7 before.": "Bez data změny (volba optimized_since): posledních 7 dní proti 7 předchozím.",
  "Dominus does not measure energy – the comparison uses heating time; add a power / gas meter with the energy_entity / gas_entity options.": "Dominus neměří energii – porovnání vychází z doby topení; měřič elektřiny / plynu přidáte volbami energy_entity / gas_entity.",
- "DHW by the boiler (I03 = 1 min) – a high threshold means always gas, keep": "TUV kotlem (I03 = 1 min) – vysoký práh = vždy plyn, beze změny"
+ "DHW by the boiler (I03 = 1 min) – a high threshold means always gas, keep": "TUV kotlem (I03 = 1 min) – vysoký práh = vždy plyn, beze změny",
+ "History": "Historie",
+ "Temperatures": "Teploty",
+ "Burner": "Hořák",
+ "Pressure": "Tlak",
+ "OpenTherm: mode, CH and DHW setpoint. With a **CAR V2 (Amico V2)** remote wired to the boiler the remote is in charge – the DHW setpoint cannot be changed and the weekly schedule runs on the remote. The Dominus module accepts **one connection at a time** – close the Dominus app before changing setpoints.": "OpenTherm: režim, nastavení ÚT a TUV. Pokud je ke kotli připojen ovladač **CAR V2 (Amico V2)**, řídí ho ovladač – nastavení TUV nelze změnit a týdenní program běží v ovladači. Modul Dominus přijímá **jen jedno připojení najednou** – před změnou nastavení zavřete aplikaci Dominus."
 }
