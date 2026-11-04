@@ -28,6 +28,7 @@ substitutions:
   t_dd_mode_winter: "Zima CO+CWU"
   t_dd_phase_comfort: "Komfort"
   t_dd_phase_eco: "Eko"
+  t_dd_dhw_phase_panel: "panel strefy (fizyczny)"
   t_dd_phase_manual: "Ręczny"
   t_dd_phase_purge: "Odpowietrzanie"
   t_dd_tp_manual: "Ręcznie"

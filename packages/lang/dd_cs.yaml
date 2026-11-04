@@ -28,6 +28,7 @@ substitutions:
   t_dd_mode_winter: "Zima ÚT+TUV"
   t_dd_phase_comfort: "Komfort"
   t_dd_phase_eco: "Útlum"
+  t_dd_dhw_phase_panel: "panel zóny (fyzický)"
   t_dd_phase_manual: "Ruční"
   t_dd_phase_purge: "Odvzdušnění"
   t_dd_tp_manual: "Ruční"

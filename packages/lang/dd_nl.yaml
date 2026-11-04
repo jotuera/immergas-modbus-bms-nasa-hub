@@ -28,6 +28,7 @@ substitutions:
   t_dd_mode_winter: "Winter CV+SWW"
   t_dd_phase_comfort: "Comfort"
   t_dd_phase_eco: "Eco"
+  t_dd_dhw_phase_panel: "zonepaneel (fysiek)"
   t_dd_phase_manual: "Handmatig"
   t_dd_phase_purge: "Ontluchten"
   t_dd_tp_manual: "Handmatig"

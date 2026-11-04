@@ -137,6 +137,16 @@ interval:
     then:
       - lambda: |-
           if (!id(dd_dhw_comfort_eco).state) return;
+          // 1.2.1: a physical zone 1 panel runs its own DHW program - the hub must not write D05 next to it
+          if (!id(dd_emulate_29_diag) && id(dd_bs_panel_online).state) {
+            if (id(dd_dhw_phase_last) != -2) {
+              id(dd_dhw_phase_last) = -2;
+              id(dd_dhw_phase).publish_state("${t_dd_dhw_phase_panel}");
+              ESP_LOGW("dd_control", "DHW Comfort / Eco by schedule paused: the physical zone 1 panel runs the DHW program");
+            }
+            return;
+          }
+          if (id(dd_dhw_phase_last) == -2) id(dd_dhw_phase_last) = -1;  // panel gone: apply the phase again
           auto now = id(dd_ha_time).now();
           if (!now.is_valid()) return;
           // 2490-2496 = Mon..Sun; ESPTime day_of_week 1 = Sunday

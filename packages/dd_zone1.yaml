@@ -214,6 +214,8 @@ sensor:
     accuracy_decimals: 0
     lambda: |-
       // v62: shows the humidity fed to the boiler (from HA, via the emulated panel 0x29).
+      // 1.2.1: with the physical panel (emulation off) the boiler gets the panel's own reading (PDU 2006) - show that.
+      if (!id(dd_emulate_29_diag) && id(dd_pdu_29_2006_raw) > 0) return id(dd_pdu_29_2006_raw);
       return id(dd_ha_room_humidity_raw);
     update_interval: 5s
 

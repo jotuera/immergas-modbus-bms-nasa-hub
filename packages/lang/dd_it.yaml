@@ -29,6 +29,7 @@ substitutions:
   t_dd_mode_winter: "Inverno risc.+ACS"
   t_dd_phase_comfort: "Comfort"
   t_dd_phase_eco: "Economy"
+  t_dd_dhw_phase_panel: "pannello di zona (fisico)"
   t_dd_phase_manual: "Manuale"
   t_dd_phase_purge: "Disaerazione"
   t_dd_tp_manual: "Manuale"

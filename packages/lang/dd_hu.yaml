@@ -28,6 +28,7 @@ substitutions:
   t_dd_mode_winter: "Tél fűtés+HMV"
   t_dd_phase_comfort: "Komfort"
   t_dd_phase_eco: "Takarék"
+  t_dd_dhw_phase_panel: "zónapanel (fizikai)"
   t_dd_phase_manual: "Kézi"
   t_dd_phase_purge: "Légtelenítés"
   t_dd_tp_manual: "Kézi"

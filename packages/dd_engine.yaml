@@ -2150,6 +2150,15 @@ interval:
             // just made in HA.
             const bool panel_write = (func == 0x10 || func == 0x06) && (addr == 0x29 || addr == 0x2A || addr == 0x2B);
             const bool dominus_read = source[0] == 'R' && addr == 0x33 && !emulator_33_enabled();
+            // 1.2.1: a READ reply of a PHYSICAL zone panel is the real schedule - the panel owns the CH and DHW programs
+            // (the DHW days 2490-2496 exist only there: the boiler reads them from the panel, the Dominus returns 0).
+            // The hub cannot write to a physical panel, so it simply follows it, the first value included.
+            const bool panel_read = source[0] == 'R' && ((addr == 0x29 && !emulator_29_enabled()) ||
+                                    (addr == 0x2A && !emulator_2a_enabled()) || (addr == 0x2B && !emulator_2b_enabled()));
+            if (schedule_reg && chrono_is_schedule_reg(reg) && panel_read) {
+              if (chrono_apply(reg, value, "PANEL-R->HA")) chrono_learned[reg - 2310] = true;
+              return;
+            }
             if (schedule_reg && chrono_is_schedule_reg(reg) && (panel_write || dominus_read)) {
               static std::array<std::array<int32_t, 2497 - 2310>, 4> seen = [] {
                 std::array<std::array<int32_t, 2497 - 2310>, 4> a{};

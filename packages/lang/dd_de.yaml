@@ -28,6 +28,7 @@ substitutions:
   t_dd_mode_winter: "Winter Heizung+WW"
   t_dd_phase_comfort: "Komfort"
   t_dd_phase_eco: "Eco"
+  t_dd_dhw_phase_panel: "Zonenpanel (physisch)"
   t_dd_phase_manual: "Manuell"
   t_dd_phase_purge: "Entlüftung"
   t_dd_tp_manual: "Manuell"
