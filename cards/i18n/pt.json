@@ -1154,5 +1154,8 @@
  "MODUL – flow by the room / setpoint difference": "MODUL – ida pela diferença ambiente / setpoint",
  "Frost protection": "Proteção anticongelamento",
  "Protection temperature": "Temperatura de proteção",
- "switches heating off (Summer), restores the mode on return": "desliga o aquecimento (Verão), no regresso repõe o modo"
+ "switches heating off (Summer), restores the mode on return": "desliga o aquecimento (Verão), no regresso repõe o modo",
+ "DHW by the boiler: the setpoint does not affect the heat-pump COP; above 55 °C cylinder losses and scale grow": "AQS pela caldeira: o setpoint não afeta o COP da bomba; acima de 55 °C aumentam as perdas do depósito e o calcário",
+ "above 55 °C – cylinder losses": "acima de 55 °C – perdas do depósito",
+ "DHW by the boiler, 45–55 °C – keep": "AQS pela caldeira, 45–55 °C – manter"
 }

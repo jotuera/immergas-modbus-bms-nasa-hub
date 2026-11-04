@@ -1154,5 +1154,8 @@
  "MODUL – flow by the room / setpoint difference": "MODUL – départ selon l’écart pièce / consigne",
  "Frost protection": "Protection hors-gel",
  "Protection temperature": "Température de protection",
- "switches heating off (Summer), restores the mode on return": "coupe le chauffage (Été), rétablit le mode au retour"
+ "switches heating off (Summer), restores the mode on return": "coupe le chauffage (Été), rétablit le mode au retour",
+ "DHW by the boiler: the setpoint does not affect the heat-pump COP; above 55 °C cylinder losses and scale grow": "ECS par la chaudière : la consigne n’influe pas sur le COP de la PAC ; au-dessus de 55 °C les pertes du ballon et le tartre augmentent",
+ "above 55 °C – cylinder losses": "au-dessus de 55 °C – pertes du ballon",
+ "DHW by the boiler, 45–55 °C – keep": "ECS par la chaudière, 45–55 °C – inchangé"
 }

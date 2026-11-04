@@ -1154,5 +1154,8 @@
  "MODUL – flow by the room / setpoint difference": "MODUL – aanvoer volgens verschil ruimte / setpoint",
  "Frost protection": "Vorstbeveiliging",
  "Protection temperature": "Beveiligingstemperatuur",
- "switches heating off (Summer), restores the mode on return": "zet de verwarming uit (Zomer), herstelt de modus bij terugkomst"
+ "switches heating off (Summer), restores the mode on return": "zet de verwarming uit (Zomer), herstelt de modus bij terugkomst",
+ "DHW by the boiler: the setpoint does not affect the heat-pump COP; above 55 °C cylinder losses and scale grow": "Tapwater via de ketel: het setpoint beïnvloedt de COP van de warmtepomp niet; boven 55 °C nemen boilerverliezen en kalk toe",
+ "above 55 °C – cylinder losses": "boven 55 °C – boilerverliezen",
+ "DHW by the boiler, 45–55 °C – keep": "Tapwater via de ketel, 45–55 °C – ongewijzigd"
 }

@@ -482,7 +482,9 @@ class ImmergasCalibrationCard extends HubCard {
     // T05 = minimum pause between CH starts: raise it when the compressor cycles, never go below 15 min -
     // a shorter pause brings nothing for a slow floor and leaves no protection when cycling comes back
     const t05 = this.n("t05"), t05rec = isNaN(t05) ? NaN : S.coPerH > 3 ? cap(t05 + 5, 15, 20) : Math.max(t05, 15);
-    const dhw = this.n("dhw_set"), dhwRec = isNaN(dhw) ? NaN : dhw > 50 ? 48 : dhw < 45 ? 45 : dhw;
+    // DHW heated by the gas boiler (I01 on, source "boiler"): the setpoint does not cost heat-pump COP - 45-55 °C is fine
+    const dhwGas = !!this.eid("i01") && this.on("i01") && this.dhwSource().cur === "boiler";
+    const dhw = this.n("dhw_set"), dhwRec = isNaN(dhw) ? NaN : dhwGas ? (dhw > 55 ? 55 : dhw < 45 ? 45 : dhw) : dhw > 50 ? 48 : dhw < 45 ? 45 : dhw;
     const t02 = this.n("t02"), t02rec = isNaN(t02) ? NaN : S.dhwPerDay > 4 ? cap(Math.max(t02, 7), 0, 20) : t02 < 4 ? 5 : t02;
 
     // cycling: read-only rows - model, measured, and what to do about it
@@ -713,8 +715,10 @@ class ImmergasCalibrationCard extends HubCard {
       { k: "t07", code: "T07", name: ["Opóźnienie żądania z termostatu", "Room thermostat request delay"], unit: "s", d: 0,
         model: 0, why: ["bez opóźnienia – termostaty i tak pracują wolno", "no delay – the thermostats are slow anyway"], rec: 0, reason: ["0 s", "0 s"] },
       { k: "dhw_set", code: "D05", name: ["Nastawa CWU", "DHW setpoint"], unit: "°C", d: 1,
-        model: 48, why: ["pompa: każdy 1 K więcej to ~3 % gorszy COP; legionella osobno (P15)", "heat pump: each 1 K more costs ~3 % COP; legionella separately (P15)"],
-        rec: dhwRec, reason: dhw > 50 ? ["powyżej 50 °C pompa grzeje drogo", "above 50 °C the heat pump heats expensively"] : ["w zakresie 45–50 °C – bez zmian", "within 45–50 °C – keep"] },
+        model: dhwGas ? 50 : 48, why: dhwGas ? ["CWU kotłem: nastawa nie zmienia COP pompy; powyżej 55 °C rosną straty zasobnika i osad", "DHW by the boiler: the setpoint does not affect the heat-pump COP; above 55 °C cylinder losses and scale grow"]
+          : ["pompa: każdy 1 K więcej to ~3 % gorszy COP; legionella osobno (P15)", "heat pump: each 1 K more costs ~3 % COP; legionella separately (P15)"],
+        rec: dhwRec, reason: dhwGas ? (dhw > 55 ? ["powyżej 55 °C – straty zasobnika", "above 55 °C – cylinder losses"] : ["CWU kotłem, 45–55 °C – bez zmian", "DHW by the boiler, 45–55 °C – keep"])
+          : dhw > 50 ? ["powyżej 50 °C pompa grzeje drogo", "above 50 °C the heat pump heats expensively"] : ["w zakresie 45–50 °C – bez zmian", "within 45–50 °C – keep"] },
       { k: "t02", code: "T02", name: ["Histereza CWU", "DHW hysteresis"], unit: "K", d: 0,
         model: 5, why: ["większa histereza = rzadsze, dłuższe cykle CWU", "larger hysteresis = fewer, longer DHW cycles"],
         rec: t02rec, reason: [`${this.f(S.dhwPerDay, 1, 0)} cykli CWU na dobę`, `${this.f(S.dhwPerDay, 1, 0)} DHW cycles per day`] },

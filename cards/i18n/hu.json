@@ -1154,5 +1154,8 @@
  "MODUL – flow by the room / setpoint difference": "MODUL – előremenő a szoba / alapjel különbség szerint",
  "Frost protection": "Fagyvédelem",
  "Protection temperature": "Védelmi hőmérséklet",
- "switches heating off (Summer), restores the mode on return": "kikapcsolja a fűtést (Nyár), visszatéréskor visszaállítja az üzemmódot"
+ "switches heating off (Summer), restores the mode on return": "kikapcsolja a fűtést (Nyár), visszatéréskor visszaállítja az üzemmódot",
+ "DHW by the boiler: the setpoint does not affect the heat-pump COP; above 55 °C cylinder losses and scale grow": "HMV kazánnal: az alapjel nem befolyásolja a hőszivattyú COP-ját; 55 °C felett nő a tároló vesztesége és a vízkő",
+ "above 55 °C – cylinder losses": "55 °C felett – tárolóveszteség",
+ "DHW by the boiler, 45–55 °C – keep": "HMV kazánnal, 45–55 °C – változatlan"
 }

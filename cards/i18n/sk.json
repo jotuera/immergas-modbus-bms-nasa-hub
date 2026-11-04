@@ -1154,5 +1154,8 @@
  "MODUL – flow by the room / setpoint difference": "MODUL – výstup podľa rozdielu miestnosť / požadovaná",
  "Frost protection": "Protimrazová ochrana",
  "Protection temperature": "Teplota ochrany",
- "switches heating off (Summer), restores the mode on return": "vypne kúrenie (Leto), po návrate obnoví režim"
+ "switches heating off (Summer), restores the mode on return": "vypne kúrenie (Leto), po návrate obnoví režim",
+ "DHW by the boiler: the setpoint does not affect the heat-pump COP; above 55 °C cylinder losses and scale grow": "TÚV kotlom: nastavenie neovplyvňuje COP tepelného čerpadla; nad 55 °C rastú straty zásobníka a vodný kameň",
+ "above 55 °C – cylinder losses": "nad 55 °C – straty zásobníka",
+ "DHW by the boiler, 45–55 °C – keep": "TÚV kotlom, 45–55 °C – bez zmeny"
 }

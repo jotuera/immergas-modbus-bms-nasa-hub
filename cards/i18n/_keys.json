@@ -1730,8 +1730,29 @@
   ]
  },
  {
+  "en": "DHW by the boiler: the setpoint does not affect the heat-pump COP; above 55 °C cylinder losses and scale grow",
+  "pl": "CWU kotłem: nastawa nie zmienia COP pompy; powyżej 55 °C rosną straty zasobnika i osad",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
   "en": "heat pump: each 1 K more costs ~3 % COP; legionella separately (P15)",
   "pl": "pompa: każdy 1 K więcej to ~3 % gorszy COP; legionella osobno (P15)",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "above 55 °C – cylinder losses",
+  "pl": "powyżej 55 °C – straty zasobnika",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "DHW by the boiler, 45–55 °C – keep",
+  "pl": "CWU kotłem, 45–55 °C – bez zmian",
   "files": [
    "calibration.ts"
   ]

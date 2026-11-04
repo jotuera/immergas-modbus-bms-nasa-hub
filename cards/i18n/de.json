@@ -1154,5 +1154,8 @@
  "MODUL – flow by the room / setpoint difference": "MODUL – Vorlauf nach Differenz Raum / Sollwert",
  "Frost protection": "Frostschutz",
  "Protection temperature": "Schutztemperatur",
- "switches heating off (Summer), restores the mode on return": "schaltet die Heizung aus (Sommer), stellt die Betriebsart danach wieder her"
+ "switches heating off (Summer), restores the mode on return": "schaltet die Heizung aus (Sommer), stellt die Betriebsart danach wieder her",
+ "DHW by the boiler: the setpoint does not affect the heat-pump COP; above 55 °C cylinder losses and scale grow": "Warmwasser über den Kessel: der Sollwert beeinflusst den COP der Wärmepumpe nicht; über 55 °C steigen Speicherverluste und Kalk",
+ "above 55 °C – cylinder losses": "über 55 °C – Speicherverluste",
+ "DHW by the boiler, 45–55 °C – keep": "Warmwasser über den Kessel, 45–55 °C – unverändert"
 }

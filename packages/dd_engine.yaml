@@ -1984,6 +1984,19 @@ interval:
             // ------------------------------------------------------------
             // DHW setpoint: only 2095 counts. 2291 / 2292 trail it while a change spreads, and 3015 is the setpoint the
             // boiler applies right now (60 °C while the anti-legionella cycle runs) - none of them is the user setting.
+            // 1.2.1: on a PHYSICAL zone 1 panel 2290 = DHW Comfort, 2291 = DHW Eco, 2292 = the manual DHW setpoint
+            // (= 2095), confirmed by changing them on the panel; the panel owns them (the Dominus returns 0 there).
+            // Take Comfort / Eco into the hub's DHW Comfort / Eco numbers so they show the panel's values.
+            if (addr == 0x29 && source[0] == 'R' && !emulator_29_enabled() && (reg == 2290 || reg == REG_DHW_SETPOINT_COPY_1)) {
+              if (value >= 300 && value <= 650) {
+                number::Number *n = reg == 2290 ? id(dd_dhw_comfort_set) : id(dd_dhw_eco_set);
+                if (std::isnan(n->state) || fabsf(n->state - value / 10.0f) > 0.05f) {
+                  n->make_call().set_value(value / 10.0f).perform();
+                  ESP_LOGW("dd_value", "PANEL-R->HA DHW %s PDU %u = %.1f", reg == 2290 ? "Comfort" : "Eco", reg, value / 10.0f);
+                }
+              }
+              return;
+            }
             const bool dhw_copy = reg == REG_DHW_SETPOINT_COPY_1 || reg == REG_DHW_SETPOINT_COPY_2 || reg == REG_DHW_SETPOINT_COPY_3;
             if (dhw_copy) {
               ESP_LOGD("dd_value", "%s DHW setpoint copy PDU %u = %d (not used)", source, reg, value);
