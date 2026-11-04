@@ -1946,7 +1946,6 @@ interval:
                 return;
               }
               id(dd_zone1_temp_raw) = value;
-              id(dd_zone1_temp_sensor).publish_state(value / 10.0f);
               id(dd_ha_temp_raw_1) = value;  // v101: "${t_dd_src_panel}" source = real PDU 2005 of the physical panel 0x29
               if (id(dd_temp_src_idx) == 1) id(dd_ha_room_temp_raw) = value;
               ESP_LOGI("dd_value", "%s addr=0x29 Zone1 temp PDU %u = %d / %.1f°C", source, reg, value, value / 10.0f);
@@ -1956,7 +1955,6 @@ interval:
             if (reg == REG_ZONE1_TEMP_OLD && addr != 0x2A && addr != 0x2B) {  // v103: temp 0x2A/0x2B -> blok "${t_dd_src_panel}" wyzej
               if (!valid_temp_x10(value)) return;
               id(dd_zone1_temp_raw) = value;
-              id(dd_zone1_temp_sensor).publish_state(value / 10.0f);
               return;
             }
 
