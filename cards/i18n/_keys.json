@@ -6107,6 +6107,13 @@
   ]
  },
  {
+  "en": "· physical panel: its own sensor, the source choice is inactive",
+  "pl": "· fizyczny panel: temperatura z jego czujnika, wybór źródła nieaktywny",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
   "en": "humidity",
   "pl": "wilgotność",
   "files": [

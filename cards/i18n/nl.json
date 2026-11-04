@@ -1157,5 +1157,6 @@
  "switches heating off (Summer), restores the mode on return": "zet de verwarming uit (Zomer), herstelt de modus bij terugkomst",
  "DHW by the boiler: the setpoint does not affect the heat-pump COP; above 55 °C cylinder losses and scale grow": "Tapwater via de ketel: het setpoint beïnvloedt de COP van de warmtepomp niet; boven 55 °C nemen boilerverliezen en kalk toe",
  "above 55 °C – cylinder losses": "boven 55 °C – boilerverliezen",
- "DHW by the boiler, 45–55 °C – keep": "Tapwater via de ketel, 45–55 °C – ongewijzigd"
+ "DHW by the boiler, 45–55 °C – keep": "Tapwater via de ketel, 45–55 °C – ongewijzigd",
+ "· physical panel: its own sensor, the source choice is inactive": "· fysiek paneel: eigen voeler, bronkeuze inactief"
 }

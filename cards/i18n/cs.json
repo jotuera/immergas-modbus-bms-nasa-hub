@@ -1157,5 +1157,6 @@
  "switches heating off (Summer), restores the mode on return": "vypne topení (Léto), po návratu obnoví režim",
  "DHW by the boiler: the setpoint does not affect the heat-pump COP; above 55 °C cylinder losses and scale grow": "TUV kotlem: nastavení neovlivňuje COP tepelného čerpadla; nad 55 °C rostou ztráty zásobníku a vodní kámen",
  "above 55 °C – cylinder losses": "nad 55 °C – ztráty zásobníku",
- "DHW by the boiler, 45–55 °C – keep": "TUV kotlem, 45–55 °C – beze změny"
+ "DHW by the boiler, 45–55 °C – keep": "TUV kotlem, 45–55 °C – beze změny",
+ "· physical panel: its own sensor, the source choice is inactive": "· fyzický panel: vlastní čidlo, volba zdroje neaktivní"
 }

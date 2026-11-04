@@ -4,6 +4,8 @@ import { HubCard, html, css, nothing, c, ca, box, register } from "../base";
 class ImmergasModeCard extends HubCard {
   /** boiler OFF (its own button): it stops polling D+/D- (DD link off for 30 s+) while T-/T+ still answers with
    *  D99 = 0 - a broken D+/D- cable or a hub restart leaves T-/T+ silent or unavailable, so it does not count */
+  /** a physical zone 1 panel serves the boiler (hub emulation off, panel connected): it sends its own temperature */
+  private get physPanel(): boolean { return !!this.eid("dd_panel_link") && this.on("dd_panel_link") && !this.on("dd_emu_panel"); }
   private get boilerOff(): boolean {
     const link = this.so("dd_link");
     if (!link || link.state !== "off" || Date.now() - Date.parse(link.last_changed) < 30000) return false;
@@ -244,7 +246,8 @@ class ImmergasModeCard extends HubCard {
       ${this.config.show_toggles === false ? nothing : this.toggles([
         ["room_mod", "mdi:home-thermometer-outline", "green", this.t("Modulacja z sondą pokojową", "Room probe modulation"),
           html`${this.t("zasilanie korygowane wg temp. w pokoju", "flow corrected by the room temperature")}
-            ${this.selPick("temp_src", this.t("temperatura", "temperature"))}`, true],
+            ${this.physPanel ? html`<span style="color:${c("yellow")}">${this.t("· fizyczny panel: temperatura z jego czujnika, wybór źródła nieaktywny",
+              "· physical panel: its own sensor, the source choice is inactive")}</span>` : this.selPick("temp_src", this.t("temperatura", "temperature"))}`, true],
         ["dew_corr", "mdi:water-percent", "sky", this.t("Korekcja punktu rosy", "Dew point correction"),
           this.eid("hum_src") ? html`${this.selPick("hum_src", this.t("wilgotność", "humidity"))}` : undefined, true],
         ["boost", "mdi:water-boiler-alert", "yellow", this.t("Wymuszenie CWU", "DHW boost"), undefined, true],

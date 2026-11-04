@@ -1157,5 +1157,6 @@
  "switches heating off (Summer), restores the mode on return": "apaga la calefacción (Verano) y al volver restaura el modo",
  "DHW by the boiler: the setpoint does not affect the heat-pump COP; above 55 °C cylinder losses and scale grow": "ACS con caldera: la consigna no afecta al COP de la bomba; por encima de 55 °C crecen las pérdidas del depósito y la cal",
  "above 55 °C – cylinder losses": "por encima de 55 °C – pérdidas del depósito",
- "DHW by the boiler, 45–55 °C – keep": "ACS con caldera, 45–55 °C – sin cambios"
+ "DHW by the boiler, 45–55 °C – keep": "ACS con caldera, 45–55 °C – sin cambios",
+ "· physical panel: its own sensor, the source choice is inactive": "· panel físico: su propio sensor, la elección de fuente está inactiva"
 }
