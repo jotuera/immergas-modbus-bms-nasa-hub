@@ -402,8 +402,7 @@
   "en": "Control",
   "pl": "Sterowanie",
   "files": [
-   "automations.ts",
-   "strategy.ts"
+   "automations.ts"
   ]
  },
  {
@@ -1125,6 +1124,8 @@
   "pl": "Kotłem",
   "files": [
    "calibration.ts",
+   "charts.ts",
+   "diagram.ts",
    "links.ts",
    "strategy.ts"
   ]
@@ -3599,8 +3600,7 @@
   "pl": "Obecnie",
   "files": [
    "calibration.ts",
-   "now.ts",
-   "strategy.ts"
+   "now.ts"
   ]
  },
  {
@@ -3844,6 +3844,28 @@
   ]
  },
  {
+  "en": "CH setpoint",
+  "pl": "Nastawa CO",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "Return",
+  "pl": "Powrót",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "Flow",
+  "pl": "Zasilanie",
+  "files": [
+   "charts.ts",
+   "now.ts"
+  ]
+ },
+ {
   "en": "Target",
   "pl": "Zadana",
   "files": [
@@ -3864,6 +3886,15 @@
   "pl": "Zadana CWU",
   "files": [
    "charts.ts"
+  ]
+ },
+ {
+  "en": "flame",
+  "pl": "płomień",
+  "files": [
+   "charts.ts",
+   "diagram.ts",
+   "now.ts"
   ]
  },
  {
@@ -3931,7 +3962,8 @@
    "curve.ts",
    "diagram.ts",
    "now.ts",
-   "schedule.ts"
+   "schedule.ts",
+   "setpoints.ts"
   ]
  },
  {
@@ -4868,6 +4900,7 @@
   "pl": "Grzanie",
   "files": [
    "curve.ts",
+   "diagram.ts",
    "now.ts",
    "setpoints.ts"
   ]
@@ -5077,6 +5110,20 @@
   ]
  },
  {
+  "en": "modulation ",
+  "pl": "modulacja ",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "pressure ",
+  "pl": "ciśnienie ",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
   "en": "vacation: on",
   "pl": "wyjazd: włączony",
   "files": [
@@ -5142,6 +5189,14 @@
   ]
  },
  {
+  "en": "no flame",
+  "pl": "płomień zgaszony",
+  "files": [
+   "diagram.ts",
+   "now.ts"
+  ]
+ },
+ {
   "en": "below {0} °C (I10): boiler",
   "pl": "poniżej {0} °C (I10): kocioł",
   "files": [
@@ -5163,8 +5218,15 @@
   ]
  },
  {
+  "en": "return ",
+  "pl": "powrót ",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
   "en": "set ",
-  "pl": "zadana ",
+  "pl": "nastawa ",
   "files": [
    "diagram.ts"
   ]
@@ -5795,6 +5857,13 @@
   ]
  },
  {
+  "en": "CH only",
+  "pl": "Tylko CO",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
   "en": "not set – enter the day, time and duration from the boiler",
   "pl": "nie ustawione – wpisz z pieca dzień, godzinę i czas",
   "files": [
@@ -5995,6 +6064,13 @@
  {
   "en": "tap twice to change",
   "pl": "dotknij 2× aby zmienić",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "OpenTherm: with a CAR V2 remote the remote also sets the mode – a change here may be overridden by it",
+  "pl": "OpenTherm: z pilotem CAR V2 tryb ustawia też pilot – zmiana tutaj może zostać przez niego nadpisana",
   "files": [
    "mode.ts"
   ]
@@ -6469,8 +6545,36 @@
   ]
  },
  {
+  "en": "boiler flow",
+  "pl": "zasilanie kotła",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "boiler return",
+  "pl": "powrót do kotła",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "CH setpoint (flow)",
+  "pl": "nastawa CO (zasilanie)",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
   "en": "zone 1 CH setpoint",
   "pl": "nastawa CO strefy 1",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Modulation",
+  "pl": "Modulacja",
   "files": [
    "now.ts"
   ]
@@ -6492,6 +6596,20 @@
  {
   "en": "no",
   "pl": "nie",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "System pressure",
+  "pl": "Ciśnienie instalacji",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "DHW flow rate",
+  "pl": "Przepływ CWU",
   "files": [
    "now.ts"
   ]
@@ -6808,6 +6926,27 @@
   ]
  },
  {
+  "en": "CH · flow temperature",
+  "pl": "CO · temperatura zasilania",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "heating",
+  "pl": "grzeje",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "setpoint = max flow temperature; with a CAR V2 remote the remote runs the heating curve",
+  "pl": "nastawa = maks. temperatura zasilania; z pilotem CAR V2 pilot prowadzi krzywą grzewczą",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
   "en": "CH · zone 1",
   "pl": "CO · strefa 1",
   "files": [
@@ -6817,13 +6956,6 @@
  {
   "en": "cooling",
   "pl": "chłodzi",
-  "files": [
-   "setpoints.ts"
-  ]
- },
- {
-  "en": "heating",
-  "pl": "grzeje",
   "files": [
    "setpoints.ts"
   ]
@@ -6852,6 +6984,13 @@
  {
   "en": " · now ",
   "pl": " · teraz ",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "with a CAR V2 remote its dial sets the DHW setpoint",
+  "pl": "z pilotem CAR V2 nastawę CWU ustawia pokrętło pilota",
   "files": [
    "setpoints.ts"
   ]
@@ -7498,41 +7637,6 @@
   "pl": "Język",
   "files": [
    "settings.ts"
-  ]
- },
- {
-  "en": "OpenTherm: mode, CH and DHW setpoint. With a **CAR V2 (Amico V2)** remote wired to the boiler the remote is in charge – the DHW setpoint cannot be changed and the weekly schedule runs on the remote. The Dominus module accepts **one connection at a time** – close the Dominus app before changing setpoints.",
-  "pl": "OpenTherm: tryb, nastawa CO i CWU. Gdy do kotła jest podłączony pilot **CAR V2 (Amico V2)**, to on steruje – nastawy CWU nie da się zmienić, a harmonogram tygodniowy prowadzi pilot. Moduł Dominus przyjmuje **jedno połączenie naraz** – przed zmianą nastaw zamknij aplikację Dominus.",
-  "files": [
-   "strategy.ts"
-  ]
- },
- {
-  "en": "History",
-  "pl": "Historia",
-  "files": [
-   "strategy.ts"
-  ]
- },
- {
-  "en": "Temperatures",
-  "pl": "Temperatury",
-  "files": [
-   "strategy.ts"
-  ]
- },
- {
-  "en": "Burner",
-  "pl": "Praca palnika",
-  "files": [
-   "strategy.ts"
-  ]
- },
- {
-  "en": "Pressure",
-  "pl": "Ciśnienie",
-  "files": [
-   "strategy.ts"
   ]
  }
 ]

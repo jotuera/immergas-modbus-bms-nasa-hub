@@ -12,6 +12,8 @@ export interface HubIndex {
   ids: Partial<Record<Key, string>>;
   /** "hub" = the ESPHome hub, "dominus" = the Immergas Dominus integration (fewer entities, no heat-pump data) */
   source: "hub" | "dominus";
+  /** Dominus in the OpenTherm mode (VICTRIX ZEUS / AVIO …): only the OpenTherm Data-IDs, no zone / schedules / statistics */
+  ot?: boolean;
 }
 
 // Immergas Dominus entity key -> card key; the schedule entities are generated below
@@ -30,6 +32,11 @@ const DOMINUS: Record<string, Key> = {
   curve_r02: "dom_r02", curve_r03: "dom_r03", curve_r04: "r04", curve_r05: "r05", curve_r10: "dom_r10", curve_r11: "dom_r11",
   curve_r12: "r12", curve_r13: "r13", dhw_hysteresis: "dom_t02", ch_restart_minutes: "dom_t05", integration_ch_wait: "dom_i04",
   integration_activation_temp: "dom_i10", boiler_integration: "dom_int_ch", dhw_integration: "dom_int_dhw",
+  // OpenTherm mode (Data-IDs): the same card keys where the meaning matches, ot_* where only OpenTherm has it
+  ot_outside_temperature: "outdoor", ot_dhw_temperature: "tank", ot_fault: "err_active", ot_fault_code: "err_code",
+  ot_dhw_setpoint: "dhw_set", ot_ch_active: "dom_ch_demand", ot_dhw_active: "dom_dhw_request", ot_mode: "mode",
+  ot_flow_temperature: "ot_flow", ot_return_temperature: "ot_ret", ot_modulation_level: "ot_mod", ot_ch_water_pressure: "ot_press",
+  ot_dhw_flow_rate: "ot_dhw_flow", ot_flame: "ot_flame", ot_ch_setpoint: "ot_ch_set", ot_max_ch_setpoint: "ot_max_ch",
   room_control_mode: "dom_a31", outdoor_probe_correction: "dom_p07", floor_type: "floor_type", zone1_time_program: "prog_mode", heated_area: "heated_area",
   // 1.3.0: statistics, vacation, auto season, alerts
   ch_heating_time_today: "dom_ch_time_today", ch_heating_share_24h: "dom_ch_share", dhw_cycles_today: "dom_dhw_cycles", last_dhw_cycle_duration: "dom_dhw_last_dur", last_dhw_cycle_rise: "dom_dhw_last_rise", ch_starts_per_hour: "dom_starts_h", ch_starts_today: "dom_starts_today", room_deviation: "dom_room_dev", time_to_target: "dom_ttt", degree_days_today: "dom_dd_today", degree_days_month: "dom_dd_month", heating_hours_per_degree_day: "dom_h_per_dd", frost_risk: "dom_frost", module_offline: "dom_offline", vacation_temperature: "dom_vac_temp", season_winter_below: "dom_win_below", season_summer_above: "dom_sum_above", frost_threshold: "dom_frost_thr", offline_minutes: "dom_off_min", vacation_mode: "dom_vacation", alert_notifications: "dom_notify", auto_season: "dom_auto_season", vacation_until: "dom_vac_until",
@@ -129,11 +136,11 @@ function buildDominus(hass: any): HubIndex | null {
     if (e.platform !== "immergas_dominus") continue;
     const k = DOMINUS[dominusKeys[id] ?? e.translation_key ?? ""];
     if (k && !ids[k]) ids[k] = id;
-    if (e.translation_key === "fault_code") deviceId = e.device_id ?? "";
+    if (e.translation_key === "fault_code" || e.translation_key === "ot_fault_code") deviceId = e.device_id ?? "";
   }
   if (!deviceId) return null;
   const l = String(hass?.locale?.language ?? hass?.language ?? "en").slice(0, 2);
-  return { deviceId, lang: l === "pl" ? "pl" : "en", ids, source: "dominus" };
+  return { deviceId, lang: l === "pl" ? "pl" : "en", ids, source: "dominus", ot: !!ids.ot_flow || !!ids.ot_ch_set || !!ids.ot_flame };
 }
 
 let dominusCache: { index: HubIndex | null; count: number; at: number } | null = null;

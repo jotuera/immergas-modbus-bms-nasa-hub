@@ -89,9 +89,10 @@ class ImmergasDiagramCard extends HubCard {
   private domBody() {
     const now = Date.now();
     this.tankTrack(now);
-    const ch = this.on("dom_ch_demand"), rq = this.so("dom_dhw_request");
+    const ot = this.ot, ch = this.on("dom_ch_demand"), rq = this.so("dom_dhw_request");
     const reqOff = rq?.state === "off" ? new Date(rq.last_changed).getTime() : -Infinity;
-    const dw = dhwHeatingNow(reqOff, this.tk, now), heat = ch && !dw;
+    // OpenTherm: the boiler reports DHW active itself (no cylinder tracking needed)
+    const dw = ot ? this.on("dom_dhw_request") : dhwHeatingNow(reqOff, this.tk, now), heat = ch && !dw;
     const err = this.on("err_active"), act = dw || ch;
     const out = this.n("outdoor"), mean = parseFloat(this.attr("dom_auto_season", "outdoor_mean_24h") ?? "");
     const z1 = this.n("zone1"), zs = this.n("zone1_set"), tank = this.n("tank"), ds = this.n("dhw_set");
@@ -109,20 +110,25 @@ class ImmergasDiagramCard extends HubCard {
       ${p07 ? this.label(34, 302, this.t(`korekta sondy P07 ${p07 > 0 ? "+" : ""}${this.f(p07, 0)} °C – już wliczona`, `probe correction P07 ${p07 > 0 ? "+" : ""}${this.f(p07, 0)} °C – already applied`), "yellow", 9, "start", 600) : nothing}</g>`);
     // operating mode, curve offset, vacation and alerts
     const vac = this.on("dom_vacation"), auto = this.on("dom_auto_season"), alarm = this.on("dom_frost") || this.on("dom_offline");
+    const mod = this.n("ot_mod"), press = this.n("ot_press"), flameOn = this.on("ot_flame");
     g.push(svg`<g @click=${this.tap("mode")} class="hit"><rect x="16" y="334" width="230" height="150" rx="18" class="panel"/>
       ${this.label(34, 362, this.t("TRYB PRACY", "OPERATING MODE"), "", 9, "start")}
       ${this.label(34, 396, (this.bad("mode") ? "–" : this.txt("mode") ?? "–") + (auto ? " (auto)" : ""), "", 15, "start")}
-      ${this.label(34, 424, "offset U03 " + this.val("u03", 1, ""), "", 10.5, "start", 600)}
+      ${ot ? svg`${this.label(34, 424, this.t("modulacja ", "modulation ") + (flameOn && !isNaN(mod) ? Math.round(mod) + " %" : "–"), flameOn ? "peach" : "", 10.5, "start", 600)}
+        ${isNaN(press) ? nothing : this.label(34, 446, this.t("ciśnienie ", "pressure ") + this.f(press, 1, 1) + " bar", press < 1 || press > 2.5 ? "red" : "", 10.5, "start", 600)}
+        ${this.label(34, 468, "OpenTherm", "", 10.5, "start", 600)}`
+      : svg`${this.label(34, 424, "offset U03 " + this.val("u03", 1, ""), "", 10.5, "start", 600)}
       ${this.label(34, 446, vac ? this.t("wyjazd: włączony", "vacation: on") : this.t("wyjazd: wył.", "vacation: off"), vac ? "teal" : "", 10.5, "start", 600)}
-      ${this.label(34, 468, alarm ? this.t("alarm!", "alert!") : this.t("alarmy: brak", "alerts: none"), alarm ? "red" : "", 10.5, "start", 600)}</g>`);
+      ${this.label(34, 468, alarm ? this.t("alarm!", "alert!") : this.t("alarmy: brak", "alerts: none"), alarm ? "red" : "", 10.5, "start", 600)}`}</g>`);
     // one boiler block: Dominus does not tell whether the heat pump or the gas burner works
     g.push(svg`<g @click=${this.tap("mode")} class="hit">
         <rect x="300" y="196" width="180" height="170" rx="16" class="dev" style="stroke:${c(act || err ? flame : "overlay1")};${act ? `fill:${ca(flame, 0.1)}` : ""}"/>
         <path d="M 390 236 C 372 258, 378 282, 390 292 C 402 282, 408 258, 390 236 Z M 390 258 C 383 268, 386 280, 390 284 C 394 280, 397 268, 390 258 Z"
           fill=${c(flame)} fill-rule="evenodd" style=${act ? `filter:drop-shadow(0 0 6px ${c(flame)});animation:ih-pulse 1.2s ease-in-out infinite` : ""}/></g>
-      ${this.label(390, 186, this.t("Kocioł Magis", "Magis boiler"), "", 11, "middle", 800)}
+      ${this.label(390, 186, ot ? this.t("Kocioł", "Boiler") : this.t("Kocioł Magis", "Magis boiler"), "", 11, "middle", 800)}
       ${this.label(390, 322, err ? this.t("AWARIA", "FAULT") : dw ? this.t("grzeje CWU", "heats DHW") : heat ? this.t("grzeje CO", "heats CH") : this.t("czuwanie", "standby"), flame, 12)}
-      ${this.label(390, 346, intOn ? this.t(`poniżej ${this.f(i10, 0)} °C (I10): kocioł`, `below ${this.f(i10, 0)} °C (I10): boiler`)
+      ${ot ? this.label(390, 346, flameOn ? this.t("płomień", "flame") + (isNaN(mod) ? "" : ` ${Math.round(mod)} %`) : this.t("płomień zgaszony", "no flame"), flameOn ? "peach" : "", 9, "middle", 600)
+        : this.label(390, 346, intOn ? this.t(`poniżej ${this.f(i10, 0)} °C (I10): kocioł`, `below ${this.f(i10, 0)} °C (I10): boiler`)
         : this.t("pompa / gaz – nie widać po TCP", "heat pump / gas – not visible over TCP"), intOn && out < i10 ? "yellow" : "", 8, "middle", 600)}`);
     // CH loop to the house
     g.push(this.pipe("M 480 236 L 600 236 L 600 120 L 680 120", HOT, heat, 1.4));
@@ -130,13 +136,16 @@ class ImmergasDiagramCard extends HubCard {
     g.push(this.label(540, 226, this.t("CO", "CH"), heat ? "peach" : "overlay1", 10, "middle", 800));
     const ph = this.bad("zone1_phase") ? "" : this.txt("zone1_phase") ?? "";
     const chT = this.n("dom_ch_time_today"), st = this.n("dom_starts_today");
-    g.push(svg`<g @click=${this.tap("zone1")} class="hit">
+    g.push(svg`<g @click=${this.tap(ot ? "ot_flow" : "zone1")} class="hit">
         <path d="M 680 92 L 790 30 L 900 92 L 900 230 L 680 230 Z" class="house" style="stroke:${c(heat ? "peach" : "overlay2")}"/>
         <path d="M 696 214 h 188 M 696 214 q 0 -8 10 -8 h 168 q 10 0 10 -8 q 0 -8 -10 -8 h -168" fill="none"
           stroke=${c(heat ? "peach" : "overlay2")} stroke-width="2.5" stroke-linecap="round" style=${heat ? `filter:drop-shadow(0 0 4px ${ca("peach", 0.7)})` : "opacity:.5"}/>
-        ${this.label(790, 92, this.t("Strefa 1", "Zone 1"), "", 10, "middle", 700)}
+        ${ot ? svg`${this.label(790, 92, this.t("Ogrzewanie", "Heating"), "", 10, "middle", 700)}
+          ${this.label(790, 134, isNaN(this.n("ot_flow")) ? "–" : this.f(this.n("ot_flow"), 1, 1) + "°", "", 24)}
+          ${this.label(790, 156, this.t("powrót ", "return ") + this.f(this.n("ot_ret"), 1, 1) + "° · " + this.t("nastawa ", "set ") + this.f(this.n("ot_ch_set"), 0) + "°", "", 10, "middle", 600)}`
+        : svg`${this.label(790, 92, this.t("Strefa 1", "Zone 1"), "", 10, "middle", 700)}
         ${this.label(790, 134, isNaN(z1) ? "–" : this.f(z1, 1, 1) + "°", "", 24)}
-        ${this.label(790, 156, this.t("zadana ", "set ") + this.f(zs, 1, 1) + "°" + (ph ? " · " + ph : ""), "", 10, "middle", 600)}
+        ${this.label(790, 156, this.t("zadana ", "set ") + this.f(zs, 1, 1) + "°" + (ph ? " · " + ph : ""), "", 10, "middle", 600)}`}
         ${isNaN(chT) ? nothing : this.label(790, 178, this.t("dziś ", "today ") + this.f(chT, 1, 1) + " h · " + this.f(st, 0) + this.t(" startów", " starts"), "", 9.5, "middle", 600)}</g>`);
     // DHW loop to the cylinder
     g.push(this.pipe("M 420 366 L 420 400 L 692 400", HOT, dw, 1.4));

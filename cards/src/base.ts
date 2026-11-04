@@ -113,6 +113,8 @@ export abstract class HubCard extends LitElement {
   }
   /** entities come from the Immergas Dominus integration, not from the hub (reduced view, no heat-pump data) */
   protected get dominus() { return this.idx?.source === "dominus"; }
+  /** Dominus in the OpenTherm mode: fewer values, no zone / schedules / statistics */
+  protected get ot() { return !!this.idx?.ot; }
   /** F1/F2 write gate: locked only while the "Active ODU control" switch is exposed and off (hub v23+ keeps it armed and hidden) */
   protected get writeLocked() { return !!this.eid("f_arm") && !this.on("f_arm"); }
 
@@ -156,6 +158,9 @@ export abstract class HubCard extends LitElement {
   render() {
     if (!this.hass) return nothing;
     this.idx = hubIndex(this.hass, () => this.requestUpdate(), this.config.source);
+    // ot_preview: {card key: entity_id} - shows the OpenTherm variant with stand-in entities (a preview without a VICTRIX)
+    if (this.idx && this.config.ot_preview && typeof this.config.ot_preview === "object")
+      this.idx = { ...this.idx, ot: true, ids: { ...this.idx.ids, ...this.config.ot_preview } };
     if (!this.idx) {
       return html`<ha-card><div class="empty">${this.t("Szukam huba Immergas… (urządzenie z encją „Immergas Hub - Stan pracy”) albo integracji Immergas Dominus",
         "Looking for the Immergas hub… (device with the “Immergas Hub - Operating state” entity) or the Immergas Dominus integration")}</div></ha-card>`;

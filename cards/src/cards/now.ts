@@ -329,10 +329,15 @@ class ImmergasNowCard extends HubCard {
     const err = this.on("err_active"), ch = this.on("dom_ch_demand"), dhw = this.on("dom_dhw_request");
     const col = err ? "red" : dhw ? "yellow" : ch ? "peach" : "overlay1";
     const state = err ? this.t("AWARIA", "FAULT") : dhw ? this.t("Ciepła woda", "Hot water") : ch ? this.t("Ogrzewanie", "Heating") : this.t("Czuwanie", "Standby");
+    const ot = this.ot, flame = this.on("ot_flame"), mod = this.n("ot_mod"), press = this.n("ot_press");
     const sub = [this.bad("mode") ? "" : this.t("tryb ", "mode ") + this.txt("mode"),
       this.bad("zone1_phase") ? "" : this.t("program ", "program ") + this.txt("zone1_phase"),
+      ot && flame ? this.t("płomień", "flame") + (isNaN(mod) ? "" : ` ${Math.round(mod)} %`) : "",
       ch && dhw ? this.t("CO też czeka", "CH also waiting") : ""].filter(Boolean).join(" · ");
-    const out = this.n("outdoor"), z1 = this.n("zone1"), tank = this.n("tank"), zs = this.n("zone1_set"), ds = this.n("dhw_set");
+    const out = this.n("outdoor"), z1 = this.n("zone1"), tank = this.n("tank"), ds = this.n("dhw_set");
+    // OpenTherm: no zone - the CH setpoint is the boiler flow setpoint
+    const zs = ot ? this.n("ot_ch_set") : this.n("zone1_set"), zsKey: Key = ot ? "ot_ch_set" : "zone1_set";
+    const fl = this.n("ot_flow"), rt = this.n("ot_ret");
     return html`
       ${this.head("mdi:water-boiler", this.t("Teraz", "Now"))}
       ${err ? html`<div class="banner" style=${box("red", true)} @click=${() => this.moreInfo("err_desc")}>
@@ -340,23 +345,32 @@ class ImmergasNowCard extends HubCard {
         <div class="cx"><div class="bt" style="color:${c("red")}">${this.t("BŁĄD KOTŁA", "BOILER FAULT")}</div><div class="bs">${this.s("err_desc") ?? ""}</div></div></div>` : nothing}
       <div class="hero" style="background:${ch || dhw || err ? `color-mix(in srgb, ${c(col)} 16%, var(--ha-card-background, var(--card-background-color)))` : ca("overlay1", 0.06)}"
         @click=${() => this.moreInfo("mode")}>
-        <ha-icon class="hi" icon=${dhw ? "mdi:water-boiler" : ch ? "mdi:radiator" : "mdi:water-boiler-off"} style="color:${c(col)}"></ha-icon>
+        <ha-icon class="hi" icon=${ot && flame ? "mdi:fire" : dhw ? "mdi:water-boiler" : ch ? "mdi:radiator" : "mdi:water-boiler-off"} style="color:${c(col)}"></ha-icon>
         <div class="hm">
-          <div class="hn">${this.config.title ?? "Immergas · Dominus"}</div>
+          <div class="hn">${this.config.title ?? (ot ? "Immergas · Dominus · OpenTherm" : "Immergas · Dominus")}</div>
           <div class="mode" style="color:${c(col)}">${state}</div>
           <div class="sub">${sub}</div></div>
         <div class="flow">
-          <span style="color:${c("peach")}" title=${this.t("nastawa CO strefy 1", "zone 1 CH setpoint")}
-            @click=${(e: Event) => { e.stopPropagation(); this.moreInfo("zone1_set"); }}>CO ${this.f(zs)}°</span>
+          ${ot && !isNaN(fl) ? html`<span style="color:${c("red")}" title=${this.t("zasilanie kotła", "boiler flow")}
+            @click=${(e: Event) => { e.stopPropagation(); this.moreInfo("ot_flow"); }}>▲ ${this.f(fl)}°</span>` : nothing}
+          ${ot && !isNaN(rt) ? html`<span style="color:${c("blue")}" title=${this.t("powrót do kotła", "boiler return")}
+            @click=${(e: Event) => { e.stopPropagation(); this.moreInfo("ot_ret"); }}>▼ ${this.f(rt)}°</span>` : nothing}
+          <span style="color:${c("peach")}" title=${ot ? this.t("nastawa CO (zasilanie)", "CH setpoint (flow)") : this.t("nastawa CO strefy 1", "zone 1 CH setpoint")}
+            @click=${(e: Event) => { e.stopPropagation(); this.moreInfo(zsKey); }}>CO ${this.f(zs, ot ? 0 : 1)}°</span>
           <span style="color:${c("yellow")}" title=${this.t("nastawa CWU", "DHW setpoint")}
             @click=${(e: Event) => { e.stopPropagation(); this.moreInfo("dhw_set"); }}>${this.t("CWU", "DHW")} ${this.f(ds, 0)}°</span></div>
       </div>
       <div class="grid4">
         ${this.tile("outdoor", "mdi:thermometer", this.t("Na zewnątrz", "Outdoor"), this.f(out, 1, 1) + " °C", tempCol(out), (out + 15) / 50 * 100)}
-        ${this.tile("zone1", "mdi:home-thermometer", this.t("Strefa 1", "Zone 1"), this.f(z1, 1, 1) + " °C", tempCol(z1), (z1 - 15) / 13 * 100)}
-        ${this.tile("tank", "mdi:water-boiler", this.t("Zasobnik CWU", "DHW cylinder"), this.f(tank, 1, 1) + " °C", tank >= 45 ? "peach" : tank >= 35 ? "yellow" : "sky", (tank - 20) / 45 * 100)}
-        ${this.tile("dom_ch_demand", ch ? "mdi:fire" : "mdi:fire-off", this.t("Żądanie CO", "CH demand"), ch ? this.t("tak", "yes") : this.t("nie", "no"), ch ? "peach" : "overlay1")}
+        ${ot ? this.tile("ot_flow", "mdi:thermometer-chevron-up", this.t("Zasilanie", "Flow"), this.f(fl, 1, 1) + " °C", tempCol(fl / 2), (fl - 20) / 60 * 100)
+          : this.tile("zone1", "mdi:home-thermometer", this.t("Strefa 1", "Zone 1"), this.f(z1, 1, 1) + " °C", tempCol(z1), (z1 - 15) / 13 * 100)}
+        ${this.tile("tank", "mdi:water-boiler", ot ? this.t("Ciepła woda", "Hot water") : this.t("Zasobnik CWU", "DHW cylinder"), this.f(tank, 1, 1) + " °C", tank >= 45 ? "peach" : tank >= 35 ? "yellow" : "sky", (tank - 20) / 45 * 100)}
+        ${ot ? this.tile("ot_mod", flame ? "mdi:fire" : "mdi:fire-off", this.t("Modulacja", "Modulation"), flame ? this.f(mod, 0) + " %" : this.t("płomień zgaszony", "no flame"), flame ? "peach" : "overlay1", flame ? mod : 0)
+          : this.tile("dom_ch_demand", ch ? "mdi:fire" : "mdi:fire-off", this.t("Żądanie CO", "CH demand"), ch ? this.t("tak", "yes") : this.t("nie", "no"), ch ? "peach" : "overlay1")}
       </div>
+      ${ot && (this.eid("ot_press") || this.eid("ot_dhw_flow")) ? html`<div class="chips2">
+        ${this.eid("ot_press") ? this.chip("ot_press", "mdi:gauge", press < 1 || press > 2.5 ? "red" : "green", this.t("Ciśnienie instalacji", "System pressure"), this.f(press, 1, 1) + " bar", false) : nothing}
+        ${this.eid("ot_dhw_flow") ? this.chip("ot_dhw_flow", "mdi:water-pump", "sky", this.t("Przepływ CWU", "DHW flow rate"), this.f(this.n("ot_dhw_flow"), 1, 1) + " l/min", false) : nothing}</div>` : nothing}
       ${this.config.show_timers === false || !this.eid("dom_ch_demand") ? nothing : this.domTimers()}
       ${this.eid("dom_ch_time_today") ? html`<div class="chips2">
         ${this.chip("dom_ch_time_today", "mdi:radiator", "peach", this.t("Grzanie CO dziś", "CH heating today"),

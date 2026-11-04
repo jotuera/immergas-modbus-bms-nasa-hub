@@ -90,7 +90,10 @@ class ImmergasChartsCard extends HubCard {
     const end = new Date(), t1 = end.getTime();
     const start = new Date(t1); start.setHours(0, 0, 0, 0);
     const t0 = tab === "day" ? t1 - DAY : start.getTime() - (tab === "week" ? 6 : 29) * DAY;
-    const keys: Key[] = tab === "day" ? ["zone1", "zone1_set", "outdoor", "tank", "dhw_set", "zone1_phase", "dom_ch_demand", "dom_dhw_request"]
+    const ot = this.ot;
+    // OpenTherm: no zone - the boiler flow / return and the CH (flow) setpoint take the zone line
+    const keys: Key[] = tab === "day" ? (ot ? ["ot_flow", "ot_ret", "ot_ch_set", "outdoor", "tank", "dhw_set", "dom_ch_demand", "dom_dhw_request", "ot_flame"]
+      : ["zone1", "zone1_set", "outdoor", "tank", "dhw_set", "zone1_phase", "dom_ch_demand", "dom_dhw_request"])
       : ["outdoor", "dom_ch_demand", "dom_dhw_request"];
     const ids = keys.map((k) => this.eid(k)).filter(Boolean) as string[];
     const r = await this.hass.callWS({ type: "history/history_during_period", start_time: new Date(t0).toISOString(), end_time: end.toISOString(),
@@ -110,9 +113,10 @@ class ImmergasChartsCard extends HubCard {
     };
     const isOn = (v: string) => v === "on";
     if (tab === "day") {
-      this.data.day = { at: Date.now(), t0, t1, room: num("zone1"), set: num("zone1_set"), out: num("outdoor"), tank: num("tank"), dset: num("dhw_set"),
+      this.data.day = { at: Date.now(), t0, t1, room: num(ot ? "ot_flow" : "zone1"), set: num(ot ? "ot_ch_set" : "zone1_set"), ret: ot ? num("ot_ret") : [],
+        out: num("outdoor"), tank: num("tank"), dset: num("dhw_set"),
         comfort: bands("zone1_phase", (v) => v === "comfort"), eco: bands("zone1_phase", (v) => v === "economy"),
-        ch: bands("dom_ch_demand", isOn), dhw: bands("dom_dhw_request", isOn) };
+        ch: bands(ot ? "ot_flame" : "dom_ch_demand", isOn), dhw: bands("dom_dhw_request", isOn) };
       return;
     }
     const days: number[] = [];
@@ -308,7 +312,12 @@ class ImmergasChartsCard extends HubCard {
     const d = this.data.day;
     if (!d) return html`<div class="empty2">${this.t("Wczytuję historię…", "Loading history…")}</div>`;
     if (d.error) return html`<div class="empty2">${d.error}</div>`;
-    const zone: Series[] = [
+    const ot = this.ot;
+    const zone: Series[] = ot ? [
+      { key: "outdoor", slot: 2, label: this.t("Na zewnątrz", "Outdoor"), pts: d.out, unit: "°C" },
+      { key: "ot_ch_set", slot: 0, label: this.t("Nastawa CO", "CH setpoint"), pts: d.set, step: true, unit: "°C", d: 0, dash: true },
+      { key: "ot_ret", slot: 4, label: this.t("Powrót", "Return"), pts: d.ret ?? [], unit: "°C" },
+      { key: "ot_flow", slot: 1, label: this.t("Zasilanie", "Flow"), pts: d.room, unit: "°C" }] : [
       { key: "outdoor", slot: 2, label: this.t("Na zewnątrz", "Outdoor"), pts: d.out, unit: "°C" },
       { key: "zone1_set", slot: 0, label: this.t("Zadana", "Target"), pts: d.set, step: true, unit: "°C", dash: true },
       { key: "zone1", slot: 1, label: this.t("Strefa 1", "Zone 1"), pts: d.room, unit: "°C" }];
@@ -318,13 +327,18 @@ class ImmergasChartsCard extends HubCard {
     const hrs = (bs: Band[]) => bs.reduce((a, [x, y]) => a + Math.max(0, y - Math.max(x, d.t0)), 0) / H;
     const now = (k: Key, dd = 1) => this.f(this.n(k), dd) + " °C";
     return html`
-      <div class="sub">${this.t("Strefa 1", "Zone 1")} · °C · ${this.t("żądanie grzania", "heating demand")} ${this.f(hrs(d.ch), 1)} h</div>
+      ${ot ? html`<div class="sub">${this.t("Kocioł", "Boiler")} · °C · ${this.t("płomień", "flame")} ${this.f(hrs(d.ch), 1)} h</div>
+      ${this.lineChart("zone", zone, d.t0, d.t1, 190, { minSpan: 10, strips: [{ bands: d.ch, color: this.col(1) }] })}
+      ${this.legend([{ slot: 1, label: this.t("Zasilanie", "Flow"), value: now("ot_flow") }, { slot: 4, label: this.t("Powrót", "Return"), value: now("ot_ret") },
+        { slot: 0, label: this.t("Nastawa CO", "CH setpoint"), value: now("ot_ch_set", 0) }, { slot: 2, label: this.t("Na zewnątrz", "Outdoor"), value: now("outdoor") }], undefined,
+        [{ color: this.col(1), label: this.t("płomień", "flame"), op: 1 }])}`
+      : html`<div class="sub">${this.t("Strefa 1", "Zone 1")} · °C · ${this.t("żądanie grzania", "heating demand")} ${this.f(hrs(d.ch), 1)} h</div>
       ${this.lineChart("zone", zone, d.t0, d.t1, 190, { minSpan: 6,
         bandSets: [{ bands: d.comfort, color: this.col(3) }, { bands: d.eco, color: this.col(0) }], strips: [{ bands: d.ch, color: this.col(1) }] })}
       ${this.legend([{ slot: 1, label: this.t("Strefa 1", "Zone 1"), value: now("zone1") }, { slot: 0, label: this.t("Zadana", "Target"), value: now("zone1_set") },
         { slot: 2, label: this.t("Na zewnątrz", "Outdoor"), value: now("outdoor") }], undefined,
         [{ color: this.col(3), label: this.t("faza Komfort", "Comfort phase"), op: 0.3 }, { color: this.col(0), label: this.t("faza Eko", "Eco phase"), op: 0.3 },
-          { color: this.col(1), label: this.t("żądanie grzania", "heating demand"), op: 1 }])}
+          { color: this.col(1), label: this.t("żądanie grzania", "heating demand"), op: 1 }])}`}
       <div class="sub">${this.t("Ciepła woda", "Hot water")} · °C · ${this.t("żądanie CWU", "DHW request")} ${this.f(hrs(d.dhw), 1)} h · ${d.dhw.length} ${this.t("cykli", "cycles")}</div>
       ${this.lineChart("dhw", dhw, d.t0, d.t1, 140, { minSpan: 10, bands: d.dhw })}
       ${this.legend([{ slot: 3, label: this.t("Zasobnik CWU", "DHW cylinder"), value: now("tank") }, { slot: 4, label: this.t("Zadana CWU", "DHW target"), value: now("dhw_set", 0) }],

@@ -61,11 +61,11 @@ class ImmergasSetpointsCard extends HubCard {
         <div class="rb" @click=${() => this.bump(o.k, -1)}><ha-icon icon="mdi:minus"></ha-icon></div>
         <div class="rv" @click=${() => this.moreInfo(o.k)}><span class="rn" style=${pend ? `color:${c(o.col)}` : ""}>${this.f(sp, 1, 1)}°</span><span class="rl">${this.t("NASTAWA", "SETPOINT")}</span></div>
         <div class="rb" @click=${() => this.bump(o.k, 1)}><ha-icon icon="mdi:plus"></ha-icon></div></div>
-      <div class="pf">${o.profiles.map(([id, lbl, v]) => {
+      ${o.profiles.length ? html`<div class="pf">${o.profiles.map(([id, lbl, v]) => {
         const on = !isNaN(v) && Math.abs(sp - v) < 0.01, pc = id === "eco" ? "teal" : "peach";
         return html`<div class="pb" style=${on ? `background:${ca(pc, 0.3)};border-color:${ca(pc, 0.75)};color:${c(pc)}` : ""} @click=${() => !on && this.set(o.k, v)}>
           <span class="pl"><ha-icon icon=${id === "eco" ? "mdi:leaf" : "mdi:sofa-outline"} style="color:${c(pc)}"></ha-icon>${lbl}</span><span class="pv">${this.f(v, 1, 1)}°</span></div>`;
-      })}</div>
+      })}</div>` : nothing}
       ${o.hint ? html`<div class="hint">${o.hint}</div>` : nothing}</div>`;
   }
 
@@ -90,7 +90,7 @@ class ImmergasSetpointsCard extends HubCard {
   }
 
   protected body() {
-    const modeIdx = ((this.attr("mode", "options") ?? []) as string[]).indexOf(this.s("mode") ?? ""), cool = modeIdx === 2;
+    const modeIdx = ((this.attr("mode", "options") ?? []) as string[]).indexOf(this.s("mode") ?? ""), cool = !this.ot && modeIdx === 2;
     const st = this.s("state") ?? "";
     // Dominus has no operating state: the zone heating demand and the DHW request flags instead
     const dhwRun = this.dominus ? this.on("dom_dhw_request") : isDhw(st);
@@ -104,7 +104,11 @@ class ImmergasSetpointsCard extends HubCard {
     const auto = (() => { const o: string[] = this.attr("prog_mode", "options") ?? []; return o.length === 2 && this.s("prog_mode") === o[1]; })()
       || (this.dominus && ["comfort", "economy"].includes(this.s("zone1_phase") ?? ""));
     const phase = this.bad("zone1_phase") ? "" : this.txt("zone1_phase")!;
-    const ch = this.tileView({
+    const ch = this.ot ? this.tileView({
+      k: "ot_ch_set", meas: "ot_flow", icon: "mdi:radiator", col: "peach", title: this.t("Ogrzewanie", "Heating"), sub: this.t("CO · temperatura zasilania", "CH · flow temperature"),
+      temp: this.n("ot_flow"), status: chRun ? this.t("grzeje", "heating") : this.t("czuwa", "standby"), active: chRun, profiles: [],
+      hint: this.t("nastawa = maks. temperatura zasilania; z pilotem CAR V2 pilot prowadzi krzywą grzewczą", "setpoint = max flow temperature; with a CAR V2 remote the remote runs the heating curve"),
+    }) : this.tileView({
       k: "zone1_set", meas: "zone1", icon: cool ? "mdi:snowflake" : "mdi:radiator", col: cool ? "sky" : tempCol(z),
       title: cool ? this.t("Chłodzenie", "Cooling") : this.t("Ogrzewanie", "Heating"), sub: this.t("CO · strefa 1", "CH · zone 1"), temp: z,
       extra: !isNaN(hum) ? html`<span class="hum"><ha-icon icon="mdi:water-percent"></ha-icon>${Math.round(hum)}%${!isNaN(ht) ? html`<span style="opacity:.55"> / ${Math.round(ht)}%</span>` : nothing}</span>` : nothing,
@@ -118,7 +122,11 @@ class ImmergasSetpointsCard extends HubCard {
     // DHW profiles: the DD entities (DD >= 2.4.0) or, on older DD, card options dhw_eco / dhw_comfort
     const dd = !!this.eid("dhw_comfort_dd") && !!this.eid("dhw_eco_dd");
     const dEco = dd ? this.n("dhw_eco_dd") : this.prof("dhw_eco", 45), dCom = dd ? this.n("dhw_comfort_dd") : this.prof("dhw_comfort", 55);
-    const dhw = this.tileView({
+    const dhw = this.ot ? this.tileView({
+      k: "dhw_set", meas: "tank", icon: "mdi:water-boiler", col: "peach", title: this.t("Ciepła woda", "Hot water"), sub: this.t("CWU", "DHW"), temp: tank,
+      status: dhwRun ? this.t("grzeje", "heating") : this.t("czuwa", "standby"), active: dhwRun, profiles: [],
+      hint: this.t("z pilotem CAR V2 nastawę CWU ustawia pokrętło pilota", "with a CAR V2 remote its dial sets the DHW setpoint"),
+    }) : this.tileView({
       k: "dhw_set", meas: "tank", icon: "mdi:water-boiler", col: "peach", title: this.t("Ciepła woda", "Hot water"), sub: this.t("CWU · zasobnik", "DHW · cylinder"), temp: tank,
       status: dhwRun ? this.t("grzeje", "heating") : this.t("czuwa", "standby"), active: dhwRun,
       profiles: [["eco", this.t("EKO", "ECO"), dEco], ["comfort", this.t("KOMFORT", "COMFORT"), dCom]],
@@ -127,10 +135,10 @@ class ImmergasSetpointsCard extends HubCard {
     });
 
     return html`
-      ${this.head("mdi:thermostat", this.t("Nastawy", "Setpoints"), html`<span class="gear2" @click=${() => { this.gear = !this.gear; this.requestUpdate(); }}>
+      ${this.head("mdi:thermostat", this.t("Nastawy", "Setpoints"), this.ot ? undefined : html`<span class="gear2" @click=${() => { this.gear = !this.gear; this.requestUpdate(); }}>
         <ha-icon icon=${this.gear ? "mdi:close" : "mdi:cog-outline"}></ha-icon></span>`)}
       <div class="two">${ch}${dhw}</div>
-      ${this.gear ? html`<div class="presets">
+      ${this.gear && !this.ot ? html`<div class="presets">
         <div class="grp">${cool ? this.t("Profile chłodzenia Strefy 1 (piec)", "Zone 1 cooling profiles (boiler)") : this.t("Profile ogrzewania Strefy 1 (piec)", "Zone 1 heating profiles (boiler)")}</div>
         ${this.numRow(cKey, "mdi:sofa-outline", this.t("Komfort", "Comfort"), 1)}
         ${this.numRow(eKey, "mdi:leaf", this.t("Eko", "Eco"), 1)}

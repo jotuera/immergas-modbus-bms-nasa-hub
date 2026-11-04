@@ -16,4 +16,4 @@ import "./cards/charts";
 import "./cards/links";
 import "./strategy";
 
-console.info("%c IMMERGAS-HUB-CARDS %c 0.51.5 ", "background:#fab387;color:#1e1e2e;font-weight:700", "background:#313244;color:#cdd6f4");
+console.info("%c IMMERGAS-HUB-CARDS %c 0.51.6 ", "background:#fab387;color:#1e1e2e;font-weight:700", "background:#313244;color:#cdd6f4");
