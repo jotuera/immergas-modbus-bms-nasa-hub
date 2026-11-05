@@ -51,6 +51,8 @@ const DOMINUS: Record<string, Key> = {
   // Dominus 1.6.9: the rest of the CAR V2 (VACANZ action, MANUTZ, RIDOTT ON, AUTO A)
   ot_vacation_action: "ot_vac_action", ot_maintenance: "ot_maint", ot_eco_flow_reduction: "ot_eco_red", ot_self_learning: "ot_self_learn",
   ot_last_service: "ot_last_srv", ot_service_done: "ot_srv_done", ot_maintenance_due: "ot_maint_due",
+  // Dominus 1.6.9: the P / t / A menu of an OpenTherm boiler, declared by the user (offline settings)
+  ot_t0: "ot_t0", ot_t1: "ot_t1", ot_t2: "ot_t2", ot_t4: "ot_t4", ot_t5: "ot_t5", ot_t6: "ot_t6", ot_t7: "ot_t7", ot_p0: "ot_p0", ot_p1: "ot_p1", ot_p2: "ot_p2", ot_p6: "ot_p6", ot_p7: "ot_p7", ot_a3: "ot_a3", ot_a4: "ot_a4", ot_a5: "ot_a5",
   room_control_mode: "dom_a31", outdoor_probe_correction: "dom_p07", floor_type: "floor_type", zone1_time_program: "prog_mode", heated_area: "heated_area",
   // 1.3.0: statistics, vacation, auto season, alerts
   ch_heating_time_today: "dom_ch_time_today", ch_heating_share_24h: "dom_ch_share", dhw_cycles_today: "dom_dhw_cycles", last_dhw_cycle_duration: "dom_dhw_last_dur", last_dhw_cycle_rise: "dom_dhw_last_rise", ch_starts_per_hour: "dom_starts_h", ch_starts_today: "dom_starts_today", room_deviation: "dom_room_dev", time_to_target: "dom_ttt", degree_days_today: "dom_dd_today", degree_days_month: "dom_dd_month", heating_hours_per_degree_day: "dom_h_per_dd", frost_risk: "dom_frost", module_offline: "dom_offline", vacation_temperature: "dom_vac_temp", season_winter_below: "dom_win_below", season_summer_above: "dom_sum_above", frost_threshold: "dom_frost_thr", offline_minutes: "dom_off_min", vacation_mode: "dom_vacation", alert_notifications: "dom_notify", auto_season: "dom_auto_season", vacation_until: "dom_vac_until",

@@ -95,6 +95,41 @@ class ImmergasSettingsCard extends HubCard {
       ${this.domParams()}`;
   }
 
+  /** OpenTherm: the boiler's P / t / A menu copied once from the boiler (Immergas does not publish which Data-ID 11
+   *  parameter is which, so they are not read yet) - with hints from what the boiler does report */
+  private otOffline() {
+    const r = (k: Key, icon: string, label: string, d = 0) => this.numRow(k, icon, label, d, undefined, true);
+    const sh = this.n("ot_burn_h"), t5 = this.n("ot_t5");
+    const ch = this.so("ot_ch_set")?.attributes, mm = this.n("ot_minmod");
+    const tsp = (this.attr("ot_ids", "boiler_parameters") ?? {}) as Record<string, unknown>, tsp12 = tsp["12"];
+    const hint = (txt: string, col = "overlay2") => html`<div class="note" style="color:${c(col)}">${txt}</div>`;
+    return html`
+      <div class="grp">${this.t("Ogrzewanie (menu t)", "Central heating (menu t)")}</div>
+      ${r("ot_t0", "mdi:thermometer-low", this.t("t0 · min. temperatura zasilania CO", "t0 · CH min. flow temperature"))}
+      ${r("ot_t1", "mdi:thermometer-high", this.t("t1 · maks. temperatura zasilania CO", "t1 · CH max. flow temperature"))}
+      ${ch?.min !== undefined && ch?.max !== undefined ? hint(this.t(`kocioł podaje zakres CO ${this.f(ch.min, 0)}–${this.f(ch.max, 0)} °C (Data-ID 49)`,
+        `the boiler reports the CH range ${this.f(ch.min, 0)}–${this.f(ch.max, 0)} °C (Data-ID 49)`)) : nothing}
+      ${r("ot_t5", "mdi:timer-lock-outline", this.t("t5 · blokada ponownego zapłonu CO", "t5 · CH ignitions timer"))}
+      ${sh > 6 ? hint(this.t(`taktowanie: ${this.f(sh, 0)} startów w ostatniej godzinie`, `short cycling: ${this.f(sh, 0)} starts in the last hour`)
+        + (isNaN(t5) || t5 < 300 ? this.t(" – wydłuż t5 na kotle (np. 300–600 s)", " – lengthen t5 on the boiler (e.g. 300–600 s)") : ""), "peach") : nothing}
+      ${r("ot_t6", "mdi:chart-line-variant", this.t("t6 · rampa mocy CO", "t6 · CH ramp timer"))}
+      ${r("ot_t7", "mdi:timer-play-outline", this.t("t7 · opóźnienie zapłonu CO", "t7 · CH ignition delay"))}
+      ${r("ot_t4", "mdi:timer-sand", this.t("t4 · czekanie po CWU przed CO", "t4 · wait after DHW before CH"))}
+      ${this.selRow(this.eid("ot_t2"), this.t("t2 · zasilanie przy grzaniu zasobnika", "t2 · flow while heating the cylinder"), "mdi:water-thermometer")}
+      <div class="grp">${this.t("Moc (menu P)", "Output (menu P)")}</div>
+      ${r("ot_p2", "mdi:fire", this.t("P2 · maks. moc CO", "P2 · CH max. output"))}
+      ${tsp12 !== undefined ? hint(this.t(`parametr kotła 12 ze skanu = ${tsp12} (najpewniej P2)`, `boiler parameter 12 from the scan = ${tsp12} (probably P2)`)) : nothing}
+      ${r("ot_p1", "mdi:fire-circle", this.t("P1 · min. moc", "P1 · min. output"))}
+      ${!isNaN(mm) ? hint(this.t(`kocioł podaje min. modulację ${this.f(mm, 0)} % (Data-ID 15)`, `the boiler reports ${this.f(mm, 0)} % min. modulation (Data-ID 15)`)) : nothing}
+      ${r("ot_p0", "mdi:water-boiler", this.t("P0 · maks. moc CWU", "P0 · DHW max. output"))}
+      <div class="grp">${this.t("Pompa i sonda", "Pump and probe")}</div>
+      ${this.selRow(this.eid("ot_p6"), this.t("P6 · praca pompy", "P6 · pump operation"), "mdi:pump")}
+      ${r("ot_a3", "mdi:pump", this.t("A3 · maks. prędkość pompy", "A3 · pump max. speed"))}
+      ${r("ot_a4", "mdi:pump-off", this.t("A4 · min. prędkość pompy", "A4 · pump min. speed"))}
+      ${r("ot_a5", "mdi:delta", this.t("A5 · tryb pompy (0 = proporcjonalny, 5–25 = stała ΔT)", "A5 · pump mode (0 = proportional head, 5–25 = constant ΔT)"))}
+      ${r("ot_p7", "mdi:thermometer-plus", this.t("P7 · korekta sondy zewnętrznej", "P7 · outdoor probe correction"))}`;
+  }
+
   /** Dominus in the OpenTherm mode: the programs kept in Home Assistant and the regulator of the module (Data-ID 89) */
   private otRows() {
     if (!this.ot) return nothing;
@@ -183,7 +218,8 @@ class ImmergasSettingsCard extends HubCard {
         : this.t("ceny, zasobnik, tryb nocny, legionella…", "prices, cylinder, night mode, legionella…"))
       : part === "online" ? (this.ot ? this.t("praca bez CAR V2, programy CO / CWU, regulator Dominusa, przegląd, Lato/Zima, alarmy", "running without the CAR V2, CH / DHW programs, Dominus regulator, service, summer/winter, alerts")
         : this.t("zasilanie, wilgotność, posadzka, powierzchnia, Lato/Zima, alarmy, język błędów", "flow, humidity, screed, floor area, summer/winter, alerts, fault language"))
-      : part === "offline" ? this.t("U11, P15, krzywe R, T02/T05, integracja I, A31, P07", "U11, P15, R curves, T02/T05, I integration, A31, P07")
+      : part === "offline" ? (this.ot ? this.t("menu kotła: t0/t1, t5 taktowanie, moc P0–P2, pompa, P7", "boiler menu: t0/t1, t5 cycling, output P0–P2, pump, P7")
+        : this.t("U11, P15, krzywe R, T02/T05, integracja I, A31, P07", "U11, P15, R curves, T02/T05, I integration, A31, P07"))
       : this.t("parametry pieca, tryb nocny, legionella, wyjazd, Lato/Zima, alarmy, język błędów", "boiler parameters, night mode, legionella, vacation, summer/winter, alerts, fault language");
     const note = !this.dominus ? (part === "offline" ? this.t("Hub nie czyta tych ustawień z magistral – przepisz je raz z menu pieca; służą paskom czasu, krzywej i kalibracji.",
         "The hub cannot read these from the buses – copy them once from the boiler menu; they drive the timer bars, the curve and the calibration.") : "")
@@ -233,7 +269,7 @@ class ImmergasSettingsCard extends HubCard {
         ${this.eid("hub_p07") ? html`<div class="grp">${this.t("Instalacja", "Installation")}</div>
           ${this.numRow("hub_p07", "mdi:thermometer-plus", this.t("P07 · korekta sondy zewnętrznej", "P07 · outdoor probe correction"), 0)}` : nothing}
       ` : nothing}
-      ${open && this.dominus && off ? this.domOffline() : nothing}
+      ${open && this.dominus && off ? (this.ot ? this.otOffline() : this.domOffline()) : nothing}
       ${open && this.dominus && on ? html`${this.otRows()}${this.domRows()}` : nothing}
       ${open && lang && on ? html`<div class="grp">${this.t("Opisy błędów", "Fault descriptions")}</div>
           <div class="nr"><ha-icon icon="mdi:translate"></ha-icon><span class="nl">${this.t("Język", "Language")}</span>

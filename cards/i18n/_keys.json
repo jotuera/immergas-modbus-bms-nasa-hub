@@ -8299,6 +8299,167 @@
   ]
  },
  {
+  "en": "Central heating (menu t)",
+  "pl": "Ogrzewanie (menu t)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "t0 · CH min. flow temperature",
+  "pl": "t0 · min. temperatura zasilania CO",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "t1 · CH max. flow temperature",
+  "pl": "t1 · maks. temperatura zasilania CO",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "the boiler reports the CH range {0}–{1} °C (Data-ID 49)",
+  "pl": "kocioł podaje zakres CO {0}–{1} °C (Data-ID 49)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "t5 · CH ignitions timer",
+  "pl": "t5 · blokada ponownego zapłonu CO",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "short cycling: {0} starts in the last hour",
+  "pl": "taktowanie: {0} startów w ostatniej godzinie",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": " – lengthen t5 on the boiler (e.g. 300–600 s)",
+  "pl": " – wydłuż t5 na kotle (np. 300–600 s)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "t6 · CH ramp timer",
+  "pl": "t6 · rampa mocy CO",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "t7 · CH ignition delay",
+  "pl": "t7 · opóźnienie zapłonu CO",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "t4 · wait after DHW before CH",
+  "pl": "t4 · czekanie po CWU przed CO",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "t2 · flow while heating the cylinder",
+  "pl": "t2 · zasilanie przy grzaniu zasobnika",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Output (menu P)",
+  "pl": "Moc (menu P)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "P2 · CH max. output",
+  "pl": "P2 · maks. moc CO",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "boiler parameter 12 from the scan = {0} (probably P2)",
+  "pl": "parametr kotła 12 ze skanu = {0} (najpewniej P2)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "P1 · min. output",
+  "pl": "P1 · min. moc",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "the boiler reports {0} % min. modulation (Data-ID 15)",
+  "pl": "kocioł podaje min. modulację {0} % (Data-ID 15)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "P0 · DHW max. output",
+  "pl": "P0 · maks. moc CWU",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Pump and probe",
+  "pl": "Pompa i sonda",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "P6 · pump operation",
+  "pl": "P6 · praca pompy",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "A3 · pump max. speed",
+  "pl": "A3 · maks. prędkość pompy",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "A4 · pump min. speed",
+  "pl": "A4 · min. prędkość pompy",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "A5 · pump mode (0 = proportional head, 5–25 = constant ΔT)",
+  "pl": "A5 · tryb pompy (0 = proporcjonalny, 5–25 = stała ΔT)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "P7 · outdoor probe correction",
+  "pl": "P7 · korekta sondy zewnętrznej",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
   "en": "Read only (remote in charge)",
   "pl": "Tylko odczyt (steruje pilot)",
   "files": [
@@ -8651,6 +8812,13 @@
  {
   "en": "flow, humidity, screed, floor area, summer/winter, alerts, fault language",
   "pl": "zasilanie, wilgotność, posadzka, powierzchnia, Lato/Zima, alarmy, język błędów",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "boiler menu: t0/t1, t5 cycling, output P0–P2, pump, P7",
+  "pl": "menu kotła: t0/t1, t5 taktowanie, moc P0–P2, pompa, P7",
   "files": [
    "settings.ts"
   ]

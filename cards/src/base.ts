@@ -216,11 +216,11 @@ export abstract class HubCard extends LitElement {
   /** typical value offered as the starting point of an empty declared parameter */
   protected suggested(k: Key): unknown { return this.attr(k, "suggested"); }
 
-  protected numRow(k: Key, icon: string, label: string, d = 1, unit?: string) {
+  protected numRow(k: Key, icon: string, label: string, d = 1, unit?: string, free = false) {
     const so = this.so(k);
     if (!so) return nothing;
     const a = so.attributes ?? {}, v = parseFloat(so.state), step = a.step ?? 1, u = unit ?? a.unit_of_measurement ?? "";
-    const sug = parseFloat(String(a.suggested ?? "")), empty = isNaN(v) && !isNaN(sug), ro = this.otRO;
+    const sug = parseFloat(String(a.suggested ?? "")), empty = isNaN(v) && !isNaN(sug), ro = this.otRO && !free;
     const set = (dir: number) => {
       if (ro) return;
       // an empty declared parameter: the first tap writes the suggested value as the starting point
