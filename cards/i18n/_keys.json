@@ -56,6 +56,13 @@
   ]
  },
  {
+  "en": "HA programs paused – the remote (CAR V2 / Super Amico) is in charge. Switch off the write block on the remote tile of the Connectivity card to use them.",
+  "pl": "Programy HA wstrzymane – steruje pilot (CAR V2 / Super Amico). Odblokujesz je wyłączając blokadę zapisu na kaflu pilota w karcie Łączność.",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
   "en": "Looking for the Immergas hub… (device with the “Immergas Hub - Operating state” entity) or the Immergas Dominus integration",
   "pl": "Szukam huba Immergas… (urządzenie z encją „Immergas Hub - Stan pracy”) albo integracji Immergas Dominus",
   "files": [
@@ -7964,6 +7971,20 @@
  {
   "en": "Anti-legionella temperature",
   "pl": "Temperatura anty-legionella",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Max. ",
+  "pl": "Maks. ",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "what the boiler accepts (Data-ID 48)",
+  "pl": "tyle przyjmuje kocioł (Data-ID 48)",
   "files": [
    "settings.ts"
   ]

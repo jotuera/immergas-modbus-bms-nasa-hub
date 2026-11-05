@@ -157,6 +157,7 @@ class ImmergasScheduleCard extends HubCard {
       ${this.dominus && !this.eid("k1z1on") ? html`<div class="note" style="color:${c("yellow")}">${this.t(
         "Godziny kalendarzy są ukryte: włącz urządzenie „Heating schedule” integracji Immergas Dominus (Ustawienia → Urządzenia).",
         "Calendar hours are hidden: enable the “Heating schedule” device of the Immergas Dominus integration (Settings → Devices).")}</div>` : nothing}
+      ${this.progLock()}<div class=${this.otRO ? "locked" : ""}>
       ${view === "week" ? this.week(ks, today, nowM) : this.calendars(ks, today, nowM)}
       <div class="row">${sets.map(([k, icon, lbl]) => {
         const v = this.n(k as Key), a = this.so(k as Key)?.attributes ?? {}, step = a.step ?? 0.5;
@@ -173,7 +174,7 @@ class ImmergasScheduleCard extends HubCard {
         ? this.t("Wybierz kalendarz dla każdego dnia; zakresy edytujesz w polu poniżej. Zakresy kalendarzy są wspólne dla CO i CWU, przypisanie dni — osobne.",
           "Pick a calendar for each day; edit the ranges below. Calendar ranges are shared by CH and DHW, the day assignment is separate.")
         : this.t("Dotknij dnia, aby przenieść go do kalendarza; ołówek otwiera zakresy godzin. Zakresy kalendarzy są wspólne dla CO i CWU, dni tygodnia — osobne.",
-          "Tap a day to move it to the calendar; the pencil opens the time ranges. Calendar ranges are shared by CH and DHW, the weekdays are separate.")}</div>`;
+          "Tap a day to move it to the calendar; the pencil opens the time ranges. Calendar ranges are shared by CH and DHW, the weekdays are separate.")}</div></div>`;
   }
 
   static styles = [HubCard.styles, css`

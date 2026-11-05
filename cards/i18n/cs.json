@@ -1242,5 +1242,8 @@
  "CAR V2 remote": "Ovladač CAR V2",
  "OpenTherm · remote": "OpenTherm · ovladač",
  "Block writes from HA": "Blokovat zápis z HA",
- "HA only reads. After switching it on, power-cycle the Dominus once – it forgets the last setpoint from HA.": "HA pouze čte. Po zapnutí jednou odpojte napájení modulu Dominus – zapomene poslední nastavení z HA."
+ "HA only reads. After switching it on, power-cycle the Dominus once – it forgets the last setpoint from HA.": "HA pouze čte. Po zapnutí jednou odpojte napájení modulu Dominus – zapomene poslední nastavení z HA.",
+ "HA programs paused – the remote (CAR V2 / Super Amico) is in charge. Switch off the write block on the remote tile of the Connectivity card to use them.": "Programy HA pozastaveny – řídí ovladač (CAR V2 / Super Amico). Odblokujete je vypnutím blokace zápisu na dlaždici ovladače v kartě Připojení.",
+ "Max. ": "Max. ",
+ "what the boiler accepts (Data-ID 48)": "tolik kotel přijme (Data-ID 48)"
 }

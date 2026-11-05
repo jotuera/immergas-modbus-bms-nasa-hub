@@ -100,13 +100,15 @@ class ImmergasSettingsCard extends HubCard {
     if (!this.ot) return nothing;
     return html`
       ${this.eid("comfort_heat") ? html`<div class="grp">${this.t("Program CO i CWU (Home Assistant)", "CH and DHW program (Home Assistant)")}</div>
+        ${this.progLock()}<div class=${this.otRO ? "locked" : ""}>
         ${this.numRow("comfort_heat", "mdi:sofa-outline", this.t("Pokój · Komfort", "Room · Comfort"), 1)}
         ${this.numRow("eco_heat", "mdi:leaf", this.t("Pokój · Eko", "Room · Eco"), 1)}
         ${this.selRow(this.eid("ot_eco_action"), this.t("W fazie Eko", "In the Eco phase"), "mdi:leaf")}
         ${this.numRow("dhw_comfort_dd", "mdi:sofa-outline", this.t("CWU · Komfort", "DHW · Comfort"), 0)}
         ${this.numRow("dhw_eco_dd", "mdi:leaf", this.t("CWU · Eko", "DHW · Eco"), 0)}
         ${this.selRow(this.eid("ot_leg"), this.t("Anty-legionella", "Anti-legionella"), "mdi:bacteria-outline")}
-        ${this.numRow("ot_leg_t", "mdi:thermometer-high", this.t("Temperatura anty-legionella", "Anti-legionella temperature"), 0)}` : nothing}
+        ${this.numRow("ot_leg_t", "mdi:thermometer-high", this.t("Temperatura anty-legionella", "Anti-legionella temperature"), 0)}
+        ${this.so("ot_leg_t")?.attributes?.max !== undefined ? html`<div class="note">${this.t("Maks. ", "Max. ")}${this.f(+this.attr("ot_leg_t", "max"), 0)} °C – ${this.t("tyle przyjmuje kocioł (Data-ID 48)", "what the boiler accepts (Data-ID 48)")}</div>` : nothing}</div>` : nothing}
       ${this.eid("ot_curve") ? html`<div class="grp">${this.t("Regulator Dominusa (jak menu CAR V2)", "Dominus regulator (like the CAR V2 menu)")}</div>
         ${this.switchRow("ot_room_sensor", "mdi:home-thermometer-outline", "green", this.t("Czujnik pokojowy", "Room sensor"), this.t("AMB – regulacja wg temperatury pokoju", "AMB – control by the room temperature"))}
         ${this.selRow(this.eid("ot_ntc"), this.t("Sonda Dominusa mierzy", "Dominus probe measures"), "mdi:thermometer-probe")}
@@ -134,6 +136,7 @@ class ImmergasSettingsCard extends HubCard {
       ${this.eid("floor_type") || this.eid("heated_area") ? html`<div class="grp">${this.t("Budynek", "Building")}</div>
         ${this.selRow(this.eid("floor_type"), this.t("Rodzaj posadzki", "Floor screed type"), "mdi:layers-triple-outline")}
         ${this.numRow("heated_area", "mdi:floor-plan", this.t("Powierzchnia ogrzewana", "Heated floor area"), 0)}` : nothing}
+      <div class=${this.otRO ? "locked" : ""}>
       ${this.eid("dom_vacation") ? html`<div class="grp">${this.t("Tryb wyjazdowy", "Vacation")}</div>
         ${this.switchRow("dom_vacation", "mdi:bag-suitcase-outline", "sky", this.t("Tryb wyjazdowy", "Vacation mode"),
           this.ot ? this.t("wyłącza ogrzewanie (Lato), po powrocie przywraca tryb", "switches heating off (Summer), restores the mode on return")
@@ -147,6 +150,7 @@ class ImmergasSettingsCard extends HubCard {
             : this.t(`średnia 24 h ${this.f(mean, 1, 1)} °C z ${this.f(hrs, 0)} h danych`, `24 h mean ${this.f(mean, 1, 1)} °C from ${this.f(hrs, 0)} h of data`))}
         ${this.numRow("dom_win_below", "mdi:snowflake", this.t("Zima poniżej (średnia 24 h)", "Winter below (24 h mean)"), 1)}
         ${this.numRow("dom_sum_above", "mdi:weather-sunny", this.t("Lato powyżej (średnia 24 h)", "Summer above (24 h mean)"), 1)}` : nothing}
+      </div>
       ${this.eid("dom_frost") || this.eid("dom_offline") ? html`<div class="grp">${this.t("Alarmy", "Alerts")}</div>
         ${this.numRow("dom_frost_thr", "mdi:snowflake-alert", this.t("Ryzyko zamarznięcia poniżej", "Frost risk below") + ` · ${alert("dom_frost")}`, 1)}
         ${this.numRow("dom_off_min", "mdi:lan-disconnect", this.t("Moduł offline po", "Module offline after") + ` · ${alert("dom_offline")}`, 0)}` : nothing}`;

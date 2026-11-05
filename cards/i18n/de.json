@@ -1242,5 +1242,8 @@
  "CAR V2 remote": "Fernbedienung CAR V2",
  "OpenTherm · remote": "OpenTherm · Fernbedienung",
  "Block writes from HA": "Schreiben aus HA sperren",
- "HA only reads. After switching it on, power-cycle the Dominus once – it forgets the last setpoint from HA.": "HA liest nur. Nach dem Einschalten den Dominus einmal stromlos machen – er vergisst den letzten Sollwert aus HA."
+ "HA only reads. After switching it on, power-cycle the Dominus once – it forgets the last setpoint from HA.": "HA liest nur. Nach dem Einschalten den Dominus einmal stromlos machen – er vergisst den letzten Sollwert aus HA.",
+ "HA programs paused – the remote (CAR V2 / Super Amico) is in charge. Switch off the write block on the remote tile of the Connectivity card to use them.": "HA-Programme pausiert – die Fernbedienung (CAR V2 / Super Amico) regelt. Schalten Sie die Schreibsperre auf der Fernbedienungs-Kachel der Verbindungskarte aus, um sie zu nutzen.",
+ "Max. ": "Max. ",
+ "what the boiler accepts (Data-ID 48)": "so viel nimmt der Kessel an (Data-ID 48)"
 }

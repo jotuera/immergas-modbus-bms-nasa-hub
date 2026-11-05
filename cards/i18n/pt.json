@@ -1242,5 +1242,8 @@
  "CAR V2 remote": "Comando CAR V2",
  "OpenTherm · remote": "OpenTherm · comando",
  "Block writes from HA": "Bloquear escrita a partir do HA",
- "HA only reads. After switching it on, power-cycle the Dominus once – it forgets the last setpoint from HA.": "O HA só lê. Depois de ativar, desligue uma vez a alimentação do Dominus – esquece a última consigna do HA."
+ "HA only reads. After switching it on, power-cycle the Dominus once – it forgets the last setpoint from HA.": "O HA só lê. Depois de ativar, desligue uma vez a alimentação do Dominus – esquece a última consigna do HA.",
+ "HA programs paused – the remote (CAR V2 / Super Amico) is in charge. Switch off the write block on the remote tile of the Connectivity card to use them.": "Programas do HA em pausa – controla o comando (CAR V2 / Super Amico). Desative o bloqueio de escrita no mosaico do comando do cartão Conectividade para os usar.",
+ "Max. ": "Máx. ",
+ "what the boiler accepts (Data-ID 48)": "o que a caldeira aceita (Data-ID 48)"
 }

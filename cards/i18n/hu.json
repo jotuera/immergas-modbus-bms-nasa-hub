@@ -1242,5 +1242,8 @@
  "CAR V2 remote": "CAR V2 távvezérlő",
  "OpenTherm · remote": "OpenTherm · távvezérlő",
  "Block writes from HA": "HA írás tiltása",
- "HA only reads. After switching it on, power-cycle the Dominus once – it forgets the last setpoint from HA.": "A HA csak olvas. Bekapcsolás után egyszer áramtalanítsa a Dominus modult – elfelejti a HA utolsó beállítását."
+ "HA only reads. After switching it on, power-cycle the Dominus once – it forgets the last setpoint from HA.": "A HA csak olvas. Bekapcsolás után egyszer áramtalanítsa a Dominus modult – elfelejti a HA utolsó beállítását.",
+ "HA programs paused – the remote (CAR V2 / Super Amico) is in charge. Switch off the write block on the remote tile of the Connectivity card to use them.": "HA programok szüneteltetve – a távvezérlő irányít (CAR V2 / Super Amico). A használatukhoz kapcsolja ki az írástiltást a Kapcsolatok kártya távvezérlő csempéjén.",
+ "Max. ": "Max. ",
+ "what the boiler accepts (Data-ID 48)": "ennyit fogad el a kazán (Data-ID 48)"
 }

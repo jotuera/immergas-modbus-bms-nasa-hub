@@ -119,6 +119,13 @@ export abstract class HubCard extends LitElement {
   protected get writeLocked() { return !!this.eid("f_arm") && !this.on("f_arm"); }
   /** Dominus OpenTherm "Read only (remote in charge)" is on: no control writes to the boiler */
   protected get otRO() { return this.ot && this.on("ot_ro"); }
+  /** OpenTherm with a remote in charge: the banner over the Home Assistant programs (they are paused in Dominus) */
+  protected progLock() {
+    if (!this.otRO) return nothing;
+    return html`<div class="plock" style=${box("overlay1", false)} @click=${() => this.moreInfo("ot_ro")}>
+      <ha-icon icon="mdi:lock-outline"></ha-icon><div>${this.t("Programy HA wstrzymane – steruje pilot (CAR V2 / Super Amico). Odblokujesz je wyłączając blokadę zapisu na kaflu pilota w karcie Łączność.",
+        "HA programs paused – the remote (CAR V2 / Super Amico) is in charge. Switch off the write block on the remote tile of the Connectivity card to use them.")}</div></div>`;
+  }
   /** a Data-ID the last Data-ID scan found unanswered (no reply / unsupported) - its tile is left out */
   protected otMissing(id: number) {
     const a = this.so("ot_ids")?.attributes;
@@ -358,6 +365,10 @@ export abstract class HubCard extends LitElement {
   }
 
   static styles: CSSResultGroup = css`
+    .plock { display: flex; gap: 8px; align-items: flex-start; padding: 8px 10px; border-radius: 12px; margin: 6px 0 8px;
+      font-size: 11px; line-height: 1.35; cursor: pointer; color: var(--secondary-text-color); }
+    .plock ha-icon { --mdc-icon-size: 18px; flex: none; color: var(--ih-overlay2); }
+    .locked { filter: grayscale(1); opacity: .45; pointer-events: none; }
     :host { ${unsafeCSS(paletteCss)} }
     *, *::before, *::after { box-sizing: border-box; }
     ha-card { padding: 12px 14px; }
