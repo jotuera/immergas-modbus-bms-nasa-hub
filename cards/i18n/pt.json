@@ -1228,5 +1228,19 @@
  "The scan reads every standard Data-ID once and the boiler parameters (polling pauses meanwhile). Report: a link in the HA notifications opens GitHub with the map and the model filled in – nothing is sent until you press Create.": "A análise lê uma vez cada Data-ID padrão e os parâmetros da caldeira (a leitura fica em pausa entretanto). Relatório: um link nas notificações do HA abre o GitHub com o mapa e o modelo – nada é enviado até premir Create.",
  "Last write": "Última escrita",
  " – the boiler acknowledged it but keeps its own value (remote?)": " – a caldeira confirmou mas mantém o seu valor (comando?)",
- "Read only – the remote (CAR V2 / Super Amico) sets the setpoints.": "Só leitura – o comando (CAR V2 / Super Amico) define as consignas."
+ "Read only – the remote (CAR V2 / Super Amico) sets the setpoints.": "Só leitura – o comando (CAR V2 / Super Amico) define as consignas.",
+ "OpenTherm · session released after every cycle for the app": "OpenTherm · sessão libertada após cada ciclo para a app",
+ "no OpenTherm readings": "sem leituras OpenTherm",
+ "Remote lost (E31)": "Comando perdido (E31)",
+ "Remote in charge": "O comando controla",
+ "Room temperature present": "Temperatura ambiente presente",
+ "Not detected": "Não detetado",
+ "the boiler waits for its paired remote and ignores CH / DHW / mode commands": "a caldeira espera o comando emparelhado e ignora as ordens de aquecimento / AQS / modo",
+ "from a CAR V2 or the Dominus probe": "de um CAR V2 ou da sonda do Dominus",
+ "from the CAR V2": "do CAR V2",
+ "without a remote the Dominus runs the boiler (programs in HA); a Super Amico on the boiler is not visible over OpenTherm": "sem comando o Dominus controla a caldeira (programas no HA); um Super Amico na caldeira não é visível por OpenTherm",
+ "CAR V2 remote": "Comando CAR V2",
+ "OpenTherm · remote": "OpenTherm · comando",
+ "Block writes from HA": "Bloquear escrita a partir do HA",
+ "HA only reads. After switching it on, power-cycle the Dominus once – it forgets the last setpoint from HA.": "O HA só lê. Depois de ativar, desligue uma vez a alimentação do Dominus – esquece a última consigna do HA."
 }

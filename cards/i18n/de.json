@@ -1228,5 +1228,19 @@
  "The scan reads every standard Data-ID once and the boiler parameters (polling pauses meanwhile). Report: a link in the HA notifications opens GitHub with the map and the model filled in – nothing is sent until you press Create.": "Der Scan liest jede Standard-Data-ID einmal und die Kesselparameter (die Abfrage pausiert solange). Bericht: ein Link in den HA-Benachrichtigungen öffnet GitHub mit Karte und Modell – nichts wird gesendet, bis Sie Create drücken.",
  "Last write": "Letzter Schreibvorgang",
  " – the boiler acknowledged it but keeps its own value (remote?)": " – der Kessel hat bestätigt, behält aber seinen Wert (Fernbedienung?)",
- "Read only – the remote (CAR V2 / Super Amico) sets the setpoints.": "Nur lesen – die Fernbedienung (CAR V2 / Super Amico) stellt die Sollwerte ein."
+ "Read only – the remote (CAR V2 / Super Amico) sets the setpoints.": "Nur lesen – die Fernbedienung (CAR V2 / Super Amico) stellt die Sollwerte ein.",
+ "OpenTherm · session released after every cycle for the app": "OpenTherm · Sitzung nach jedem Zyklus für die App freigegeben",
+ "no OpenTherm readings": "keine OpenTherm-Werte",
+ "Remote lost (E31)": "Fernbedienung verloren (E31)",
+ "Remote in charge": "Fernbedienung regelt",
+ "Room temperature present": "Raumtemperatur vorhanden",
+ "Not detected": "Nicht erkannt",
+ "the boiler waits for its paired remote and ignores CH / DHW / mode commands": "der Kessel wartet auf seine gekoppelte Fernbedienung und ignoriert HZ- / WW- / Betriebsart-Befehle",
+ "from a CAR V2 or the Dominus probe": "von einer CAR V2 oder dem Dominus-Fühler",
+ "from the CAR V2": "von der CAR V2",
+ "without a remote the Dominus runs the boiler (programs in HA); a Super Amico on the boiler is not visible over OpenTherm": "ohne Fernbedienung regelt der Dominus den Kessel (Programme in HA); eine Super Amico am Kessel ist über OpenTherm nicht sichtbar",
+ "CAR V2 remote": "Fernbedienung CAR V2",
+ "OpenTherm · remote": "OpenTherm · Fernbedienung",
+ "Block writes from HA": "Schreiben aus HA sperren",
+ "HA only reads. After switching it on, power-cycle the Dominus once – it forgets the last setpoint from HA.": "HA liest nur. Nach dem Einschalten den Dominus einmal stromlos machen – er vergisst den letzten Sollwert aus HA."
 }

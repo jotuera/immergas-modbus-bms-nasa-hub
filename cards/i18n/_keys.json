@@ -246,6 +246,7 @@
   "pl": "Potwierdź – dotknij ponownie",
   "files": [
    "base.ts",
+   "links.ts",
    "mode.ts"
   ]
  },
@@ -5940,6 +5941,104 @@
  {
   "en": "Dehumidifier",
   "pl": "Photovoltaics",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "OpenTherm · session released after every cycle for the app",
+  "pl": "OpenTherm · sesja zwalniana po każdym cyklu dla apki",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "no OpenTherm readings",
+  "pl": "brak odczytów OpenTherm",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Remote lost (E31)",
+  "pl": "Brak łączności z pilotem (E31)",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Remote in charge",
+  "pl": "Steruje pilot",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Room temperature present",
+  "pl": "Jest temperatura pokoju",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Not detected",
+  "pl": "Nie wykryto",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "the boiler waits for its paired remote and ignores CH / DHW / mode commands",
+  "pl": "kocioł czeka na sparowany pilot i ignoruje polecenia CO / CWU / trybu",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "from a CAR V2 or the Dominus probe",
+  "pl": "z CAR V2 albo z sondy Dominusa",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "from the CAR V2",
+  "pl": "z CAR V2",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "without a remote the Dominus runs the boiler (programs in HA); a Super Amico on the boiler is not visible over OpenTherm",
+  "pl": "bez pilota kotłem steruje Dominus (programy w HA); Super Amico na kotle nie jest widoczny po OpenTherm",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "CAR V2 remote",
+  "pl": "Pilot CAR V2",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "OpenTherm · remote",
+  "pl": "OpenTherm · pilot",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Block writes from HA",
+  "pl": "Blokada zapisu z HA",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "HA only reads. After switching it on, power-cycle the Dominus once – it forgets the last setpoint from HA.",
+  "pl": "HA tylko czyta. Po włączeniu raz odłącz zasilanie modułu Dominus – zapomni ostatnią nastawę z HA.",
   "files": [
    "links.ts"
   ]

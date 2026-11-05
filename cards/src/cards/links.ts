@@ -4,7 +4,7 @@ import { HubCard, html, css, nothing, c, ca, box, register } from "../base";
 import { Key } from "../names";
 
 type State = "ok" | "emu" | "off" | "bad" | "na";
-type Link = { k: Key; icon: string; name: [string, string]; bus: string; st: State; detail: string; label?: string };
+type Link = { k: Key; icon: string; name: [string, string]; bus: string; st: State; detail: string; label?: string; extra?: unknown };
 
 class ImmergasLinksCard extends HubCard {
   /** seconds since the entity last changed (a counter that keeps changing = the bus is alive) */
@@ -54,8 +54,12 @@ class ImmergasLinksCard extends HubCard {
       detail: bmsOn ? this.t("hub pełni rolę centralki (master BMS)", "the hub acts as the controller (BMS master)")
         : this.t("hub nie odpytuje – miejsce dla centralki", "the hub does not poll – room for a controller") });
 
+    // Dominus in the OpenTherm mode: the module, the boiler behind it and the remote (CAR V2 / Super Amico) instead of
+    // the zone 1 panel - with the switch that blocks writes from Home Assistant
+    if (this.dominus && this.ot) this.otLinks(out);
+
     // Immergas Dominus integration: the Wi-Fi module answers local TCP polls (last good poll, failed polls since HA start)
-    if (this.eid("dom_last_read")) {
+    if (this.eid("dom_last_read") && !this.ot) {
       const last = Date.parse(this.s("dom_last_read") ?? ""), fails = this.n("dom_failed");
       const fresh = !isNaN(last) && Date.now() - last < 5 * 60e3;
       out.push({ k: "dom_last_read", icon: "mdi:router-wireless", name: ["Dominus", "Dominus"], bus: this.t("Wi-Fi · TCP", "Wi-Fi · TCP"),
@@ -94,6 +98,42 @@ class ImmergasLinksCard extends HubCard {
     return out.sort((a, b) => ORDER.indexOf(a.name[1]) - ORDER.indexOf(b.name[1]));
   }
 
+  /** OpenTherm: Dominus, the boiler and the remote. A CAR V2 is not reported over OpenTherm as such - it is inferred:
+   *  E31 = the boiler lost its remote; a room temperature (Data-ID 24) comes from a CAR V2 or the Dominus probe;
+   *  "Read only (remote in charge)" on = the user says a remote runs the boiler. */
+  private otLinks(out: Link[]) {
+    const live = !this.bad("ot_flow") || !this.bad("ot_flame");
+    out.push({ k: this.eid("ot_flow") ? "ot_flow" : "ot_flame", icon: "mdi:router-wireless", name: ["Dominus", "Dominus"], bus: this.t("Wi-Fi · TCP", "Wi-Fi · TCP"),
+      st: live ? "ok" : "bad",
+      detail: live ? this.t("OpenTherm · sesja zwalniana po każdym cyklu dla apki", "OpenTherm · session released after every cycle for the app")
+        : this.t("brak odczytów OpenTherm", "no OpenTherm readings") });
+    out.push({ k: "mode", icon: "mdi:water-boiler", name: ["Kocioł", "Boiler"], bus: "Dominus · OpenTherm",
+      st: live ? "ok" : "bad", detail: this.bad("mode") ? "" : this.t("tryb ", "mode ") + this.txt("mode") });
+    const code = String(this.s("err_code") ?? "").replace(/\D/g, ""), e31 = code === "31";
+    const room = this.n("zone1"), ro = this.on("ot_ro"), probeRoom = this.s("ot_ntc") === "room";
+    const st: State = e31 ? "bad" : ro || !isNaN(room) ? "ok" : "off";
+    const label = e31 ? this.t("Brak łączności z pilotem (E31)", "Remote lost (E31)")
+      : ro ? this.t("Steruje pilot", "Remote in charge")
+      : !isNaN(room) ? this.t("Jest temperatura pokoju", "Room temperature present")
+      : this.t("Nie wykryto", "Not detected");
+    const detail = e31 ? this.t("kocioł czeka na sparowany pilot i ignoruje polecenia CO / CWU / trybu",
+        "the boiler waits for its paired remote and ignores CH / DHW / mode commands")
+      : !isNaN(room) ? `${this.f(room, 1, 1)} °C · ` + (probeRoom ? this.t("z CAR V2 albo z sondy Dominusa", "from a CAR V2 or the Dominus probe")
+        : this.t("z CAR V2", "from the CAR V2"))
+      : this.t("bez pilota kotłem steruje Dominus (programy w HA); Super Amico na kotle nie jest widoczny po OpenTherm",
+        "without a remote the Dominus runs the boiler (programs in HA); a Super Amico on the boiler is not visible over OpenTherm");
+    const tag = "lk_ro", armed = this.isArmed(tag);
+    out.push({ k: this.eid("ot_ro") ? "ot_ro" : "zone1", icon: "mdi:remote", name: ["Pilot CAR V2", "CAR V2 remote"], bus: this.t("OpenTherm · pilot", "OpenTherm · remote"),
+      st, label, detail,
+      extra: this.eid("ot_ro") ? html`<div class="ro" @click=${(e: Event) => e.stopPropagation()}>
+        <span>${armed ? this.t("Potwierdź – dotknij ponownie", "Confirm – tap again") : this.t("Blokada zapisu z HA", "Block writes from HA")}</span>
+        <div class="tgl ${this.bad("ot_ro") ? "dis" : ""}" style="background:${ro ? ca("sky", 0.35) : "rgba(255,255,255,.08)"}${armed ? `;outline:2px solid ${c("sky")}` : ""}"
+          @click=${() => !this.bad("ot_ro") && this.confirm(tag, () => this.call("switch", ro ? "turn_off" : "turn_on", "ot_ro"))}>
+          <div class="kn" style="left:${ro ? 23 : 3}px;background:${ro ? c("sky") : c("overlay1")}"></div></div></div>
+        ${ro ? html`<div class="ld">${this.t("HA tylko czyta. Po włączeniu raz odłącz zasilanie modułu Dominus – zapomni ostatnią nastawę z HA.",
+          "HA only reads. After switching it on, power-cycle the Dominus once – it forgets the last setpoint from HA.")}</div>` : nothing}` : undefined });
+  }
+
   protected body() {
     const L = this.links();
     // pairs: a bus and the device behind it, one column each (Hub / Dominus, Modbus / zone 1 panel, BMS / system
@@ -122,6 +162,7 @@ class ImmergasLinksCard extends HubCard {
             <div class="ln">${this.t(l.name[0], l.name[1])}<span class="bus">${l.bus}</span></div>
             <div class="ls" style="color:${c(col)}"><ha-icon icon=${icon}></ha-icon>${txt}</div>
             ${l.detail ? html`<div class="ld">${l.detail}</div>` : nothing}
+            ${l.extra ?? nothing}
           </div></div>`;
       })}</div>`)}</div>`;
   }
@@ -144,6 +185,7 @@ class ImmergasLinksCard extends HubCard {
     .ls { display: flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 800; margin-top: 2px; }
     .ls ha-icon { --mdc-icon-size: 14px; }
     .ld { font-size: 10px; opacity: .6; margin-top: 2px; line-height: 1.3; overflow-wrap: anywhere; }
+    .ro { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 7px; font-size: 11px; font-weight: 800; }
   `];
 }
 

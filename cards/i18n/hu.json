@@ -1228,5 +1228,19 @@
  "The scan reads every standard Data-ID once and the boiler parameters (polling pauses meanwhile). Report: a link in the HA notifications opens GitHub with the map and the model filled in – nothing is sent until you press Create.": "A szkennelés minden szabványos Data-ID-t és a kazán paramétereit egyszer kiolvassa (az olvasás közben szünetel). Bejelentés: a HA értesítésekben lévő link megnyitja a GitHubot a térképpel és a típussal – semmi nem kerül elküldésre, amíg meg nem nyomja a Create gombot.",
  "Last write": "Utolsó írás",
  " – the boiler acknowledged it but keeps its own value (remote?)": " – a kazán nyugtázta, de megtartja a saját értékét (távvezérlő?)",
- "Read only – the remote (CAR V2 / Super Amico) sets the setpoints.": "Csak olvasás – az alapjeleket a távvezérlő állítja (CAR V2 / Super Amico)."
+ "Read only – the remote (CAR V2 / Super Amico) sets the setpoints.": "Csak olvasás – az alapjeleket a távvezérlő állítja (CAR V2 / Super Amico).",
+ "OpenTherm · session released after every cycle for the app": "OpenTherm · a munkamenet minden ciklus után felszabadul az alkalmazásnak",
+ "no OpenTherm readings": "nincs OpenTherm adat",
+ "Remote lost (E31)": "Távvezérlő elveszett (E31)",
+ "Remote in charge": "A távvezérlő irányít",
+ "Room temperature present": "Van szobahőmérséklet",
+ "Not detected": "Nem észlelt",
+ "the boiler waits for its paired remote and ignores CH / DHW / mode commands": "a kazán a párosított távvezérlőre vár, és figyelmen kívül hagyja a fűtés / HMV / üzemmód parancsokat",
+ "from a CAR V2 or the Dominus probe": "CAR V2-től vagy a Dominus szondájától",
+ "from the CAR V2": "a CAR V2-től",
+ "without a remote the Dominus runs the boiler (programs in HA); a Super Amico on the boiler is not visible over OpenTherm": "távvezérlő nélkül a Dominus irányítja a kazánt (programok a HA-ban); a kazánon lévő Super Amico OpenThermen nem látszik",
+ "CAR V2 remote": "CAR V2 távvezérlő",
+ "OpenTherm · remote": "OpenTherm · távvezérlő",
+ "Block writes from HA": "HA írás tiltása",
+ "HA only reads. After switching it on, power-cycle the Dominus once – it forgets the last setpoint from HA.": "A HA csak olvas. Bekapcsolás után egyszer áramtalanítsa a Dominus modult – elfelejti a HA utolsó beállítását."
 }

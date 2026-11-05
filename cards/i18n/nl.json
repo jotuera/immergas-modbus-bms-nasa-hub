@@ -1228,5 +1228,19 @@
  "The scan reads every standard Data-ID once and the boiler parameters (polling pauses meanwhile). Report: a link in the HA notifications opens GitHub with the map and the model filled in – nothing is sent until you press Create.": "De scan leest elke standaard Data-ID en de ketelparameters één keer (het uitlezen pauzeert zolang). Melding: een link in de HA-meldingen opent GitHub met de kaart en het model – er wordt niets verstuurd totdat u op Create drukt.",
  "Last write": "Laatste schrijfactie",
  " – the boiler acknowledged it but keeps its own value (remote?)": " – de ketel bevestigde het maar houdt zijn eigen waarde (afstandsbediening?)",
- "Read only – the remote (CAR V2 / Super Amico) sets the setpoints.": "Alleen lezen – de afstandsbediening (CAR V2 / Super Amico) stelt de instelwaarden in."
+ "Read only – the remote (CAR V2 / Super Amico) sets the setpoints.": "Alleen lezen – de afstandsbediening (CAR V2 / Super Amico) stelt de instelwaarden in.",
+ "OpenTherm · session released after every cycle for the app": "OpenTherm · sessie na elke cyclus vrijgegeven voor de app",
+ "no OpenTherm readings": "geen OpenTherm-waarden",
+ "Remote lost (E31)": "Afstandsbediening kwijt (E31)",
+ "Remote in charge": "Afstandsbediening regelt",
+ "Room temperature present": "Kamertemperatuur aanwezig",
+ "Not detected": "Niet gedetecteerd",
+ "the boiler waits for its paired remote and ignores CH / DHW / mode commands": "de ketel wacht op zijn gekoppelde afstandsbediening en negeert CV- / SWW- / modusopdrachten",
+ "from a CAR V2 or the Dominus probe": "van een CAR V2 of de Dominus-sensor",
+ "from the CAR V2": "van de CAR V2",
+ "without a remote the Dominus runs the boiler (programs in HA); a Super Amico on the boiler is not visible over OpenTherm": "zonder afstandsbediening regelt de Dominus de ketel (programma's in HA); een Super Amico op de ketel is via OpenTherm niet zichtbaar",
+ "CAR V2 remote": "Afstandsbediening CAR V2",
+ "OpenTherm · remote": "OpenTherm · afstandsbediening",
+ "Block writes from HA": "Schrijven vanuit HA blokkeren",
+ "HA only reads. After switching it on, power-cycle the Dominus once – it forgets the last setpoint from HA.": "HA leest alleen. Maak na het inschakelen de Dominus één keer spanningsloos – hij vergeet de laatste instelwaarde uit HA."
 }

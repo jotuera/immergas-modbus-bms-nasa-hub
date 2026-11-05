@@ -1228,5 +1228,19 @@
  "The scan reads every standard Data-ID once and the boiler parameters (polling pauses meanwhile). Report: a link in the HA notifications opens GitHub with the map and the model filled in – nothing is sent until you press Create.": "Sken jednou přečte každé standardní Data-ID a parametry kotle (čtení se mezitím pozastaví). Hlášení: odkaz v oznámeních HA otevře GitHub s vyplněnou mapou a modelem – nic se neodešle, dokud nestisknete Create.",
  "Last write": "Poslední zápis",
  " – the boiler acknowledged it but keeps its own value (remote?)": " – kotel potvrdil, ale drží svou hodnotu (ovladač?)",
- "Read only – the remote (CAR V2 / Super Amico) sets the setpoints.": "Pouze čtení – nastavení nastavuje ovladač (CAR V2 / Super Amico)."
+ "Read only – the remote (CAR V2 / Super Amico) sets the setpoints.": "Pouze čtení – nastavení nastavuje ovladač (CAR V2 / Super Amico).",
+ "OpenTherm · session released after every cycle for the app": "OpenTherm · relace uvolněna po každém cyklu pro aplikaci",
+ "no OpenTherm readings": "žádná data OpenTherm",
+ "Remote lost (E31)": "Ovladač ztracen (E31)",
+ "Remote in charge": "Řídí ovladač",
+ "Room temperature present": "Teplota místnosti je k dispozici",
+ "Not detected": "Nezjištěno",
+ "the boiler waits for its paired remote and ignores CH / DHW / mode commands": "kotel čeká na spárovaný ovladač a ignoruje příkazy ÚT / TUV / režimu",
+ "from a CAR V2 or the Dominus probe": "z CAR V2 nebo ze sondy Dominus",
+ "from the CAR V2": "z CAR V2",
+ "without a remote the Dominus runs the boiler (programs in HA); a Super Amico on the boiler is not visible over OpenTherm": "bez ovladače řídí kotel Dominus (programy v HA); Super Amico na kotli není přes OpenTherm vidět",
+ "CAR V2 remote": "Ovladač CAR V2",
+ "OpenTherm · remote": "OpenTherm · ovladač",
+ "Block writes from HA": "Blokovat zápis z HA",
+ "HA only reads. After switching it on, power-cycle the Dominus once – it forgets the last setpoint from HA.": "HA pouze čte. Po zapnutí jednou odpojte napájení modulu Dominus – zapomene poslední nastavení z HA."
 }

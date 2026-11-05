@@ -1228,5 +1228,19 @@
  "The scan reads every standard Data-ID once and the boiler parameters (polling pauses meanwhile). Report: a link in the HA notifications opens GitHub with the map and the model filled in – nothing is sent until you press Create.": "La scansione legge una volta ogni Data-ID standard e i parametri della caldaia (la lettura va in pausa nel frattempo). Segnalazione: un link nelle notifiche di HA apre GitHub con la mappa e il modello – nulla viene inviato finché non premi Create.",
  "Last write": "Ultima scrittura",
  " – the boiler acknowledged it but keeps its own value (remote?)": " – la caldaia l’ha confermato ma mantiene il suo valore (comando remoto?)",
- "Read only – the remote (CAR V2 / Super Amico) sets the setpoints.": "Sola lettura – il comando remoto (CAR V2 / Super Amico) imposta i setpoint."
+ "Read only – the remote (CAR V2 / Super Amico) sets the setpoints.": "Sola lettura – il comando remoto (CAR V2 / Super Amico) imposta i setpoint.",
+ "OpenTherm · session released after every cycle for the app": "OpenTherm · sessione liberata dopo ogni ciclo per l’app",
+ "no OpenTherm readings": "nessuna lettura OpenTherm",
+ "Remote lost (E31)": "Comando remoto perso (E31)",
+ "Remote in charge": "Comanda il comando remoto",
+ "Room temperature present": "Temperatura ambiente presente",
+ "Not detected": "Non rilevato",
+ "the boiler waits for its paired remote and ignores CH / DHW / mode commands": "la caldaia attende il comando remoto abbinato e ignora i comandi riscaldamento / ACS / modalità",
+ "from a CAR V2 or the Dominus probe": "da un CAR V2 o dalla sonda del Dominus",
+ "from the CAR V2": "dal CAR V2",
+ "without a remote the Dominus runs the boiler (programs in HA); a Super Amico on the boiler is not visible over OpenTherm": "senza comando remoto il Dominus gestisce la caldaia (programmi in HA); un Super Amico sulla caldaia non è visibile via OpenTherm",
+ "CAR V2 remote": "Comando remoto CAR V2",
+ "OpenTherm · remote": "OpenTherm · comando remoto",
+ "Block writes from HA": "Blocca scrittura da HA",
+ "HA only reads. After switching it on, power-cycle the Dominus once – it forgets the last setpoint from HA.": "HA legge soltanto. Dopo averlo attivato, togli una volta l’alimentazione al Dominus: dimenticherà l’ultimo setpoint da HA."
 }
