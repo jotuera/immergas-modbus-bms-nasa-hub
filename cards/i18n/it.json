@@ -1364,5 +1364,7 @@
  "the thermostat alone switches heating – no room temperature over TCP": "solo il termostato accende/spegne – nessuna temperatura ambiente via TCP",
  "the panel gives the temperature and setpoint, the thermostat switches heating": "il pannello dà temperatura e setpoint, il termostato accende/spegne",
  "the zone panel gives the temperature and the heating demand": "il pannello di zona dà temperatura e richiesta",
- "the Dominus does not read the thermostat – set A31 in the Boiler parameters (offline)": "il Dominus non legge il termostato – imposta A31 nei parametri caldaia (offline)"
+ "the Dominus does not read the thermostat – set A31 in the Boiler parameters (offline)": "il Dominus non legge il termostato – imposta A31 nei parametri caldaia (offline)",
+ "No thermostat / panel": "Nessun termostato / pannello",
+ "the Dominus reports no room sensor (PDU 2011 = 32767)": "il Dominus segnala che manca la sonda ambiente (PDU 2011 = 32767)"
 }

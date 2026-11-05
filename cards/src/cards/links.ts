@@ -149,12 +149,18 @@ class ImmergasLinksCard extends HubCard {
    *  TCP is not taken by the module (tested), so there is no emulated thermostat here - the hub's zone panel does it. */
   private a31Link(): Link {
     const a31 = this.isSet("dom_a31") ? this.s("dom_a31") ?? "" : "";
-    const st: State = a31 === "rpt" || a31 === "rt" ? "ok" : a31 === "rp" ? "off" : "na";
-    const label = a31 === "rt" ? this.t("Termostat fizyczny (RT)", "Physical thermostat (RT)")
+    // PDU 2011 = 32767 (the sensor reads "unknown"): the Dominus reports no room sensor - no panel / thermostat on the
+    // bus; normal only with RT (an on/off thermostat has no temperature)
+    const missing = this.s("zone1") === "unknown" && a31 !== "rt";
+    const st: State = missing ? "bad" : a31 === "rpt" || a31 === "rt" ? "ok" : a31 === "rp" ? "off" : "na";
+    const label = missing ? this.t("Brak termostatu / panelu", "No thermostat / panel")
+      : a31 === "rt" ? this.t("Termostat fizyczny (RT)", "Physical thermostat (RT)")
       : a31 === "rpt" ? this.t("Termostat fizyczny (RPT)", "Physical thermostat (RPT)")
       : a31 === "rp" ? this.t("Bez termostatu (RP)", "No thermostat (RP)")
       : this.t("Nie ustawiono A31", "A31 not set");
-    const detail = a31 === "rt" ? this.t("sam termostat włącza/wyłącza grzanie – bez temperatury pokoju po TCP", "the thermostat alone switches heating – no room temperature over TCP")
+    const detail = missing ? this.t("Dominus zgłasza brak czujnika pokojowego (PDU 2011 = 32767)", "the Dominus reports no room sensor (PDU 2011 = 32767)")
+        + (a31 ? ` · A31 ${a31.toUpperCase()}` : "")
+      : a31 === "rt" ? this.t("sam termostat włącza/wyłącza grzanie – bez temperatury pokoju po TCP", "the thermostat alone switches heating – no room temperature over TCP")
       : a31 === "rpt" ? this.t("panel daje temperaturę i nastawę, termostat włącza/wyłącza grzanie", "the panel gives the temperature and setpoint, the thermostat switches heating")
       : a31 === "rp" ? this.t("panel strefy daje temperaturę i żądanie grzania", "the zone panel gives the temperature and the heating demand")
       : this.t("Dominus nie czyta termostatu – ustaw A31 w Parametrach pieca (offline)", "the Dominus does not read the thermostat – set A31 in the Boiler parameters (offline)");

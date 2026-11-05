@@ -1364,5 +1364,7 @@
  "the thermostat alone switches heating – no room temperature over TCP": "topení zapíná/vypíná jen termostat – bez teploty místnosti po TCP",
  "the panel gives the temperature and setpoint, the thermostat switches heating": "panel dává teplotu a požadovanou, termostat zapíná/vypíná topení",
  "the zone panel gives the temperature and the heating demand": "panel zóny dává teplotu a požadavek topení",
- "the Dominus does not read the thermostat – set A31 in the Boiler parameters (offline)": "Dominus termostat nečte – nastavte A31 v Parametrech kotle (offline)"
+ "the Dominus does not read the thermostat – set A31 in the Boiler parameters (offline)": "Dominus termostat nečte – nastavte A31 v Parametrech kotle (offline)",
+ "No thermostat / panel": "Chybí termostat / panel",
+ "the Dominus reports no room sensor (PDU 2011 = 32767)": "Dominus hlásí chybějící pokojové čidlo (PDU 2011 = 32767)"
 }

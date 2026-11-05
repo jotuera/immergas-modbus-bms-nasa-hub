@@ -6176,6 +6176,13 @@
   ]
  },
  {
+  "en": "No thermostat / panel",
+  "pl": "Brak termostatu / panelu",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
   "en": "Physical thermostat (RT)",
   "pl": "Termostat fizyczny (RT)",
   "files": [
@@ -6199,6 +6206,13 @@
  {
   "en": "A31 not set",
   "pl": "Nie ustawiono A31",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "the Dominus reports no room sensor (PDU 2011 = 32767)",
+  "pl": "Dominus zgłasza brak czujnika pokojowego (PDU 2011 = 32767)",
   "files": [
    "links.ts"
   ]

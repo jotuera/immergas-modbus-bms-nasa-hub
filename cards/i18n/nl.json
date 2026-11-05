@@ -1364,5 +1364,7 @@
  "the thermostat alone switches heating – no room temperature over TCP": "alleen de thermostaat schakelt – geen kamertemperatuur via TCP",
  "the panel gives the temperature and setpoint, the thermostat switches heating": "het paneel geeft temperatuur en instelwaarde, de thermostaat schakelt",
  "the zone panel gives the temperature and the heating demand": "het zonepaneel geeft temperatuur en warmtevraag",
- "the Dominus does not read the thermostat – set A31 in the Boiler parameters (offline)": "de Dominus leest de thermostaat niet – stel A31 in bij de ketelparameters (offline)"
+ "the Dominus does not read the thermostat – set A31 in the Boiler parameters (offline)": "de Dominus leest de thermostaat niet – stel A31 in bij de ketelparameters (offline)",
+ "No thermostat / panel": "Geen thermostaat / paneel",
+ "the Dominus reports no room sensor (PDU 2011 = 32767)": "de Dominus meldt geen kamersensor (PDU 2011 = 32767)"
 }
