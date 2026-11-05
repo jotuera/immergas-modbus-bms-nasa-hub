@@ -85,8 +85,9 @@ class ImmergasLinksCard extends HubCard {
         detail: isNaN(room)
           ? (a31 === "rt" ? how : this.t("Dominus nie mierzy temperatury – potrzebny panel strefy (fizyczny albo emulowany przez hub)",
             "Dominus does not measure it – a zone panel is needed (physical or emulated by the hub)"))
-          : `${this.f(room, 1, 1)} °C · ` + this.t("fizyczny lub emulowany", "physical or emulated") + (how ? " · " + how : "") });
-      if (this.eid("ot_thermo")) out.push(this.thermoLink());
+          : `${this.f(room, 1, 1)} °C · ` + this.t("fizyczny lub emulowany", "physical or emulated") });
+      // the room thermostat: the Dominus does not report it - the declared A31 room control (offline settings) says it
+      if (this.eid("dom_a31")) out.push(this.a31Link());
     }
 
     const wifi = this.n("hub_wifi");
@@ -143,6 +144,23 @@ class ImmergasLinksCard extends HubCard {
           "HA only reads. After switching it on, power-cycle the Dominus once – it forgets the last setpoint from HA.")}</div>` : nothing}` : undefined });
   }
 
+  /** Modbus Dominus: the Thermostat tile from the declared A31 room control (Boiler parameters, offline) - RP: the zone
+   *  panel only, RPT: panel + room thermostat (on / off), RT: the room thermostat only. A room temperature written over
+   *  TCP is not taken by the module (tested), so there is no emulated thermostat here - the hub's zone panel does it. */
+  private a31Link(): Link {
+    const a31 = this.isSet("dom_a31") ? this.s("dom_a31") ?? "" : "";
+    const st: State = a31 === "rpt" || a31 === "rt" ? "ok" : a31 === "rp" ? "off" : "na";
+    const label = a31 === "rt" ? this.t("Termostat fizyczny (RT)", "Physical thermostat (RT)")
+      : a31 === "rpt" ? this.t("Termostat fizyczny (RPT)", "Physical thermostat (RPT)")
+      : a31 === "rp" ? this.t("Bez termostatu (RP)", "No thermostat (RP)")
+      : this.t("Nie ustawiono A31", "A31 not set");
+    const detail = a31 === "rt" ? this.t("sam termostat włącza/wyłącza grzanie – bez temperatury pokoju po TCP", "the thermostat alone switches heating – no room temperature over TCP")
+      : a31 === "rpt" ? this.t("panel daje temperaturę i nastawę, termostat włącza/wyłącza grzanie", "the panel gives the temperature and setpoint, the thermostat switches heating")
+      : a31 === "rp" ? this.t("panel strefy daje temperaturę i żądanie grzania", "the zone panel gives the temperature and the heating demand")
+      : this.t("Dominus nie czyta termostatu – ustaw A31 w Parametrach pieca (offline)", "the Dominus does not read the thermostat – set A31 in the Boiler parameters (offline)");
+    return { k: "dom_a31", icon: "mdi:thermostat", name: ["Termostat", "Thermostat"], bus: "A31", st, label, detail };
+  }
+
   /** OpenTherm: the room thermostat - the boiler does not report it, so the user says what is connected: none, a
    *  physical one (contacts 40-41) or an emulated one (Home Assistant sends an HA entity's temperature to the module) */
   private thermoLink(): Link {
@@ -151,15 +169,11 @@ class ImmergasLinksCard extends HubCard {
     const v = parseFloat(src?.state ?? ""), sent = a.room_sent_at ? Date.parse(a.room_sent_at) : NaN;
     const res = a.write_result as string | undefined, ack = parseFloat(String(a.acknowledged ?? ""));
     const st: State = mode === "physical" ? "ok" : mode === "emulated" ? (src && !isNaN(v) && res !== "error" && res !== "not_taken" ? "emu" : "bad") : "off";
-    const target = this.ot ? "Dominus (Data-ID 24)" : "Dominus (PDU 2011)";
+    const target = "Dominus (Data-ID 24)";
     const label = mode === "physical" ? this.t("Termostat fizyczny", "Physical thermostat")
       : mode === "emulated" ? this.t("Termostat emulowany", "Emulated thermostat") : this.t("Nie wybrano", "Not chosen");
-    const a31 = this.s("dom_a31") ?? "";
-    const detail = mode === "physical" ? (this.ot ? this.t("zaciski 40-41 kotła – OpenTherm nie podaje jego stanu; grzanie widać po żądaniu CO",
+    const detail = mode === "physical" ? this.t("zaciski 40-41 kotła – OpenTherm nie podaje jego stanu; grzanie widać po żądaniu CO",
         "boiler contacts 40-41 – OpenTherm does not report it; heating shows as the CH demand")
-        : a31 === "rt" ? this.t("A31 RT: sam termostat włącza/wyłącza grzanie, bez temperatury pokoju po TCP", "A31 RT: the thermostat alone switches heating, no room temperature over TCP")
-        : a31 === "rpt" ? this.t("A31 RPT: panel daje temperaturę i nastawę, termostat włącza/wyłącza grzanie", "A31 RPT: the panel gives the temperature and setpoint, the thermostat switches heating")
-        : this.t("wybierz sposób sterowania A31 z menu kotła", "choose the A31 room control from the boiler menu"))
       : mode === "emulated" ? (src && !isNaN(v) ? `${src.attributes?.friendly_name ?? srcId} ${this.f(v, 1, 1)} °C → ${target}`
           + (!isNaN(sent) ? this.t(" · wysłano ", " · sent ") + new Date(sent).toLocaleTimeString(this.loc, { hour: "2-digit", minute: "2-digit" }) : "")
           + (res === "taken" ? this.t(" · moduł przyjął", " · the module took it")
@@ -177,9 +191,7 @@ class ImmergasLinksCard extends HubCard {
     const opt = (o: string, lbl: string) => html`<div class="seg ${mode === o ? "on" : ""}" @click=${(e: Event) => { e.stopPropagation(); if (mode !== o) pick(o); }}>${lbl}</div>`;
     return { k: "ot_thermo", icon: "mdi:thermostat", name: ["Termostat", "Thermostat"], bus: this.t("pokój", "room"), st, label, detail,
       extra: html`<div class="segs" @click=${(e: Event) => e.stopPropagation()}>${opt("none", this.t("Brak", "None"))}${opt("physical", this.t("Fizyczny", "Physical"))}${opt("emulated", this.t("Emulowany", "Emulated"))}</div>
-        ${mode === "physical" && !this.ot && this.eid("dom_a31") ? html`<div class="segs" @click=${(e: Event) => e.stopPropagation()}>
-          ${(["rpt", "rt"] as const).map((o) => html`<div class="seg ${a31 === o ? "on" : ""}" @click=${() => { const id = this.eid("dom_a31");
-            if (id && a31 !== o) this.hass.callService(dom(id), "select_option", { entity_id: id, option: o }); }}>A31 ${o.toUpperCase()}</div>`)}</div>` : nothing}
+
         ${mode === "emulated" && this.eid("ot_room_src") ? html`<select class="src" @click=${(e: Event) => e.stopPropagation()} @change=${setSrc}>
           <option value="" ?selected=${!srcId}>${this.t("— encja temperatury —", "— temperature entity —")}</option>
           ${temps.map((s) => html`<option value=${s.entity_id} ?selected=${s.entity_id === srcId}>${s.attributes.friendly_name ?? s.entity_id} · ${this.f(parseFloat(s.state), 1, 1)} °C</option>`)}

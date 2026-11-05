@@ -1356,5 +1356,13 @@
  " · the module took it": " · a modul elfogadta",
  " · the module did not take it (acknowledged ": " · a modul nem fogadta el (nyugtázta: ",
  " · write error": " · írási hiba",
- "rt": "rt"
+ "rt": "rt",
+ "Physical thermostat (RT)": "Fizikai termosztát (RT)",
+ "Physical thermostat (RPT)": "Fizikai termosztát (RPT)",
+ "No thermostat (RP)": "Termosztát nélkül (RP)",
+ "A31 not set": "A31 nincs beállítva",
+ "the thermostat alone switches heating – no room temperature over TCP": "csak a termosztát kapcsolja a fűtést – nincs szobahőmérséklet TCP-n",
+ "the panel gives the temperature and setpoint, the thermostat switches heating": "a panel adja a hőmérsékletet és az alapjelet, a termosztát kapcsolja a fűtést",
+ "the zone panel gives the temperature and the heating demand": "a zóna panel adja a hőmérsékletet és a fűtési igényt",
+ "the Dominus does not read the thermostat – set A31 in the Boiler parameters (offline)": "a Dominus nem olvassa a termosztátot – állítsa be az A31-et a kazán paramétereiben (offline)"
 }

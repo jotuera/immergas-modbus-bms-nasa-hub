@@ -1356,5 +1356,13 @@
  " · the module took it": " · modul ji přijal",
  " · the module did not take it (acknowledged ": " · modul ji nepřijal (potvrdil ",
  " · write error": " · chyba zápisu",
- "rt": "rt"
+ "rt": "rt",
+ "Physical thermostat (RT)": "Fyzický termostat (RT)",
+ "Physical thermostat (RPT)": "Fyzický termostat (RPT)",
+ "No thermostat (RP)": "Bez termostatu (RP)",
+ "A31 not set": "A31 nenastaveno",
+ "the thermostat alone switches heating – no room temperature over TCP": "topení zapíná/vypíná jen termostat – bez teploty místnosti po TCP",
+ "the panel gives the temperature and setpoint, the thermostat switches heating": "panel dává teplotu a požadovanou, termostat zapíná/vypíná topení",
+ "the zone panel gives the temperature and the heating demand": "panel zóny dává teplotu a požadavek topení",
+ "the Dominus does not read the thermostat – set A31 in the Boiler parameters (offline)": "Dominus termostat nečte – nastavte A31 v Parametrech kotle (offline)"
 }

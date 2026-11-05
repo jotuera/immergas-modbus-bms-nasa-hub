@@ -6176,6 +6176,69 @@
   ]
  },
  {
+  "en": "Physical thermostat (RT)",
+  "pl": "Termostat fizyczny (RT)",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Physical thermostat (RPT)",
+  "pl": "Termostat fizyczny (RPT)",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "No thermostat (RP)",
+  "pl": "Bez termostatu (RP)",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "A31 not set",
+  "pl": "Nie ustawiono A31",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "the thermostat alone switches heating – no room temperature over TCP",
+  "pl": "sam termostat włącza/wyłącza grzanie – bez temperatury pokoju po TCP",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "the panel gives the temperature and setpoint, the thermostat switches heating",
+  "pl": "panel daje temperaturę i nastawę, termostat włącza/wyłącza grzanie",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "the zone panel gives the temperature and the heating demand",
+  "pl": "panel strefy daje temperaturę i żądanie grzania",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "the Dominus does not read the thermostat – set A31 in the Boiler parameters (offline)",
+  "pl": "Dominus nie czyta termostatu – ustaw A31 w Parametrach pieca (offline)",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Thermostat",
+  "pl": "Termostat",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
   "en": "Physical thermostat",
   "pl": "Termostat fizyczny",
   "files": [
@@ -6199,27 +6262,6 @@
  {
   "en": "boiler contacts 40-41 – OpenTherm does not report it; heating shows as the CH demand",
   "pl": "zaciski 40-41 kotła – OpenTherm nie podaje jego stanu; grzanie widać po żądaniu CO",
-  "files": [
-   "links.ts"
-  ]
- },
- {
-  "en": "A31 RT: the thermostat alone switches heating, no room temperature over TCP",
-  "pl": "A31 RT: sam termostat włącza/wyłącza grzanie, bez temperatury pokoju po TCP",
-  "files": [
-   "links.ts"
-  ]
- },
- {
-  "en": "A31 RPT: the panel gives the temperature and setpoint, the thermostat switches heating",
-  "pl": "A31 RPT: panel daje temperaturę i nastawę, termostat włącza/wyłącza grzanie",
-  "files": [
-   "links.ts"
-  ]
- },
- {
-  "en": "choose the A31 room control from the boiler menu",
-  "pl": "wybierz sposób sterowania A31 z menu kotła",
   "files": [
    "links.ts"
   ]
@@ -6267,13 +6309,6 @@
   ]
  },
  {
-  "en": "Thermostat",
-  "pl": "Termostat",
-  "files": [
-   "links.ts"
-  ]
- },
- {
   "en": "None",
   "pl": "Brak",
   "files": [
@@ -6290,13 +6325,6 @@
  {
   "en": "Emulated",
   "pl": "Emulowany",
-  "files": [
-   "links.ts"
-  ]
- },
- {
-  "en": "rt",
-  "pl": "rpt",
   "files": [
    "links.ts"
   ]
