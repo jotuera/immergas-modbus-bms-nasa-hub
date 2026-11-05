@@ -2,7 +2,7 @@
 // Bus map of the hub: every register / PDU seen on a bus with its first, min, max and last value and how often it
 // changed - the base of the "Report bus map" buttons (a pre-filled GitHub issue, made in the browser by the cards).
 // D+/D- (DD): key = addr << 24 | kind << 16 | reg   (kind 'R' func03 reply, 'I' func04 reply, 'W' boiler write)
-// T-/T+ (TT): key = PDU, filled by the PDU scanner.
+// T-/T+ (TT): key = function << 16 | PDU, filled by the PDU scanner (03 holding, 04 input registers).
 // Only the undescribed entries go into the report: the described ones are in the knowledge base already.
 #include <cstdint>
 #include <cstdio>
@@ -109,7 +109,9 @@ inline std::string dd_key(uint32_t key) {
   snprintf(b, sizeof(b), "%02X%c%u", (unsigned) (key >> 24), (char) ((key >> 16) & 0xFF), (unsigned) (key & 0xFFFF));
   return b;
 }
-inline std::string tt_key(uint32_t key) { return std::to_string(key); }
+inline std::string tt_key(uint32_t key) {  // function << 16 | PDU -> "4011" (holding) / "F04:4011" (input)
+  return (key >> 16) == 0x04 ? "F04:" + std::to_string(key & 0xFFFF) : std::to_string(key & 0xFFFF);
+}
 
 }  // namespace busmap
 }  // namespace immergas

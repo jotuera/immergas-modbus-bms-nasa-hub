@@ -29,8 +29,9 @@ uart:
               {
                 // 1.2.1 - bus map for the "Report bus map" button; described = a PDU the tt_ packages read
                 static const uint16_t described[] = {512, 2000, 2010, 2095, 2100, 2102, 3000, 3001, 3002, 3003, 3016, 3027, 3028, 3029, 3054, 3056, 3061, 4011, 4201, 4202, 4350, 4351, 4356, 4357, 4402, 4403, 4411, 4449, 4451, 4452, 4453, 4454, 4455, 4468, 4469, 4479, 4551, 4554, 4557, 4558, 4585, 4586, 4587, 4588, 4600, 6000, 6002, 6010, 6011, 6013, 6014, 6500, 6501, 6502, 6503, 6504, 6505, 6506, 6507, 6510};
-                bool k = std::binary_search(std::begin(described), std::end(described), (uint16_t) reg);
-                immergas::busmap::tt().record(reg, (int16_t) value, k);
+                // key = function << 16 | PDU (03 holding, 04 input); the tt_ packages read holding registers
+                bool k = bytes[1] == 0x03 && std::binary_search(std::begin(described), std::end(described), (uint16_t) reg);
+                immergas::busmap::tt().record(((uint32_t) bytes[1] << 16) | (uint32_t) reg, (int16_t) value, k);
               }
               id(tt_pdu_scan_waiting) = false;
               id(tt_pdu_scan_current) = reg + 1;
