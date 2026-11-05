@@ -1376,5 +1376,8 @@
  "the boiler does not report a thermostat – set it in the Boiler parameters (offline)": "de ketel meldt geen thermostaat – stel hem in bij de ketelparameters (offline)",
  "Room thermostat": "Kamerthermostaat",
  "Temperature source": "Temperatuurbron",
- "Experimental: the temperature goes as Data-ID 24. A minute later the integration reads Data-ID 24 back – the Thermostat tile of the Connectivity card shows whether the boiler took it.": "Experimenteel: de temperatuur gaat als Data-ID 24. Een minuut later leest de integratie Data-ID 24 terug – de tegel Thermostaat in de kaart Verbindingen toont of de ketel hem overnam."
+ "Experimental: the temperature goes as Data-ID 24. A minute later the integration reads Data-ID 24 back – the Thermostat tile of the Connectivity card shows whether the boiler took it.": "Experimenteel: de temperatuur gaat als Data-ID 24. Een minuut later leest de integratie Data-ID 24 terug – de tegel Thermostaat in de kaart Verbindingen toont of de ketel hem overnam.",
+ "No room temperature": "Geen kamertemperatuur",
+ "the boiler does not report Data-ID 24 – check the Dominus probe (terminals 1-2, “Dominus probe use” = room)": "de ketel meldt Data-ID 24 niet – controleer de Dominus-sensor (klemmen 1-2, „Dominus-sensor meet” = kamer)",
+ " · room control (AMB) on": " · kamerregeling (AMB) aan"
 }

@@ -1376,5 +1376,8 @@
  "the boiler does not report a thermostat – set it in the Boiler parameters (offline)": "la caldera no indica termostato – defínalo en Parámetros de la caldera (offline)",
  "Room thermostat": "Termostato ambiente",
  "Temperature source": "Fuente de temperatura",
- "Experimental: the temperature goes as Data-ID 24. A minute later the integration reads Data-ID 24 back – the Thermostat tile of the Connectivity card shows whether the boiler took it.": "Experimental: la temperatura va como Data-ID 24. Un minuto después la integración lee Data-ID 24 – el mosaico Termostato de Conectividad muestra si la caldera la aceptó."
+ "Experimental: the temperature goes as Data-ID 24. A minute later the integration reads Data-ID 24 back – the Thermostat tile of the Connectivity card shows whether the boiler took it.": "Experimental: la temperatura va como Data-ID 24. Un minuto después la integración lee Data-ID 24 – el mosaico Termostato de Conectividad muestra si la caldera la aceptó.",
+ "No room temperature": "Sin temperatura ambiente",
+ "the boiler does not report Data-ID 24 – check the Dominus probe (terminals 1-2, “Dominus probe use” = room)": "la caldera no indica Data-ID 24 – revise la sonda del Dominus (bornes 1-2, «La sonda del Dominus mide» = estancia)",
+ " · room control (AMB) on": " · regulación por estancia (AMB) activada"
 }

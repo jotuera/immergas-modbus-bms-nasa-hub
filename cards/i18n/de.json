@@ -1376,5 +1376,8 @@
  "the boiler does not report a thermostat – set it in the Boiler parameters (offline)": "der Kessel meldet kein Thermostat – in den Kesselparametern (offline) setzen",
  "Room thermostat": "Raumthermostat",
  "Temperature source": "Temperaturquelle",
- "Experimental: the temperature goes as Data-ID 24. A minute later the integration reads Data-ID 24 back – the Thermostat tile of the Connectivity card shows whether the boiler took it.": "Experimentell: die Temperatur geht als Data-ID 24. Eine Minute später liest die Integration Data-ID 24 zurück – die Thermostat-Kachel der Verbindungskarte zeigt, ob der Kessel sie übernommen hat."
+ "Experimental: the temperature goes as Data-ID 24. A minute later the integration reads Data-ID 24 back – the Thermostat tile of the Connectivity card shows whether the boiler took it.": "Experimentell: die Temperatur geht als Data-ID 24. Eine Minute später liest die Integration Data-ID 24 zurück – die Thermostat-Kachel der Verbindungskarte zeigt, ob der Kessel sie übernommen hat.",
+ "No room temperature": "Keine Raumtemperatur",
+ "the boiler does not report Data-ID 24 – check the Dominus probe (terminals 1-2, “Dominus probe use” = room)": "der Kessel meldet Data-ID 24 nicht – Dominus-Fühler prüfen (Klemmen 1-2, „Dominus-Fühler misst“ = Raum)",
+ " · room control (AMB) on": " · Raumregelung (AMB) ein"
 }

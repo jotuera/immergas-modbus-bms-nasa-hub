@@ -1376,5 +1376,8 @@
  "the boiler does not report a thermostat – set it in the Boiler parameters (offline)": "kotol termostat nehlási – nastavte ho v parametroch kotla (offline)",
  "Room thermostat": "Izbový termostat",
  "Temperature source": "Zdroj teploty",
- "Experimental: the temperature goes as Data-ID 24. A minute later the integration reads Data-ID 24 back – the Thermostat tile of the Connectivity card shows whether the boiler took it.": "Experimentálne: teplota ide ako Data-ID 24. Po minúte integrácia prečíta Data-ID 24 – dlaždica Termostat v karte Pripojenie ukáže, či ju kotol prijal."
+ "Experimental: the temperature goes as Data-ID 24. A minute later the integration reads Data-ID 24 back – the Thermostat tile of the Connectivity card shows whether the boiler took it.": "Experimentálne: teplota ide ako Data-ID 24. Po minúte integrácia prečíta Data-ID 24 – dlaždica Termostat v karte Pripojenie ukáže, či ju kotol prijal.",
+ "No room temperature": "Chýba teplota miestnosti",
+ "the boiler does not report Data-ID 24 – check the Dominus probe (terminals 1-2, “Dominus probe use” = room)": "kotol nehlási Data-ID 24 – skontrolujte sondu Dominus (svorky 1-2, „Sonda Dominus meria“ = miestnosť)",
+ " · room control (AMB) on": " · regulácia podľa miestnosti (AMB) zapnutá"
 }

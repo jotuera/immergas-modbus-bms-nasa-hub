@@ -6254,6 +6254,13 @@
   ]
  },
  {
+  "en": "No room temperature",
+  "pl": "Brak temperatury pokoju",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
   "en": "Physical thermostat",
   "pl": "Termostat fizyczny",
   "files": [
@@ -6277,6 +6284,20 @@
  {
   "en": "Not set",
   "pl": "Nie ustawiono",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "the boiler does not report Data-ID 24 – check the Dominus probe (terminals 1-2, “Dominus probe use” = room)",
+  "pl": "kocioł nie podaje Data-ID 24 – sprawdź sondę Dominusa (zaciski 1-2, „Sonda Dominusa mierzy” = pokój)",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": " · room control (AMB) on",
+  "pl": " · regulacja wg pokoju (AMB) włączona",
   "files": [
    "links.ts"
   ]

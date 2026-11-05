@@ -179,11 +179,17 @@ class ImmergasLinksCard extends HubCard {
     const mode = this.s("ot_thermo") ?? "none", a = this.so("ot_thermo")?.attributes ?? {};
     const srcId = String(this.s("ot_room_src") ?? ""), src = srcId ? this.hass.states[srcId] : undefined;
     const v = parseFloat(src?.state ?? ""), sent = a.room_sent_at ? Date.parse(a.room_sent_at) : NaN, res = a.write_result as string | undefined;
-    const st: State = mode === "physical" ? "ok" : mode === "emulated" ? (!src || isNaN(v) || res === "not_taken" ? "bad" : "emu") : "na";
-    const label = mode === "physical" ? this.t("Termostat fizyczny", "Physical thermostat")
+    // no room temperature (Data-ID 24 unanswered / unsupported) while something needs it: emulated, or room control (AMB) on
+    const noRoom = (this.bad("zone1") || this.otMissing(24)) && (mode === "emulated" || this.on("ot_room_sensor"));
+    const st: State = noRoom ? "bad" : mode === "physical" ? "ok" : mode === "emulated" ? (!src || isNaN(v) || res === "not_taken" ? "bad" : "emu") : "na";
+    const label = noRoom ? this.t("Brak temperatury pokoju", "No room temperature")
+      : mode === "physical" ? this.t("Termostat fizyczny", "Physical thermostat")
       : mode === "emulated" ? (res === "not_taken" ? this.t("Emulacja nie działa", "Emulation does not work") : this.t("Termostat emulowany", "Emulated thermostat"))
       : this.t("Nie ustawiono", "Not set");
-    const detail = mode === "physical" ? this.t("zaciski 40-41 kotła – OpenTherm nie podaje jego stanu; grzanie widać po żądaniu CO",
+    const detail = noRoom ? this.t("kocioł nie podaje Data-ID 24 – sprawdź sondę Dominusa (zaciski 1-2, „Sonda Dominusa mierzy” = pokój)",
+        "the boiler does not report Data-ID 24 – check the Dominus probe (terminals 1-2, “Dominus probe use” = room)")
+        + (this.on("ot_room_sensor") ? this.t(" · regulacja wg pokoju (AMB) włączona", " · room control (AMB) on") : "")
+      : mode === "physical" ? this.t("zaciski 40-41 kotła – OpenTherm nie podaje jego stanu; grzanie widać po żądaniu CO",
         "boiler contacts 40-41 – OpenTherm does not report it; heating shows as the CH demand")
       : mode === "emulated" ? (src && !isNaN(v) ? `${src.attributes?.friendly_name ?? srcId} ${this.f(v, 1, 1)} °C → Data-ID 24`
           + (!isNaN(sent) ? this.t(" · wysłano ", " · sent ") + new Date(sent).toLocaleTimeString(this.loc, { hour: "2-digit", minute: "2-digit" }) : "")
