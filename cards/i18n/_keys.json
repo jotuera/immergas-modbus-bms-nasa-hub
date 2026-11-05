@@ -4159,6 +4159,7 @@
   "pl": "Modulacja",
   "files": [
    "charts.ts",
+   "mode.ts",
    "now.ts",
    "settings.ts"
   ]
@@ -6452,6 +6453,20 @@
   ]
  },
  {
+  "en": "on · flow by the room / setpoint difference",
+  "pl": "włączona · zasilanie wg różnicy pokój / zadana",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "off · constant flow until the setpoint is reached",
+  "pl": "wyłączona · stałe zasilanie do osiągnięcia zadanej",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
   "en": "on · heats when the room drops below the threshold",
   "pl": "włączona · grzeje, gdy pokój spadnie poniżej progu",
   "files": [
@@ -6645,20 +6660,6 @@
  {
   "en": "OpenTherm: with a CAR V2 remote the remote also sets the mode – a change here may be overridden by it",
   "pl": "OpenTherm: z pilotem CAR V2 tryb ustawia też pilot – zmiana tutaj może zostać przez niego nadpisana",
-  "files": [
-   "mode.ts"
-  ]
- },
- {
-  "en": "Modulation (MODUL)",
-  "pl": "Modulacja (MODUL)",
-  "files": [
-   "mode.ts"
-  ]
- },
- {
-  "en": "flow by the room / setpoint difference; off = constant flow until the setpoint is reached",
-  "pl": "zasilanie wg różnicy pokój / zadana; wyłączona = stałe zasilanie do osiągnięcia zadanej",
   "files": [
    "mode.ts"
   ]
@@ -7895,6 +7896,13 @@
  {
   "en": "COMFORT",
   "pl": "KOMFORT",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "the remote sets the room setpoint; Eco / Comfort recognised by the value (OpenTherm does not report the remote's program phase)",
+  "pl": "nastawę pokoju ustawia pilot; Eko / Komfort rozpoznane po wartości (OpenTherm nie podaje fazy programu pilota)",
   "files": [
    "setpoints.ts"
   ]

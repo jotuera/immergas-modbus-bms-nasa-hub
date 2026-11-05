@@ -285,7 +285,7 @@ class ImmergasNowCard extends HubCard {
         bad ? "–" : on ? this.s("fault_text") ?? "–" : this.t("brak aktywnych błędów", "no active faults"), on);
     }
     const code = this.s("err_code") ?? "", desc = this.s("err_desc") ?? "", ff = this.s("ff_err") ?? "";
-    const boiler = this.on("err_active") || (!!code && !NO_ERR.includes(code) && !/^(brak|none|no )/i.test(code));
+    const boiler = this.on("err_active") || (!!code && !NO_ERR.includes(code) && parseFloat(code) !== 0 && !/^(brak|none|no )/i.test(code));
     const odu = !NO_ERR.includes(ff);
     const bad = this.bad("err_desc") && this.bad("ff_err");
     const txt = bad ? "–" : !boiler && !odu ? this.t("brak aktywnych błędów", "no active faults")

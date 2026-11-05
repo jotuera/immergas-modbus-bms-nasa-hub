@@ -1304,5 +1304,8 @@
  "on · heats when the room drops below the threshold": "zapnutá · kúri, keď miestnosť klesne pod prah",
  "off – without the CAR V2 nothing protects the rooms": "vypnutá – bez CAR V2 nič nechráni miestnosti",
  "THRESHOLD": "PRAH",
- "Frost protection threshold": "Prah ochrany proti zamrznutiu"
+ "Frost protection threshold": "Prah ochrany proti zamrznutiu",
+ "on · flow by the room / setpoint difference": "zapnutá · výstup podľa rozdielu miestnosť / požadovaná",
+ "off · constant flow until the setpoint is reached": "vypnutá · stály výstup do dosiahnutia požadovanej",
+ "the remote sets the room setpoint; Eco / Comfort recognised by the value (OpenTherm does not report the remote's program phase)": "teplotu miestnosti nastavuje ovládač; Eko / Komfort rozpoznané podľa hodnoty (OpenTherm nehlási fázu programu ovládača)"
 }

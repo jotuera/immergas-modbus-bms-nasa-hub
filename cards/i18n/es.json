@@ -1304,5 +1304,8 @@
  "on · heats when the room drops below the threshold": "activada · calienta si la estancia baja del umbral",
  "off – without the CAR V2 nothing protects the rooms": "desactivada – sin CAR V2 nada protege las estancias",
  "THRESHOLD": "UMBRAL",
- "Frost protection threshold": "Umbral antihielo"
+ "Frost protection threshold": "Umbral antihielo",
+ "on · flow by the room / setpoint difference": "activada · impulsión según la diferencia estancia / consigna",
+ "off · constant flow until the setpoint is reached": "desactivada · impulsión constante hasta la consigna",
+ "the remote sets the room setpoint; Eco / Comfort recognised by the value (OpenTherm does not report the remote's program phase)": "el mando fija la consigna ambiente; Eco / Confort reconocido por el valor (OpenTherm no informa la fase del programa del mando)"
 }

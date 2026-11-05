@@ -171,6 +171,14 @@ class ImmergasModeCard extends HubCard {
         ${tchip(this.eid("dom_sum_above"), this.t("LATO POWYŻEJ", "SUMMER ABOVE"), isNaN(sa) ? null : this.f(sa, 1, 1) + " °C", "teal")}</div>`);
   }
 
+  /** OpenTherm: Modulation of the Dominus regulator (CAR V2 "MODUL") */
+  private modRow() {
+    if (!this.ot || !this.eid("ot_modul")) return nothing;
+    return this.progSwitch("ot_modul", "tg_modul", "mdi:fire-circle", "peach", this.t("Modulacja", "Modulation"),
+      this.on("ot_modul") ? this.t("włączona · zasilanie wg różnicy pokój / zadana", "on · flow by the room / setpoint difference")
+        : this.t("wyłączona · stałe zasilanie do osiągnięcia zadanej", "off · constant flow until the setpoint is reached"), nothing);
+  }
+
   /** OpenTherm: room frost protection of the Dominus regulator (CAR V2 "ANTIGL" - the highest priority) */
   private frostRow(tchip: (o: string | undefined, l: string, v: string | null, col?: string, faint?: boolean) => unknown) {
     if (!this.ot || !this.eid("ot_frost")) return nothing;
@@ -330,16 +338,15 @@ class ImmergasModeCard extends HubCard {
         : this.ot ? html`<div class="hint">${this.t("OpenTherm: z pilotem CAR V2 tryb ustawia też pilot – zmiana tutaj może zostać przez niego nadpisana", "OpenTherm: with a CAR V2 remote the remote also sets the mode – a change here may be overridden by it")}</div>` : nothing}
       ${this.eid("u11") && !this.ot ? night : nothing}
       ${this.dominus && !this.eid("prog_mode") ? this.domRows(modeIdx === 2) : nothing}
-      ${this.ot ? this.otLegRow(tchip) : this.legRow(tchip, hm)}
+      ${this.modRow()}
       ${this.vacRow(tchip)}
       ${this.seasonRow(tchip)}
+      ${this.ot ? this.otLegRow(tchip) : this.legRow(tchip, hm)}
       ${this.frostRow(tchip)}
       ${this.config.show_f1f2 === false ? nothing : this.f1f2Rows()}
       ${this.progRow()}
       ${this.dhwProgRow()}
       ${this.config.show_toggles === false ? nothing : this.toggles([
-        ["ot_modul", "mdi:fire-circle", "peach", this.t("Modulacja (MODUL)", "Modulation (MODUL)"),
-          this.t("zasilanie wg różnicy pokój / zadana; wyłączona = stałe zasilanie do osiągnięcia zadanej", "flow by the room / setpoint difference; off = constant flow until the setpoint is reached"), true],
         ["room_mod", "mdi:home-thermometer-outline", "green", this.t("Modulacja z sondą pokojową", "Room probe modulation"),
           html`${this.t("zasilanie korygowane wg temp. w pokoju", "flow corrected by the room temperature")}
             ${this.physPanel ? html`<span style="color:${c("yellow")}">${this.t("· fizyczny panel: temperatura z jego czujnika, wybór źródła nieaktywny",

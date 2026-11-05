@@ -1304,5 +1304,8 @@
  "on · heats when the room drops below the threshold": "activée · chauffe si la pièce descend sous le seuil",
  "off – without the CAR V2 nothing protects the rooms": "désactivée – sans CAR V2 rien ne protège les pièces",
  "THRESHOLD": "SEUIL",
- "Frost protection threshold": "Seuil hors-gel"
+ "Frost protection threshold": "Seuil hors-gel",
+ "on · flow by the room / setpoint difference": "activée · départ selon l’écart pièce / consigne",
+ "off · constant flow until the setpoint is reached": "désactivée · départ constant jusqu’à la consigne",
+ "the remote sets the room setpoint; Eco / Comfort recognised by the value (OpenTherm does not report the remote's program phase)": "la télécommande règle la consigne d’ambiance ; Éco / Confort reconnu par la valeur (OpenTherm ne transmet pas la phase du programme de la télécommande)"
 }

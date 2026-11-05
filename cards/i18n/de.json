@@ -1304,5 +1304,8 @@
  "on · heats when the room drops below the threshold": "ein · heizt, wenn der Raum unter die Schwelle fällt",
  "off – without the CAR V2 nothing protects the rooms": "aus – ohne CAR V2 schützt nichts die Räume",
  "THRESHOLD": "SCHWELLE",
- "Frost protection threshold": "Frostschutzschwelle"
+ "Frost protection threshold": "Frostschutzschwelle",
+ "on · flow by the room / setpoint difference": "ein · Vorlauf nach Differenz Raum / Sollwert",
+ "off · constant flow until the setpoint is reached": "aus · konstanter Vorlauf bis zum Sollwert",
+ "the remote sets the room setpoint; Eco / Comfort recognised by the value (OpenTherm does not report the remote's program phase)": "die Fernbedienung stellt den Raumsollwert ein; Eco / Komfort am Wert erkannt (OpenTherm meldet die Programmphase der Fernbedienung nicht)"
 }

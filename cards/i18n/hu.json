@@ -1304,5 +1304,8 @@
  "on · heats when the room drops below the threshold": "be · fűt, ha a szoba a küszöb alá esik",
  "off – without the CAR V2 nothing protects the rooms": "ki – CAR V2 nélkül semmi sem védi a szobákat",
  "THRESHOLD": "KÜSZÖB",
- "Frost protection threshold": "Fagyvédelmi küszöb"
+ "Frost protection threshold": "Fagyvédelmi küszöb",
+ "on · flow by the room / setpoint difference": "be · előremenő a szoba / alapjel különbsége szerint",
+ "off · constant flow until the setpoint is reached": "ki · állandó előremenő az alapjel eléréséig",
+ "the remote sets the room setpoint; Eco / Comfort recognised by the value (OpenTherm does not report the remote's program phase)": "a szoba alapjelét a távvezérlő állítja; Eco / Komfort az érték alapján felismerve (az OpenTherm nem jelzi a távvezérlő programfázisát)"
 }

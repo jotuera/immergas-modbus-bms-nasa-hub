@@ -119,13 +119,15 @@ class ImmergasSetpointsCard extends HubCard {
     const auto = (() => { const o: string[] = this.attr("prog_mode", "options") ?? []; return o.length === 2 && this.s("prog_mode") === o[1]; })()
       || (this.dominus && ["comfort", "economy"].includes(this.s("zone1_phase") ?? ""));
     const phase = this.bad("zone1_phase") ? "" : this.txt("zone1_phase")!;
-    const otRoom = this.ot && !!this.eid("ot_room_set") && !this.otRO, zr = this.n("zone1");
+    const otRoom = this.ot && !!this.eid("ot_room_set"), zr = this.n("zone1");
     const ch = otRoom ? this.tileView({
       k: "ot_room_set", meas: this.eid("zone1") ? "zone1" : "ot_flow", icon: "mdi:radiator", col: tempCol(zr), title: this.t("Ogrzewanie", "Heating"),
       sub: this.t("CO · pokój", "CH · room"), temp: this.eid("zone1") ? zr : this.n("ot_flow"),
       status: chRun ? this.t("grzeje", "heating") : this.t("czuwa", "standby"), active: chRun,
       profiles: this.eid("comfort_heat") ? [["eco", this.t("EKO", "ECO"), this.n("eco_heat")], ["comfort", this.t("KOMFORT", "COMFORT"), this.n("comfort_heat")]] : [],
-      hint: (auto ? this.t("program AUTO: nastawę zmienia harmonogram", "AUTO program: the schedule changes the setpoint") + (phase ? this.t(" · teraz ", " · now ") + phase : "") + " · " : "")
+      hint: (this.otRO ? this.t("nastawę pokoju ustawia pilot; Eko / Komfort rozpoznane po wartości (OpenTherm nie podaje fazy programu pilota)",
+          "the remote sets the room setpoint; Eco / Comfort recognised by the value (OpenTherm does not report the remote's program phase)") + " · "
+        : auto ? this.t("program AUTO: nastawę zmienia harmonogram", "AUTO program: the schedule changes the setpoint") + (phase ? this.t(" · teraz ", " · now ") + phase : "") + " · " : "")
         + this.t("maks. zasilanie ", "max. flow ") + this.f(this.n("ot_ch_set"), 0) + " °C",
     }) : this.ot ? this.tileView({
       k: "ot_ch_set", meas: "ot_flow", icon: "mdi:radiator", col: "peach", title: this.t("Ogrzewanie", "Heating"), sub: this.t("CO · temperatura zasilania", "CH · flow temperature"),

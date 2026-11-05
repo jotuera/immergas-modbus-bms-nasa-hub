@@ -1304,5 +1304,8 @@
  "on · heats when the room drops below the threshold": "ligada · aquece se a divisão descer abaixo do limiar",
  "off – without the CAR V2 nothing protects the rooms": "desligada – sem CAR V2 nada protege as divisões",
  "THRESHOLD": "LIMIAR",
- "Frost protection threshold": "Limiar anticongelamento"
+ "Frost protection threshold": "Limiar anticongelamento",
+ "on · flow by the room / setpoint difference": "ligada · ida conforme a diferença divisão / consigna",
+ "off · constant flow until the setpoint is reached": "desligada · ida constante até à consigna",
+ "the remote sets the room setpoint; Eco / Comfort recognised by the value (OpenTherm does not report the remote's program phase)": "o comando define a consigna ambiente; Eco / Conforto reconhecido pelo valor (o OpenTherm não indica a fase do programa do comando)"
 }
