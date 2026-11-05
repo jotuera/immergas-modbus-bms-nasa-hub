@@ -7,7 +7,7 @@ sensors:
   water_outlet_target: Előremenő víz célhőmérséklet (aktív)
   dhw_temperature: HMV hőmérséklet
   dhw_target: HMV célhőmérséklet
-  zone1_room_temp: 1. zóna szobahőmérséklet
+  zone1_room_temp: MIM hőmérséklet 0x4203 (nem szoba)
   zone1_target: 1. zóna célhőmérséklet
   zone2_room_temp: 2. zóna szobahőmérséklet
   zone2_target: 2. zóna célhőmérséklet

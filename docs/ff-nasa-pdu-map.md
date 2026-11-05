@@ -15,7 +15,7 @@ Status: decoded unless marked *candidate* / *unknown*. **Help with the unknown o
 | `0x4247` | indoor | `water_outlet_target` | Water Outlet Target (active) | temp nan=50 | °C | Active LWT target. On a Magis it is computed by the **Immergas** controller (Termoregulation curve R02-R05 + U03 offset), not by the Samsung FSV water law. Idle placeholder 50 -> unknown. |
 | `0x4237` | indoor | `dhw_temperature` | DHW Temperature | temp | °C | 0 on a Magis Combo - the DHW tank sensor is on the Immergas side (see D03 on D+/D- or T-/T+). |
 | `0x4235` | indoor | `dhw_target` | DHW Target Temperature | temp | °C |  |
-| `0x4203` | indoor | `zone1_room_temp` | Zone 1 Indoor Temp | temp | °C | On a Magis this is **not** a room temperature (Immergas handles rooms). |
+| `0x4203` | indoor | `zone1_room_temp` | Zone 1 Indoor Temp | temp | °C | On a Magis this is **not** a room temperature (Immergas handles rooms): ~18 °C with the rooms at 22 °C, it follows the water side and fell to 14 °C during a defrost. Named "MIM temperature 0x4203" since 1.2.1. |
 | `0x4201` | indoor | `zone1_target` | Zone 1 Target Temp | temp | °C |  |
 | `0x42D4` | indoor | `zone2_room_temp` | Zone 2 Indoor Temp | temp | °C |  |
 | `0x42D6` | indoor | `zone2_target` | Zone 2 Target Temp | temp | °C |  |

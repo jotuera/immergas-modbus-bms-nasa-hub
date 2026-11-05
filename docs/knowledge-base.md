@@ -463,6 +463,7 @@ pump (0x1E R1/I10) and to the Samsung (NASA 0x4247).
 | 4558 | D71 | compressor frequency | Hz |
 | 4585 | D72 | compressor temperature (= NASA 0x8280) | ×0.1 °C |
 | 4586 | — | compressor power step 0–6 (25 Hz = 1 … 61 = 6; 7 seen with DHW by heat pump) | step |
+| 4588 | — | defrost: 1 during the heat-pump defrost + ~3 min (first seen 05.11.2026, together with NASA defrost) | 0/1 |
 | 4587 | D76 | fan speed (candidate) | rpm |
 | 6000 | T05 | CH ignition timer (minimum pause between starts) | min, RW |
 | 6002 | T07 | room thermostat (TA) request delay | 1 = 10 s, RW |
@@ -781,7 +782,7 @@ Sniffers built into the packages: *DD - Bus sniffer* (D+/D- register changes, ta
 |---|---|
 | D+/D- 0x1E | I15, I20, I37, I44–46, W5 (always 0), R2–R6, R15–R18 (5/30/10/30, maybe screed drying T21–T24); flags I18/I21/I41/I42 as candidates for **D78** (4-way valve) — data from cooling or defrost needed |
 | D+/D- 0x29 / 0x33 | 0x29 R 0/1 (233/60), 2103; 0x33 W 2012; 2090: CH or DHW |
-| T-/T+ | writable 0/1: 2102, 4449, 4600; always 0: 512, 3061, 4011, 4588, 6014, 6503, 6504 |
+| T-/T+ | writable 0/1: 2102, 4449, 4600; always 0: 512, 3061, 4011, 6014, 6503, 6504 |
 | F1/F2 | 0x0402, 0x0411–0x0415, 0x4006, 0x440A, 0x041B, 0x8201, 0x823F, 0x8243, 0x824B, 0x824C, 0x82E1, 0x8417, 0x4604 (as `RAW` in diagnostics); **0x840F** 4096 → 4224 (bit 7) at the end of the first DHW cycle by heat pump and stays — candidate for a "DHW by heat pump" flag |
 
 Most valuable recordings: cooling, defrost, frost, a multi-zone installation, a different board firmware.

@@ -7,7 +7,7 @@ sensors:
   water_outlet_target: Gewenste watertemperatuur (actief)
   dhw_temperature: SWW-temperatuur
   dhw_target: Gewenste SWW-temperatuur
-  zone1_room_temp: Kamertemperatuur zone 1
+  zone1_room_temp: MIM-temperatuur 0x4203 (niet de kamer)
   zone1_target: Gewenste temperatuur zone 1
   zone2_room_temp: Kamertemperatuur zone 2
   zone2_target: Gewenste temperatuur zone 2

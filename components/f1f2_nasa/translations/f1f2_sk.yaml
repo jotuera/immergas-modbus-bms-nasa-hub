@@ -7,7 +7,7 @@ sensors:
   water_outlet_target: Cieľová teplota výstupnej vody (aktívna)
   dhw_temperature: Teplota TÚV
   dhw_target: Cieľová teplota TÚV
-  zone1_room_temp: Izbová teplota zóny 1
+  zone1_room_temp: Teplota MIM 0x4203 (nie izbová)
   zone1_target: Cieľová teplota zóny 1
   zone2_room_temp: Izbová teplota zóny 2
   zone2_target: Cieľová teplota zóny 2

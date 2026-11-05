@@ -101,6 +101,7 @@ substitutions:
   n_tt_pdu_4586: "${tt_name_prefix} - Nivel de potencia del compresor"
   n_tt_pdu_4587: "${tt_name_prefix} - D76 Velocidad de consigna del ventilador"
   n_tt_pdu_4588: "${tt_name_prefix} - PDU 4588"
+  n_tt_defrost: "${tt_name_prefix} - Desescarche"
   n_tt_pdu_512: "${tt_name_prefix} - PDU 512"
   n_tt_pdu_6014: "${tt_name_prefix} - PDU 6014"
   n_tt_pdu_6503: "${tt_name_prefix} - PDU 6503"

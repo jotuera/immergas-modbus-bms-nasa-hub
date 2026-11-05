@@ -7,7 +7,7 @@ sensors:
   water_outlet_target: Vorlauf-Solltemperatur (aktiv)
   dhw_temperature: Warmwassertemperatur
   dhw_target: Warmwasser-Solltemperatur
-  zone1_room_temp: Raumtemperatur Zone 1
+  zone1_room_temp: MIM-Temperatur 0x4203 (nicht Raum)
   zone1_target: Solltemperatur Zone 1
   zone2_room_temp: Raumtemperatur Zone 2
   zone2_target: Solltemperatur Zone 2

@@ -88,3 +88,16 @@ switch:
     address: 6014
     bitmask: 1
     entity_category: config
+
+binary_sensor:
+  # 1.2.1: PDU 4588 = 1 while the heat pump defrosts (+ ~3 min after it ends). Seen on the first defrost of the season
+  # (05.11.2026 07:18-07:28, NASA defrost 07:17:46-07:25:02); 0 at all other times since 29.10. The raw value stays
+  # above as "PDU 4588".
+  - platform: template
+    id: tt_defrost
+    name: "${n_tt_defrost}"
+    icon: mdi:snowflake-melt
+    lambda: |-
+      float v = id(tt_pdu_4588).state;
+      if (std::isnan(v)) return {};
+      return v >= 1.0f;

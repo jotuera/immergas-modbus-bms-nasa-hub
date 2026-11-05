@@ -7,7 +7,7 @@ sensors:
   water_outlet_target: Zadana temperatura wody (aktywna)
   dhw_temperature: Temperatura CWU
   dhw_target: Zadana temperatura CWU
-  zone1_room_temp: Temperatura pokojowa strefy 1
+  zone1_room_temp: Temperatura MIM 0x4203 (nie pokojowa)
   zone1_target: Zadana temperatura strefy 1
   zone2_room_temp: Temperatura pokojowa strefy 2
   zone2_target: Zadana temperatura strefy 2

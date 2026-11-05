@@ -265,7 +265,59 @@ sensor:
     filters:
       - multiply: 0.001
 
-  # COP dzienny = energia cieplna dziś / energia pobrana dziś (Immergas FF - Energia pobrana dziś, z 0x8413).
+  # 1.2.1: ciepło pobrane z instalacji na odszranianie (obieg odwrócony: TW1 powrót > TW2 wyjście). Moc cieplna
+  # wyżej zostaje >= 0 (liczniki total_increasing nie mogą maleć), ta energia liczona osobno i odejmowana w COP dziś.
+  # Pierwsze odszranianie sezonu 05.11.2026: ok. 7 min, zasilanie 29 -> 19 °C.
+  - platform: template
+    id: hub_defrost_heat_power
+    name: "${n_hub_defrost_power}"
+    icon: mdi:snowflake-melt
+    unit_of_measurement: "W"
+    device_class: power
+    state_class: measurement
+    entity_category: diagnostic
+    accuracy_decimals: 0
+    update_interval: 10s
+    lambda: |-
+      if (!id(f1f2_defrost).state) return 0.0f;
+      float flow = id(tt_d14_pump_flow_rate).state;  // l/h
+      float tw2  = id(dd_sniff_1e_w_21).state;       // °C, wyjście wody z PC (przy odszranianiu chłodniejsze)
+      float tw1  = id(dd_sniff_1e_w_20).state;       // °C, powrót wody do PC
+      if (std::isnan(flow) || std::isnan(tw2) || std::isnan(tw1)) return NAN;
+      float dt = tw1 - tw2;
+      if (flow < 100.0f || dt <= 0.0f || dt > 25.0f) return 0.0f;
+      return flow * dt * 1.163f;
+
+  - platform: total_daily_energy
+    id: hub_defrost_energy_today
+    name: "${n_hub_defrost_today}"
+    icon: mdi:snowflake-melt
+    power_id: hub_defrost_heat_power
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    accuracy_decimals: 3
+    restore: true
+    filters:
+      - multiply: 0.001
+
+  - platform: integration
+    id: hub_defrost_energy_total
+    name: "${n_hub_defrost_total}"
+    icon: mdi:snowflake-melt
+    sensor: hub_defrost_heat_power
+    time_unit: h
+    restore: true
+    integration_method: left
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.001
+
+  # COP dzienny = (energia cieplna dziś - ciepło na odszranianie dziś) / energia pobrana dziś (Immergas FF - Energia
+  # pobrana dziś, z 0x8413).
   - platform: template
     id: hub_cop_today
     name: "${n_hub_cop_today}"
@@ -275,8 +327,10 @@ sensor:
     update_interval: 60s
     lambda: |-
       float q = id(hub_heat_energy_today).state;   // kWh
+      float d = id(hub_defrost_energy_today).state;  // kWh pobrane z wody na odszranianie
       float e = id(f1f2_daily_energy).state;       // kWh
       if (std::isnan(q) || std::isnan(e) || e < 0.05f) return NAN;
+      if (!std::isnan(d)) q -= d;
       return q / e;
 
   # ΔT na wymienniku pompy: PC D20 TW2 (wyjście) - PC D08 TW1 (powrót), D+/D-. Tylko przy pracy sprężarki

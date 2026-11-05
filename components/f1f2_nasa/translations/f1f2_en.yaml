@@ -8,7 +8,7 @@ sensors:
   water_outlet_target: Water Outlet Target (active)
   dhw_temperature: DHW Temperature
   dhw_target: DHW Target Temperature
-  zone1_room_temp: Zone 1 Indoor Temp
+  zone1_room_temp: MIM temperature 0x4203 (not the room)
   zone1_target: Zone 1 Target Temp
   zone2_room_temp: Zone 2 Indoor Temp
   zone2_target: Zone 2 Target Temp

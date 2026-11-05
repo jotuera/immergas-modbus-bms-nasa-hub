@@ -7,7 +7,7 @@ sensors:
   water_outlet_target: Temperatura de ida pretendida (ativa)
   dhw_temperature: Temperatura AQS
   dhw_target: Temperatura AQS pretendida
-  zone1_room_temp: Temperatura ambiente da zona 1
+  zone1_room_temp: Temperatura MIM 0x4203 (não ambiente)
   zone1_target: Temperatura pretendida da zona 1
   zone2_room_temp: Temperatura ambiente da zona 2
   zone2_target: Temperatura pretendida da zona 2

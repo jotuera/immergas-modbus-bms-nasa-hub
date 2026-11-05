@@ -7,7 +7,7 @@ sensors:
   water_outlet_target: Consigne de température d'eau en sortie (active)
   dhw_temperature: Température ECS
   dhw_target: Consigne de température ECS
-  zone1_room_temp: Température ambiante zone 1
+  zone1_room_temp: Température MIM 0x4203 (pas la pièce)
   zone1_target: Consigne de température zone 1
   zone2_room_temp: Température ambiante zone 2
   zone2_target: Consigne de température zone 2

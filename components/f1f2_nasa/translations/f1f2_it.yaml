@@ -7,7 +7,7 @@ sensors:
   water_outlet_target: Setpoint temperatura acqua di mandata (attivo)
   dhw_temperature: Temperatura ACS
   dhw_target: Setpoint temperatura ACS
-  zone1_room_temp: Temperatura ambiente zona 1
+  zone1_room_temp: Temperatura MIM 0x4203 (non ambiente)
   zone1_target: Setpoint temperatura zona 1
   zone2_room_temp: Temperatura ambiente zona 2
   zone2_target: Setpoint temperatura zona 2

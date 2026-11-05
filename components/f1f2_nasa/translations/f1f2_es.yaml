@@ -7,7 +7,7 @@ sensors:
   water_outlet_target: Consigna de temperatura de agua (activa)
   dhw_temperature: Temperatura ACS
   dhw_target: Consigna de temperatura ACS
-  zone1_room_temp: Temperatura ambiente zona 1
+  zone1_room_temp: Temperatura MIM 0x4203 (no ambiente)
   zone1_target: Consigna de temperatura zona 1
   zone2_room_temp: Temperatura ambiente zona 2
   zone2_target: Consigna de temperatura zona 2

@@ -456,6 +456,7 @@ U03 = −2 daje 23,5 → przycięte do **24,0** (R05). **U03 przesuwa krzywą 1:
 | 4558 | D71 | częstotliwość sprężarki | Hz |
 | 4585 | D72 | temperatura sprężarki (= NASA 0x8280) | ×0,1 °C |
 | 4586 | — | stopień mocy sprężarki 0–6 (25 Hz = 1 … 61 = 6; przy CWU pompą widziano 7) | stopień |
+| 4588 | — | odszranianie: 1 w trakcie odszraniania pompy + ok. 3 min (pierwszy raz 05.11.2026, razem z odszranianiem NASA) | 0/1 |
 | 4587 | D76 | obroty wentylatora (kandydat) | obr/min |
 | 6000 | T05 | minutnik włączeń CO (minimalna przerwa między startami) | min, RW |
 | 6002 | T07 | opóźnienie żądania z termostatu pokojowego (TA) | 1 = 10 s, RW |
@@ -770,7 +771,7 @@ Sniffery wbudowane w pakiety: *DD - Sniffer* (zmiany rejestrów D+/D-, tag `snif
 |---|---|
 | D+/D- 0x1E | I15, I20, I37, I44–46, W5 (zawsze 0), R2–R6, R15–R18 (5/30/10/30, może suszenie jastrychu T21–T24); flagi I18/I21/I41/I42 jako kandydaci na **D78** (zawór 4-drogowy) — potrzebne dane z chłodzenia lub odszraniania |
 | D+/D- 0x29 / 0x33 | 0x29 R 0/1 (233/60), 2103; 0x33 W 2012; 2090: CO czy CWU |
-| T-/T+ | zapisywalne 0/1: 2102, 4449, 4600; zawsze 0: 512, 3061, 4011, 4588, 6014, 6503, 6504 |
+| T-/T+ | zapisywalne 0/1: 2102, 4449, 4600; zawsze 0: 512, 3061, 4011, 6014, 6503, 6504 |
 | F1/F2 | 0x0402, 0x0411–0x0415, 0x4006, 0x440A, 0x041B, 0x8201, 0x823F, 0x8243, 0x824B, 0x824C, 0x82E1, 0x8417, 0x4604 (jako `RAW` w diagnostyce); **0x840F** 4096 → 4224 (bit 7) na końcu pierwszego cyklu CWU pompą i zostaje — kandydat na flagę „CWU z pompy” |
 
 Najcenniejsze nagrania: chłodzenie, odszranianie, mróz, instalacja wielostrefowa, inny firmware płyty.
