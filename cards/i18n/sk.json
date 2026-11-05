@@ -1349,5 +1349,12 @@
  "Thermostat": "Termostat",
  "None": "Žiadny",
  "Physical": "Fyzický",
- "— temperature entity —": "— entita teploty —"
+ "— temperature entity —": "— entita teploty —",
+ "A31 RT: the thermostat alone switches heating, no room temperature over TCP": "A31 RT: kúrenie zapína/vypína len termostat, bez teploty miestnosti cez TCP",
+ "A31 RPT: the panel gives the temperature and setpoint, the thermostat switches heating": "A31 RPT: panel dáva teplotu a požadovanú, termostat zapína/vypína kúrenie",
+ "choose the A31 room control from the boiler menu": "vyberte reguláciu A31 z menu kotla",
+ " · the module took it": " · modul ju prijal",
+ " · the module did not take it (acknowledged ": " · modul ju neprijal (potvrdil ",
+ " · write error": " · chyba zápisu",
+ "rt": "rt"
 }

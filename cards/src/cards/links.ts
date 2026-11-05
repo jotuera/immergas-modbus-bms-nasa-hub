@@ -86,6 +86,7 @@ class ImmergasLinksCard extends HubCard {
           ? (a31 === "rt" ? how : this.t("Dominus nie mierzy temperatury – potrzebny panel strefy (fizyczny albo emulowany przez hub)",
             "Dominus does not measure it – a zone panel is needed (physical or emulated by the hub)"))
           : `${this.f(room, 1, 1)} °C · ` + this.t("fizyczny lub emulowany", "physical or emulated") + (how ? " · " + how : "") });
+      if (this.eid("ot_thermo")) out.push(this.thermoLink());
     }
 
     const wifi = this.n("hub_wifi");
@@ -148,13 +149,22 @@ class ImmergasLinksCard extends HubCard {
     const mode = this.s("ot_thermo") ?? "none", a = this.so("ot_thermo")?.attributes ?? {};
     const srcId = String(this.s("ot_room_src") ?? ""), src = srcId ? this.hass.states[srcId] : undefined;
     const v = parseFloat(src?.state ?? ""), sent = a.room_sent_at ? Date.parse(a.room_sent_at) : NaN;
-    const st: State = mode === "physical" ? "ok" : mode === "emulated" ? (src && !isNaN(v) ? "emu" : "bad") : "off";
+    const res = a.write_result as string | undefined, ack = parseFloat(String(a.acknowledged ?? ""));
+    const st: State = mode === "physical" ? "ok" : mode === "emulated" ? (src && !isNaN(v) && res !== "error" && res !== "not_taken" ? "emu" : "bad") : "off";
+    const target = this.ot ? "Dominus (Data-ID 24)" : "Dominus (PDU 2011)";
     const label = mode === "physical" ? this.t("Termostat fizyczny", "Physical thermostat")
       : mode === "emulated" ? this.t("Termostat emulowany", "Emulated thermostat") : this.t("Nie wybrano", "Not chosen");
-    const detail = mode === "physical" ? this.t("zaciski 40-41 kotła – OpenTherm nie podaje jego stanu; grzanie widać po żądaniu CO",
+    const a31 = this.s("dom_a31") ?? "";
+    const detail = mode === "physical" ? (this.ot ? this.t("zaciski 40-41 kotła – OpenTherm nie podaje jego stanu; grzanie widać po żądaniu CO",
         "boiler contacts 40-41 – OpenTherm does not report it; heating shows as the CH demand")
-      : mode === "emulated" ? (src && !isNaN(v) ? `${src.attributes?.friendly_name ?? srcId} ${this.f(v, 1, 1)} °C → Dominus (Data-ID 24)`
+        : a31 === "rt" ? this.t("A31 RT: sam termostat włącza/wyłącza grzanie, bez temperatury pokoju po TCP", "A31 RT: the thermostat alone switches heating, no room temperature over TCP")
+        : a31 === "rpt" ? this.t("A31 RPT: panel daje temperaturę i nastawę, termostat włącza/wyłącza grzanie", "A31 RPT: the panel gives the temperature and setpoint, the thermostat switches heating")
+        : this.t("wybierz sposób sterowania A31 z menu kotła", "choose the A31 room control from the boiler menu"))
+      : mode === "emulated" ? (src && !isNaN(v) ? `${src.attributes?.friendly_name ?? srcId} ${this.f(v, 1, 1)} °C → ${target}`
           + (!isNaN(sent) ? this.t(" · wysłano ", " · sent ") + new Date(sent).toLocaleTimeString(this.loc, { hour: "2-digit", minute: "2-digit" }) : "")
+          + (res === "taken" ? this.t(" · moduł przyjął", " · the module took it")
+            : res === "not_taken" ? this.t(" · moduł nie przyjął (potwierdził ", " · the module did not take it (acknowledged ") + this.f(ack, 1, 1) + " °C)"
+            : res === "error" ? this.t(" · błąd zapisu", " · write error") : "")
         : this.t("wybierz encję temperatury poniżej", "choose a temperature entity below"))
       : this.t("kocioł nie zgłasza termostatu – zaznacz, co jest podłączone", "the boiler does not report a thermostat – choose what is connected");
     const dom = (id: string) => id.split(".")[0];
@@ -167,6 +177,9 @@ class ImmergasLinksCard extends HubCard {
     const opt = (o: string, lbl: string) => html`<div class="seg ${mode === o ? "on" : ""}" @click=${(e: Event) => { e.stopPropagation(); if (mode !== o) pick(o); }}>${lbl}</div>`;
     return { k: "ot_thermo", icon: "mdi:thermostat", name: ["Termostat", "Thermostat"], bus: this.t("pokój", "room"), st, label, detail,
       extra: html`<div class="segs" @click=${(e: Event) => e.stopPropagation()}>${opt("none", this.t("Brak", "None"))}${opt("physical", this.t("Fizyczny", "Physical"))}${opt("emulated", this.t("Emulowany", "Emulated"))}</div>
+        ${mode === "physical" && !this.ot && this.eid("dom_a31") ? html`<div class="segs" @click=${(e: Event) => e.stopPropagation()}>
+          ${(["rpt", "rt"] as const).map((o) => html`<div class="seg ${a31 === o ? "on" : ""}" @click=${() => { const id = this.eid("dom_a31");
+            if (id && a31 !== o) this.hass.callService(dom(id), "select_option", { entity_id: id, option: o }); }}>A31 ${o.toUpperCase()}</div>`)}</div>` : nothing}
         ${mode === "emulated" && this.eid("ot_room_src") ? html`<select class="src" @click=${(e: Event) => e.stopPropagation()} @change=${setSrc}>
           <option value="" ?selected=${!srcId}>${this.t("— encja temperatury —", "— temperature entity —")}</option>
           ${temps.map((s) => html`<option value=${s.entity_id} ?selected=${s.entity_id === srcId}>${s.attributes.friendly_name ?? s.entity_id} · ${this.f(parseFloat(s.state), 1, 1)} °C</option>`)}

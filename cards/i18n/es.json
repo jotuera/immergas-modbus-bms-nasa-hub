@@ -1349,5 +1349,12 @@
  "Thermostat": "Termostato",
  "None": "Ninguno",
  "Physical": "Físico",
- "— temperature entity —": "— entidad de temperatura —"
+ "— temperature entity —": "— entidad de temperatura —",
+ "A31 RT: the thermostat alone switches heating, no room temperature over TCP": "A31 RT: solo el termostato enciende/apaga la calefacción, sin temperatura ambiente por TCP",
+ "A31 RPT: the panel gives the temperature and setpoint, the thermostat switches heating": "A31 RPT: el panel da la temperatura y la consigna, el termostato enciende/apaga",
+ "choose the A31 room control from the boiler menu": "elija la regulación A31 del menú de la caldera",
+ " · the module took it": " · el módulo la aceptó",
+ " · the module did not take it (acknowledged ": " · el módulo no la aceptó (confirmó ",
+ " · write error": " · error de escritura",
+ "rt": "rt"
 }

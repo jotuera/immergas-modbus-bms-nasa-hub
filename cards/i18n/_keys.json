@@ -6204,8 +6204,50 @@
   ]
  },
  {
+  "en": "A31 RT: the thermostat alone switches heating, no room temperature over TCP",
+  "pl": "A31 RT: sam termostat włącza/wyłącza grzanie, bez temperatury pokoju po TCP",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "A31 RPT: the panel gives the temperature and setpoint, the thermostat switches heating",
+  "pl": "A31 RPT: panel daje temperaturę i nastawę, termostat włącza/wyłącza grzanie",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "choose the A31 room control from the boiler menu",
+  "pl": "wybierz sposób sterowania A31 z menu kotła",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
   "en": " · sent ",
   "pl": " · wysłano ",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": " · the module took it",
+  "pl": " · moduł przyjął",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": " · the module did not take it (acknowledged ",
+  "pl": " · moduł nie przyjął (potwierdził ",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": " · write error",
+  "pl": " · błąd zapisu",
   "files": [
    "links.ts"
   ]
@@ -6248,6 +6290,13 @@
  {
   "en": "Emulated",
   "pl": "Emulowany",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "rt",
+  "pl": "rpt",
   "files": [
    "links.ts"
   ]

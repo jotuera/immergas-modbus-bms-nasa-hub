@@ -1349,5 +1349,12 @@
  "Thermostat": "Thermostaat",
  "None": "Geen",
  "Physical": "Fysiek",
- "— temperature entity —": "— temperatuurentiteit —"
+ "— temperature entity —": "— temperatuurentiteit —",
+ "A31 RT: the thermostat alone switches heating, no room temperature over TCP": "A31 RT: alleen de thermostaat schakelt de verwarming, geen kamertemperatuur via TCP",
+ "A31 RPT: the panel gives the temperature and setpoint, the thermostat switches heating": "A31 RPT: het paneel geeft temperatuur en instelwaarde, de thermostaat schakelt",
+ "choose the A31 room control from the boiler menu": "kies de A31-kamerregeling uit het ketelmenu",
+ " · the module took it": " · de module nam hem over",
+ " · the module did not take it (acknowledged ": " · de module nam hem niet over (bevestigd ",
+ " · write error": " · schrijffout",
+ "rt": "rt"
 }

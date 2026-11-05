@@ -1349,5 +1349,12 @@
  "Thermostat": "Termosztát",
  "None": "Nincs",
  "Physical": "Fizikai",
- "— temperature entity —": "— hőmérséklet entitás —"
+ "— temperature entity —": "— hőmérséklet entitás —",
+ "A31 RT: the thermostat alone switches heating, no room temperature over TCP": "A31 RT: csak a termosztát kapcsolja a fűtést, nincs szobahőmérséklet TCP-n",
+ "A31 RPT: the panel gives the temperature and setpoint, the thermostat switches heating": "A31 RPT: a panel adja a hőmérsékletet és az alapjelet, a termosztát kapcsolja a fűtést",
+ "choose the A31 room control from the boiler menu": "válassza ki az A31 szabályozást a kazán menüből",
+ " · the module took it": " · a modul elfogadta",
+ " · the module did not take it (acknowledged ": " · a modul nem fogadta el (nyugtázta: ",
+ " · write error": " · írási hiba",
+ "rt": "rt"
 }
