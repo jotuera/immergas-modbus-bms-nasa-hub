@@ -1296,5 +1296,13 @@
  "flow by the room / setpoint difference; off = constant flow until the setpoint is reached": "mandata secondo la differenza ambiente / setpoint; spenta = mandata costante fino al setpoint",
  "what the boiler answers – not scanned yet": "cosa risponde la caldaia – non ancora scansionato",
  "running without the CAR V2, CH / DHW programs, Dominus regulator, service, summer/winter, alerts": "funzionamento senza CAR V2, programmi riscaldamento / ACS, regolatore Dominus, manutenzione, estate/inverno, allarmi",
- "flow, humidity, screed, floor area, summer/winter, alerts, fault language": "mandata, umidità, massetto, superficie, estate/inverno, allarmi, lingua anomalie"
+ "flow, humidity, screed, floor area, summer/winter, alerts, fault language": "mandata, umidità, massetto, superficie, estate/inverno, allarmi, lingua anomalie",
+ "24 h mean – collecting data": "media 24 h – raccolta dati",
+ "24 h mean {0} °C ({1} h)": "media 24 h {0} °C ({1} h)",
+ "WINTER BELOW": "INVERNO SOTTO",
+ "SUMMER ABOVE": "ESTATE SOPRA",
+ "on · heats when the room drops below the threshold": "attiva · riscalda se l’ambiente scende sotto la soglia",
+ "off – without the CAR V2 nothing protects the rooms": "spenta – senza CAR V2 niente protegge gli ambienti",
+ "THRESHOLD": "SOGLIA",
+ "Frost protection threshold": "Soglia antigelo"
 }

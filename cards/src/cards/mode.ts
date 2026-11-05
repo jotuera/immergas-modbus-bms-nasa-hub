@@ -1,5 +1,6 @@
 // "Tryb pracy / Operating mode": mode buttons (two-tap confirm), night function U11, compressor cycling, boiler integration.
 import { HubCard, html, css, nothing, c, ca, box, register } from "../base";
+import { Key } from "../names";
 
 class ImmergasModeCard extends HubCard {
   /** boiler OFF (its own button): it stops polling D+/D- (DD link off for 30 s+) while T-/T+ still answers with
@@ -141,6 +142,43 @@ class ImmergasModeCard extends HubCard {
         : tchip(this.eid("dom_vac_temp"), this.t("TEMPERATURA", "TEMPERATURE"), isNaN(vt) ? null : this.f(vt, 1, 1) + " °C", "sky")}
         ${tchip(this.eid("dom_vac_until"), this.t("DO", "UNTIL"), u, "sky")}</div>
     </div>`;
+  }
+
+  /** a switch row of this card (two-tap toggle, dimmed while the remote is in charge) */
+  private progSwitch(k: Key, tag: string, icon: string, col: string, title: string, st: string, chips: unknown, dim = this.otRO) {
+    const on = this.on(k), bad = this.bad(k) || dim, conf = this.isArmed(tag), cc = on ? col : "overlay2";
+    return html`<div class="night" style="${box(cc, on)}${dim ? ";opacity:.55" : ""}">
+      <ha-icon icon=${icon} style="color:${c(cc)}" @click=${() => this.moreInfo(k)}></ha-icon>
+      <div class="cx" @click=${() => this.moreInfo(k)}><div class="nt">${title}</div>
+        <div class="ns" style="color:${c(cc)}">${dim ? this.t("wstrzymane – steruje pilot", "paused – the remote is in charge") : conf ? this.t("dotknij ponownie, aby potwierdzić", "tap again to confirm") : st}</div></div>
+      <div class="tgl ${bad ? "dis" : ""}" style="flex:none;align-self:flex-start;background:${on ? ca(col, 0.35) : "rgba(255,255,255,.08)"}${conf ? `;outline:2px solid ${c(col)}` : ""}"
+        @click=${() => !bad && this.confirm(tag, () => this.call("switch", on ? "turn_off" : "turn_on", k))}>
+        <div class="kn" style="left:${on ? 23 : 3}px;background:${on ? c(col) : c("overlay1")}"></div></div>
+      ${chips}
+    </div>`;
+  }
+
+  /** automatic Summer / Winter by the 24 h outdoor mean (an HA program, both modes; moved from the Online settings) */
+  private seasonRow(tchip: (o: string | undefined, l: string, v: string | null, col?: string, faint?: boolean) => unknown) {
+    if (!this.eid("dom_auto_season")) return nothing;
+    const a = this.so("dom_auto_season")?.attributes ?? {}, mean = parseFloat(a.outdoor_mean_24h), hrs = parseFloat(a.hours_of_data);
+    const on = this.on("dom_auto_season"), wb = this.n("dom_win_below"), sa = this.n("dom_sum_above");
+    const st = (on ? this.t("włączone · ", "on · ") : this.t("wyłączone · ", "off · "))
+      + (isNaN(mean) ? this.t("średnia 24 h – zbieram dane", "24 h mean – collecting data")
+        : this.t(`średnia 24 h ${this.f(mean, 1, 1)} °C (${this.f(hrs, 0)} h)`, `24 h mean ${this.f(mean, 1, 1)} °C (${this.f(hrs, 0)} h)`));
+    return this.progSwitch("dom_auto_season", "tg_season", "mdi:sun-snowflake-variant", "teal", this.t("Automatyczne Lato / Zima", "Automatic summer / winter"), st,
+      html`<div class="tcs full">${tchip(this.eid("dom_win_below"), this.t("ZIMA PONIŻEJ", "WINTER BELOW"), isNaN(wb) ? null : this.f(wb, 1, 1) + " °C", "teal")}
+        ${tchip(this.eid("dom_sum_above"), this.t("LATO POWYŻEJ", "SUMMER ABOVE"), isNaN(sa) ? null : this.f(sa, 1, 1) + " °C", "teal")}</div>`);
+  }
+
+  /** OpenTherm: room frost protection of the Dominus regulator (CAR V2 "ANTIGL" - the highest priority) */
+  private frostRow(tchip: (o: string | undefined, l: string, v: string | null, col?: string, faint?: boolean) => unknown) {
+    if (!this.ot || !this.eid("ot_frost")) return nothing;
+    const on = this.on("ot_frost"), ft = this.n("ot_frost_t");
+    const st = on ? this.t("włączona · grzeje, gdy pokój spadnie poniżej progu", "on · heats when the room drops below the threshold")
+      : this.t("wyłączona – bez CAR V2 nic nie chroni pomieszczeń", "off – without the CAR V2 nothing protects the rooms");
+    return this.progSwitch("ot_frost", "tg_frost", "mdi:snowflake-alert", "sky", this.t("Ochrona przed zamarzaniem (ANTIGL)", "Frost protection (ANTIGL)"), st,
+      html`<div class="tcs full">${tchip(this.eid("ot_frost_t"), this.t("PRÓG", "THRESHOLD"), isNaN(ft) ? null : this.f(ft, 1, 1) + " °C", "sky")}</div>`);
   }
 
   /** Dominus: night function U11 is not readable over TCP - the switch declares it set on the boiler (two-tap), the
@@ -294,6 +332,8 @@ class ImmergasModeCard extends HubCard {
       ${this.dominus && !this.eid("prog_mode") ? this.domRows(modeIdx === 2) : nothing}
       ${this.ot ? this.otLegRow(tchip) : this.legRow(tchip, hm)}
       ${this.vacRow(tchip)}
+      ${this.seasonRow(tchip)}
+      ${this.frostRow(tchip)}
       ${this.config.show_f1f2 === false ? nothing : this.f1f2Rows()}
       ${this.progRow()}
       ${this.dhwProgRow()}

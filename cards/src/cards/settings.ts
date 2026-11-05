@@ -126,8 +126,7 @@ class ImmergasSettingsCard extends HubCard {
         ${this.numRow("ot_inertia", "mdi:home-clock-outline", this.t("Bezwładność budynku (DIMENS)", "Building inertia (BUILD)"), 0)}
         ${this.numRow("ot_hyst", "mdi:arrow-expand-vertical", this.t("Histereza pokojowa", "Room hysteresis"), 1)}
         ${this.switchRow("ot_modul", "mdi:fire-circle", "peach", this.t("Modulacja", "Modulation"), this.t("MODUL – zasilanie wg różnicy pokój / zadana", "MODUL – flow by the room / setpoint difference"))}
-        ${this.switchRow("ot_frost", "mdi:snowflake-alert", "sky", this.t("Ochrona przed zamarzaniem", "Frost protection"), "")}
-        ${this.numRow("ot_frost_t", "mdi:snowflake-thermometer", this.t("Temperatura ochrony", "Protection temperature"), 1)}` : nothing}`;
+        ${this.numRow("ot_frost_t", "mdi:snowflake-thermometer", this.t("Próg ochrony przed zamarzaniem", "Frost protection threshold"), 1)}` : nothing}`;
   }
 
   /** OpenTherm: CAR V2 "MANUTZ" - the service reminder (interval, last service, "service done") */
@@ -152,7 +151,6 @@ class ImmergasSettingsCard extends HubCard {
   private domRows() {
     const until = this.so("dom_vac_until"), u = until && !["unknown", "unavailable", ""].includes(until.state)
       ? new Date(until.state).toLocaleString(this.loc, { dateStyle: "medium", timeStyle: "short" }) : this.t("do wyłączenia", "until switched off");
-    const season = this.so("dom_auto_season")?.attributes ?? {}, mean = parseFloat(season.outdoor_mean_24h), hrs = parseFloat(season.hours_of_data);
     const alert = (k: "dom_frost" | "dom_offline") => this.bad(k) ? "–" : this.on(k) ? this.t("ALARM", "ALERT") : this.t("ok", "ok");
     return html`
       ${this.eid("dom_flow_target") || this.eid("dom_hum_target") ? html`<div class="grp">${this.t("Nastawy Strefy 1", "Zone 1 settings")}</div>
@@ -161,14 +159,6 @@ class ImmergasSettingsCard extends HubCard {
       ${this.eid("floor_type") || this.eid("heated_area") ? html`<div class="grp">${this.t("Budynek", "Building")}</div>
         ${this.selRow(this.eid("floor_type"), this.t("Rodzaj posadzki", "Floor screed type"), "mdi:layers-triple-outline")}
         ${this.numRow("heated_area", "mdi:floor-plan", this.t("Powierzchnia ogrzewana", "Heated floor area"), 0)}` : nothing}
-      <div class=${this.otRO ? "locked" : ""}>
-      ${this.eid("dom_auto_season") ? html`<div class="grp">${this.t("Automatyczne Lato / Zima", "Automatic summer / winter")}</div>
-        ${this.switchRow("dom_auto_season", "mdi:sun-snowflake-variant", "teal", this.t("Automatyczne Lato / Zima", "Automatic summer / winter"),
-          isNaN(mean) ? this.t("średnia zewnętrzna z 24 h – zbieram dane", "24 h outdoor mean – collecting data")
-            : this.t(`średnia 24 h ${this.f(mean, 1, 1)} °C z ${this.f(hrs, 0)} h danych`, `24 h mean ${this.f(mean, 1, 1)} °C from ${this.f(hrs, 0)} h of data`))}
-        ${this.numRow("dom_win_below", "mdi:snowflake", this.t("Zima poniżej (średnia 24 h)", "Winter below (24 h mean)"), 1)}
-        ${this.numRow("dom_sum_above", "mdi:weather-sunny", this.t("Lato powyżej (średnia 24 h)", "Summer above (24 h mean)"), 1)}` : nothing}
-      </div>
       ${this.eid("ot_maint") ? this.maintRows() : nothing}
       ${this.eid("dom_frost") || this.eid("dom_offline") ? html`<div class="grp">${this.t("Alarmy", "Alerts")}</div>
         ${this.numRow("dom_frost_thr", "mdi:snowflake-alert", this.t("Ryzyko zamarznięcia poniżej", "Frost risk below") + ` · ${alert("dom_frost")}`, 1)}

@@ -1296,5 +1296,13 @@
  "flow by the room / setpoint difference; off = constant flow until the setpoint is reached": "aanvoer volgens verschil kamer / instelwaarde; uit = constante aanvoer tot de instelwaarde",
  "what the boiler answers – not scanned yet": "wat de ketel antwoordt – nog niet gescand",
  "running without the CAR V2, CH / DHW programs, Dominus regulator, service, summer/winter, alerts": "werking zonder CAR V2, CV- / SWW-programma's, Dominus-regelaar, onderhoud, zomer/winter, alarmen",
- "flow, humidity, screed, floor area, summer/winter, alerts, fault language": "aanvoer, vochtigheid, dekvloer, oppervlak, zomer/winter, alarmen, taal storingen"
+ "flow, humidity, screed, floor area, summer/winter, alerts, fault language": "aanvoer, vochtigheid, dekvloer, oppervlak, zomer/winter, alarmen, taal storingen",
+ "24 h mean – collecting data": "24-uursgemiddelde – gegevens verzamelen",
+ "24 h mean {0} °C ({1} h)": "24-uursgemiddelde {0} °C ({1} h)",
+ "WINTER BELOW": "WINTER ONDER",
+ "SUMMER ABOVE": "ZOMER BOVEN",
+ "on · heats when the room drops below the threshold": "aan · verwarmt als de kamer onder de drempel zakt",
+ "off – without the CAR V2 nothing protects the rooms": "uit – zonder CAR V2 beschermt niets de kamers",
+ "THRESHOLD": "DREMPEL",
+ "Frost protection threshold": "Vorstbeveiligingsdrempel"
 }

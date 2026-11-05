@@ -1296,5 +1296,13 @@
  "flow by the room / setpoint difference; off = constant flow until the setpoint is reached": "départ selon l’écart pièce / consigne ; désactivée = départ constant jusqu’à la consigne",
  "what the boiler answers – not scanned yet": "ce que la chaudière répond – pas encore scanné",
  "running without the CAR V2, CH / DHW programs, Dominus regulator, service, summer/winter, alerts": "fonctionnement sans CAR V2, programmes chauffage / ECS, régulateur Dominus, entretien, été/hiver, alarmes",
- "flow, humidity, screed, floor area, summer/winter, alerts, fault language": "départ, humidité, chape, surface, été/hiver, alarmes, langue des défauts"
+ "flow, humidity, screed, floor area, summer/winter, alerts, fault language": "départ, humidité, chape, surface, été/hiver, alarmes, langue des défauts",
+ "24 h mean – collecting data": "moyenne 24 h – collecte des données",
+ "24 h mean {0} °C ({1} h)": "moyenne 24 h {0} °C ({1} h)",
+ "WINTER BELOW": "HIVER SOUS",
+ "SUMMER ABOVE": "ÉTÉ AU-DESSUS",
+ "on · heats when the room drops below the threshold": "activée · chauffe si la pièce descend sous le seuil",
+ "off – without the CAR V2 nothing protects the rooms": "désactivée – sans CAR V2 rien ne protège les pièces",
+ "THRESHOLD": "SEUIL",
+ "Frost protection threshold": "Seuil hors-gel"
 }

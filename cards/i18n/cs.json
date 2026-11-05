@@ -1296,5 +1296,13 @@
  "flow by the room / setpoint difference; off = constant flow until the setpoint is reached": "výstup podle rozdílu místnost / požadovaná; vypnuto = stálý výstup do dosažení požadované",
  "what the boiler answers – not scanned yet": "co kotel odpovídá – zatím neskenováno",
  "running without the CAR V2, CH / DHW programs, Dominus regulator, service, summer/winter, alerts": "provoz bez CAR V2, programy ÚT / TUV, regulátor Dominus, servis, léto/zima, alarmy",
- "flow, humidity, screed, floor area, summer/winter, alerts, fault language": "výstup, vlhkost, podlaha, plocha, léto/zima, alarmy, jazyk poruch"
+ "flow, humidity, screed, floor area, summer/winter, alerts, fault language": "výstup, vlhkost, podlaha, plocha, léto/zima, alarmy, jazyk poruch",
+ "24 h mean – collecting data": "průměr 24 h – sbírám data",
+ "24 h mean {0} °C ({1} h)": "průměr 24 h {0} °C ({1} h)",
+ "WINTER BELOW": "ZIMA POD",
+ "SUMMER ABOVE": "LÉTO NAD",
+ "on · heats when the room drops below the threshold": "zapnuta · topí, když místnost klesne pod práh",
+ "off – without the CAR V2 nothing protects the rooms": "vypnuta – bez CAR V2 nic nechrání místnosti",
+ "THRESHOLD": "PRÁH",
+ "Frost protection threshold": "Práh ochrany proti zamrznutí"
 }

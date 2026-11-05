@@ -1296,5 +1296,13 @@
  "flow by the room / setpoint difference; off = constant flow until the setpoint is reached": "Vorlauf nach Differenz Raum / Sollwert; aus = konstanter Vorlauf bis zum Sollwert",
  "what the boiler answers – not scanned yet": "was der Kessel antwortet – noch nicht gescannt",
  "running without the CAR V2, CH / DHW programs, Dominus regulator, service, summer/winter, alerts": "Betrieb ohne CAR V2, HZ- / WW-Programme, Dominus-Regler, Wartung, Sommer/Winter, Alarme",
- "flow, humidity, screed, floor area, summer/winter, alerts, fault language": "Vorlauf, Feuchte, Estrich, Fläche, Sommer/Winter, Alarme, Störungssprache"
+ "flow, humidity, screed, floor area, summer/winter, alerts, fault language": "Vorlauf, Feuchte, Estrich, Fläche, Sommer/Winter, Alarme, Störungssprache",
+ "24 h mean – collecting data": "24-h-Mittel – sammle Daten",
+ "24 h mean {0} °C ({1} h)": "24-h-Mittel {0} °C ({1} h)",
+ "WINTER BELOW": "WINTER UNTER",
+ "SUMMER ABOVE": "SOMMER ÜBER",
+ "on · heats when the room drops below the threshold": "ein · heizt, wenn der Raum unter die Schwelle fällt",
+ "off – without the CAR V2 nothing protects the rooms": "aus – ohne CAR V2 schützt nichts die Räume",
+ "THRESHOLD": "SCHWELLE",
+ "Frost protection threshold": "Frostschutzschwelle"
 }

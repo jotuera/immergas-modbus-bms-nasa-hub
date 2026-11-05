@@ -115,7 +115,8 @@
   "en": "Frost protection (ANTIGL)",
   "pl": "Ochrona przed zamarzaniem (ANTIGL)",
   "files": [
-   "base.ts"
+   "base.ts",
+   "mode.ts"
   ]
  },
  {
@@ -6416,6 +6417,62 @@
   ]
  },
  {
+  "en": "24 h mean – collecting data",
+  "pl": "średnia 24 h – zbieram dane",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "24 h mean {0} °C ({1} h)",
+  "pl": "średnia 24 h {0} °C ({1} h)",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "Automatic summer / winter",
+  "pl": "Automatyczne Lato / Zima",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "WINTER BELOW",
+  "pl": "ZIMA PONIŻEJ",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "SUMMER ABOVE",
+  "pl": "LATO POWYŻEJ",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "on · heats when the room drops below the threshold",
+  "pl": "włączona · grzeje, gdy pokój spadnie poniżej progu",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "off – without the CAR V2 nothing protects the rooms",
+  "pl": "wyłączona – bez CAR V2 nic nie chroni pomieszczeń",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "THRESHOLD",
+  "pl": "PRÓG",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
   "en": "not set – enter the hours from the boiler (U12 / U13)",
   "pl": "nie ustawione – wpisz godziny z pieca (U12 / U13)",
   "files": [
@@ -8361,15 +8418,8 @@
   ]
  },
  {
-  "en": "Frost protection",
-  "pl": "Ochrona przed zamarzaniem",
-  "files": [
-   "settings.ts"
-  ]
- },
- {
-  "en": "Protection temperature",
-  "pl": "Temperatura ochrony",
+  "en": "Frost protection threshold",
+  "pl": "Próg ochrony przed zamarzaniem",
   "files": [
    "settings.ts"
   ]
@@ -8454,41 +8504,6 @@
  {
   "en": "Heated floor area",
   "pl": "Powierzchnia ogrzewana",
-  "files": [
-   "settings.ts"
-  ]
- },
- {
-  "en": "Automatic summer / winter",
-  "pl": "Automatyczne Lato / Zima",
-  "files": [
-   "settings.ts"
-  ]
- },
- {
-  "en": "24 h outdoor mean – collecting data",
-  "pl": "średnia zewnętrzna z 24 h – zbieram dane",
-  "files": [
-   "settings.ts"
-  ]
- },
- {
-  "en": "24 h mean {0} °C from {1} h of data",
-  "pl": "średnia 24 h {0} °C z {1} h danych",
-  "files": [
-   "settings.ts"
-  ]
- },
- {
-  "en": "Winter below (24 h mean)",
-  "pl": "Zima poniżej (średnia 24 h)",
-  "files": [
-   "settings.ts"
-  ]
- },
- {
-  "en": "Summer above (24 h mean)",
-  "pl": "Lato powyżej (średnia 24 h)",
   "files": [
    "settings.ts"
   ]

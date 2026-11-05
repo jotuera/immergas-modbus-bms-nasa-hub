@@ -1296,5 +1296,13 @@
  "flow by the room / setpoint difference; off = constant flow until the setpoint is reached": "impulsión según la diferencia estancia / consigna; apagada = impulsión constante hasta la consigna",
  "what the boiler answers – not scanned yet": "lo que responde la caldera – aún sin escanear",
  "running without the CAR V2, CH / DHW programs, Dominus regulator, service, summer/winter, alerts": "funcionamiento sin CAR V2, programas calefacción / ACS, regulador Dominus, mantenimiento, verano/invierno, alarmas",
- "flow, humidity, screed, floor area, summer/winter, alerts, fault language": "impulsión, humedad, solado, superficie, verano/invierno, alarmas, idioma de averías"
+ "flow, humidity, screed, floor area, summer/winter, alerts, fault language": "impulsión, humedad, solado, superficie, verano/invierno, alarmas, idioma de averías",
+ "24 h mean – collecting data": "media 24 h – recogiendo datos",
+ "24 h mean {0} °C ({1} h)": "media 24 h {0} °C ({1} h)",
+ "WINTER BELOW": "INVIERNO BAJO",
+ "SUMMER ABOVE": "VERANO SOBRE",
+ "on · heats when the room drops below the threshold": "activada · calienta si la estancia baja del umbral",
+ "off – without the CAR V2 nothing protects the rooms": "desactivada – sin CAR V2 nada protege las estancias",
+ "THRESHOLD": "UMBRAL",
+ "Frost protection threshold": "Umbral antihielo"
 }

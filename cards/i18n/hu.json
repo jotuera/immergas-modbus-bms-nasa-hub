@@ -1296,5 +1296,13 @@
  "flow by the room / setpoint difference; off = constant flow until the setpoint is reached": "előremenő a szoba / alapjel különbsége szerint; ki = állandó előremenő az alapjelig",
  "what the boiler answers – not scanned yet": "mit válaszol a kazán – még nem szkennelt",
  "running without the CAR V2, CH / DHW programs, Dominus regulator, service, summer/winter, alerts": "működés CAR V2 nélkül, fűtés / HMV programok, Dominus szabályzó, karbantartás, nyár/tél, riasztások",
- "flow, humidity, screed, floor area, summer/winter, alerts, fault language": "előremenő, páratartalom, esztrich, terület, nyár/tél, riasztások, hibanyelv"
+ "flow, humidity, screed, floor area, summer/winter, alerts, fault language": "előremenő, páratartalom, esztrich, terület, nyár/tél, riasztások, hibanyelv",
+ "24 h mean – collecting data": "24 órás átlag – adatgyűjtés",
+ "24 h mean {0} °C ({1} h)": "24 órás átlag {0} °C ({1} h)",
+ "WINTER BELOW": "TÉL ALATTA",
+ "SUMMER ABOVE": "NYÁR FELETTE",
+ "on · heats when the room drops below the threshold": "be · fűt, ha a szoba a küszöb alá esik",
+ "off – without the CAR V2 nothing protects the rooms": "ki – CAR V2 nélkül semmi sem védi a szobákat",
+ "THRESHOLD": "KÜSZÖB",
+ "Frost protection threshold": "Fagyvédelmi küszöb"
 }
