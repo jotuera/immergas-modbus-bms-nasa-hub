@@ -1275,5 +1275,7 @@
  "overdue": "überfällig",
  " days": " Tage",
  "Serviced today": "Heute gewartet",
- "During the vacation": "Während des Urlaubs"
+ "During the vacation": "Während des Urlaubs",
+ "CAR V2 emulated – Dominus + HA": "CAR V2 emuliert – Dominus + HA",
+ "the Dominus regulator and the HA programs instead of the remote": "Dominus-Regler und HA-Programme statt der Fernbedienung"
 }

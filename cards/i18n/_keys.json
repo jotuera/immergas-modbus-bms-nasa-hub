@@ -5981,8 +5981,8 @@
   ]
  },
  {
-  "en": "Dominus in charge (HA programs)",
-  "pl": "Steruje Dominus (programy HA)",
+  "en": "CAR V2 emulated – Dominus + HA",
+  "pl": "Emulacja CAR V2 – Dominus + HA",
   "files": [
    "links.ts"
   ]
@@ -5997,6 +5997,13 @@
  {
   "en": "Not detected",
   "pl": "Nie wykryto",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "the Dominus regulator and the HA programs instead of the remote",
+  "pl": "regulator Dominusa i programy HA zamiast pilota",
   "files": [
    "links.ts"
   ]

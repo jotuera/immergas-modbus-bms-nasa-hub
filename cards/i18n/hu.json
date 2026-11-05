@@ -1275,5 +1275,7 @@
  "overdue": "lejárt",
  " days": " nap",
  "Serviced today": "Ma karbantartva",
- "During the vacation": "Szabadság alatt"
+ "During the vacation": "Szabadság alatt",
+ "CAR V2 emulated – Dominus + HA": "CAR V2 emulálva – Dominus + HA",
+ "the Dominus regulator and the HA programs instead of the remote": "a Dominus szabályzó és a HA programok a távvezérlő helyett"
 }

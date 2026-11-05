@@ -1275,5 +1275,7 @@
  "overdue": "po termíne",
  " days": " dní",
  "Serviced today": "Servis vykonaný dnes",
- "During the vacation": "Počas dovolenky"
+ "During the vacation": "Počas dovolenky",
+ "CAR V2 emulated – Dominus + HA": "Emulácia CAR V2 – Dominus + HA",
+ "the Dominus regulator and the HA programs instead of the remote": "regulátor Dominus a programy HA namiesto ovládača"
 }

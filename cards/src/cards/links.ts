@@ -111,14 +111,18 @@ class ImmergasLinksCard extends HubCard {
       st: live ? "ok" : "bad", detail: this.bad("mode") ? "" : this.t("tryb ", "mode ") + this.txt("mode") });
     const code = String(this.s("err_code") ?? "").replace(/\D/g, ""), e31 = code === "31";
     const room = this.n("zone1"), ro = this.on("ot_ro"), probeRoom = this.s("ot_ntc") === "room";
-    const domCtl = !ro && this.s("prog_mode") === "auto";
-    const st: State = e31 ? "bad" : ro || domCtl || !isNaN(room) ? "ok" : "off";
+    // CAR V2 emulated: no write block and the CH program AUTO - the Dominus regulator + the HA programs do its job (blue,
+    // like the zone panel emulated by the hub)
+    const domCtl = !ro && !e31 && this.s("prog_mode") === "auto";
+    const st: State = e31 ? "bad" : domCtl ? "emu" : ro || !isNaN(room) ? "ok" : "off";
     const label = e31 ? this.t("Brak łączności z pilotem (E31)", "Remote lost (E31)")
       : ro ? this.t("Steruje pilot", "Remote in charge")
-      : domCtl ? this.t("Steruje Dominus (programy HA)", "Dominus in charge (HA programs)")
+      : domCtl ? this.t("Emulacja CAR V2 – Dominus + HA", "CAR V2 emulated – Dominus + HA")
       : !isNaN(room) ? this.t("Jest temperatura pokoju", "Room temperature present")
       : this.t("Nie wykryto", "Not detected");
-    const detail = e31 ? this.t("kocioł czeka na sparowany pilot i ignoruje polecenia CO / CWU / trybu",
+    const detail = domCtl ? this.t("regulator Dominusa i programy HA zamiast pilota", "the Dominus regulator and the HA programs instead of the remote")
+        + (!isNaN(room) ? ` · ${this.f(room, 1, 1)} °C` : "")
+      : e31 ? this.t("kocioł czeka na sparowany pilot i ignoruje polecenia CO / CWU / trybu",
         "the boiler waits for its paired remote and ignores CH / DHW / mode commands")
       : !isNaN(room) ? `${this.f(room, 1, 1)} °C · ` + (probeRoom ? this.t("z CAR V2 albo z sondy Dominusa", "from a CAR V2 or the Dominus probe")
         : this.t("z CAR V2", "from the CAR V2"))
