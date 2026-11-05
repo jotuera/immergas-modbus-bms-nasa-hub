@@ -202,8 +202,11 @@ class ImmergasNowCard extends HubCard {
     const pl = this.loc, rows: unknown[] = [];
     const tk: Pt[] = [...(h?.tk ?? [])], tv = this.n("tank");
     if (!isNaN(tv)) tk.push({ t: now, v: tv });
-    const dp = dhwPeriods(rq, tk, now), reqOff = lr && lr.s === "off" ? lr.t0 : -Infinity;
-    const dhwNow = dhwHeatingNow(reqOff, tk, now), cur = dp[dp.length - 1];
+    // Magis: the DHW request (2001) comes ~9 min before the cycle, which starts when it clears; OpenTherm: "DHW active"
+    // (status bit 2) is the cycle itself - each "on" period is one DHW heating
+    const dp = this.ot ? rq.filter((g) => g.s === "on").map((g) => ({ t0: g.t0, t1: g.t1 })) : dhwPeriods(rq, tk, now);
+    const reqOff = lr && lr.s === "off" ? lr.t0 : -Infinity;
+    const dhwNow = this.ot ? !!lr && lr.s === "on" : dhwHeatingNow(reqOff, tk, now), cur = dp[dp.length - 1];
 
     // 1) CH demand on / pause vs. the typical length of the same state
     const on = (BAD(chS) ? lc.s : chS) === "on", start = lc.s === (on ? "on" : "off") ? lc.t0 : now, el = now - start;
