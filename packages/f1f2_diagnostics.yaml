@@ -25,6 +25,13 @@ sensor:
   # 0x80B1 decoded as the "night limit" binary_sensor in f1f2_outdoor (was raw here).
   - {platform: f1f2_nasa, key: raw_840f, id: f1f2_raw_840f}
   - {platform: f1f2_nasa, key: raw_8417, id: f1f2_raw_8417}
+  # 1.2.1: long counters of the outdoor unit, read with READ requests (Emulate EHS panel on) - looking for the total
+  # compressor starts; 0x8405 = compressor running time (hours) per the NASA code list
+  - {platform: f1f2_nasa, key: raw_8401, id: f1f2_raw_8401}
+  - {platform: f1f2_nasa, key: raw_8404, id: f1f2_raw_8404}
+  - {platform: f1f2_nasa, key: comp_running_hours, id: f1f2_comp_running_hours}
+  - {platform: f1f2_nasa, key: raw_8408, id: f1f2_raw_8408}
+  - {platform: f1f2_nasa, key: raw_8409, id: f1f2_raw_8409}
   # bus statistics
   - {platform: f1f2_nasa, type: rx_frames}
   - {platform: f1f2_nasa, type: bad_frames}

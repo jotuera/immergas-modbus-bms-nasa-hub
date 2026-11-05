@@ -98,6 +98,7 @@ class NasaHub : public Component, public uart::UARTDevice {
   // --- runtime API ---
   // Queue READ requests (split into frames of <= 10 messages) to the read address.
   void request_read(const std::vector<uint16_t> &ids);
+  void request_read(const std::vector<uint16_t> &ids, const Address &dst);
   // Re-read everything registered with poll: true (FSV etc.).
   void poll_now();
   void set_sniffer_enabled(bool on) {

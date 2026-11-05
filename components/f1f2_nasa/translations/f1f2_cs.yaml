@@ -70,6 +70,10 @@ sensors:
   raw_82e1: NASA PDU venkovní 82E1 RAW
   raw_840f: NASA PDU venkovní 840F LONG RAW
   raw_8417: NASA PDU venkovní 8417 LONG RAW
+  raw_8401: NASA PDU venkovní 8401 LONG RAW
+  raw_8404: NASA PDU venkovní 8404 LONG RAW
+  raw_8408: NASA PDU venkovní 8408 LONG RAW
+  raw_8409: NASA PDU venkovní 8409 LONG RAW
   # statistiky huba (type:)
   rx_frames: NASA přijaté rámce
   bad_frames: NASA chybné rámce

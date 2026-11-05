@@ -70,6 +70,10 @@ sensors:
   raw_82e1: NASA kültéri PDU 82E1 RAW
   raw_840f: NASA kültéri PDU 840F LONG RAW
   raw_8417: NASA kültéri PDU 8417 LONG RAW
+  raw_8401: NASA kültéri PDU 8401 LONG RAW
+  raw_8404: NASA kültéri PDU 8404 LONG RAW
+  raw_8408: NASA kültéri PDU 8408 LONG RAW
+  raw_8409: NASA kültéri PDU 8409 LONG RAW
   rx_frames: NASA fogadott keretek
   bad_frames: NASA hibás keretek
   tx_frames: NASA küldött keretek

@@ -91,6 +91,13 @@ sensors:
   raw_82e1:               {pdu: 0x82E1, src: outdoor, dec: raw, acc: 0, cat: diagnostic, status: unknown}
   raw_840f:               {pdu: 0x840F, src: outdoor, dec: raw, acc: 0, cat: diagnostic, status: unknown}
   raw_8417:               {pdu: 0x8417, src: outdoor, dec: raw, acc: 0, cat: diagnostic, status: unknown}
+  # long counters of the outdoor unit, not broadcast on a Magis: read with READ requests (1.2.1) - one of them should
+  # be the total compressor starts (NASA code list: 0x8405 = compressor 1 running time, hours)
+  raw_8401:               {pdu: 0x8401, src: outdoor, dec: raw, poll: true, acc: 0, cat: diagnostic, status: unknown}
+  raw_8404:               {pdu: 0x8404, src: outdoor, dec: raw, poll: true, acc: 0, cat: diagnostic, status: unknown}
+  comp_running_hours:     {pdu: 0x8405, src: outdoor, dec: raw, poll: true, unit: "h", sc: total_increasing, acc: 0, cat: diagnostic, icon: "mdi:timer-outline", status: candidate}
+  raw_8408:               {pdu: 0x8408, src: outdoor, dec: raw, poll: true, acc: 0, cat: diagnostic, status: unknown}
+  raw_8409:               {pdu: 0x8409, src: outdoor, dec: raw, poll: true, acc: 0, cat: diagnostic, status: unknown}
 
 binary_sensors:
   water_pump:             {pdu: 0x4089, src: indoor, dc: running}

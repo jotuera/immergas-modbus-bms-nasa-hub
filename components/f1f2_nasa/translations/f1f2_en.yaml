@@ -71,6 +71,11 @@ sensors:
   raw_82e1: NASA Outdoor PDU 82E1 RAW
   raw_840f: NASA Outdoor PDU 840F LONG RAW
   raw_8417: NASA Outdoor PDU 8417 LONG RAW
+  raw_8401: NASA Outdoor PDU 8401 LONG RAW
+  raw_8404: NASA Outdoor PDU 8404 LONG RAW
+  comp_running_hours: Compressor running time (0x8405)
+  raw_8408: NASA Outdoor PDU 8408 LONG RAW
+  raw_8409: NASA Outdoor PDU 8409 LONG RAW
   # hub statistics (type:)
   rx_frames: NASA RX Frames
   bad_frames: NASA Bad Frames

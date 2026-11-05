@@ -70,6 +70,11 @@ sensors:
   raw_82e1: NASA PDU zewn. 82E1 RAW
   raw_840f: NASA PDU zewn. 840F LONG RAW
   raw_8417: NASA PDU zewn. 8417 LONG RAW
+  raw_8401: NASA PDU zewn. 8401 LONG RAW
+  raw_8404: NASA PDU zewn. 8404 LONG RAW
+  comp_running_hours: Czas pracy sprężarki (0x8405)
+  raw_8408: NASA PDU zewn. 8408 LONG RAW
+  raw_8409: NASA PDU zewn. 8409 LONG RAW
   rx_frames: NASA odebrane ramki
   bad_frames: NASA błędne ramki
   tx_frames: NASA wysłane ramki

@@ -374,18 +374,20 @@ uint8_t NasaHub::next_packet_number_() {
   return this->packet_number_;
 }
 
-void NasaHub::request_read(const std::vector<uint16_t> &ids) {
+void NasaHub::request_read(const std::vector<uint16_t> &ids) { this->request_read(ids, this->read_address_); }
+
+void NasaHub::request_read(const std::vector<uint16_t> &ids, const Address &dst) {
   if (!this->transmit_ || !this->bus_enabled_ || !this->panel_emulation_)
     return;  // active reads need NASA connection + Emulate EHS panel
   for (size_t i = 0; i < ids.size(); i += NASA_MAX_MESSAGES_PER_FRAME) {
     PendingRequest r;
-    r.dst = this->read_address_;
+    r.dst = dst;
     size_t end = std::min(ids.size(), i + NASA_MAX_MESSAGES_PER_FRAME);
     for (size_t k = i; k < end; k++) {
       // A structure message must be alone in its frame.
       if (Message::kind_of(ids[k]) == MessageKind::STRUCTURE) {
         PendingRequest s;
-        s.dst = this->read_address_;
+        s.dst = dst;
         s.ids.push_back(ids[k]);
         this->queue_.push_back(s);
       } else {
@@ -403,7 +405,20 @@ void NasaHub::poll_now() {
   if (this->poll_ids_.empty())
     return;
   ESP_LOGD(TAG, "Polling %u messages", unsigned(this->poll_ids_.size()));
-  this->request_read(this->poll_ids_);
+  // a message whose entity listens to the outdoor unit is read from the outdoor unit (e.g. its long counters)
+  std::vector<uint16_t> indoor, outdoor;
+  for (uint16_t id : this->poll_ids_) {
+    bool out = false;
+    auto it = this->listeners_.find(id);
+    if (it != this->listeners_.end())
+      for (NasaListener *l : it->second)
+        out = out || (l->get_poll() && l->get_source() == this->outdoor_address_);
+    (out ? outdoor : indoor).push_back(id);
+  }
+  if (!indoor.empty())
+    this->request_read(indoor);
+  if (!outdoor.empty())
+    this->request_read(outdoor, Address::from_raw(this->outdoor_address_));
 }
 
 void NasaHub::try_transmit_() {

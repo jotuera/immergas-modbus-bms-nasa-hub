@@ -70,6 +70,10 @@ sensors:
   raw_82e1: NASA PDU vonk. 82E1 RAW
   raw_840f: NASA PDU vonk. 840F LONG RAW
   raw_8417: NASA PDU vonk. 8417 LONG RAW
+  raw_8401: NASA PDU vonk. 8401 LONG RAW
+  raw_8404: NASA PDU vonk. 8404 LONG RAW
+  raw_8408: NASA PDU vonk. 8408 LONG RAW
+  raw_8409: NASA PDU vonk. 8409 LONG RAW
   # štatistiky huba (type:)
   rx_frames: NASA prijaté rámce
   bad_frames: NASA chybné rámce

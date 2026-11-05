@@ -70,6 +70,10 @@ sensors:
   raw_82e1: NASA PDU esterna 82E1 RAW
   raw_840f: NASA PDU esterna 840F LONG RAW
   raw_8417: NASA PDU esterna 8417 LONG RAW
+  raw_8401: NASA PDU esterna 8401 LONG RAW
+  raw_8404: NASA PDU esterna 8404 LONG RAW
+  raw_8408: NASA PDU esterna 8408 LONG RAW
+  raw_8409: NASA PDU esterna 8409 LONG RAW
   # statistiche hub (type:)
   rx_frames: NASA frame ricevuti
   bad_frames: NASA frame errati
