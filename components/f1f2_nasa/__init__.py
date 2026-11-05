@@ -212,6 +212,11 @@ async def to_code(config):
     cg.add(var.set_outdoor_address(config[CONF_OUTDOOR_ADDRESS]))
     for cls, label in sorted(translation(config[CONF_LANGUAGE]).get("device_classes", {}).items()):
         cg.add(var.add_class_label(int(cls), str(label)))
+    # bus map: every message id of the catalog and the FSV list counts as described, also when this configuration
+    # does not create its entity
+    known = sorted({int(e["pdu"]) for e in list(CATALOG.values()) + list(FSV.values()) if isinstance(e, dict) and "pdu" in e})
+    for pdu in known:
+        cg.add(var.add_known_id(pdu))
     if CONF_FLOW_CONTROL_PIN in config:
         pin = await cg.gpio_pin_expression(config[CONF_FLOW_CONTROL_PIN])
         cg.add(var.set_flow_control_pin(pin))

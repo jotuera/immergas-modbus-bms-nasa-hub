@@ -242,7 +242,9 @@ void NasaHub::handle_packet_(const Packet &p) {
       uint32_t v = uint32_t(m.value);
       if (bm == this->bus_map_.end()) {
         if (this->bus_map_.size() < 800) {
-          this->bus_map_[key] = MapStat{v, v, v, 0, this->listeners_.count(m.id) > 0};
+          bool known = this->listeners_.count(m.id) > 0 ||
+                       std::find(this->known_ids_.begin(), this->known_ids_.end(), m.id) != this->known_ids_.end();
+          this->bus_map_[key] = MapStat{v, v, v, 0, known};
           if (!this->map_src_.count(src))
             this->map_src_[src] = p.src.to_string();
         }

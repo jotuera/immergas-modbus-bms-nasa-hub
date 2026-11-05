@@ -115,6 +115,7 @@ class NasaHub : public Component, public uart::UARTDevice {
   size_t bus_map_size() const { return this->bus_map_.size(); }
   size_t bus_map_unknown() const;
   void bus_map_clear() { this->bus_map_.clear(); }
+  void add_known_id(uint16_t id) { this->known_ids_.push_back(id); }
   // Discovery: like the sniffer value-change log, but every change line also carries a snapshot of the key
   // reference signals (compressor Hz, modes, defrost, night, 3-way valve, outdoor temp) so an unknown PDU's
   // change can be correlated at a glance. Pair with the tools/sniffer_correlate.py analyser.
@@ -233,6 +234,7 @@ class NasaHub : public Component, public uart::UARTDevice {
   };
   std::map<uint64_t, MapStat> bus_map_;      // (source raw << 16 | id) -> statistics
   std::map<uint32_t, std::string> map_src_;  // source raw -> "20.00.01"
+  std::vector<uint16_t> known_ids_;          // message ids of the catalog / FSV list (described)
 
   // devices seen on the bus (address -> frames) for address discovery
   std::map<uint32_t, uint32_t> devices_;
