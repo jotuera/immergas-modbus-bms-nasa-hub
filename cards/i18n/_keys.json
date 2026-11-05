@@ -6037,7 +6037,22 @@
  },
  {
   "en": "Dominus",
-  "pl": "Hub",
+  "pl": "Boiler",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Thermostat",
+  "pl": "Dominus",
+  "files": [
+   "links.ts",
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "CAR V2 remote",
+  "pl": "Zone 1 panel",
   "files": [
    "links.ts"
   ]
@@ -6148,13 +6163,6 @@
   ]
  },
  {
-  "en": "CAR V2 remote",
-  "pl": "Pilot CAR V2",
-  "files": [
-   "links.ts"
-  ]
- },
- {
   "en": "OpenTherm · remote",
   "pl": "OpenTherm · pilot",
   "files": [
@@ -6246,15 +6254,15 @@
   ]
  },
  {
-  "en": "Thermostat",
-  "pl": "Termostat",
+  "en": "Physical thermostat",
+  "pl": "Termostat fizyczny",
   "files": [
    "links.ts"
   ]
  },
  {
-  "en": "Physical thermostat",
-  "pl": "Termostat fizyczny",
+  "en": "Emulation does not work",
+  "pl": "Emulacja nie działa",
   "files": [
    "links.ts"
   ]
@@ -6267,8 +6275,8 @@
   ]
  },
  {
-  "en": "Not chosen",
-  "pl": "Nie wybrano",
+  "en": "Not set",
+  "pl": "Nie ustawiono",
   "files": [
    "links.ts"
   ]
@@ -6288,64 +6296,36 @@
   ]
  },
  {
-  "en": " · the module took it",
-  "pl": " · moduł przyjął",
+  "en": " · the boiler reports this temperature – it works",
+  "pl": " · kocioł podaje tę temperaturę – działa",
   "files": [
    "links.ts"
   ]
  },
  {
-  "en": " · the module did not take it (acknowledged ",
-  "pl": " · moduł nie przyjął (potwierdził ",
+  "en": " · Data-ID 24 does not change – the module does not take it; set Physical",
+  "pl": " · Data-ID 24 nie zmienia się – moduł nie przyjmuje temperatury; ustaw Fizyczny",
   "files": [
    "links.ts"
   ]
  },
  {
-  "en": " · write error",
-  "pl": " · błąd zapisu",
+  "en": " · checking the read-back…",
+  "pl": " · sprawdzam odczyt…",
   "files": [
    "links.ts"
   ]
  },
  {
-  "en": "choose a temperature entity below",
-  "pl": "wybierz encję temperatury poniżej",
+  "en": "choose a temperature entity in the Boiler parameters (offline)",
+  "pl": "wybierz encję temperatury w Parametrach pieca (offline)",
   "files": [
    "links.ts"
   ]
  },
  {
-  "en": "the boiler does not report a thermostat – choose what is connected",
-  "pl": "kocioł nie zgłasza termostatu – zaznacz, co jest podłączone",
-  "files": [
-   "links.ts"
-  ]
- },
- {
-  "en": "None",
-  "pl": "Brak",
-  "files": [
-   "links.ts"
-  ]
- },
- {
-  "en": "Physical",
-  "pl": "Fizyczny",
-  "files": [
-   "links.ts"
-  ]
- },
- {
-  "en": "Emulated",
-  "pl": "Emulowany",
-  "files": [
-   "links.ts"
-  ]
- },
- {
-  "en": "— temperature entity —",
-  "pl": "— encja temperatury —",
+  "en": "the boiler does not report a thermostat – set it in the Boiler parameters (offline)",
+  "pl": "kocioł nie zgłasza termostatu – ustaw go w Parametrach pieca (offline)",
   "files": [
    "links.ts"
   ]
@@ -6353,6 +6333,13 @@
  {
   "en": "Connected",
   "pl": "Połączono",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Emulated",
+  "pl": "Emulacja",
   "files": [
    "links.ts"
   ]
@@ -8463,6 +8450,27 @@
  {
   "en": "P13 · max. cycle duration",
   "pl": "P13 · maks. czas cyklu",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Room thermostat",
+  "pl": "Termostat pokojowy",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Temperature source",
+  "pl": "Źródło temperatury",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Experimental: the temperature goes as Data-ID 24. A minute later the integration reads Data-ID 24 back – the Thermostat tile of the Connectivity card shows whether the boiler took it.",
+  "pl": "Eksperymentalne: temperatura idzie jako Data-ID 24. Po minucie integracja czyta Data-ID 24 – kafel Termostat w karcie Łączność pokaże, czy kocioł ją przyjął.",
   "files": [
    "settings.ts"
   ]

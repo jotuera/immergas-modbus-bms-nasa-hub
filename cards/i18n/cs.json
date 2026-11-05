@@ -1366,5 +1366,15 @@
  "the zone panel gives the temperature and the heating demand": "panel zóny dává teplotu a požadavek topení",
  "the Dominus does not read the thermostat – set A31 in the Boiler parameters (offline)": "Dominus termostat nečte – nastavte A31 v Parametrech kotle (offline)",
  "No thermostat / panel": "Chybí termostat / panel",
- "the Dominus reports no room sensor (PDU 2011 = 32767)": "Dominus hlásí chybějící pokojové čidlo (PDU 2011 = 32767)"
+ "the Dominus reports no room sensor (PDU 2011 = 32767)": "Dominus hlásí chybějící pokojové čidlo (PDU 2011 = 32767)",
+ "Emulation does not work": "Emulace nefunguje",
+ "Not set": "Nenastaveno",
+ " · the boiler reports this temperature – it works": " · kotel hlásí tuto teplotu – funguje",
+ " · Data-ID 24 does not change – the module does not take it; set Physical": " · Data-ID 24 se nemění – modul teplotu nepřijímá; nastavte Fyzický",
+ " · checking the read-back…": " · kontroluji zpětné čtení…",
+ "choose a temperature entity in the Boiler parameters (offline)": "vyberte entitu teploty v Parametrech kotle (offline)",
+ "the boiler does not report a thermostat – set it in the Boiler parameters (offline)": "kotel termostat nehlásí – nastavte ho v Parametrech kotle (offline)",
+ "Room thermostat": "Pokojový termostat",
+ "Temperature source": "Zdroj teploty",
+ "Experimental: the temperature goes as Data-ID 24. A minute later the integration reads Data-ID 24 back – the Thermostat tile of the Connectivity card shows whether the boiler took it.": "Experimentální: teplota jde jako Data-ID 24. Po minutě integrace přečte Data-ID 24 – dlaždice Termostat v kartě Připojení ukáže, zda ji kotel přijal."
 }

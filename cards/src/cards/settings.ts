@@ -95,6 +95,27 @@ class ImmergasSettingsCard extends HubCard {
       ${this.domParams()}`;
   }
 
+  /** OpenTherm: the room thermostat - what is connected (the boiler does not report it) and, for the emulated one,
+   *  the HA entity whose temperature goes to Data-ID 24 */
+  private otThermoRows() {
+    const tid = this.eid("ot_thermo");
+    if (!tid) return nothing;
+    const srcId = String(this.s("ot_room_src") ?? ""), sid = this.eid("ot_room_src");
+    const temps = Object.values(this.hass.states as Record<string, any>)
+      .filter((s) => s.entity_id.startsWith("sensor.") && s.attributes?.device_class === "temperature" && !isNaN(parseFloat(s.state)))
+      .sort((x, y) => String(x.attributes.friendly_name ?? x.entity_id).localeCompare(String(y.attributes.friendly_name ?? y.entity_id)));
+    return html`<div class="grp">${this.t("Termostat pokojowy", "Room thermostat")}</div>
+      ${this.selRow(tid, this.t("Termostat", "Thermostat"), "mdi:thermostat")}
+      ${this.s("ot_thermo") === "emulated" && sid ? html`<div class="nr"><ha-icon icon="mdi:home-thermometer-outline"></ha-icon>
+        <span class="nl">${this.t("Źródło temperatury", "Temperature source")}</span>
+        <select class="langs" @change=${(e: Event) => this.hass.callService(sid.split(".")[0], "set_value", { entity_id: sid, value: (e.target as HTMLSelectElement).value })}>
+          <option value="" ?selected=${!srcId}>—</option>
+          ${temps.map((s) => html`<option value=${s.entity_id} ?selected=${s.entity_id === srcId}>${s.attributes.friendly_name ?? s.entity_id} · ${this.f(parseFloat(s.state), 1, 1)} °C</option>`)}
+        </select></div>
+        <div class="note">${this.t("Eksperymentalne: temperatura idzie jako Data-ID 24. Po minucie integracja czyta Data-ID 24 – kafel Termostat w karcie Łączność pokaże, czy kocioł ją przyjął.",
+          "Experimental: the temperature goes as Data-ID 24. A minute later the integration reads Data-ID 24 back – the Thermostat tile of the Connectivity card shows whether the boiler took it.")}</div>` : nothing}`;
+  }
+
   /** OpenTherm: the boiler's P / t / A menu copied once from the boiler (Immergas does not publish which Data-ID 11
    *  parameter is which, so they are not read yet) - with hints from what the boiler does report */
   private otOffline() {
@@ -104,6 +125,7 @@ class ImmergasSettingsCard extends HubCard {
     const tsp = (this.attr("ot_ids", "boiler_parameters") ?? {}) as Record<string, unknown>, tsp12 = tsp["12"];
     const hint = (txt: string, col = "overlay2") => html`<div class="note" style="color:${c(col)}">${txt}</div>`;
     return html`
+      ${this.otThermoRows()}
       <div class="grp">${this.t("Ogrzewanie (menu t)", "Central heating (menu t)")}</div>
       ${r("ot_t0", "mdi:thermometer-low", this.t("t0 · min. temperatura zasilania CO", "t0 · CH min. flow temperature"))}
       ${r("ot_t1", "mdi:thermometer-high", this.t("t1 · maks. temperatura zasilania CO", "t1 · CH max. flow temperature"))}

@@ -1366,5 +1366,15 @@
  "the zone panel gives the temperature and the heating demand": "il pannello di zona dà temperatura e richiesta",
  "the Dominus does not read the thermostat – set A31 in the Boiler parameters (offline)": "il Dominus non legge il termostato – imposta A31 nei parametri caldaia (offline)",
  "No thermostat / panel": "Nessun termostato / pannello",
- "the Dominus reports no room sensor (PDU 2011 = 32767)": "il Dominus segnala che manca la sonda ambiente (PDU 2011 = 32767)"
+ "the Dominus reports no room sensor (PDU 2011 = 32767)": "il Dominus segnala che manca la sonda ambiente (PDU 2011 = 32767)",
+ "Emulation does not work": "L’emulazione non funziona",
+ "Not set": "Non impostato",
+ " · the boiler reports this temperature – it works": " · la caldaia riporta questa temperatura – funziona",
+ " · Data-ID 24 does not change – the module does not take it; set Physical": " · Data-ID 24 non cambia – il modulo non la accetta; scegli Fisico",
+ " · checking the read-back…": " · verifico la rilettura…",
+ "choose a temperature entity in the Boiler parameters (offline)": "scegli un’entità di temperatura nei parametri caldaia (offline)",
+ "the boiler does not report a thermostat – set it in the Boiler parameters (offline)": "la caldaia non riporta un termostato – impostalo nei parametri caldaia (offline)",
+ "Room thermostat": "Termostato ambiente",
+ "Temperature source": "Sorgente di temperatura",
+ "Experimental: the temperature goes as Data-ID 24. A minute later the integration reads Data-ID 24 back – the Thermostat tile of the Connectivity card shows whether the boiler took it.": "Sperimentale: la temperatura va come Data-ID 24. Dopo un minuto l’integrazione rilegge Data-ID 24 – il riquadro Termostato della scheda Connettività mostra se la caldaia l’ha accettata."
 }

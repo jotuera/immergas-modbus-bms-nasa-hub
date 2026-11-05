@@ -173,39 +173,26 @@ class ImmergasLinksCard extends HubCard {
 
   /** OpenTherm: the room thermostat - the boiler does not report it, so the user says what is connected: none, a
    *  physical one (contacts 40-41) or an emulated one (Home Assistant sends an HA entity's temperature to the module) */
+  /** OpenTherm Thermostat tile: only the state - the choice (none / physical / emulated + the source entity) is in the
+   *  Boiler parameters (offline). Emulated: Data-ID 24 is judged by reading it back (the ACK is no proof). */
   private thermoLink(): Link {
     const mode = this.s("ot_thermo") ?? "none", a = this.so("ot_thermo")?.attributes ?? {};
     const srcId = String(this.s("ot_room_src") ?? ""), src = srcId ? this.hass.states[srcId] : undefined;
-    const v = parseFloat(src?.state ?? ""), sent = a.room_sent_at ? Date.parse(a.room_sent_at) : NaN;
-    const res = a.write_result as string | undefined, ack = parseFloat(String(a.acknowledged ?? ""));
-    const st: State = mode === "physical" ? "ok" : mode === "emulated" ? (src && !isNaN(v) && res !== "error" && res !== "not_taken" ? "emu" : "bad") : "off";
-    const target = "Dominus (Data-ID 24)";
+    const v = parseFloat(src?.state ?? ""), sent = a.room_sent_at ? Date.parse(a.room_sent_at) : NaN, res = a.write_result as string | undefined;
+    const st: State = mode === "physical" ? "ok" : mode === "emulated" ? (!src || isNaN(v) || res === "not_taken" ? "bad" : "emu") : "na";
     const label = mode === "physical" ? this.t("Termostat fizyczny", "Physical thermostat")
-      : mode === "emulated" ? this.t("Termostat emulowany", "Emulated thermostat") : this.t("Nie wybrano", "Not chosen");
+      : mode === "emulated" ? (res === "not_taken" ? this.t("Emulacja nie działa", "Emulation does not work") : this.t("Termostat emulowany", "Emulated thermostat"))
+      : this.t("Nie ustawiono", "Not set");
     const detail = mode === "physical" ? this.t("zaciski 40-41 kotła – OpenTherm nie podaje jego stanu; grzanie widać po żądaniu CO",
         "boiler contacts 40-41 – OpenTherm does not report it; heating shows as the CH demand")
-      : mode === "emulated" ? (src && !isNaN(v) ? `${src.attributes?.friendly_name ?? srcId} ${this.f(v, 1, 1)} °C → ${target}`
+      : mode === "emulated" ? (src && !isNaN(v) ? `${src.attributes?.friendly_name ?? srcId} ${this.f(v, 1, 1)} °C → Data-ID 24`
           + (!isNaN(sent) ? this.t(" · wysłano ", " · sent ") + new Date(sent).toLocaleTimeString(this.loc, { hour: "2-digit", minute: "2-digit" }) : "")
-          + (res === "taken" ? this.t(" · moduł przyjął", " · the module took it")
-            : res === "not_taken" ? this.t(" · moduł nie przyjął (potwierdził ", " · the module did not take it (acknowledged ") + this.f(ack, 1, 1) + " °C)"
-            : res === "error" ? this.t(" · błąd zapisu", " · write error") : "")
-        : this.t("wybierz encję temperatury poniżej", "choose a temperature entity below"))
-      : this.t("kocioł nie zgłasza termostatu – zaznacz, co jest podłączone", "the boiler does not report a thermostat – choose what is connected");
-    const dom = (id: string) => id.split(".")[0];
-    const pick = (o: string) => { const id = this.eid("ot_thermo"); if (id) this.hass.callService(dom(id), "select_option", { entity_id: id, option: o }); };
-    const setSrc = (e: Event) => { const id = this.eid("ot_room_src"), val = (e.target as HTMLSelectElement).value;
-      if (id) this.hass.callService(dom(id), "set_value", { entity_id: id, value: val }); };
-    const temps = Object.values(this.hass.states as Record<string, any>)
-      .filter((s) => s.entity_id.startsWith("sensor.") && s.attributes?.device_class === "temperature" && !isNaN(parseFloat(s.state)))
-      .sort((x, y) => String(x.attributes.friendly_name ?? x.entity_id).localeCompare(String(y.attributes.friendly_name ?? y.entity_id)));
-    const opt = (o: string, lbl: string) => html`<div class="seg ${mode === o ? "on" : ""}" @click=${(e: Event) => { e.stopPropagation(); if (mode !== o) pick(o); }}>${lbl}</div>`;
-    return { k: "ot_thermo", icon: "mdi:thermostat", name: ["Termostat", "Thermostat"], bus: this.t("pokój", "room"), st, label, detail,
-      extra: html`<div class="segs" @click=${(e: Event) => e.stopPropagation()}>${opt("none", this.t("Brak", "None"))}${opt("physical", this.t("Fizyczny", "Physical"))}${opt("emulated", this.t("Emulowany", "Emulated"))}</div>
-
-        ${mode === "emulated" && this.eid("ot_room_src") ? html`<select class="src" @click=${(e: Event) => e.stopPropagation()} @change=${setSrc}>
-          <option value="" ?selected=${!srcId}>${this.t("— encja temperatury —", "— temperature entity —")}</option>
-          ${temps.map((s) => html`<option value=${s.entity_id} ?selected=${s.entity_id === srcId}>${s.attributes.friendly_name ?? s.entity_id} · ${this.f(parseFloat(s.state), 1, 1)} °C</option>`)}
-        </select>` : nothing}` };
+          + (res === "taken" ? this.t(" · kocioł podaje tę temperaturę – działa", " · the boiler reports this temperature – it works")
+            : res === "not_taken" ? this.t(" · Data-ID 24 nie zmienia się – moduł nie przyjmuje temperatury; ustaw Fizyczny", " · Data-ID 24 does not change – the module does not take it; set Physical")
+            : res === "pending" ? this.t(" · sprawdzam odczyt…", " · checking the read-back…") : "")
+        : this.t("wybierz encję temperatury w Parametrach pieca (offline)", "choose a temperature entity in the Boiler parameters (offline)"))
+      : this.t("kocioł nie zgłasza termostatu – ustaw go w Parametrach pieca (offline)", "the boiler does not report a thermostat – set it in the Boiler parameters (offline)");
+    return { k: "ot_thermo", icon: "mdi:thermostat", name: ["Termostat", "Thermostat"], bus: this.t("pokój", "room"), st, label, detail };
   }
 
   protected body() {

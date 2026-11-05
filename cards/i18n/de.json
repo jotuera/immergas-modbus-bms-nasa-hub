@@ -1366,5 +1366,15 @@
  "the zone panel gives the temperature and the heating demand": "das Zonenpanel liefert Temperatur und Heizanforderung",
  "the Dominus does not read the thermostat – set A31 in the Boiler parameters (offline)": "der Dominus liest das Thermostat nicht – A31 in den Kesselparametern (offline) setzen",
  "No thermostat / panel": "Kein Thermostat / Panel",
- "the Dominus reports no room sensor (PDU 2011 = 32767)": "der Dominus meldet keinen Raumfühler (PDU 2011 = 32767)"
+ "the Dominus reports no room sensor (PDU 2011 = 32767)": "der Dominus meldet keinen Raumfühler (PDU 2011 = 32767)",
+ "Emulation does not work": "Emulation funktioniert nicht",
+ "Not set": "Nicht gesetzt",
+ " · the boiler reports this temperature – it works": " · der Kessel meldet diese Temperatur – es funktioniert",
+ " · Data-ID 24 does not change – the module does not take it; set Physical": " · Data-ID 24 ändert sich nicht – das Modul übernimmt sie nicht; Physisch wählen",
+ " · checking the read-back…": " · prüfe die Rücklesung…",
+ "choose a temperature entity in the Boiler parameters (offline)": "Temperatur-Entität in den Kesselparametern (offline) wählen",
+ "the boiler does not report a thermostat – set it in the Boiler parameters (offline)": "der Kessel meldet kein Thermostat – in den Kesselparametern (offline) setzen",
+ "Room thermostat": "Raumthermostat",
+ "Temperature source": "Temperaturquelle",
+ "Experimental: the temperature goes as Data-ID 24. A minute later the integration reads Data-ID 24 back – the Thermostat tile of the Connectivity card shows whether the boiler took it.": "Experimentell: die Temperatur geht als Data-ID 24. Eine Minute später liest die Integration Data-ID 24 zurück – die Thermostat-Kachel der Verbindungskarte zeigt, ob der Kessel sie übernommen hat."
 }

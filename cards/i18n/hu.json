@@ -1366,5 +1366,15 @@
  "the zone panel gives the temperature and the heating demand": "a zóna panel adja a hőmérsékletet és a fűtési igényt",
  "the Dominus does not read the thermostat – set A31 in the Boiler parameters (offline)": "a Dominus nem olvassa a termosztátot – állítsa be az A31-et a kazán paramétereiben (offline)",
  "No thermostat / panel": "Nincs termosztát / panel",
- "the Dominus reports no room sensor (PDU 2011 = 32767)": "a Dominus nem jelez szobaérzékelőt (PDU 2011 = 32767)"
+ "the Dominus reports no room sensor (PDU 2011 = 32767)": "a Dominus nem jelez szobaérzékelőt (PDU 2011 = 32767)",
+ "Emulation does not work": "Az emuláció nem működik",
+ "Not set": "Nincs beállítva",
+ " · the boiler reports this temperature – it works": " · a kazán ezt a hőmérsékletet jelzi – működik",
+ " · Data-ID 24 does not change – the module does not take it; set Physical": " · a Data-ID 24 nem változik – a modul nem fogadja el; válassza a Fizikait",
+ " · checking the read-back…": " · visszaolvasás ellenőrzése…",
+ "choose a temperature entity in the Boiler parameters (offline)": "válasszon hőmérséklet entitást a kazán paramétereiben (offline)",
+ "the boiler does not report a thermostat – set it in the Boiler parameters (offline)": "a kazán nem jelez termosztátot – állítsa be a kazán paramétereiben (offline)",
+ "Room thermostat": "Szobatermosztát",
+ "Temperature source": "Hőmérséklet forrás",
+ "Experimental: the temperature goes as Data-ID 24. A minute later the integration reads Data-ID 24 back – the Thermostat tile of the Connectivity card shows whether the boiler took it.": "Kísérleti: a hőmérséklet Data-ID 24-ként megy. Egy perc múlva az integráció visszaolvassa a Data-ID 24-et – a Kapcsolatok kártya Termosztát csempéje mutatja, elfogadta-e a kazán."
 }

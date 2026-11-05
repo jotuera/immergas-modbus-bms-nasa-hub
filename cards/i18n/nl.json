@@ -1366,5 +1366,15 @@
  "the zone panel gives the temperature and the heating demand": "het zonepaneel geeft temperatuur en warmtevraag",
  "the Dominus does not read the thermostat – set A31 in the Boiler parameters (offline)": "de Dominus leest de thermostaat niet – stel A31 in bij de ketelparameters (offline)",
  "No thermostat / panel": "Geen thermostaat / paneel",
- "the Dominus reports no room sensor (PDU 2011 = 32767)": "de Dominus meldt geen kamersensor (PDU 2011 = 32767)"
+ "the Dominus reports no room sensor (PDU 2011 = 32767)": "de Dominus meldt geen kamersensor (PDU 2011 = 32767)",
+ "Emulation does not work": "Emulatie werkt niet",
+ "Not set": "Niet ingesteld",
+ " · the boiler reports this temperature – it works": " · de ketel meldt deze temperatuur – het werkt",
+ " · Data-ID 24 does not change – the module does not take it; set Physical": " · Data-ID 24 verandert niet – de module neemt hem niet over; kies Fysiek",
+ " · checking the read-back…": " · terugleesactie controleren…",
+ "choose a temperature entity in the Boiler parameters (offline)": "kies een temperatuurentiteit bij de ketelparameters (offline)",
+ "the boiler does not report a thermostat – set it in the Boiler parameters (offline)": "de ketel meldt geen thermostaat – stel hem in bij de ketelparameters (offline)",
+ "Room thermostat": "Kamerthermostaat",
+ "Temperature source": "Temperatuurbron",
+ "Experimental: the temperature goes as Data-ID 24. A minute later the integration reads Data-ID 24 back – the Thermostat tile of the Connectivity card shows whether the boiler took it.": "Experimenteel: de temperatuur gaat als Data-ID 24. Een minuut later leest de integratie Data-ID 24 terug – de tegel Thermostaat in de kaart Verbindingen toont of de ketel hem overnam."
 }

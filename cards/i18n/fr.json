@@ -1366,5 +1366,15 @@
  "the zone panel gives the temperature and the heating demand": "le panneau de zone donne la température et la demande",
  "the Dominus does not read the thermostat – set A31 in the Boiler parameters (offline)": "le Dominus ne lit pas le thermostat – réglez A31 dans les paramètres chaudière (hors ligne)",
  "No thermostat / panel": "Pas de thermostat / panneau",
- "the Dominus reports no room sensor (PDU 2011 = 32767)": "le Dominus signale l’absence de sonde d’ambiance (PDU 2011 = 32767)"
+ "the Dominus reports no room sensor (PDU 2011 = 32767)": "le Dominus signale l’absence de sonde d’ambiance (PDU 2011 = 32767)",
+ "Emulation does not work": "L’émulation ne fonctionne pas",
+ "Not set": "Non réglé",
+ " · the boiler reports this temperature – it works": " · la chaudière indique cette température – cela fonctionne",
+ " · Data-ID 24 does not change – the module does not take it; set Physical": " · Data-ID 24 ne change pas – le module ne la prend pas ; choisissez Physique",
+ " · checking the read-back…": " · vérification de la relecture…",
+ "choose a temperature entity in the Boiler parameters (offline)": "choisissez une entité de température dans les paramètres chaudière (hors ligne)",
+ "the boiler does not report a thermostat – set it in the Boiler parameters (offline)": "la chaudière ne signale pas de thermostat – réglez-le dans les paramètres chaudière (hors ligne)",
+ "Room thermostat": "Thermostat d’ambiance",
+ "Temperature source": "Source de température",
+ "Experimental: the temperature goes as Data-ID 24. A minute later the integration reads Data-ID 24 back – the Thermostat tile of the Connectivity card shows whether the boiler took it.": "Expérimental : la température est envoyée comme Data-ID 24. Une minute plus tard l’intégration relit Data-ID 24 – la tuile Thermostat de la carte Connectivité indique si la chaudière l’a prise."
 }
