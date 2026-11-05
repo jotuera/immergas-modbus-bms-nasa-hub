@@ -115,8 +115,7 @@
   "en": "Frost protection (ANTIGL)",
   "pl": "Ochrona przed zamarzaniem (ANTIGL)",
   "files": [
-   "base.ts",
-   "mode.ts"
+   "base.ts"
   ]
  },
  {
@@ -4096,7 +4095,6 @@
   "pl": "Spaliny",
   "files": [
    "charts.ts",
-   "now.ts",
    "ot.ts"
   ]
  },
@@ -4541,7 +4539,6 @@
   "pl": "Wentylator",
   "files": [
    "circuits.ts",
-   "now.ts",
    "ot.ts"
   ]
  },
@@ -6358,14 +6355,16 @@
   "en": "Summer – CH off",
   "pl": "Lato – CO wył.",
   "files": [
-   "mode.ts"
+   "mode.ts",
+   "now.ts"
   ]
  },
  {
   "en": "Standby – CH and DHW off",
   "pl": "Stand-by – CO i CWU wył.",
   "files": [
-   "mode.ts"
+   "mode.ts",
+   "now.ts"
   ]
  },
  {
@@ -6393,7 +6392,8 @@
   "en": "Vacation",
   "pl": "Tryb wyjazdowy",
   "files": [
-   "mode.ts"
+   "mode.ts",
+   "now.ts"
   ]
  },
  {
@@ -6481,6 +6481,13 @@
   ]
  },
  {
+  "en": "Frost protection",
+  "pl": "Ochrona przed zamarzaniem",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
   "en": "THRESHOLD",
   "pl": "PRÓG",
   "files": [
@@ -6540,6 +6547,13 @@
  {
   "en": "fixed setpoint, no schedule",
   "pl": "stała nastawa, bez harmonogramu",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "CH time program",
+  "pl": "Program czasowy CO",
   "files": [
    "mode.ts"
   ]
@@ -7029,6 +7043,48 @@
   ]
  },
  {
+  "en": "Disinfection running (anti-legionella)",
+  "pl": "Dezynfekcja trwa (anty-legionella)",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "the cylinder to the boiler maximum, then 20 min",
+  "pl": "zasobnik do maks. kotła, potem 20 min",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "zone 1 target lowered",
+  "pl": "obniżona zadana Strefy 1",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": " · until ",
+  "pl": " · do ",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "{0} left",
+  "pl": "jeszcze {0}",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": " · until switched off",
+  "pl": " · do wyłączenia",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
   "en": " CH starts",
   "pl": " startów CO",
   "files": [
@@ -7131,28 +7187,6 @@
   "pl": "Przepływ CWU",
   "files": [
    "now.ts"
-  ]
- },
- {
-  "en": "Flame current",
-  "pl": "Prąd płomienia",
-  "files": [
-   "now.ts"
-  ]
- },
- {
-  "en": "Starts / hour",
-  "pl": "Starty / godz.",
-  "files": [
-   "now.ts"
-  ]
- },
- {
-  "en": " · short cycling",
-  "pl": " · taktowanie",
-  "files": [
-   "now.ts",
-   "ot.ts"
   ]
  },
  {
@@ -7513,6 +7547,13 @@
   ]
  },
  {
+  "en": "Flame current",
+  "pl": "Prąd płomienia",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
   "en": "Starts today",
   "pl": "Starty dziś",
   "files": [
@@ -7522,6 +7563,13 @@
  {
   "en": "Starts / last hour",
   "pl": "Starty / ostatnia godzina",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": " · short cycling",
+  "pl": " · taktowanie",
   "files": [
    "ot.ts"
   ]

@@ -1307,5 +1307,12 @@
  "Frost protection threshold": "Soglia antigelo",
  "on · flow by the room / setpoint difference": "attiva · mandata secondo la differenza ambiente / setpoint",
  "off · constant flow until the setpoint is reached": "spenta · mandata costante fino al setpoint",
- "the remote sets the room setpoint; Eco / Comfort recognised by the value (OpenTherm does not report the remote's program phase)": "il setpoint ambiente lo imposta il comando remoto; Eco / Comfort riconosciuto dal valore (OpenTherm non riporta la fase del programma del comando)"
+ "the remote sets the room setpoint; Eco / Comfort recognised by the value (OpenTherm does not report the remote's program phase)": "il setpoint ambiente lo imposta il comando remoto; Eco / Comfort riconosciuto dal valore (OpenTherm non riporta la fase del programma del comando)",
+ "CH time program": "Programma orario riscaldamento",
+ "Disinfection running (anti-legionella)": "Disinfezione in corso (antilegionella)",
+ "the cylinder to the boiler maximum, then 20 min": "bollitore al massimo della caldaia, poi 20 min",
+ "zone 1 target lowered": "setpoint zona 1 ridotto",
+ " · until ": " · fino al ",
+ "{0} left": "ancora {0}",
+ " · until switched off": " · fino allo spegnimento"
 }

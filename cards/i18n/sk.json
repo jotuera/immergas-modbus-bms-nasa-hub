@@ -1307,5 +1307,12 @@
  "Frost protection threshold": "Prah ochrany proti zamrznutiu",
  "on · flow by the room / setpoint difference": "zapnutá · výstup podľa rozdielu miestnosť / požadovaná",
  "off · constant flow until the setpoint is reached": "vypnutá · stály výstup do dosiahnutia požadovanej",
- "the remote sets the room setpoint; Eco / Comfort recognised by the value (OpenTherm does not report the remote's program phase)": "teplotu miestnosti nastavuje ovládač; Eko / Komfort rozpoznané podľa hodnoty (OpenTherm nehlási fázu programu ovládača)"
+ "the remote sets the room setpoint; Eco / Comfort recognised by the value (OpenTherm does not report the remote's program phase)": "teplotu miestnosti nastavuje ovládač; Eko / Komfort rozpoznané podľa hodnoty (OpenTherm nehlási fázu programu ovládača)",
+ "CH time program": "Časový program ÚK",
+ "Disinfection running (anti-legionella)": "Dezinfekcia prebieha (anti-legionella)",
+ "the cylinder to the boiler maximum, then 20 min": "zásobník na maximum kotla, potom 20 min",
+ "zone 1 target lowered": "znížená požadovaná zóny 1",
+ " · until ": " · do ",
+ "{0} left": "ešte {0}",
+ " · until switched off": " · do vypnutia"
 }

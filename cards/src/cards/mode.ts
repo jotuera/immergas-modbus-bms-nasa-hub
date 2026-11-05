@@ -185,7 +185,7 @@ class ImmergasModeCard extends HubCard {
     const on = this.on("ot_frost"), ft = this.n("ot_frost_t");
     const st = on ? this.t("włączona · grzeje, gdy pokój spadnie poniżej progu", "on · heats when the room drops below the threshold")
       : this.t("wyłączona – bez CAR V2 nic nie chroni pomieszczeń", "off – without the CAR V2 nothing protects the rooms");
-    return this.progSwitch("ot_frost", "tg_frost", "mdi:snowflake-alert", "sky", this.t("Ochrona przed zamarzaniem (ANTIGL)", "Frost protection (ANTIGL)"), st,
+    return this.progSwitch("ot_frost", "tg_frost", "mdi:snowflake-alert", "sky", this.t("Ochrona przed zamarzaniem", "Frost protection"), st,
       html`<div class="tcs full">${tchip(this.eid("ot_frost_t"), this.t("PRÓG", "THRESHOLD"), isNaN(ft) ? null : this.f(ft, 1, 1) + " °C", "sky")}</div>`);
   }
 
@@ -269,7 +269,8 @@ class ImmergasModeCard extends HubCard {
     const ph = !this.bad("program") ? this.s("program")! : !this.bad("zone1_phase") ? this.txt("zone1_phase")! : "";
     const sub = bad ? this.t("brak odczytu", "no reading") : cur === "auto" ? this.t("wg harmonogramu", "by the schedule") + (ph ? this.t(" · teraz: ", " · now: ") + ph : "")
       : this.t("stała nastawa, bez harmonogramu", "fixed setpoint, no schedule");
-    return this.srcBlock("prog", this.t("Program czasowy CO Strefy 1", "Zone 1 CH time program"), sub,
+    // OpenTherm has no zones - one CH program
+    return this.srcBlock("prog", this.ot ? this.t("Program czasowy CO", "CH time program") : this.t("Program czasowy CO Strefy 1", "Zone 1 CH time program"), sub,
       [["auto", "mdi:calendar-clock", "blue", "AUTO"], ["manual", "mdi:hand-back-right-outline", "peach", "MANUAL"]], cur, set, bad);
   }
 

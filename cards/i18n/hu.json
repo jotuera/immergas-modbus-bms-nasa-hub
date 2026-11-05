@@ -1307,5 +1307,12 @@
  "Frost protection threshold": "Fagyvédelmi küszöb",
  "on · flow by the room / setpoint difference": "be · előremenő a szoba / alapjel különbsége szerint",
  "off · constant flow until the setpoint is reached": "ki · állandó előremenő az alapjel eléréséig",
- "the remote sets the room setpoint; Eco / Comfort recognised by the value (OpenTherm does not report the remote's program phase)": "a szoba alapjelét a távvezérlő állítja; Eco / Komfort az érték alapján felismerve (az OpenTherm nem jelzi a távvezérlő programfázisát)"
+ "the remote sets the room setpoint; Eco / Comfort recognised by the value (OpenTherm does not report the remote's program phase)": "a szoba alapjelét a távvezérlő állítja; Eco / Komfort az érték alapján felismerve (az OpenTherm nem jelzi a távvezérlő programfázisát)",
+ "CH time program": "Fűtési időprogram",
+ "Disinfection running (anti-legionella)": "Fertőtlenítés folyamatban (anti-legionella)",
+ "the cylinder to the boiler maximum, then 20 min": "tároló a kazán maximumán, majd 20 perc",
+ "zone 1 target lowered": "1. zóna alapjel csökkentve",
+ " · until ": " · eddig: ",
+ "{0} left": "még {0}",
+ " · until switched off": " · kikapcsolásig"
 }

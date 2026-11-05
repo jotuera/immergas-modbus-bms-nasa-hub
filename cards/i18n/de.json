@@ -1307,5 +1307,12 @@
  "Frost protection threshold": "Frostschutzschwelle",
  "on · flow by the room / setpoint difference": "ein · Vorlauf nach Differenz Raum / Sollwert",
  "off · constant flow until the setpoint is reached": "aus · konstanter Vorlauf bis zum Sollwert",
- "the remote sets the room setpoint; Eco / Comfort recognised by the value (OpenTherm does not report the remote's program phase)": "die Fernbedienung stellt den Raumsollwert ein; Eco / Komfort am Wert erkannt (OpenTherm meldet die Programmphase der Fernbedienung nicht)"
+ "the remote sets the room setpoint; Eco / Comfort recognised by the value (OpenTherm does not report the remote's program phase)": "die Fernbedienung stellt den Raumsollwert ein; Eco / Komfort am Wert erkannt (OpenTherm meldet die Programmphase der Fernbedienung nicht)",
+ "CH time program": "HZ-Zeitprogramm",
+ "Disinfection running (anti-legionella)": "Desinfektion läuft (Anti-Legionellen)",
+ "the cylinder to the boiler maximum, then 20 min": "Speicher auf Kesselmaximum, dann 20 min",
+ "zone 1 target lowered": "Sollwert Zone 1 gesenkt",
+ " · until ": " · bis ",
+ "{0} left": "noch {0}",
+ " · until switched off": " · bis zum Ausschalten"
 }

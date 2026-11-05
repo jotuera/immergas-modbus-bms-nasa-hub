@@ -46,6 +46,7 @@ class ImmergasOtBoilerCard extends HubCard {
         ${this.chip("dhw_set", "mdi:water-boiler", "yellow", this.t("Zakres CWU (kocioł)", "DHW range (boiler)"), this.range("dhw_set") + (dhwType ? " · " + dhwType : ""))}
         ${this.eid("ot_exhaust") && !this.bad("ot_exhaust") ? this.chip("ot_exhaust", "mdi:smoke", "overlay2", this.t("Spaliny", "Exhaust"), this.f(this.n("ot_exhaust"), 1, 1) + " °C") : nothing}
         ${this.eid("ot_fan") && !this.bad("ot_fan") ? this.chip("ot_fan", "mdi:fan", "sky", this.t("Wentylator", "Fan"), this.f(this.n("ot_fan"), 0) + this.t(" obr/min", " rpm")) : nothing}
+        ${this.eid("ot_flame_i") && !this.bad("ot_flame_i") ? this.chip("ot_flame_i", "mdi:fire-circle", "peach", this.t("Prąd płomienia", "Flame current"), this.f(this.n("ot_flame_i"), 1, 1) + " µA") : nothing}
       </div>
       ${this.eid("ot_burn_today") ? html`<div class="sec">${this.t("Palnik", "Burner")}</div>
         <div class="grid">

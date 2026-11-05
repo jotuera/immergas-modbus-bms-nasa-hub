@@ -263,6 +263,35 @@ class ImmergasNowCard extends HubCard {
         this.t("następna ", "next ") + day(nx), this.t("za ", "in ") + dur(nx - now)));
     }
 
+    // 4b) OpenTherm: anti-legionella of the HA programs (02:00 daily / on Monday; paused while the remote is in charge)
+    const lg = this.s("ot_leg");
+    if (this.ot && (lg === "daily" || lg === "weekly") && !this.otRO) {
+      const run = !!this.attr("zone1_phase", "anti_legionella_running");
+      const at2 = (d: Date) => { const x = new Date(d); x.setHours(2, 0, 0, 0); return x.getTime(); };
+      let nx = at2(new Date(now));
+      if (lg === "daily") { if (nx <= now) nx += 86400e3; }
+      else { const d = new Date(nx); const add = (8 - d.getDay()) % 7; nx += add * 86400e3; if (nx <= now) nx += 7 * 86400e3; }
+      const prev = nx - (lg === "daily" ? 1 : 7) * 86400e3;
+      const day = (t: number) => new Date(t).toLocaleDateString(pl, { weekday: "short", day: "numeric", month: "numeric" }) + " " + clock(t, pl);
+      rows.push(run ? this.bar("ot_leg", "mdi:bacteria-outline", "red", this.t("Dezynfekcja trwa (anty-legionella)", "Disinfection running (anti-legionella)"), 1, 1,
+          this.t("zasobnik do maks. kotła, potem 20 min", "the cylinder to the boiler maximum, then 20 min"), this.t("teraz", "now"))
+        : this.bar("ot_leg", "mdi:bacteria-outline", "red", this.t("Do dezynfekcji (anty-legionella)", "Until disinfection (anti-legionella)"), now - prev, nx - prev,
+          this.t("następna ", "next ") + day(nx), this.t("za ", "in ") + dur(nx - now)));
+    }
+
+    // 4c) vacation (both modes): time left until the end date, or since it started when it has none
+    if (this.on("dom_vacation")) {
+      const since = Date.parse(this.so("dom_vacation")?.last_changed ?? ""), us = this.s("dom_vac_until") ?? "", until = Date.parse(us);
+      const what = this.ot ? (this.s("ot_vac_action") === "summer" ? this.t("Lato – CO wył.", "Summer – CH off") : this.t("Stand-by – CO i CWU wył.", "Standby – CH and DHW off"))
+        : this.t("obniżona zadana Strefy 1", "zone 1 target lowered");
+      const day = (t: number) => new Date(t).toLocaleDateString(pl, { weekday: "short", day: "numeric", month: "numeric" }) + " " + clock(t, pl);
+      rows.push(!isNaN(until) && until > now && !isNaN(since)
+        ? this.bar("dom_vacation", "mdi:bag-suitcase-outline", "sky", this.t("Tryb wyjazdowy", "Vacation"), now - since, until - since,
+          what + this.t(" · do ", " · until ") + day(until), this.t(`jeszcze ${dur(until - now)}`, `${dur(until - now)} left`))
+        : this.bar("dom_vacation", "mdi:bag-suitcase-outline", "sky", this.t("Tryb wyjazdowy", "Vacation"), isNaN(since) ? 0 : now - since, 0,
+          what + this.t(" · do wyłączenia", " · until switched off")));
+    }
+
     // 5) last 6 h: CH demand (peach) and DHW heating (yellow) over the idle background
     const w0 = now - WIN, pct = (t: number) => (Math.max(t, w0) - w0) / WIN * 100;
     const chOn = ch.filter((g) => g.s === "on" && g.t1 > w0), dw = dp.filter((g) => g.t1 > w0);
@@ -334,19 +363,6 @@ class ImmergasNowCard extends HubCard {
       chips.push(this.chip("ot_press", "mdi:gauge", press < 1 || press > 2.5 ? "red" : "green", this.t("Ciśnienie instalacji", "System pressure"), this.f(press, 1, 1) + " bar", false));
     if (this.eid("ot_dhw_flow") && !this.bad("ot_dhw_flow") && !this.otMissing(19) && (fl > 0 || dhw))
       chips.push(this.chip("ot_dhw_flow", "mdi:water-pump", "sky", this.t("Przepływ CWU", "DHW flow rate"), this.f(fl, 1, 1) + " l/min", false));
-    if (this.eid("ot_exhaust") && !this.bad("ot_exhaust"))
-      chips.push(this.chip("ot_exhaust", "mdi:smoke", "overlay2", this.t("Spaliny", "Exhaust"), this.f(this.n("ot_exhaust"), 1, 1) + " °C", false));
-    if (this.eid("ot_fan") && !this.bad("ot_fan"))
-      chips.push(this.chip("ot_fan", "mdi:fan", "sky", this.t("Wentylator", "Fan"), this.f(this.n("ot_fan"), 0) + this.t(" obr/min", " rpm"), false));
-    if (this.eid("ot_flame_i") && !this.bad("ot_flame_i"))
-      chips.push(this.chip("ot_flame_i", "mdi:fire-circle", "peach", this.t("Prąd płomienia", "Flame current"), this.f(this.n("ot_flame_i"), 1, 1) + " µA", false));
-    if (this.eid("ot_burn_today") && !this.bad("ot_burn_today")) {
-      const sh = this.n("ot_burn_h");
-      chips.push(this.chip("ot_burn_today", "mdi:fire", "peach", this.t("Palnik dziś", "Burner today"),
-        `${this.f(this.n("ot_burn_hours"), 1, 1)} h · ${this.f(this.n("ot_burn_today"), 0)} ${this.t("startów", "starts")}`, false));
-      chips.push(this.chip("ot_burn_h", "mdi:fire-alert", sh > 6 ? "red" : sh > 3 ? "peach" : "green", this.t("Starty / godz.", "Starts / hour"),
-        this.f(sh, 0) + (sh > 6 ? this.t(" · taktowanie", " · short cycling") : ""), sh > 6));
-    }
     return chips.length ? html`<div class="chips2">${chips}</div>` : nothing;
   }
 

@@ -1307,5 +1307,12 @@
  "Frost protection threshold": "Umbral antihielo",
  "on · flow by the room / setpoint difference": "activada · impulsión según la diferencia estancia / consigna",
  "off · constant flow until the setpoint is reached": "desactivada · impulsión constante hasta la consigna",
- "the remote sets the room setpoint; Eco / Comfort recognised by the value (OpenTherm does not report the remote's program phase)": "el mando fija la consigna ambiente; Eco / Confort reconocido por el valor (OpenTherm no informa la fase del programa del mando)"
+ "the remote sets the room setpoint; Eco / Comfort recognised by the value (OpenTherm does not report the remote's program phase)": "el mando fija la consigna ambiente; Eco / Confort reconocido por el valor (OpenTherm no informa la fase del programa del mando)",
+ "CH time program": "Programa horario calefacción",
+ "Disinfection running (anti-legionella)": "Desinfección en curso (antilegionela)",
+ "the cylinder to the boiler maximum, then 20 min": "acumulador al máximo de la caldera, luego 20 min",
+ "zone 1 target lowered": "consigna zona 1 reducida",
+ " · until ": " · hasta ",
+ "{0} left": "quedan {0}",
+ " · until switched off": " · hasta apagarlo"
 }

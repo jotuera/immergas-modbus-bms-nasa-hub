@@ -1307,5 +1307,12 @@
  "Frost protection threshold": "Vorstbeveiligingsdrempel",
  "on · flow by the room / setpoint difference": "aan · aanvoer volgens verschil kamer / instelwaarde",
  "off · constant flow until the setpoint is reached": "uit · constante aanvoer tot de instelwaarde",
- "the remote sets the room setpoint; Eco / Comfort recognised by the value (OpenTherm does not report the remote's program phase)": "de afstandsbediening stelt de kamerwaarde in; Eco / Comfort herkend aan de waarde (OpenTherm meldt de programmafase van de afstandsbediening niet)"
+ "the remote sets the room setpoint; Eco / Comfort recognised by the value (OpenTherm does not report the remote's program phase)": "de afstandsbediening stelt de kamerwaarde in; Eco / Comfort herkend aan de waarde (OpenTherm meldt de programmafase van de afstandsbediening niet)",
+ "CH time program": "Tijdprogramma CV",
+ "Disinfection running (anti-legionella)": "Desinfectie bezig (anti-legionella)",
+ "the cylinder to the boiler maximum, then 20 min": "boiler naar ketelmaximum, dan 20 min",
+ "zone 1 target lowered": "instelwaarde zone 1 verlaagd",
+ " · until ": " · tot ",
+ "{0} left": "nog {0}",
+ " · until switched off": " · tot uitschakelen"
 }

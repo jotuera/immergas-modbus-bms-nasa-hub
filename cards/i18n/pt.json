@@ -1307,5 +1307,12 @@
  "Frost protection threshold": "Limiar anticongelamento",
  "on · flow by the room / setpoint difference": "ligada · ida conforme a diferença divisão / consigna",
  "off · constant flow until the setpoint is reached": "desligada · ida constante até à consigna",
- "the remote sets the room setpoint; Eco / Comfort recognised by the value (OpenTherm does not report the remote's program phase)": "o comando define a consigna ambiente; Eco / Conforto reconhecido pelo valor (o OpenTherm não indica a fase do programa do comando)"
+ "the remote sets the room setpoint; Eco / Comfort recognised by the value (OpenTherm does not report the remote's program phase)": "o comando define a consigna ambiente; Eco / Conforto reconhecido pelo valor (o OpenTherm não indica a fase do programa do comando)",
+ "CH time program": "Programa horário aquecimento",
+ "Disinfection running (anti-legionella)": "Desinfeção em curso (antilegionela)",
+ "the cylinder to the boiler maximum, then 20 min": "depósito ao máximo da caldeira, depois 20 min",
+ "zone 1 target lowered": "consigna da zona 1 reduzida",
+ " · until ": " · até ",
+ "{0} left": "faltam {0}",
+ " · until switched off": " · até desligar"
 }
