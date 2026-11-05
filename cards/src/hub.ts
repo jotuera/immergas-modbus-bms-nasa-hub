@@ -139,6 +139,9 @@ function buildDominus(hass: any): HubIndex | null {
   let deviceId = "";
   for (const [id, e] of Object.entries(ents)) {
     if (e.platform !== "immergas_dominus") continue;
+    // 0.52.4: skip orphans left by an earlier setup (no state / "restored") - they pointed the cards at an old device
+    const st = hass.states?.[id];
+    if (!st || st.attributes?.restored) continue;
     const k = DOMINUS[dominusKeys[id] ?? e.translation_key ?? ""];
     if (k && !ids[k]) ids[k] = id;
     if (e.translation_key === "fault_code" || e.translation_key === "ot_fault_code") deviceId = e.device_id ?? "";

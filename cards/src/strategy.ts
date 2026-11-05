@@ -72,8 +72,16 @@ class ImmergasDominusStrategy {
 function otEntities(hass: any): Record<string, string> {
   const r: Record<string, string> = {};
   for (const [id, e] of Object.entries<any>(hass?.entities ?? {}))
-    if (e.platform === "immergas_dominus" && e.translation_key && !r[e.translation_key]) r[e.translation_key] = id;
+    // 0.52.4: skip orphans (registry entries left by an earlier Modbus setup: no state, or a "restored" one) - they made
+    // an OpenTherm installation look like Modbus (#2)
+    if (e.platform === "immergas_dominus" && e.translation_key && !r[e.translation_key] && liveEntity(hass, id)) r[e.translation_key] = id;
   return r;
+}
+
+/** the entity is provided by the integration now (not just a leftover registry entry restored as unavailable) */
+function liveEntity(hass: any, id: string): boolean {
+  const s = hass?.states?.[id];
+  return !!s && !s.attributes?.restored;
 }
 
 /** OpenTherm: the same Dominus cards in the same style; only what OpenTherm has no data for is left out (heating curve
