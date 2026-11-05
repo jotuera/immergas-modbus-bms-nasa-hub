@@ -1338,5 +1338,16 @@
  "A4 · pump min. speed": "A4 · velocidade mín. bomba",
  "A5 · pump mode (0 = proportional head, 5–25 = constant ΔT)": "A5 · modo bomba (0 = proporcional, 5–25 = ΔT constante)",
  "P7 · outdoor probe correction": "P7 · correção sonda exterior",
- "boiler menu: t0/t1, t5 cycling, output P0–P2, pump, P7": "menu da caldeira: t0/t1, t5 ciclos, potência P0–P2, bomba, P7"
+ "boiler menu: t0/t1, t5 cycling, output P0–P2, pump, P7": "menu da caldeira: t0/t1, t5 ciclos, potência P0–P2, bomba, P7",
+ "Physical thermostat": "Termóstato físico",
+ "Emulated thermostat": "Termóstato emulado",
+ "Not chosen": "Não escolhido",
+ "boiler contacts 40-41 – OpenTherm does not report it; heating shows as the CH demand": "bornes 40-41 da caldeira – o OpenTherm não o indica; o aquecimento aparece como pedido",
+ " · sent ": " · enviado ",
+ "choose a temperature entity below": "escolha abaixo uma entidade de temperatura",
+ "the boiler does not report a thermostat – choose what is connected": "a caldeira não indica termóstato – escolha o que está ligado",
+ "Thermostat": "Termóstato",
+ "None": "Nenhum",
+ "Physical": "Físico",
+ "— temperature entity —": "— entidade de temperatura —"
 }

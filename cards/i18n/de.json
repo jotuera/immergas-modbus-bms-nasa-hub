@@ -1338,5 +1338,16 @@
  "A4 · pump min. speed": "A4 · min. Pumpendrehzahl",
  "A5 · pump mode (0 = proportional head, 5–25 = constant ΔT)": "A5 · Pumpenmodus (0 = proportional, 5–25 = konstantes ΔT)",
  "P7 · outdoor probe correction": "P7 · Außenfühlerkorrektur",
- "boiler menu: t0/t1, t5 cycling, output P0–P2, pump, P7": "Kesselmenü: t0/t1, t5 Takten, Leistung P0–P2, Pumpe, P7"
+ "boiler menu: t0/t1, t5 cycling, output P0–P2, pump, P7": "Kesselmenü: t0/t1, t5 Takten, Leistung P0–P2, Pumpe, P7",
+ "Physical thermostat": "Physisches Thermostat",
+ "Emulated thermostat": "Emuliertes Thermostat",
+ "Not chosen": "Nicht gewählt",
+ "boiler contacts 40-41 – OpenTherm does not report it; heating shows as the CH demand": "Kesselklemmen 40-41 – OpenTherm meldet es nicht; Heizen zeigt sich als HZ-Anforderung",
+ " · sent ": " · gesendet ",
+ "choose a temperature entity below": "wählen Sie unten eine Temperatur-Entität",
+ "the boiler does not report a thermostat – choose what is connected": "der Kessel meldet kein Thermostat – wählen Sie, was angeschlossen ist",
+ "Thermostat": "Thermostat",
+ "None": "Keins",
+ "Physical": "Physisch",
+ "— temperature entity —": "— Temperatur-Entität —"
 }

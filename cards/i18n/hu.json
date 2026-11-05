@@ -1338,5 +1338,16 @@
  "A4 · pump min. speed": "A4 · min. szivattyú fordulat",
  "A5 · pump mode (0 = proportional head, 5–25 = constant ΔT)": "A5 · szivattyú mód (0 = arányos, 5–25 = állandó ΔT)",
  "P7 · outdoor probe correction": "P7 · külső szonda korrekció",
- "boiler menu: t0/t1, t5 cycling, output P0–P2, pump, P7": "kazán menü: t0/t1, t5 ciklizálás, teljesítmény P0–P2, szivattyú, P7"
+ "boiler menu: t0/t1, t5 cycling, output P0–P2, pump, P7": "kazán menü: t0/t1, t5 ciklizálás, teljesítmény P0–P2, szivattyú, P7",
+ "Physical thermostat": "Fizikai termosztát",
+ "Emulated thermostat": "Emulált termosztát",
+ "Not chosen": "Nincs kiválasztva",
+ "boiler contacts 40-41 – OpenTherm does not report it; heating shows as the CH demand": "kazán 40-41 kapcsok – az OpenTherm nem jelzi; a fűtés fűtési igényként látszik",
+ " · sent ": " · elküldve ",
+ "choose a temperature entity below": "válasszon alább hőmérséklet entitást",
+ "the boiler does not report a thermostat – choose what is connected": "a kazán nem jelez termosztátot – válassza ki, mi van csatlakoztatva",
+ "Thermostat": "Termosztát",
+ "None": "Nincs",
+ "Physical": "Fizikai",
+ "— temperature entity —": "— hőmérséklet entitás —"
 }

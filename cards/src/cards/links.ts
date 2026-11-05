@@ -94,6 +94,7 @@ class ImmergasLinksCard extends HubCard {
       detail: isNaN(wifi) ? "" : this.t("sygnał ", "signal ") + Math.round(wifi) + " dBm" + (wifi < -80 ? this.t(" · słaby", " · weak") : "") });
     // pairs, one under the other: hub / Dominus, Modbus / zone 1 panel, BMS / system controller, NASA / EHS panel,
     // photovoltaics / dehumidifier
+    if (this.dominus && this.ot) return out;
     const ORDER = ["Hub", "Dominus", "Modbus", "Zone 1 panel", "BMS", "System controller", "NASA", "EHS panel", "Photovoltaics", "Dehumidifier"];
     return out.sort((a, b) => ORDER.indexOf(a.name[1]) - ORDER.indexOf(b.name[1]));
   }
@@ -107,8 +108,9 @@ class ImmergasLinksCard extends HubCard {
       st: live ? "ok" : "bad",
       detail: live ? this.t("OpenTherm · sesja zwalniana po każdym cyklu dla apki", "OpenTherm · session released after every cycle for the app")
         : this.t("brak odczytów OpenTherm", "no OpenTherm readings") });
-    out.push({ k: "mode", icon: "mdi:water-boiler", name: ["Kocioł", "Boiler"], bus: "Dominus · OpenTherm",
+    out.unshift({ k: "mode", icon: "mdi:water-boiler", name: ["Kocioł", "Boiler"], bus: "Dominus · OpenTherm",
       st: live ? "ok" : "bad", detail: this.bad("mode") ? "" : this.t("tryb ", "mode ") + this.txt("mode") });
+    if (this.eid("ot_thermo")) out.push(this.thermoLink());
     const code = String(this.s("err_code") ?? "").replace(/\D/g, ""), e31 = code === "31";
     const room = this.n("zone1"), ro = this.on("ot_ro"), probeRoom = this.s("ot_ntc") === "room";
     // CAR V2 emulated: no write block and the CH program AUTO - the Dominus regulator + the HA programs do its job (blue,
@@ -138,6 +140,37 @@ class ImmergasLinksCard extends HubCard {
           <div class="kn" style="left:${ro ? 23 : 3}px;background:${ro ? c("sky") : c("overlay1")}"></div></div></div>
         ${ro ? html`<div class="ld">${this.t("HA tylko czyta. Po włączeniu raz odłącz zasilanie modułu Dominus – zapomni ostatnią nastawę z HA.",
           "HA only reads. After switching it on, power-cycle the Dominus once – it forgets the last setpoint from HA.")}</div>` : nothing}` : undefined });
+  }
+
+  /** OpenTherm: the room thermostat - the boiler does not report it, so the user says what is connected: none, a
+   *  physical one (contacts 40-41) or an emulated one (Home Assistant sends an HA entity's temperature to the module) */
+  private thermoLink(): Link {
+    const mode = this.s("ot_thermo") ?? "none", a = this.so("ot_thermo")?.attributes ?? {};
+    const srcId = String(this.s("ot_room_src") ?? ""), src = srcId ? this.hass.states[srcId] : undefined;
+    const v = parseFloat(src?.state ?? ""), sent = a.room_sent_at ? Date.parse(a.room_sent_at) : NaN;
+    const st: State = mode === "physical" ? "ok" : mode === "emulated" ? (src && !isNaN(v) ? "emu" : "bad") : "off";
+    const label = mode === "physical" ? this.t("Termostat fizyczny", "Physical thermostat")
+      : mode === "emulated" ? this.t("Termostat emulowany", "Emulated thermostat") : this.t("Nie wybrano", "Not chosen");
+    const detail = mode === "physical" ? this.t("zaciski 40-41 kotła – OpenTherm nie podaje jego stanu; grzanie widać po żądaniu CO",
+        "boiler contacts 40-41 – OpenTherm does not report it; heating shows as the CH demand")
+      : mode === "emulated" ? (src && !isNaN(v) ? `${src.attributes?.friendly_name ?? srcId} ${this.f(v, 1, 1)} °C → Dominus (Data-ID 24)`
+          + (!isNaN(sent) ? this.t(" · wysłano ", " · sent ") + new Date(sent).toLocaleTimeString(this.loc, { hour: "2-digit", minute: "2-digit" }) : "")
+        : this.t("wybierz encję temperatury poniżej", "choose a temperature entity below"))
+      : this.t("kocioł nie zgłasza termostatu – zaznacz, co jest podłączone", "the boiler does not report a thermostat – choose what is connected");
+    const dom = (id: string) => id.split(".")[0];
+    const pick = (o: string) => { const id = this.eid("ot_thermo"); if (id) this.hass.callService(dom(id), "select_option", { entity_id: id, option: o }); };
+    const setSrc = (e: Event) => { const id = this.eid("ot_room_src"), val = (e.target as HTMLSelectElement).value;
+      if (id) this.hass.callService(dom(id), "set_value", { entity_id: id, value: val }); };
+    const temps = Object.values(this.hass.states as Record<string, any>)
+      .filter((s) => s.entity_id.startsWith("sensor.") && s.attributes?.device_class === "temperature" && !isNaN(parseFloat(s.state)))
+      .sort((x, y) => String(x.attributes.friendly_name ?? x.entity_id).localeCompare(String(y.attributes.friendly_name ?? y.entity_id)));
+    const opt = (o: string, lbl: string) => html`<div class="seg ${mode === o ? "on" : ""}" @click=${(e: Event) => { e.stopPropagation(); if (mode !== o) pick(o); }}>${lbl}</div>`;
+    return { k: "ot_thermo", icon: "mdi:thermostat", name: ["Termostat", "Thermostat"], bus: this.t("pokój", "room"), st, label, detail,
+      extra: html`<div class="segs" @click=${(e: Event) => e.stopPropagation()}>${opt("none", this.t("Brak", "None"))}${opt("physical", this.t("Fizyczny", "Physical"))}${opt("emulated", this.t("Emulowany", "Emulated"))}</div>
+        ${mode === "emulated" && this.eid("ot_room_src") ? html`<select class="src" @click=${(e: Event) => e.stopPropagation()} @change=${setSrc}>
+          <option value="" ?selected=${!srcId}>${this.t("— encja temperatury —", "— temperature entity —")}</option>
+          ${temps.map((s) => html`<option value=${s.entity_id} ?selected=${s.entity_id === srcId}>${s.attributes.friendly_name ?? s.entity_id} · ${this.f(parseFloat(s.state), 1, 1)} °C</option>`)}
+        </select>` : nothing}` };
   }
 
   protected body() {
@@ -192,6 +225,11 @@ class ImmergasLinksCard extends HubCard {
     .ls ha-icon { --mdc-icon-size: 14px; }
     .ld { font-size: 10px; opacity: .6; margin-top: 2px; line-height: 1.3; overflow-wrap: anywhere; }
     .ro { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 7px; font-size: 11px; font-weight: 800; }
+    .segs { display: flex; gap: 4px; margin-top: 7px; flex-wrap: wrap; }
+    .seg { cursor: pointer; font-size: 10.5px; font-weight: 800; padding: 4px 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,.12); opacity: .7; }
+    .seg.on { opacity: 1; background: rgba(var(--ih-sky-rgb), .25); border-color: rgba(var(--ih-sky-rgb), .6); }
+    .src { margin-top: 6px; width: 100%; font: inherit; font-size: 11px; padding: 5px 6px; border-radius: 8px; background: transparent; color: inherit;
+      border: 1px solid rgba(255,255,255,.18); }
   `];
 }
 

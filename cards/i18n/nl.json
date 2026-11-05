@@ -1338,5 +1338,16 @@
  "A4 · pump min. speed": "A4 · min. pomptoerental",
  "A5 · pump mode (0 = proportional head, 5–25 = constant ΔT)": "A5 · pompmodus (0 = proportioneel, 5–25 = constante ΔT)",
  "P7 · outdoor probe correction": "P7 · correctie buitenvoeler",
- "boiler menu: t0/t1, t5 cycling, output P0–P2, pump, P7": "ketelmenu: t0/t1, t5 pendelen, vermogen P0–P2, pomp, P7"
+ "boiler menu: t0/t1, t5 cycling, output P0–P2, pump, P7": "ketelmenu: t0/t1, t5 pendelen, vermogen P0–P2, pomp, P7",
+ "Physical thermostat": "Fysieke thermostaat",
+ "Emulated thermostat": "Geëmuleerde thermostaat",
+ "Not chosen": "Niet gekozen",
+ "boiler contacts 40-41 – OpenTherm does not report it; heating shows as the CH demand": "ketelklemmen 40-41 – OpenTherm meldt hem niet; verwarmen is zichtbaar als CV-vraag",
+ " · sent ": " · verzonden ",
+ "choose a temperature entity below": "kies hieronder een temperatuurentiteit",
+ "the boiler does not report a thermostat – choose what is connected": "de ketel meldt geen thermostaat – kies wat is aangesloten",
+ "Thermostat": "Thermostaat",
+ "None": "Geen",
+ "Physical": "Fysiek",
+ "— temperature entity —": "— temperatuurentiteit —"
 }

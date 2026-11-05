@@ -4691,7 +4691,8 @@
   "en": "room",
   "pl": "pokój",
   "files": [
-   "curve.ts"
+   "curve.ts",
+   "links.ts"
   ]
  },
  {
@@ -6175,15 +6176,92 @@
   ]
  },
  {
-  "en": "Connected",
-  "pl": "Połączono",
+  "en": "Physical thermostat",
+  "pl": "Termostat fizyczny",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Emulated thermostat",
+  "pl": "Termostat emulowany",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Not chosen",
+  "pl": "Nie wybrano",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "boiler contacts 40-41 – OpenTherm does not report it; heating shows as the CH demand",
+  "pl": "zaciski 40-41 kotła – OpenTherm nie podaje jego stanu; grzanie widać po żądaniu CO",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": " · sent ",
+  "pl": " · wysłano ",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "choose a temperature entity below",
+  "pl": "wybierz encję temperatury poniżej",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "the boiler does not report a thermostat – choose what is connected",
+  "pl": "kocioł nie zgłasza termostatu – zaznacz, co jest podłączone",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Thermostat",
+  "pl": "Termostat",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "None",
+  "pl": "Brak",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Physical",
+  "pl": "Fizyczny",
   "files": [
    "links.ts"
   ]
  },
  {
   "en": "Emulated",
-  "pl": "Emulacja",
+  "pl": "Emulowany",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "— temperature entity —",
+  "pl": "— encja temperatury —",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "Connected",
+  "pl": "Połączono",
   "files": [
    "links.ts"
   ]
