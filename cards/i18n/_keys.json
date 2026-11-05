@@ -56,6 +56,30 @@
   ]
  },
  {
+  "en": "Summer",
+  "pl": "Lato",
+  "files": [
+   "base.ts",
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "Winter",
+  "pl": "Zima",
+  "files": [
+   "base.ts",
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "CH only",
+  "pl": "Tylko CO",
+  "files": [
+   "base.ts",
+   "mode.ts"
+  ]
+ },
+ {
   "en": "The boiler does not wait for the remote (no E31)",
   "pl": "Kocioł nie czeka na pilota (brak E31)",
   "files": [
@@ -6401,29 +6425,8 @@
   ]
  },
  {
-  "en": "Summer",
-  "pl": "Lato",
-  "files": [
-   "mode.ts"
-  ]
- },
- {
-  "en": "Winter",
-  "pl": "Zima",
-  "files": [
-   "mode.ts"
-  ]
- },
- {
   "en": "Boiler switched off with its button (OFF) – switch it on at the boiler",
   "pl": "Piec wyłączony przyciskiem (OFF) – włącz go na piecu",
-  "files": [
-   "mode.ts"
-  ]
- },
- {
-  "en": "CH only",
-  "pl": "Tylko CO",
   "files": [
    "mode.ts"
   ]

@@ -109,6 +109,11 @@ export abstract class HubCard extends LitElement {
   /** state as Home Assistant shows it (translated enum / select option), e.g. Dominus "economy" -> "Eko" */
   protected txt(k: Key): string | undefined {
     const so = this.so(k);
+    // OpenTherm mode select: the app's names also when the entity has no translation (e.g. a stand-in helper)
+    if (so && k === "mode" && this.ot) {
+      const m: Record<string, [string, string]> = { off: ["Standby", "Standby"], water: ["Lato", "Summer"], heating_water: ["Zima", "Winter"], heating: ["Tylko CO", "CH only"] };
+      if (m[so.state]) return this.t(m[so.state][0], m[so.state][1]);
+    }
     return so ? this.hass.formatEntityState?.(so) ?? so.state : undefined;
   }
   /** entities come from the Immergas Dominus integration, not from the hub (reduced view, no heat-pump data) */
