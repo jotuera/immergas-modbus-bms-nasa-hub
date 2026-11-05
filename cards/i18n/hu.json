@@ -1161,5 +1161,17 @@
  "· physical panel: its own sensor, the source choice is inactive": "· fizikai panel: saját érzékelő, a forrás választása inaktív",
  "raise R05 by 2 K and T05 to 15 min": "emelje R05-öt 2 K-nel és T05-öt 15 min-re",
  "raise R05 by 2 K (T05 is already at its 15 min maximum)": "emelje az R05-öt 2 K-nel (a T05 már a max. 15 percen van)",
- " – 15 min is the boiler maximum, then R05": " – 15 perc a kazán maximuma, utána R05"
+ " – 15 min is the boiler maximum, then R05": " – 15 perc a kazán maximuma, utána R05",
+ "registers read and written by the boiler": "a kazán által olvasott és írt regiszterek",
+ "results of the PDU scanner (Scan PDU …)": "a PDU-szkenner eredményei (PDU szkennelése …)",
+ "every NASA message": "minden NASA üzenet",
+ "Bus map": "Busztérkép",
+ "Add the hub_busmap.yaml package to collect the bus map.": "Adja hozzá a hub_busmap.yaml csomagot a busztérkép gyűjtéséhez.",
+ "undescribed PDUs": "leíratlan PDU-k",
+ "Boiler and heat pump model (rating plate)": "Kazán és hőszivattyú típusa (adattábla)",
+ "Prepare report": "Bejelentés előkészítése",
+ "Open the pre-filled issue ": "Kitöltött bejelentés megnyitása ",
+ "Nothing has been sent: the link opens GitHub with the issue filled in (model, hub version, the map – no addresses or passwords). Check it and press Create, or close the page.": "Semmi sem lett elküldve: a link megnyitja a GitHubot a kitöltött bejelentéssel (típus, hub verzió, a térkép – címek és jelszavak nélkül). Ellenőrizze, és nyomja meg a Create gombot, vagy zárja be az oldalt.",
+ "The hub did not answer within 15 s – is it online?": "A hub 15 s alatt nem válaszolt – online van?",
+ "The map builds up from the hub start. TT is filled by the PDU scanner (Scan PDU … buttons). Constant zeros may come alive in winter – a report from another model helps the most.": "A térkép a hub indulásától gyűlik. A TT-t a PDU-szkenner tölti fel (PDU szkennelése … gombok). Az állandó nullák télen életre kelhetnek – egy másik típus bejelentése segít a legtöbbet."
 }

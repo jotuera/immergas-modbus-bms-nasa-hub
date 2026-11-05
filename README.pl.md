@@ -182,6 +182,16 @@ W Magis Pro (bez kotła gazowego) encja zostaje na 0 i nie jest potrzebna.
   dostaje jedną spójną wartość; emulacja obsługuje piec także wtedy, gdy Home Assistant albo Wi-Fi nie działa.
 - Każdy przełącznik na kartach, który zmienia coś w piecu, wymaga **dwóch dotknięć**.
 
+## Pomóż zmapować kolejne rejestry
+
+Pakiet `hub_busmap.yaml` zbiera wszystko, co hub widzi, a czego żadna encja jeszcze nie opisuje: D+/D- (każdy rejestr,
+który piec czyta albo zapisuje), T-/T+ (wyniki skanera PDU, `tt_scanner.yaml`) i F1/F2 (każda wiadomość NASA) – z
+ostatnią, najmniejszą i największą wartością oraz liczbą zmian. Karta **Mapa magistral** pokazuje liczniki; wpisz
+**model kotła i pompy**, naciśnij **Przygotuj zgłoszenie**, a karta zbuduje link do **gotowego zgłoszenia na
+GitHubie**. Nic nie jest wysyłane automatycznie: sprawdzasz je na GitHubie i klikasz *Create* – nie ma w nim adresów
+ani haseł. Rejestry, które dziś stoją na 0, mogą ożyć zimą, przy odszranianiu albo na innym modelu, dlatego
+najcenniejsze są zgłoszenia z innych instalacji.
+
 ## Dokumentacja
 
 Masz inny model, więcej stref albo akcesorium? **[Zbieranie logów](docs/collecting-logs.pl.md)** pokazuje, jak nagrać

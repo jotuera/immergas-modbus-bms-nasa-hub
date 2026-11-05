@@ -1,0 +1,90 @@
+# IMMERGAS Modbus BMS NASA Hub - package "hub_busmap"
+# Bus map report: what the hub has seen on D+/D- (every decoded register), T-/T+ (the PDU scanner) and F1/F2 (every
+# NASA message) that no entity describes yet. "Report bus map …" sends it as an `esphome.immergas_bus_map` event;
+# the "immergas-busmap" card turns it into a link to a pre-filled GitHub issue (boiler model, hub version, the map).
+# Nothing leaves Home Assistant unless the user opens the link and presses Create on GitHub.
+# Needs dd_core (immergas_core), tt_scanner and f1f2_core. Part of jotuera/immergas-modbus-bms-nasa-hub
+# (PolyForm Noncommercial 1.0.0).
+
+text:
+  - platform: template
+    name: "${n_hub_boiler_model}"
+    id: hub_boiler_model
+    icon: mdi:water-boiler
+    entity_category: config
+    mode: text
+    max_length: 80
+    optimistic: true
+    restore_value: true
+    initial_value: ""
+
+sensor:
+  - platform: template
+    name: "${n_hub_map_dd}"
+    id: hub_map_dd_unknown
+    icon: mdi:map-search-outline
+    entity_category: diagnostic
+    accuracy_decimals: 0
+    update_interval: 60s
+    lambda: return (float) immergas::busmap::dd().unknown();
+
+  - platform: template
+    name: "${n_hub_map_tt}"
+    id: hub_map_tt_unknown
+    icon: mdi:map-search-outline
+    entity_category: diagnostic
+    accuracy_decimals: 0
+    update_interval: 60s
+    lambda: return (float) immergas::busmap::tt().unknown();
+
+  - platform: template
+    name: "${n_hub_map_ff}"
+    id: hub_map_ff_unknown
+    icon: mdi:map-search-outline
+    entity_category: diagnostic
+    accuracy_decimals: 0
+    update_interval: 60s
+    lambda: return (float) id(f1f2_hub)->bus_map_unknown();
+
+button:
+  - platform: template
+    name: "${n_hub_map_dd_report}"
+    id: hub_map_dd_report
+    icon: mdi:github
+    entity_category: diagnostic
+    on_press:
+      - homeassistant.event:
+          event: esphome.immergas_bus_map
+          data:
+            bus: DD
+            hub_version: "${hub_project_version}"
+            model: !lambda return id(hub_boiler_model).state;
+            map: !lambda return immergas::busmap::dd().report(immergas::busmap::dd_key, 5500);
+
+  - platform: template
+    name: "${n_hub_map_tt_report}"
+    id: hub_map_tt_report
+    icon: mdi:github
+    entity_category: diagnostic
+    on_press:
+      - homeassistant.event:
+          event: esphome.immergas_bus_map
+          data:
+            bus: TT
+            hub_version: "${hub_project_version}"
+            model: !lambda return id(hub_boiler_model).state;
+            map: !lambda return immergas::busmap::tt().report(immergas::busmap::tt_key, 5500);
+
+  - platform: template
+    name: "${n_hub_map_ff_report}"
+    id: hub_map_ff_report
+    icon: mdi:github
+    entity_category: diagnostic
+    on_press:
+      - homeassistant.event:
+          event: esphome.immergas_bus_map
+          data:
+            bus: FF
+            hub_version: "${hub_project_version}"
+            model: !lambda return id(hub_boiler_model).state;
+            map: !lambda return id(f1f2_hub)->bus_map_report(5500);

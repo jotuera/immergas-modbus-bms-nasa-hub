@@ -628,6 +628,90 @@
   ]
  },
  {
+  "en": "registers read and written by the boiler",
+  "pl": "rejestry odczytane i zapisane przez piec",
+  "files": [
+   "busmap.ts"
+  ]
+ },
+ {
+  "en": "results of the PDU scanner (Scan PDU …)",
+  "pl": "wyniki skanera PDU (Skanuj PDU …)",
+  "files": [
+   "busmap.ts"
+  ]
+ },
+ {
+  "en": "every NASA message",
+  "pl": "wszystkie wiadomości NASA",
+  "files": [
+   "busmap.ts"
+  ]
+ },
+ {
+  "en": "Bus map",
+  "pl": "Mapa magistral",
+  "files": [
+   "busmap.ts"
+  ]
+ },
+ {
+  "en": "Add the hub_busmap.yaml package to collect the bus map.",
+  "pl": "Wgraj pakiet hub_busmap.yaml, żeby zbierać mapę magistral.",
+  "files": [
+   "busmap.ts"
+  ]
+ },
+ {
+  "en": "undescribed PDUs",
+  "pl": "nieopisane PDU",
+  "files": [
+   "busmap.ts"
+  ]
+ },
+ {
+  "en": "Boiler and heat pump model (rating plate)",
+  "pl": "Model kotła i pompy (z tabliczki)",
+  "files": [
+   "busmap.ts"
+  ]
+ },
+ {
+  "en": "Prepare report",
+  "pl": "Przygotuj zgłoszenie",
+  "files": [
+   "busmap.ts"
+  ]
+ },
+ {
+  "en": "Open the pre-filled issue ",
+  "pl": "Otwórz gotowe zgłoszenie ",
+  "files": [
+   "busmap.ts"
+  ]
+ },
+ {
+  "en": "Nothing has been sent: the link opens GitHub with the issue filled in (model, hub version, the map – no addresses or passwords). Check it and press Create, or close the page.",
+  "pl": "Nic nie zostało wysłane: link otwiera GitHub z wypełnionym zgłoszeniem (model, wersja huba, mapa – bez adresów i haseł). Sprawdź je i naciśnij Create albo zamknij stronę.",
+  "files": [
+   "busmap.ts"
+  ]
+ },
+ {
+  "en": "The hub did not answer within 15 s – is it online?",
+  "pl": "Hub nie odpowiedział w 15 s – czy jest online?",
+  "files": [
+   "busmap.ts"
+  ]
+ },
+ {
+  "en": "The map builds up from the hub start. TT is filled by the PDU scanner (Scan PDU … buttons). Constant zeros may come alive in winter – a report from another model helps the most.",
+  "pl": "Mapa zbiera się od startu huba. TT wypełnia skaner PDU (przyciski Skanuj PDU …). Stałe zera zimą też mogą ożyć – zgłoszenie z innego modelu pomaga najbardziej.",
+  "files": [
+   "busmap.ts"
+  ]
+ },
+ {
   "en": "Cycling",
   "pl": "Taktowanie",
   "files": [

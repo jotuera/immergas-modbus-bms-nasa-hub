@@ -1161,5 +1161,17 @@
  "· physical panel: its own sensor, the source choice is inactive": "· fysiek paneel: eigen voeler, bronkeuze inactief",
  "raise R05 by 2 K and T05 to 15 min": "verhoog R05 met 2 K en T05 naar 15 min",
  "raise R05 by 2 K (T05 is already at its 15 min maximum)": "verhoog R05 met 2 K (T05 staat al op het maximum van 15 min)",
- " – 15 min is the boiler maximum, then R05": " – 15 min is het ketelmaximum, daarna R05"
+ " – 15 min is the boiler maximum, then R05": " – 15 min is het ketelmaximum, daarna R05",
+ "registers read and written by the boiler": "registers die de ketel leest en schrijft",
+ "results of the PDU scanner (Scan PDU …)": "resultaten van de PDU-scanner (PDU's scannen …)",
+ "every NASA message": "alle NASA-berichten",
+ "Bus map": "Buskaart",
+ "Add the hub_busmap.yaml package to collect the bus map.": "Voeg het pakket hub_busmap.yaml toe om de buskaart te verzamelen.",
+ "undescribed PDUs": "onbeschreven PDU's",
+ "Boiler and heat pump model (rating plate)": "Model ketel en warmtepomp (typeplaat)",
+ "Prepare report": "Melding voorbereiden",
+ "Open the pre-filled issue ": "Ingevulde melding openen ",
+ "Nothing has been sent: the link opens GitHub with the issue filled in (model, hub version, the map – no addresses or passwords). Check it and press Create, or close the page.": "Er is niets verstuurd: de link opent GitHub met de ingevulde melding (model, hubversie, de kaart – zonder adressen of wachtwoorden). Controleer hem en druk op Create, of sluit de pagina.",
+ "The hub did not answer within 15 s – is it online?": "De hub antwoordde niet binnen 15 s – is hij online?",
+ "The map builds up from the hub start. TT is filled by the PDU scanner (Scan PDU … buttons). Constant zeros may come alive in winter – a report from another model helps the most.": "De kaart wordt verzameld vanaf de start van de hub. TT wordt gevuld door de PDU-scanner (knoppen PDU's scannen …). Constante nullen kunnen in de winter tot leven komen – een melding van een ander model helpt het meest."
 }

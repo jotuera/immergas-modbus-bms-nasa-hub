@@ -1161,5 +1161,17 @@
  "· physical panel: its own sensor, the source choice is inactive": "· physisches Bedienfeld: eigener Fühler, Quellenwahl inaktiv",
  "raise R05 by 2 K and T05 to 15 min": "R05 um 2 K und T05 auf 15 min anheben",
  "raise R05 by 2 K (T05 is already at its 15 min maximum)": "R05 um 2 K anheben (T05 steht schon auf max. 15 min)",
- " – 15 min is the boiler maximum, then R05": " – 15 min ist das Kesselmaximum, dann R05"
+ " – 15 min is the boiler maximum, then R05": " – 15 min ist das Kesselmaximum, dann R05",
+ "registers read and written by the boiler": "vom Kessel gelesene und geschriebene Register",
+ "results of the PDU scanner (Scan PDU …)": "Ergebnisse des PDU-Scanners (PDU scannen …)",
+ "every NASA message": "alle NASA-Nachrichten",
+ "Bus map": "Buskarte",
+ "Add the hub_busmap.yaml package to collect the bus map.": "Fügen Sie das Paket hub_busmap.yaml hinzu, um die Buskarte zu sammeln.",
+ "undescribed PDUs": "unbeschriebene PDUs",
+ "Boiler and heat pump model (rating plate)": "Kessel- und Wärmepumpenmodell (Typenschild)",
+ "Prepare report": "Bericht vorbereiten",
+ "Open the pre-filled issue ": "Vorausgefülltes Issue öffnen ",
+ "Nothing has been sent: the link opens GitHub with the issue filled in (model, hub version, the map – no addresses or passwords). Check it and press Create, or close the page.": "Nichts wurde gesendet: der Link öffnet GitHub mit dem ausgefüllten Issue (Modell, Hub-Version, die Karte – keine Adressen oder Passwörter). Prüfen Sie es und drücken Sie Create, oder schließen Sie die Seite.",
+ "The hub did not answer within 15 s – is it online?": "Der Hub hat nicht innerhalb von 15 s geantwortet – ist er online?",
+ "The map builds up from the hub start. TT is filled by the PDU scanner (Scan PDU … buttons). Constant zeros may come alive in winter – a report from another model helps the most.": "Die Karte wird ab dem Hub-Start gesammelt. TT füllt der PDU-Scanner (Tasten PDU scannen …). Konstante Nullen können im Winter lebendig werden – ein Bericht von einem anderen Modell hilft am meisten."
 }

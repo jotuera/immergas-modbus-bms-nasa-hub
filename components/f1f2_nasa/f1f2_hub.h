@@ -109,6 +109,12 @@ class NasaHub : public Component, public uart::UARTDevice {
       this->high_freq_.stop();
   }
   bool is_sniffer_enabled() const { return this->sniffer_; }
+  // Bus map (always on): every message id seen from every device with min / max / changes; the report lists the ids
+  // no entity of this component describes (for the "Report bus map" button, a pre-filled GitHub issue).
+  std::string bus_map_report(size_t limit) const;
+  size_t bus_map_size() const { return this->bus_map_.size(); }
+  size_t bus_map_unknown() const;
+  void bus_map_clear() { this->bus_map_.clear(); }
   // Discovery: like the sniffer value-change log, but every change line also carries a snapshot of the key
   // reference signals (compressor Hz, modes, defrost, night, 3-way valve, outdoor temp) so an unknown PDU's
   // change can be correlated at a glance. Pair with the tools/sniffer_correlate.py analyser.
@@ -221,6 +227,12 @@ class NasaHub : public Component, public uart::UARTDevice {
   std::map<uint16_t, uint32_t> last_value_;  // last raw value per message id (for write readback)
 
   std::map<uint32_t, uint32_t> sniff_last_;  // (source<<16 | id) -> last value
+  struct MapStat {
+    uint32_t min, max, last, changes;
+    bool known;
+  };
+  std::map<uint64_t, MapStat> bus_map_;      // (source raw << 16 | id) -> statistics
+  std::map<uint32_t, std::string> map_src_;  // source raw -> "20.00.01"
 
   // devices seen on the bus (address -> frames) for address discovery
   std::map<uint32_t, uint32_t> devices_;

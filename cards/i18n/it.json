@@ -1161,5 +1161,17 @@
  "· physical panel: its own sensor, the source choice is inactive": "· pannello fisico: il suo sensore, la scelta della sorgente è inattiva",
  "raise R05 by 2 K and T05 to 15 min": "alza R05 di 2 K e T05 a 15 min",
  "raise R05 by 2 K (T05 is already at its 15 min maximum)": "alza R05 di 2 K (T05 è già al massimo di 15 min)",
- " – 15 min is the boiler maximum, then R05": " – 15 min è il massimo della caldaia, poi R05"
+ " – 15 min is the boiler maximum, then R05": " – 15 min è il massimo della caldaia, poi R05",
+ "registers read and written by the boiler": "registri letti e scritti dalla caldaia",
+ "results of the PDU scanner (Scan PDU …)": "risultati dello scanner PDU (Scansiona PDU …)",
+ "every NASA message": "tutti i messaggi NASA",
+ "Bus map": "Mappa dei bus",
+ "Add the hub_busmap.yaml package to collect the bus map.": "Aggiungi il pacchetto hub_busmap.yaml per raccogliere la mappa dei bus.",
+ "undescribed PDUs": "PDU non descritti",
+ "Boiler and heat pump model (rating plate)": "Modello caldaia e pompa (targhetta)",
+ "Prepare report": "Prepara la segnalazione",
+ "Open the pre-filled issue ": "Apri la segnalazione precompilata ",
+ "Nothing has been sent: the link opens GitHub with the issue filled in (model, hub version, the map – no addresses or passwords). Check it and press Create, or close the page.": "Non è stato inviato nulla: il link apre GitHub con la segnalazione compilata (modello, versione dell’hub, la mappa – senza indirizzi né password). Controllala e premi Create, oppure chiudi la pagina.",
+ "The hub did not answer within 15 s – is it online?": "L’hub non ha risposto entro 15 s – è online?",
+ "The map builds up from the hub start. TT is filled by the PDU scanner (Scan PDU … buttons). Constant zeros may come alive in winter – a report from another model helps the most.": "La mappa si raccoglie dall’avvio dell’hub. TT è riempito dallo scanner PDU (pulsanti Scansiona PDU …). Gli zeri costanti possono attivarsi d’inverno – una segnalazione da un altro modello aiuta di più."
 }

@@ -1161,5 +1161,17 @@
  "· physical panel: its own sensor, the source choice is inactive": "· fyzický panel: vlastní čidlo, volba zdroje neaktivní",
  "raise R05 by 2 K and T05 to 15 min": "zvyšte R05 o 2 K a T05 na 15 min",
  "raise R05 by 2 K (T05 is already at its 15 min maximum)": "zvyšte R05 o 2 K (T05 už má max. 15 min)",
- " – 15 min is the boiler maximum, then R05": " – 15 min je maximum kotle, dál R05"
+ " – 15 min is the boiler maximum, then R05": " – 15 min je maximum kotle, dál R05",
+ "registers read and written by the boiler": "registry čtené a zapisované kotlem",
+ "results of the PDU scanner (Scan PDU …)": "výsledky skeneru PDU (Skenovat PDU …)",
+ "every NASA message": "všechny zprávy NASA",
+ "Bus map": "Mapa sběrnic",
+ "Add the hub_busmap.yaml package to collect the bus map.": "Přidejte balíček hub_busmap.yaml pro sběr mapy sběrnic.",
+ "undescribed PDUs": "nepopsané PDU",
+ "Boiler and heat pump model (rating plate)": "Model kotle a čerpadla (typový štítek)",
+ "Prepare report": "Připravit hlášení",
+ "Open the pre-filled issue ": "Otevřít připravené hlášení ",
+ "Nothing has been sent: the link opens GitHub with the issue filled in (model, hub version, the map – no addresses or passwords). Check it and press Create, or close the page.": "Nic nebylo odesláno: odkaz otevře GitHub s vyplněným hlášením (model, verze hubu, mapa – bez adres a hesel). Zkontrolujte ho a stiskněte Create, nebo stránku zavřete.",
+ "The hub did not answer within 15 s – is it online?": "Hub neodpověděl do 15 s – je online?",
+ "The map builds up from the hub start. TT is filled by the PDU scanner (Scan PDU … buttons). Constant zeros may come alive in winter – a report from another model helps the most.": "Mapa se sbírá od startu hubu. TT plní skener PDU (tlačítka Skenovat PDU …). Stálé nuly mohou v zimě ožít – nejvíc pomůže hlášení z jiného modelu."
 }

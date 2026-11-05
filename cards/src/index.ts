@@ -14,6 +14,7 @@ import "./cards/settings";
 import "./cards/diagram";
 import "./cards/charts";
 import "./cards/links";
+import "./cards/busmap";
 import "./strategy";
 
-console.info("%c IMMERGAS-HUB-CARDS %c 0.52.5 ", "background:#fab387;color:#1e1e2e;font-weight:700", "background:#313244;color:#cdd6f4");
+console.info("%c IMMERGAS-HUB-CARDS %c 0.53.0 ", "background:#fab387;color:#1e1e2e;font-weight:700", "background:#313244;color:#cdd6f4");

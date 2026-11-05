@@ -1697,6 +1697,11 @@ interval:
           };
 
           auto handle_pdu = [&](uint8_t addr, uint8_t func, uint16_t reg, int value, const char *source) {
+            // 1.2.1 - bus map: every register seen, for the "Report bus map" button (bus_map.h)
+            {
+              uint32_t kind = (source[0] == 'W') ? 'W' : (func == 0x04 ? 'I' : 'R');
+              immergas::busmap::dd().record(((uint32_t) addr << 24) | (kind << 16) | reg, value, is_known_pdu(addr, reg));
+            }
             // v1.2.0 - decoded registers + optional bus sniffer (before everything else, also before the 0x1E "return").
             {
               char kind = (source[0] == 'W') ? 'W' : (func == 0x04 ? 'I' : 'R');  // R = func03 reply, I = func04 reply, W = boiler write

@@ -180,6 +180,16 @@ starts from zero. On a Magis Pro (no gas boiler) the entity stays at 0 and is no
   boiler gets one consistent value; the emulation keeps serving the boiler when Home Assistant or Wi-Fi is down.
 - Every switch on the cards that changes the boiler needs **two taps**.
 
+## Help map more registers
+
+The `hub_busmap.yaml` package collects everything the hub sees that no entity describes yet: D+/D- (every register
+the boiler reads or writes), T-/T+ (the results of the PDU scanner, `tt_scanner.yaml`) and F1/F2 (every NASA message),
+with the last, min and max value and how often it changed. The **Bus map** card shows the counts; type the **boiler and
+heat pump model**, press **Prepare report** and the card builds a link to a **pre-filled GitHub issue**. Nothing is
+sent automatically: you check it on GitHub and press *Create* – no addresses or passwords are in it. Registers that
+stay 0 now may come alive in winter, during a defrost or on another model, so reports from other installations help
+the most.
+
 ## Documentation
 
 Have a different model, more zones or an accessory? **[Collecting logs](docs/collecting-logs.md)** shows how to

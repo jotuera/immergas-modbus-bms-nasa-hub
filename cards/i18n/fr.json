@@ -1161,5 +1161,17 @@
  "· physical panel: its own sensor, the source choice is inactive": "· panneau physique : son propre capteur, le choix de la source est inactif",
  "raise R05 by 2 K and T05 to 15 min": "augmenter R05 de 2 K et T05 à 15 min",
  "raise R05 by 2 K (T05 is already at its 15 min maximum)": "augmentez R05 de 2 K (T05 est déjà à son maximum de 15 min)",
- " – 15 min is the boiler maximum, then R05": " – 15 min est le maximum de la chaudière, ensuite R05"
+ " – 15 min is the boiler maximum, then R05": " – 15 min est le maximum de la chaudière, ensuite R05",
+ "registers read and written by the boiler": "registres lus et écrits par la chaudière",
+ "results of the PDU scanner (Scan PDU …)": "résultats du scanner de PDU (Scanner les PDU …)",
+ "every NASA message": "tous les messages NASA",
+ "Bus map": "Carte des bus",
+ "Add the hub_busmap.yaml package to collect the bus map.": "Ajoutez le paquet hub_busmap.yaml pour collecter la carte des bus.",
+ "undescribed PDUs": "PDU non décrits",
+ "Boiler and heat pump model (rating plate)": "Modèle chaudière et PAC (plaque signalétique)",
+ "Prepare report": "Préparer le rapport",
+ "Open the pre-filled issue ": "Ouvrir le rapport prérempli ",
+ "Nothing has been sent: the link opens GitHub with the issue filled in (model, hub version, the map – no addresses or passwords). Check it and press Create, or close the page.": "Rien n’a été envoyé : le lien ouvre GitHub avec le rapport rempli (modèle, version du hub, la carte – sans adresses ni mots de passe). Vérifiez-le et appuyez sur Create, ou fermez la page.",
+ "The hub did not answer within 15 s – is it online?": "Le hub n’a pas répondu en 15 s – est-il en ligne ?",
+ "The map builds up from the hub start. TT is filled by the PDU scanner (Scan PDU … buttons). Constant zeros may come alive in winter – a report from another model helps the most.": "La carte se construit depuis le démarrage du hub. TT est rempli par le scanner de PDU (boutons Scanner les PDU …). Les zéros constants peuvent s’animer en hiver – un rapport d’un autre modèle aide le plus."
 }

@@ -1161,5 +1161,17 @@
  "· physical panel: its own sensor, the source choice is inactive": "· panel físico: su propio sensor, la elección de fuente está inactiva",
  "raise R05 by 2 K and T05 to 15 min": "sube R05 en 2 K y T05 a 15 min",
  "raise R05 by 2 K (T05 is already at its 15 min maximum)": "sube R05 en 2 K (T05 ya está en su máximo de 15 min)",
- " – 15 min is the boiler maximum, then R05": " – 15 min es el máximo de la caldera, luego R05"
+ " – 15 min is the boiler maximum, then R05": " – 15 min es el máximo de la caldera, luego R05",
+ "registers read and written by the boiler": "registros leídos y escritos por la caldera",
+ "results of the PDU scanner (Scan PDU …)": "resultados del escáner de PDU (Escanear PDU …)",
+ "every NASA message": "todos los mensajes NASA",
+ "Bus map": "Mapa de buses",
+ "Add the hub_busmap.yaml package to collect the bus map.": "Añada el paquete hub_busmap.yaml para recoger el mapa de buses.",
+ "undescribed PDUs": "PDU sin describir",
+ "Boiler and heat pump model (rating plate)": "Modelo de caldera y bomba (placa de características)",
+ "Prepare report": "Preparar informe",
+ "Open the pre-filled issue ": "Abrir el informe rellenado ",
+ "Nothing has been sent: the link opens GitHub with the issue filled in (model, hub version, the map – no addresses or passwords). Check it and press Create, or close the page.": "No se ha enviado nada: el enlace abre GitHub con el informe rellenado (modelo, versión del hub, el mapa – sin direcciones ni contraseñas). Revíselo y pulse Create, o cierre la página.",
+ "The hub did not answer within 15 s – is it online?": "El hub no respondió en 15 s – ¿está en línea?",
+ "The map builds up from the hub start. TT is filled by the PDU scanner (Scan PDU … buttons). Constant zeros may come alive in winter – a report from another model helps the most.": "El mapa se recoge desde el arranque del hub. TT lo rellena el escáner de PDU (botones Escanear PDU …). Los ceros constantes pueden activarse en invierno – un informe de otro modelo es lo que más ayuda."
 }

@@ -1,0 +1,39 @@
+name: Bus map
+description: Undescribed registers of D+/D-, T-/T+ or F1/F2 from your installation (made by the hub's Bus map card).
+title: "Bus map: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks! This report was prepared by the **Bus map** card (*Prepare report*). It holds only register / PDU
+        numbers and values the hub has seen and no entity describes yet - no addresses or passwords. Check it and
+        press *Create*. Registers that stay 0 may come alive in another season or on another model.
+  - type: input
+    id: model
+    attributes:
+      label: Boiler and heat pump model
+      description: e.g. Magis Pro 6 ErP + Victrix Tera 24 (as on the rating plates)
+    validations:
+      required: true
+  - type: input
+    id: bus
+    attributes:
+      label: Bus
+      description: DD (D+/D-), TT (T-/T+) or FF (F1/F2)
+  - type: input
+    id: hub_version
+    attributes:
+      label: Hub version
+  - type: textarea
+    id: map
+    attributes:
+      label: Bus map
+      description: "DD keys: address + R (read reply) / I (input reply) / W (boiler write) + register, e.g. 29R2001. TT: PDU. FF: device + NASA message id."
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: What was the system doing (heating, DHW, defrost, cooling, a fault)? Anything you changed on the panel?

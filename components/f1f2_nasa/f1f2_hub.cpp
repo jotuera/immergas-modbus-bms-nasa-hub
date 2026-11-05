@@ -236,6 +236,25 @@ void NasaHub::handle_packet_(const Packet &p) {
   uint32_t src = p.src.raw();
   for (const Message &m : p.messages) {
     this->last_value_[m.id] = m.value;  // remember every value, for control readback
+    if (m.kind != MessageKind::STRUCTURE) {
+      uint64_t key = (uint64_t(src) << 16) | m.id;
+      auto bm = this->bus_map_.find(key);
+      uint32_t v = uint32_t(m.value);
+      if (bm == this->bus_map_.end()) {
+        if (this->bus_map_.size() < 800) {
+          this->bus_map_[key] = MapStat{v, v, v, 0, this->listeners_.count(m.id) > 0};
+          if (!this->map_src_.count(src))
+            this->map_src_[src] = p.src.to_string();
+        }
+      } else {
+        MapStat &s = bm->second;
+        if (v != s.last)
+          s.changes++;
+        s.last = v;
+        s.min = std::min(s.min, v);
+        s.max = std::max(s.max, v);
+      }
+    }
     auto it = this->listeners_.find(m.id);
     if (it == this->listeners_.end())
       continue;
@@ -611,6 +630,52 @@ void NasaHub::publish_stats_() {
   if (this->timeouts_sensor_ != nullptr)
     this->timeouts_sensor_->publish_state(this->timeouts_);
 #endif
+}
+
+// ---------------------------------------------------------------- bus map
+
+size_t NasaHub::bus_map_unknown() const {
+  size_t n = 0;
+  for (auto &kv : this->bus_map_)
+    n += kv.second.known ? 0 : 1;
+  return n;
+}
+
+std::string NasaHub::bus_map_report(size_t limit) const {
+  std::string moving, still, zeros;
+  size_t n_moving = 0, n_still = 0, n_zero = 0;
+  char b[96];
+  for (auto &kv : this->bus_map_) {
+    const MapStat &s = kv.second;
+    if (s.known)
+      continue;
+    auto src = this->map_src_.find(uint32_t(kv.first >> 16));
+    snprintf(b, sizeof(b), "%s %04X", src == this->map_src_.end() ? "?" : src->second.c_str(),
+             unsigned(kv.first & 0xFFFF));
+    std::string k = b;
+    if (s.min == 0 && s.max == 0) {
+      zeros += (zeros.empty() ? "" : ", ") + k;
+      n_zero++;
+    } else if (s.changes == 0) {
+      snprintf(b, sizeof(b), "%s=%lu", k.c_str(), (unsigned long) s.last);
+      still += (still.empty() ? "" : ", ") + std::string(b);
+      n_still++;
+    } else {
+      snprintf(b, sizeof(b), "%s=%lu (%lu..%lu, %lux)", k.c_str(), (unsigned long) s.last, (unsigned long) s.min,
+               (unsigned long) s.max, (unsigned long) s.changes);
+      moving += (moving.empty() ? "" : ", ") + std::string(b);
+      n_moving++;
+    }
+  }
+  snprintf(b, sizeof(b), "seen: %u, described: %u, undescribed: %u", unsigned(this->bus_map_.size()),
+           unsigned(this->bus_map_.size() - this->bus_map_unknown()), unsigned(this->bus_map_unknown()));
+  std::string out = b;
+  out += "\n\nchanging (" + std::to_string(n_moving) + "): " + (moving.empty() ? "-" : moving);
+  out += "\n\nconstant, not 0 (" + std::to_string(n_still) + "): " + (still.empty() ? "-" : still);
+  out += "\n\nalways 0 (" + std::to_string(n_zero) + "): " + (zeros.empty() ? "-" : zeros);
+  if (out.size() > limit)
+    out = out.substr(0, limit > 40 ? limit - 40 : limit) + "\n... (cut, too long for one report)";
+  return out;
 }
 
 }  // namespace f1f2_nasa

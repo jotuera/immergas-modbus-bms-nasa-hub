@@ -128,6 +128,8 @@ packages:
       # hub: values from all three buses, boiler menu settings for the cards, hardware profile
       - packages/hub_diagnostics.yaml
       - packages/hub_combined.yaml
+      # bus map report (undescribed registers of D+/D-, T-/T+ and F1/F2 as a pre-filled GitHub issue)
+      - packages/hub_busmap.yaml
       - packages/hub_boiler_params.yaml
       - packages/hw_atoms3_portabc.yaml
 

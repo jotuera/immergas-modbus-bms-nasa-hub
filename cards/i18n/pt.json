@@ -1161,5 +1161,17 @@
  "· physical panel: its own sensor, the source choice is inactive": "· painel físico: o seu próprio sensor, a escolha da fonte está inativa",
  "raise R05 by 2 K and T05 to 15 min": "suba R05 em 2 K e T05 para 15 min",
  "raise R05 by 2 K (T05 is already at its 15 min maximum)": "suba R05 em 2 K (T05 já está no máximo de 15 min)",
- " – 15 min is the boiler maximum, then R05": " – 15 min é o máximo da caldeira, depois R05"
+ " – 15 min is the boiler maximum, then R05": " – 15 min é o máximo da caldeira, depois R05",
+ "registers read and written by the boiler": "registos lidos e escritos pela caldeira",
+ "results of the PDU scanner (Scan PDU …)": "resultados do scanner de PDU (Analisar PDU …)",
+ "every NASA message": "todas as mensagens NASA",
+ "Bus map": "Mapa dos barramentos",
+ "Add the hub_busmap.yaml package to collect the bus map.": "Adicione o pacote hub_busmap.yaml para recolher o mapa dos barramentos.",
+ "undescribed PDUs": "PDU não descritos",
+ "Boiler and heat pump model (rating plate)": "Modelo da caldeira e bomba (placa de características)",
+ "Prepare report": "Preparar relatório",
+ "Open the pre-filled issue ": "Abrir o relatório preenchido ",
+ "Nothing has been sent: the link opens GitHub with the issue filled in (model, hub version, the map – no addresses or passwords). Check it and press Create, or close the page.": "Nada foi enviado: o link abre o GitHub com o relatório preenchido (modelo, versão do hub, o mapa – sem endereços nem palavras-passe). Verifique-o e prima Create, ou feche a página.",
+ "The hub did not answer within 15 s – is it online?": "O hub não respondeu em 15 s – está online?",
+ "The map builds up from the hub start. TT is filled by the PDU scanner (Scan PDU … buttons). Constant zeros may come alive in winter – a report from another model helps the most.": "O mapa é recolhido desde o arranque do hub. O TT é preenchido pelo scanner de PDU (botões Analisar PDU …). Os zeros constantes podem ganhar vida no inverno – um relatório de outro modelo ajuda mais."
 }
