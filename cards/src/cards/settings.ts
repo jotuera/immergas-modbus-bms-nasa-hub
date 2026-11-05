@@ -2,7 +2,7 @@
 // capacity, gas-estimate calibration, DHW boost duration, fault description language and the night-function window
 // (U12 / U13 are not on any bus: options night_start / night_stop point to input_datetime helpers, edited here ±15 min).
 // Option: expanded: true (open by default).
-import { HubCard, html, css, nothing, register } from "../base";
+import { HubCard, html, css, nothing, c, register } from "../base";
 import { Key } from "../names";
 
 class ImmergasSettingsCard extends HubCard {
@@ -104,6 +104,9 @@ class ImmergasSettingsCard extends HubCard {
         ${this.numRow("comfort_heat", "mdi:sofa-outline", this.t("Pokój · Komfort", "Room · Comfort"), 1)}
         ${this.numRow("eco_heat", "mdi:leaf", this.t("Pokój · Eko", "Room · Eco"), 1)}
         ${this.selRow(this.eid("ot_eco_action"), this.t("W fazie Eko", "In the Eco phase"), "mdi:leaf")}
+        ${this.s("ot_eco_action") === "reduce_flow" ? this.numRow("ot_eco_red", "mdi:thermometer-minus", this.t("Obniżenie zasilania w Eko (RIDOTT)", "Eco flow reduction (RIDOTT)"), 0) : nothing}
+        ${this.eid("ot_self_learn") ? this.switchRow("ot_self_learn", "mdi:school-outline", "mauve", this.t("Samouczenie (AUTO A)", "Self-learning (AUTO A)"),
+          this.t("raz na dobę koryguje offset CO o 1 °C, gdy w fazie Komfort pokój był za zimny / za ciepły", "once a day moves the CH offset by 1 °C when the room was too cold / warm in the Comfort phase")) : nothing}
         ${this.numRow("dhw_comfort_dd", "mdi:sofa-outline", this.t("CWU · Komfort", "DHW · Comfort"), 0)}
         ${this.numRow("dhw_eco_dd", "mdi:leaf", this.t("CWU · Eko", "DHW · Eco"), 0)}
         ${this.selRow(this.eid("ot_leg"), this.t("Anty-legionella", "Anti-legionella"), "mdi:bacteria-outline")}
@@ -121,6 +124,24 @@ class ImmergasSettingsCard extends HubCard {
         ${this.switchRow("ot_modul", "mdi:fire-circle", "peach", this.t("Modulacja", "Modulation"), this.t("MODUL – zasilanie wg różnicy pokój / zadana", "MODUL – flow by the room / setpoint difference"))}
         ${this.switchRow("ot_frost", "mdi:snowflake-alert", "sky", this.t("Ochrona przed zamarzaniem", "Frost protection"), "")}
         ${this.numRow("ot_frost_t", "mdi:snowflake-thermometer", this.t("Temperatura ochrony", "Protection temperature"), 1)}` : nothing}`;
+  }
+
+  /** OpenTherm: CAR V2 "MANUTZ" - the service reminder (interval, last service, "service done") */
+  private maintRows() {
+    const due = this.on("ot_maint_due"), next = this.attr("ot_maint_due", "next_service") as string | null, left = this.attr("ot_maint_due", "days_left");
+    const last = this.s("ot_last_srv"), fmt = (s: string | null | undefined) => s && !["unknown", "unavailable", ""].includes(s)
+      ? new Date(s).toLocaleDateString(this.loc, { dateStyle: "medium" }) : "–";
+    const tag = "srv_done", armed = this.isArmed(tag);
+    return html`<div class="grp">${this.t("Przegląd kotła (MANUTZ)", "Boiler service (MANUTZ)")}</div>
+      ${this.selRow(this.eid("ot_maint"), this.t("Przypomnienie", "Reminder"), "mdi:wrench-clock")}
+      <div class="nr"><ha-icon icon="mdi:calendar-check"></ha-icon><span class="nl" @click=${() => this.moreInfo("ot_last_srv")}>${this.t("Ostatni przegląd", "Last service")}</span>
+        <span class="nv" style="min-width:auto">${fmt(last)}</span></div>
+      ${next ? html`<div class="nr"><ha-icon icon=${due ? "mdi:alert-circle-outline" : "mdi:calendar-clock"} style=${due ? `color:${c("red")}` : ""}></ha-icon>
+        <span class="nl" @click=${() => this.moreInfo("ot_maint_due")}>${this.t("Następny przegląd", "Next service")}</span>
+        <span class="nv" style="min-width:auto;${due ? `color:${c("red")}` : ""}">${fmt(next)}${typeof left === "number" ? ` · ${due ? this.t("po terminie", "overdue") : left + this.t(" dni", " days")}` : ""}</span></div>` : nothing}
+      ${this.eid("ot_srv_done") ? html`<div class="nr"><ha-icon icon="mdi:wrench-check"></ha-icon><span class="nl">${this.t("Przegląd wykonany dziś", "Serviced today")}</span>
+        <div class="btn xs" style=${armed ? `outline:2px solid ${c("green")}` : ""} @click=${() => this.confirm(tag, () => this.call("button", "press", "ot_srv_done"))}>
+          <ha-icon icon=${armed ? "mdi:check-all" : "mdi:check"}></ha-icon></div></div>` : nothing}`;
   }
 
   /** Immergas Dominus 1.3.0, online part: vacation, automatic summer / winter, alerts (all writes off by default) */
@@ -141,7 +162,8 @@ class ImmergasSettingsCard extends HubCard {
         ${this.switchRow("dom_vacation", "mdi:bag-suitcase-outline", "sky", this.t("Tryb wyjazdowy", "Vacation mode"),
           this.ot ? this.t("wyłącza ogrzewanie (Lato), po powrocie przywraca tryb", "switches heating off (Summer), restores the mode on return")
             : this.t("obniża zadaną Strefy 1, po powrocie przywraca", "lowers the zone 1 target, restores it on return"))}
-        ${this.numRow("dom_vac_temp", "mdi:thermometer-low", this.t("Temperatura na wyjazd", "Vacation temperature"), 1)}
+        ${this.ot ? this.selRow(this.eid("ot_vac_action"), this.t("Na czas urlopu", "During the vacation"), "mdi:bag-suitcase-outline")
+          : this.numRow("dom_vac_temp", "mdi:thermometer-low", this.t("Temperatura na wyjazd", "Vacation temperature"), 1)}
         <div class="nr"><ha-icon icon="mdi:calendar-end"></ha-icon><span class="nl" @click=${() => this.moreInfo("dom_vac_until")}>${this.t("Wyjazd do", "Away until")}</span>
           <span class="nv" style="min-width:auto">${u}</span></div>` : nothing}
       ${this.eid("dom_auto_season") ? html`<div class="grp">${this.t("Automatyczne Lato / Zima", "Automatic summer / winter")}</div>
@@ -151,6 +173,7 @@ class ImmergasSettingsCard extends HubCard {
         ${this.numRow("dom_win_below", "mdi:snowflake", this.t("Zima poniżej (średnia 24 h)", "Winter below (24 h mean)"), 1)}
         ${this.numRow("dom_sum_above", "mdi:weather-sunny", this.t("Lato powyżej (średnia 24 h)", "Summer above (24 h mean)"), 1)}` : nothing}
       </div>
+      ${this.eid("ot_maint") ? this.maintRows() : nothing}
       ${this.eid("dom_frost") || this.eid("dom_offline") ? html`<div class="grp">${this.t("Alarmy", "Alerts")}</div>
         ${this.numRow("dom_frost_thr", "mdi:snowflake-alert", this.t("Ryzyko zamarznięcia poniżej", "Frost risk below") + ` · ${alert("dom_frost")}`, 1)}
         ${this.numRow("dom_off_min", "mdi:lan-disconnect", this.t("Moduł offline po", "Module offline after") + ` · ${alert("dom_offline")}`, 0)}` : nothing}`;

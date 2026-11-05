@@ -22,6 +22,32 @@ class ImmergasOtBoilerCard extends HubCard {
     return a && a.min !== undefined && a.max !== undefined ? `${this.f(a.min, 0)}–${this.f(a.max, 0)} °C` : "–";
   }
 
+  /** what is needed to run the boiler without the CAR V2: the Dominus regulator + the programs in Home Assistant */
+  private carReady() {
+    const code = String(this.s("err_code") ?? "").replace(/\D/g, "");
+    const room = !this.bad("zone1") && !isNaN(this.n("zone1"));
+    type Row = [boolean | null, string, string];
+    const rows: Row[] = [
+      [code !== "31", this.t("Kocioł nie czeka na pilota (brak E31)", "The boiler does not wait for the remote (no E31)"),
+        this.t("po zdjęciu CAR V2: odłącz i włącz zasilanie kotła", "after removing the CAR V2: power-cycle the boiler")],
+      [null, this.t("Mostek X40 na zaciskach 40-41 kotła", "Jumper X40 on boiler terminals 40-41"),
+        this.t("CAR V2 wymaga jego zdjęcia – bez CAR V2 załóż go z powrotem (albo termostat), inaczej kocioł nie włączy CO", "the CAR V2 needs it removed – without the CAR V2 put it back (or a thermostat), else the boiler will not heat")],
+      [room && this.s("ot_ntc") === "room", this.t("Sonda Dominusa mierzy pokój", "The Dominus probe measures the room"),
+        room ? `${this.f(this.n("zone1"), 1, 1)} °C` : this.t("podłącz sondę do zacisków 1-2 i ustaw „Sonda Dominusa mierzy” = pokój", "connect the probe to terminals 1-2 and set “Dominus probe use” = room")],
+      [this.eid("ot_room_sensor") ? this.on("ot_room_sensor") : null, this.t("Regulacja wg pokoju (AMB)", "Room control (AMB)"), this.t("Czujnik pokojowy włączony", "Room sensor on")],
+      [this.eid("ot_frost") ? this.on("ot_frost") : null, this.t("Ochrona przed zamarzaniem (ANTIGL)", "Frost protection (ANTIGL)"), ""],
+      [this.eid("prog_mode") ? (this.attr("prog_mode", "options") ?? []).length > 0 && this.s("prog_mode") === "auto" : null,
+        this.t("Program CO AUTO (PR RIS)", "CH program AUTO (PR RIS)"), this.t("kalendarze Komfort / Eko w karcie Harmonogram", "Comfort / Eco calendars in the Schedule card")],
+      [this.eid("dhw_sched") ? this.on("dhw_sched") : null, this.t("Program CWU (PR SAN)", "DHW program (PR SAN)"), this.t("tylko z zasobnikiem", "storage tank only")],
+      [!this.on("ot_ro"), this.t("Blokada zapisu wyłączona", "Write block off"), this.t("HA steruje, nie pilot", "HA in charge, not the remote")],
+    ];
+    const ok = rows.filter(([v]) => v === true).length, need = rows.filter(([v]) => v !== null).length;
+    const icon = (v: boolean | null) => v === null ? { ic: "mdi:information-outline", col: "overlay2" } : v ? { ic: "mdi:check-circle", col: "green" } : { ic: "mdi:close-circle-outline", col: "peach" };
+    return html`<div class="sec">${this.t("Praca bez CAR V2", "Running without the CAR V2")} · ${ok} / ${need}</div>
+      <div class="ready">${rows.map(([v, lbl, sub]) => { const { ic, col } = icon(v); return html`<div class="rr">
+        <ha-icon icon=${ic} style="color:var(--ih-${col})"></ha-icon><div><div class="rl">${lbl}</div>${sub ? html`<div class="rs">${sub}</div>` : nothing}</div></div>`; })}</div>`;
+  }
+
   protected body() {
     if (!this.ot) return html`${this.head("mdi:water-boiler", this.t("Kocioł OpenTherm", "OpenTherm boiler"))}
       <div class="hint">${this.t("Ta karta jest dla integracji Immergas Dominus w trybie OpenTherm.", "This card is for the Immergas Dominus integration in the OpenTherm mode.")}</div>`;
@@ -54,6 +80,8 @@ class ImmergasOtBoilerCard extends HubCard {
         </div>
         <div class="hint">${this.t("Liczone z płomienia co cykl odczytu (~45 s) – bardzo krótkie zapłony mogą umknąć.", "Counted from the flame flag every polling cycle (~45 s) – very short burns may be missed.")}</div>` : nothing}
       <div class="sec">${this.t("Błędy", "Faults")}</div>
+      ${this.on("ot_maint_due") ? html`<div class="grid1">${this.chip("ot_maint_due", "mdi:wrench-clock", "peach", this.t("Przegląd kotła", "Boiler service"),
+        this.t("termin minął – po przeglądzie naciśnij „Przegląd wykonany”", "due – after the service press “Service done”"), true)}</div>` : nothing}
       ${active.length ? html`<div class="grid">${active.map(([k, icon, [pl, en]]) => this.chip(k, icon, "red", this.t("Flaga błędu", "Fault flag"), this.t(pl, en), true))}</div>`
         : known ? html`<div class="grid1">${this.chip(FLAGS[0][0], "mdi:check-circle-outline", "green", this.t("Flagi błędów (ID5)", "Fault flags (ID5)"), this.t("brak – ciśnienie, płomień, ciąg, temperatura OK", "none – pressure, flame, air, temperature OK"))}</div>` : nothing}
       ${this.eid("ot_fhist") && !this.bad("ot_fhist") ? html`<div class="hist">
@@ -67,6 +95,7 @@ class ImmergasOtBoilerCard extends HubCard {
           @click=${() => !ro && this.confirm(resetTag, () => this.call("button", "press", "ot_reset"))}>
           <ha-icon icon="mdi:restart-alert"></ha-icon>${armed ? this.t("Potwierdź reset", "Confirm reset") : this.t("Reset kotła", "Boiler reset")}</button>` : nothing}
       </div>
+      ${this.carReady()}
       ${this.toggles([["ot_ro", "mdi:lock-outline", "sky", this.t("Tylko odczyt (steruje pilot)", "Read only (remote in charge)"),
         this.t("HA nic nie zapisuje do kotła – dla CAR V2 / Super Amico. Po włączeniu raz zrestartuj moduł Dominus.",
           "HA writes nothing to the boiler – for a CAR V2 / Super Amico. After switching it on, power-cycle the Dominus once."), true]])}`;
@@ -85,6 +114,11 @@ class ImmergasOtBoilerCard extends HubCard {
     .hr { font-size: 11px; line-height: 1.4; display: flex; gap: 6px; padding: 2px 0; }
     .hn { font-weight: 800; opacity: .55; min-width: 16px; }
     .row { display: flex; gap: 8px; margin: 10px 0 8px; flex-wrap: wrap; }
+    .ready { display: grid; gap: 4px; margin-bottom: 8px; }
+    .rr { display: flex; gap: 8px; align-items: flex-start; }
+    .rr ha-icon { --mdc-icon-size: 17px; flex: none; margin-top: 1px; }
+    .rl { font-size: 11.5px; font-weight: 800; }
+    .rs { font-size: 10px; opacity: .6; line-height: 1.3; }
     .act { display: inline-flex; align-items: center; gap: 6px; font: inherit; font-size: 12px; font-weight: 800; cursor: pointer;
       padding: 7px 12px; border-radius: 10px; border: 1px solid rgba(var(--ih-red-rgb), 0.4); background: rgba(var(--ih-red-rgb), 0.08); color: inherit; }
     .act[disabled] { opacity: .4; cursor: default; }

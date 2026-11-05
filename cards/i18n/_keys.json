@@ -5981,6 +5981,13 @@
   ]
  },
  {
+  "en": "Dominus in charge (HA programs)",
+  "pl": "Steruje Dominus (programy HA)",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
   "en": "Room temperature present",
   "pl": "Jest temperatura pokoju",
   "files": [
@@ -7112,6 +7119,118 @@
   ]
  },
  {
+  "en": "The boiler does not wait for the remote (no E31)",
+  "pl": "Kocioł nie czeka na pilota (brak E31)",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "after removing the CAR V2: power-cycle the boiler",
+  "pl": "po zdjęciu CAR V2: odłącz i włącz zasilanie kotła",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Jumper X40 on boiler terminals 40-41",
+  "pl": "Mostek X40 na zaciskach 40-41 kotła",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "the CAR V2 needs it removed – without the CAR V2 put it back (or a thermostat), else the boiler will not heat",
+  "pl": "CAR V2 wymaga jego zdjęcia – bez CAR V2 załóż go z powrotem (albo termostat), inaczej kocioł nie włączy CO",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "The Dominus probe measures the room",
+  "pl": "Sonda Dominusa mierzy pokój",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "connect the probe to terminals 1-2 and set “Dominus probe use” = room",
+  "pl": "podłącz sondę do zacisków 1-2 i ustaw „Sonda Dominusa mierzy” = pokój",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Room control (AMB)",
+  "pl": "Regulacja wg pokoju (AMB)",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Room sensor on",
+  "pl": "Czujnik pokojowy włączony",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Frost protection (ANTIGL)",
+  "pl": "Ochrona przed zamarzaniem (ANTIGL)",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "CH program AUTO (PR RIS)",
+  "pl": "Program CO AUTO (PR RIS)",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Comfort / Eco calendars in the Schedule card",
+  "pl": "kalendarze Komfort / Eko w karcie Harmonogram",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "DHW program (PR SAN)",
+  "pl": "Program CWU (PR SAN)",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "storage tank only",
+  "pl": "tylko z zasobnikiem",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Write block off",
+  "pl": "Blokada zapisu wyłączona",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "HA in charge, not the remote",
+  "pl": "HA steruje, nie pilot",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Running without the CAR V2",
+  "pl": "Praca bez CAR V2",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
   "en": "OpenTherm boiler",
   "pl": "Kocioł OpenTherm",
   "files": [
@@ -7219,6 +7338,20 @@
  {
   "en": "Faults",
   "pl": "Błędy",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Boiler service",
+  "pl": "Przegląd kotła",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "due – after the service press “Service done”",
+  "pl": "termin minął – po przeglądzie naciśnij „Przegląd wykonany”",
   "files": [
    "ot.ts"
   ]
@@ -7955,6 +8088,27 @@
   ]
  },
  {
+  "en": "Eco flow reduction (RIDOTT)",
+  "pl": "Obniżenie zasilania w Eko (RIDOTT)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Self-learning (AUTO A)",
+  "pl": "Samouczenie (AUTO A)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "once a day moves the CH offset by 1 °C when the room was too cold / warm in the Comfort phase",
+  "pl": "raz na dobę koryguje offset CO o 1 °C, gdy w fazie Komfort pokój był za zimny / za ciepły",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
   "en": "DHW · Comfort",
   "pl": "CWU · Komfort",
   "files": [
@@ -8081,6 +8235,55 @@
   ]
  },
  {
+  "en": "Boiler service (MANUTZ)",
+  "pl": "Przegląd kotła (MANUTZ)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Reminder",
+  "pl": "Przypomnienie",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Last service",
+  "pl": "Ostatni przegląd",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Next service",
+  "pl": "Następny przegląd",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "overdue",
+  "pl": "po terminie",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": " days",
+  "pl": " dni",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Serviced today",
+  "pl": "Przegląd wykonany dziś",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
   "en": "until switched off",
   "pl": "do wyłączenia",
   "files": [
@@ -8139,6 +8342,13 @@
  {
   "en": "lowers the zone 1 target, restores it on return",
   "pl": "obniża zadaną Strefy 1, po powrocie przywraca",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "During the vacation",
+  "pl": "Na czas urlopu",
   "files": [
    "settings.ts"
   ]

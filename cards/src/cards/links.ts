@@ -111,9 +111,11 @@ class ImmergasLinksCard extends HubCard {
       st: live ? "ok" : "bad", detail: this.bad("mode") ? "" : this.t("tryb ", "mode ") + this.txt("mode") });
     const code = String(this.s("err_code") ?? "").replace(/\D/g, ""), e31 = code === "31";
     const room = this.n("zone1"), ro = this.on("ot_ro"), probeRoom = this.s("ot_ntc") === "room";
-    const st: State = e31 ? "bad" : ro || !isNaN(room) ? "ok" : "off";
+    const domCtl = !ro && this.s("prog_mode") === "auto";
+    const st: State = e31 ? "bad" : ro || domCtl || !isNaN(room) ? "ok" : "off";
     const label = e31 ? this.t("Brak łączności z pilotem (E31)", "Remote lost (E31)")
       : ro ? this.t("Steruje pilot", "Remote in charge")
+      : domCtl ? this.t("Steruje Dominus (programy HA)", "Dominus in charge (HA programs)")
       : !isNaN(room) ? this.t("Jest temperatura pokoju", "Room temperature present")
       : this.t("Nie wykryto", "Not detected");
     const detail = e31 ? this.t("kocioł czeka na sparowany pilot i ignoruje polecenia CO / CWU / trybu",
