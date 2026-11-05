@@ -96,7 +96,11 @@ class ImmergasLinksCard extends HubCard {
       detail: isNaN(wifi) ? "" : this.t("sygnał ", "signal ") + Math.round(wifi) + " dBm" + (wifi < -80 ? this.t(" · słaby", " · weak") : "") });
     // pairs, one under the other: hub / Dominus, Modbus / zone 1 panel, BMS / system controller, NASA / EHS panel,
     // photovoltaics / dehumidifier
-    if (this.dominus && this.ot) return out;
+    // Dominus (two columns): boiler + thermostat on the left, Dominus + zone 1 panel / CAR V2 on the right
+    if (this.dominus) {
+      const DOM = ["Boiler", "Dominus", "Thermostat", "Zone 1 panel", "CAR V2 remote"];
+      return out.sort((a, b) => DOM.indexOf(a.name[1]) - DOM.indexOf(b.name[1]));
+    }
     const ORDER = ["Hub", "Dominus", "Modbus", "Zone 1 panel", "BMS", "System controller", "NASA", "EHS panel", "Photovoltaics", "Dehumidifier"];
     return out.sort((a, b) => ORDER.indexOf(a.name[1]) - ORDER.indexOf(b.name[1]));
   }
