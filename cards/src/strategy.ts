@@ -98,7 +98,7 @@ function otDashboard(config: any, t: (a: string, b: string) => string) {
         { type: "grid", cards: [card("immergas-now-card", config.now ?? {})] },
         { type: "grid", cards: [card("immergas-setpoints-card", config.setpoints ?? {})] },
         { type: "grid", cards: [card("immergas-mode-card", config.mode ?? {}), card("immergas-settings-card", { part: "online", ...(config.settings ?? {}) })] },
-        { type: "grid", column_span: 3, cards: [card("immergas-schedule-card", config.schedule ?? {})] },
+        { type: "grid", cards: [card("immergas-schedule-card", config.schedule ?? {})] },
         { type: "grid", column_span: 3, cards: [card("immergas-charts-card", config.charts ?? {})] },
       ],
     }],
