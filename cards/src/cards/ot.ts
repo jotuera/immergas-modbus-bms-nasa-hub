@@ -22,32 +22,6 @@ class ImmergasOtBoilerCard extends HubCard {
     return a && a.min !== undefined && a.max !== undefined ? `${this.f(a.min, 0)}–${this.f(a.max, 0)} °C` : "–";
   }
 
-  /** what is needed to run the boiler without the CAR V2: the Dominus regulator + the programs in Home Assistant */
-  private carReady() {
-    const code = String(this.s("err_code") ?? "").replace(/\D/g, "");
-    const room = !this.bad("zone1") && !isNaN(this.n("zone1"));
-    type Row = [boolean | null, string, string];
-    const rows: Row[] = [
-      [code !== "31", this.t("Kocioł nie czeka na pilota (brak E31)", "The boiler does not wait for the remote (no E31)"),
-        this.t("po zdjęciu CAR V2: odłącz i włącz zasilanie kotła", "after removing the CAR V2: power-cycle the boiler")],
-      [null, this.t("Mostek X40 na zaciskach 40-41 kotła", "Jumper X40 on boiler terminals 40-41"),
-        this.t("CAR V2 wymaga jego zdjęcia – bez CAR V2 załóż go z powrotem (albo termostat), inaczej kocioł nie włączy CO", "the CAR V2 needs it removed – without the CAR V2 put it back (or a thermostat), else the boiler will not heat")],
-      [room && this.s("ot_ntc") === "room", this.t("Sonda Dominusa mierzy pokój", "The Dominus probe measures the room"),
-        room ? `${this.f(this.n("zone1"), 1, 1)} °C` : this.t("podłącz sondę do zacisków 1-2 i ustaw „Sonda Dominusa mierzy” = pokój", "connect the probe to terminals 1-2 and set “Dominus probe use” = room")],
-      [this.eid("ot_room_sensor") ? this.on("ot_room_sensor") : null, this.t("Regulacja wg pokoju (AMB)", "Room control (AMB)"), this.t("Czujnik pokojowy włączony", "Room sensor on")],
-      [this.eid("ot_frost") ? this.on("ot_frost") : null, this.t("Ochrona przed zamarzaniem (ANTIGL)", "Frost protection (ANTIGL)"), ""],
-      [this.eid("prog_mode") ? (this.attr("prog_mode", "options") ?? []).length > 0 && this.s("prog_mode") === "auto" : null,
-        this.t("Program CO AUTO (PR RIS)", "CH program AUTO (PR RIS)"), this.t("kalendarze Komfort / Eko w karcie Harmonogram", "Comfort / Eco calendars in the Schedule card")],
-      [this.eid("dhw_sched") ? this.on("dhw_sched") : null, this.t("Program CWU (PR SAN)", "DHW program (PR SAN)"), this.t("tylko z zasobnikiem", "storage tank only")],
-      [!this.on("ot_ro"), this.t("Blokada zapisu wyłączona", "Write block off"), this.t("HA steruje, nie pilot", "HA in charge, not the remote")],
-    ];
-    const ok = rows.filter(([v]) => v === true).length, need = rows.filter(([v]) => v !== null).length;
-    const icon = (v: boolean | null) => v === null ? { ic: "mdi:information-outline", col: "overlay2" } : v ? { ic: "mdi:check-circle", col: "green" } : { ic: "mdi:close-circle-outline", col: "peach" };
-    return html`<div class="sec">${this.t("Praca bez CAR V2", "Running without the CAR V2")} · ${ok} / ${need}</div>
-      <div class="ready">${rows.map(([v, lbl, sub]) => { const { ic, col } = icon(v); return html`<div class="rr">
-        <ha-icon icon=${ic} style="color:var(--ih-${col})"></ha-icon><div><div class="rl">${lbl}</div>${sub ? html`<div class="rs">${sub}</div>` : nothing}</div></div>`; })}</div>`;
-  }
-
   protected body() {
     if (!this.ot) return html`${this.head("mdi:water-boiler", this.t("Kocioł OpenTherm", "OpenTherm boiler"))}
       <div class="hint">${this.t("Ta karta jest dla integracji Immergas Dominus w trybie OpenTherm.", "This card is for the Immergas Dominus integration in the OpenTherm mode.")}</div>`;
@@ -95,10 +69,7 @@ class ImmergasOtBoilerCard extends HubCard {
           @click=${() => !ro && this.confirm(resetTag, () => this.call("button", "press", "ot_reset"))}>
           <ha-icon icon="mdi:restart-alert"></ha-icon>${armed ? this.t("Potwierdź reset", "Confirm reset") : this.t("Reset kotła", "Boiler reset")}</button>` : nothing}
       </div>
-      ${this.carReady()}
-      ${this.toggles([["ot_ro", "mdi:lock-outline", "sky", this.t("Tylko odczyt (steruje pilot)", "Read only (remote in charge)"),
-        this.t("HA nic nie zapisuje do kotła – dla CAR V2 / Super Amico. Po włączeniu raz zrestartuj moduł Dominus.",
-          "HA writes nothing to the boiler – for a CAR V2 / Super Amico. After switching it on, power-cycle the Dominus once."), true]])}`;
+`;
   }
 
   static styles = [HubCard.styles, css`
@@ -114,11 +85,6 @@ class ImmergasOtBoilerCard extends HubCard {
     .hr { font-size: 11px; line-height: 1.4; display: flex; gap: 6px; padding: 2px 0; }
     .hn { font-weight: 800; opacity: .55; min-width: 16px; }
     .row { display: flex; gap: 8px; margin: 10px 0 8px; flex-wrap: wrap; }
-    .ready { display: grid; gap: 4px; margin-bottom: 8px; }
-    .rr { display: flex; gap: 8px; align-items: flex-start; }
-    .rr ha-icon { --mdc-icon-size: 17px; flex: none; margin-top: 1px; }
-    .rl { font-size: 11.5px; font-weight: 800; }
-    .rs { font-size: 10px; opacity: .6; line-height: 1.3; }
     .act { display: inline-flex; align-items: center; gap: 6px; font: inherit; font-size: 12px; font-weight: 800; cursor: pointer;
       padding: 7px 12px; border-radius: 10px; border: 1px solid rgba(var(--ih-red-rgb), 0.4); background: rgba(var(--ih-red-rgb), 0.08); color: inherit; }
     .act[disabled] { opacity: .4; cursor: default; }
@@ -127,6 +93,8 @@ class ImmergasOtBoilerCard extends HubCard {
 }
 
 class ImmergasOtMapCard extends HubCard {
+  private open: boolean | null = null;
+
   protected body() {
     if (!this.ot || !this.eid("ot_ids")) return html`${this.head("mdi:radar", this.t("Mapa Data-ID", "Data-ID map"))}
       <div class="hint">${this.t("Ta karta jest dla integracji Immergas Dominus w trybie OpenTherm (1.6.1+).", "This card is for the Immergas Dominus integration in the OpenTherm mode (1.6.1+).")}</div>`;
@@ -136,9 +104,14 @@ class ImmergasOtMapCard extends HubCard {
     const ok = (t: Record<string, unknown> | null) => (t ? Object.values(t).filter((v) => typeof v === "number").length : 0);
     const fin = this.attr("ot_ids", "finished") as string | undefined;
     const model = this.s("dom_model") ?? "";
-    const scanTag = "ot_scan", armed = this.isArmed(scanTag);
+    const scanTag = "ot_scan", armed = this.isArmed(scanTag), open = this.open ?? !!this.config.expanded;
     return html`
-      ${this.head("mdi:radar", this.t("Mapa Data-ID", "Data-ID map"), this.t("co kocioł podaje", "what the boiler answers"))}
+      <div class="sh" @click=${() => { this.open = !open; this.requestUpdate(); }}>
+        <ha-icon icon="mdi:radar"></ha-icon><span class="ttl">${this.t("Mapa Data-ID", "Data-ID map")}</span>
+        <span class="sum">${open ? "" : running ? this.t("skanuję…", "scanning…") : isNaN(sup) ? this.t("co kocioł podaje – jeszcze nie skanowano", "what the boiler answers – not scanned yet")
+          : `${this.f(sup, 0)} / 128 Data-ID` + (tsp ? ` · TSP ${ok(tsp)} / ${Object.keys(tsp).length}` : "")}</span>
+        <ha-icon class="chev" icon=${open ? "mdi:chevron-up" : "mdi:chevron-down"}></ha-icon></div>
+      ${!open ? nothing : html`
       ${this.eid("dom_model") ? html`<div class="model"><ha-icon icon="mdi:water-boiler"></ha-icon>
         <input .value=${model === "unknown" ? "" : model} placeholder=${this.t("Model kotła (z tabliczki)", "Boiler model (rating plate)")}
           @change=${(e: Event) => this.call("text", "set_value", "dom_model", { value: (e.target as HTMLInputElement).value.trim() })}></div>` : nothing}
@@ -159,11 +132,17 @@ class ImmergasOtMapCard extends HubCard {
           <ha-icon icon="mdi:github"></ha-icon>${this.t("Przygotuj zgłoszenie", "Prepare report")}</button>
       </div>
       <div class="hint">${this.t("Skan czyta raz każdy standardowy Data-ID i parametry kotła (odczyt w tym czasie pauzuje). Zgłoszenie: link w powiadomieniach HA otwiera GitHub z gotową mapą i modelem – nic nie jest wysyłane, dopóki nie naciśniesz Create.",
-        "The scan reads every standard Data-ID once and the boiler parameters (polling pauses meanwhile). Report: a link in the HA notifications opens GitHub with the map and the model filled in – nothing is sent until you press Create.")}</div>`;
+        "The scan reads every standard Data-ID once and the boiler parameters (polling pauses meanwhile). Report: a link in the HA notifications opens GitHub with the map and the model filled in – nothing is sent until you press Create.")}</div>`}`;
   }
 
   static styles = [HubCard.styles, css`
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    ha-card { padding: 8px 12px; }
+    .sh { cursor: pointer; display: flex; align-items: center; gap: 8px; }
+    .sh > ha-icon { --mdc-icon-size: 17px; opacity: .55; }
+    .ttl { font-size: 10.5px; font-weight: 800; opacity: .55; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+    .sum { flex: 1; font-size: 10.5px; opacity: .4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .chev { margin-left: auto; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
     .model { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
     .model ha-icon { --mdc-icon-size: 20px; opacity: .7; }
     .model input { flex: 1; min-width: 0; font: inherit; font-size: 12.5px; padding: 7px 9px; border-radius: 10px;

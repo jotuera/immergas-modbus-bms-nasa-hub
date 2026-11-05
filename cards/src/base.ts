@@ -119,6 +119,32 @@ export abstract class HubCard extends LitElement {
   protected get writeLocked() { return !!this.eid("f_arm") && !this.on("f_arm"); }
   /** Dominus OpenTherm "Read only (remote in charge)" is on: no control writes to the boiler */
   protected get otRO() { return this.ot && this.on("ot_ro"); }
+  /** what is needed to run the boiler without the CAR V2: the Dominus regulator + the programs in Home Assistant */
+  protected carReady() {
+    const code = String(this.s("err_code") ?? "").replace(/\D/g, "");
+    const room = !this.bad("zone1") && !isNaN(this.n("zone1"));
+    type Row = [boolean | null, string, string];
+    const rows: Row[] = [
+      [code !== "31", this.t("Kocioł nie czeka na pilota (brak E31)", "The boiler does not wait for the remote (no E31)"),
+        this.t("po zdjęciu CAR V2: odłącz i włącz zasilanie kotła", "after removing the CAR V2: power-cycle the boiler")],
+      [null, this.t("Mostek X40 na zaciskach 40-41 kotła", "Jumper X40 on boiler terminals 40-41"),
+        this.t("CAR V2 wymaga jego zdjęcia – bez CAR V2 załóż go z powrotem (albo termostat), inaczej kocioł nie włączy CO", "the CAR V2 needs it removed – without the CAR V2 put it back (or a thermostat), else the boiler will not heat")],
+      [room && this.s("ot_ntc") === "room", this.t("Sonda Dominusa mierzy pokój", "The Dominus probe measures the room"),
+        room ? `${this.f(this.n("zone1"), 1, 1)} °C` : this.t("podłącz sondę do zacisków 1-2 i ustaw „Sonda Dominusa mierzy” = pokój", "connect the probe to terminals 1-2 and set “Dominus probe use” = room")],
+      [this.eid("ot_room_sensor") ? this.on("ot_room_sensor") : null, this.t("Regulacja wg pokoju (AMB)", "Room control (AMB)"), this.t("Czujnik pokojowy włączony", "Room sensor on")],
+      [this.eid("ot_frost") ? this.on("ot_frost") : null, this.t("Ochrona przed zamarzaniem (ANTIGL)", "Frost protection (ANTIGL)"), ""],
+      [this.eid("prog_mode") ? (this.attr("prog_mode", "options") ?? []).length > 0 && this.s("prog_mode") === "auto" : null,
+        this.t("Program CO AUTO (PR RIS)", "CH program AUTO (PR RIS)"), this.t("kalendarze Komfort / Eko w karcie Harmonogram", "Comfort / Eco calendars in the Schedule card")],
+      [this.eid("dhw_sched") ? this.on("dhw_sched") : null, this.t("Program CWU (PR SAN)", "DHW program (PR SAN)"), this.t("tylko z zasobnikiem", "storage tank only")],
+      [!this.on("ot_ro"), this.t("Blokada zapisu wyłączona", "Write block off"), this.t("HA steruje, nie pilot", "HA in charge, not the remote")],
+    ];
+    const ok = rows.filter(([v]) => v === true).length, need = rows.filter(([v]) => v !== null).length;
+    const icon = (v: boolean | null) => v === null ? { ic: "mdi:information-outline", col: "overlay2" } : v ? { ic: "mdi:check-circle", col: "green" } : { ic: "mdi:close-circle-outline", col: "peach" };
+    return html`<div class="grp">${this.t("Praca bez CAR V2", "Running without the CAR V2")} · ${ok} / ${need}</div>
+      <div class="ready">${rows.map(([v, lbl, sub]) => { const { ic, col } = icon(v); return html`<div class="rr">
+        <ha-icon icon=${ic} style="color:var(--ih-${col})"></ha-icon><div><div class="rl">${lbl}</div>${sub ? html`<div class="rs">${sub}</div>` : nothing}</div></div>`; })}</div>`;
+  }
+
   /** OpenTherm with a remote in charge: the banner over the Home Assistant programs (they are paused in Dominus) */
   protected progLock() {
     if (!this.otRO) return nothing;
@@ -369,6 +395,11 @@ export abstract class HubCard extends LitElement {
       font-size: 11px; line-height: 1.35; cursor: pointer; color: var(--secondary-text-color); }
     .plock ha-icon { --mdc-icon-size: 18px; flex: none; color: var(--ih-overlay2); }
     .locked { filter: grayscale(1); opacity: .45; pointer-events: none; }
+    .ready { display: grid; gap: 4px; margin-bottom: 8px; }
+    .rr { display: flex; gap: 8px; align-items: flex-start; }
+    .rr ha-icon { --mdc-icon-size: 17px; flex: none; margin-top: 1px; }
+    .rl { font-size: 11.5px; font-weight: 800; }
+    .rs { font-size: 10px; opacity: .6; line-height: 1.3; }
     :host { ${unsafeCSS(paletteCss)} }
     *, *::before, *::after { box-sizing: border-box; }
     ha-card { padding: 12px 14px; }

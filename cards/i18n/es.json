@@ -1293,5 +1293,8 @@
  "TEMPERATURE": "TEMPERATURA",
  "UNTIL": "HASTA",
  "Modulation (MODUL)": "Modulación (MODUL)",
- "flow by the room / setpoint difference; off = constant flow until the setpoint is reached": "impulsión según la diferencia estancia / consigna; apagada = impulsión constante hasta la consigna"
+ "flow by the room / setpoint difference; off = constant flow until the setpoint is reached": "impulsión según la diferencia estancia / consigna; apagada = impulsión constante hasta la consigna",
+ "what the boiler answers – not scanned yet": "lo que responde la caldera – aún sin escanear",
+ "running without the CAR V2, CH / DHW programs, Dominus regulator, service, summer/winter, alerts": "funcionamiento sin CAR V2, programas calefacción / ACS, regulador Dominus, mantenimiento, verano/invierno, alarmas",
+ "flow, humidity, screed, floor area, summer/winter, alerts, fault language": "impulsión, humedad, solado, superficie, verano/invierno, alarmas, idioma de averías"
 }

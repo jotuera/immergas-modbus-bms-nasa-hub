@@ -56,6 +56,118 @@
   ]
  },
  {
+  "en": "The boiler does not wait for the remote (no E31)",
+  "pl": "Kocioł nie czeka na pilota (brak E31)",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "after removing the CAR V2: power-cycle the boiler",
+  "pl": "po zdjęciu CAR V2: odłącz i włącz zasilanie kotła",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "Jumper X40 on boiler terminals 40-41",
+  "pl": "Mostek X40 na zaciskach 40-41 kotła",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "the CAR V2 needs it removed – without the CAR V2 put it back (or a thermostat), else the boiler will not heat",
+  "pl": "CAR V2 wymaga jego zdjęcia – bez CAR V2 załóż go z powrotem (albo termostat), inaczej kocioł nie włączy CO",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "The Dominus probe measures the room",
+  "pl": "Sonda Dominusa mierzy pokój",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "connect the probe to terminals 1-2 and set “Dominus probe use” = room",
+  "pl": "podłącz sondę do zacisków 1-2 i ustaw „Sonda Dominusa mierzy” = pokój",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "Room control (AMB)",
+  "pl": "Regulacja wg pokoju (AMB)",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "Room sensor on",
+  "pl": "Czujnik pokojowy włączony",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "Frost protection (ANTIGL)",
+  "pl": "Ochrona przed zamarzaniem (ANTIGL)",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "CH program AUTO (PR RIS)",
+  "pl": "Program CO AUTO (PR RIS)",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "Comfort / Eco calendars in the Schedule card",
+  "pl": "kalendarze Komfort / Eko w karcie Harmonogram",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "DHW program (PR SAN)",
+  "pl": "Program CWU (PR SAN)",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "storage tank only",
+  "pl": "tylko z zasobnikiem",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "Write block off",
+  "pl": "Blokada zapisu wyłączona",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "HA in charge, not the remote",
+  "pl": "HA steruje, nie pilot",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "Running without the CAR V2",
+  "pl": "Praca bez CAR V2",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
   "en": "HA programs paused – the remote (CAR V2 / Super Amico) is in charge. Switch off the write block on the remote tile of the Connectivity card to use them.",
   "pl": "Programy HA wstrzymane – steruje pilot (CAR V2 / Super Amico). Odblokujesz je wyłączając blokadę zapisu na kaflu pilota w karcie Łączność.",
   "files": [
@@ -7259,118 +7371,6 @@
   ]
  },
  {
-  "en": "The boiler does not wait for the remote (no E31)",
-  "pl": "Kocioł nie czeka na pilota (brak E31)",
-  "files": [
-   "ot.ts"
-  ]
- },
- {
-  "en": "after removing the CAR V2: power-cycle the boiler",
-  "pl": "po zdjęciu CAR V2: odłącz i włącz zasilanie kotła",
-  "files": [
-   "ot.ts"
-  ]
- },
- {
-  "en": "Jumper X40 on boiler terminals 40-41",
-  "pl": "Mostek X40 na zaciskach 40-41 kotła",
-  "files": [
-   "ot.ts"
-  ]
- },
- {
-  "en": "the CAR V2 needs it removed – without the CAR V2 put it back (or a thermostat), else the boiler will not heat",
-  "pl": "CAR V2 wymaga jego zdjęcia – bez CAR V2 załóż go z powrotem (albo termostat), inaczej kocioł nie włączy CO",
-  "files": [
-   "ot.ts"
-  ]
- },
- {
-  "en": "The Dominus probe measures the room",
-  "pl": "Sonda Dominusa mierzy pokój",
-  "files": [
-   "ot.ts"
-  ]
- },
- {
-  "en": "connect the probe to terminals 1-2 and set “Dominus probe use” = room",
-  "pl": "podłącz sondę do zacisków 1-2 i ustaw „Sonda Dominusa mierzy” = pokój",
-  "files": [
-   "ot.ts"
-  ]
- },
- {
-  "en": "Room control (AMB)",
-  "pl": "Regulacja wg pokoju (AMB)",
-  "files": [
-   "ot.ts"
-  ]
- },
- {
-  "en": "Room sensor on",
-  "pl": "Czujnik pokojowy włączony",
-  "files": [
-   "ot.ts"
-  ]
- },
- {
-  "en": "Frost protection (ANTIGL)",
-  "pl": "Ochrona przed zamarzaniem (ANTIGL)",
-  "files": [
-   "ot.ts"
-  ]
- },
- {
-  "en": "CH program AUTO (PR RIS)",
-  "pl": "Program CO AUTO (PR RIS)",
-  "files": [
-   "ot.ts"
-  ]
- },
- {
-  "en": "Comfort / Eco calendars in the Schedule card",
-  "pl": "kalendarze Komfort / Eko w karcie Harmonogram",
-  "files": [
-   "ot.ts"
-  ]
- },
- {
-  "en": "DHW program (PR SAN)",
-  "pl": "Program CWU (PR SAN)",
-  "files": [
-   "ot.ts"
-  ]
- },
- {
-  "en": "storage tank only",
-  "pl": "tylko z zasobnikiem",
-  "files": [
-   "ot.ts"
-  ]
- },
- {
-  "en": "Write block off",
-  "pl": "Blokada zapisu wyłączona",
-  "files": [
-   "ot.ts"
-  ]
- },
- {
-  "en": "HA in charge, not the remote",
-  "pl": "HA steruje, nie pilot",
-  "files": [
-   "ot.ts"
-  ]
- },
- {
-  "en": "Running without the CAR V2",
-  "pl": "Praca bez CAR V2",
-  "files": [
-   "ot.ts"
-  ]
- },
- {
   "en": "OpenTherm boiler",
   "pl": "Kocioł OpenTherm",
   "files": [
@@ -7553,20 +7553,6 @@
   ]
  },
  {
-  "en": "Read only (remote in charge)",
-  "pl": "Tylko odczyt (steruje pilot)",
-  "files": [
-   "ot.ts"
-  ]
- },
- {
-  "en": "HA writes nothing to the boiler – for a CAR V2 / Super Amico. After switching it on, power-cycle the Dominus once.",
-  "pl": "HA nic nie zapisuje do kotła – dla CAR V2 / Super Amico. Po włączeniu raz zrestartuj moduł Dominus.",
-  "files": [
-   "ot.ts"
-  ]
- },
- {
   "en": "Data-ID map",
   "pl": "Mapa Data-ID",
   "files": [
@@ -7581,8 +7567,15 @@
   ]
  },
  {
-  "en": "what the boiler answers",
-  "pl": "co kocioł podaje",
+  "en": "scanning…",
+  "pl": "skanuję…",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "what the boiler answers – not scanned yet",
+  "pl": "co kocioł podaje – jeszcze nie skanowano",
   "files": [
    "ot.ts"
   ]
@@ -7597,13 +7590,6 @@
  {
   "en": "Supported Data-IDs",
   "pl": "Obsługiwane Data-ID",
-  "files": [
-   "ot.ts"
-  ]
- },
- {
-  "en": "scanning…",
-  "pl": "skanuję…",
   "files": [
    "ot.ts"
   ]
@@ -8200,6 +8186,20 @@
   ]
  },
  {
+  "en": "Read only (remote in charge)",
+  "pl": "Tylko odczyt (steruje pilot)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "HA writes nothing to the boiler – for a CAR V2 / Super Amico. After switching it on, power-cycle the Dominus once.",
+  "pl": "HA nic nie zapisuje do kotła – dla CAR V2 / Super Amico. Po włączeniu raz zrestartuj moduł Dominus.",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
   "en": "CH and DHW program (Home Assistant)",
   "pl": "Program CO i CWU (Home Assistant)",
   "files": [
@@ -8571,8 +8571,15 @@
   ]
  },
  {
-  "en": "flow, humidity, screed, floor area, vacation, summer/winter, alerts, fault language",
-  "pl": "zasilanie, wilgotność, posadzka, powierzchnia, wyjazd, Lato/Zima, alarmy, język błędów",
+  "en": "running without the CAR V2, CH / DHW programs, Dominus regulator, service, summer/winter, alerts",
+  "pl": "praca bez CAR V2, programy CO / CWU, regulator Dominusa, przegląd, Lato/Zima, alarmy",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "flow, humidity, screed, floor area, summer/winter, alerts, fault language",
+  "pl": "zasilanie, wilgotność, posadzka, powierzchnia, Lato/Zima, alarmy, język błędów",
   "files": [
    "settings.ts"
   ]

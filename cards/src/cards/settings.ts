@@ -99,6 +99,10 @@ class ImmergasSettingsCard extends HubCard {
   private otRows() {
     if (!this.ot) return nothing;
     return html`
+      ${this.carReady()}
+      ${this.toggles([["ot_ro", "mdi:lock-outline", "sky", this.t("Tylko odczyt (steruje pilot)", "Read only (remote in charge)"),
+        this.t("HA nic nie zapisuje do kotła – dla CAR V2 / Super Amico. Po włączeniu raz zrestartuj moduł Dominus.",
+          "HA writes nothing to the boiler – for a CAR V2 / Super Amico. After switching it on, power-cycle the Dominus once."), true]])}
       ${this.eid("comfort_heat") ? html`<div class="grp">${this.t("Program CO i CWU (Home Assistant)", "CH and DHW program (Home Assistant)")}</div>
         ${this.progLock()}<div class=${this.otRO ? "locked" : ""}>
         ${this.numRow("comfort_heat", "mdi:sofa-outline", this.t("Pokój · Komfort", "Room · Comfort"), 1)}
@@ -187,7 +191,8 @@ class ImmergasSettingsCard extends HubCard {
     const sum = !this.dominus ? (part === "online" ? this.t("ceny, zasobnik, szacowanie gazu, posadzka, powierzchnia, język błędów", "prices, cylinder, gas estimate, screed, floor area, fault language")
         : part === "offline" ? this.t("U12/U13, P16/P17/P13, limit podłogi, tania taryfa, R02/R03, R10/R11, P07", "U12/U13, P16/P17/P13, floor limit, cheap tariff, R02/R03, R10/R11, P07")
         : this.t("ceny, zasobnik, tryb nocny, legionella…", "prices, cylinder, night mode, legionella…"))
-      : part === "online" ? this.t("zasilanie, wilgotność, posadzka, powierzchnia, wyjazd, Lato/Zima, alarmy, język błędów", "flow, humidity, screed, floor area, vacation, summer/winter, alerts, fault language")
+      : part === "online" ? (this.ot ? this.t("praca bez CAR V2, programy CO / CWU, regulator Dominusa, przegląd, Lato/Zima, alarmy", "running without the CAR V2, CH / DHW programs, Dominus regulator, service, summer/winter, alerts")
+        : this.t("zasilanie, wilgotność, posadzka, powierzchnia, Lato/Zima, alarmy, język błędów", "flow, humidity, screed, floor area, summer/winter, alerts, fault language"))
       : part === "offline" ? this.t("U11, P15, krzywe R, T02/T05, integracja I, A31, P07", "U11, P15, R curves, T02/T05, I integration, A31, P07")
       : this.t("parametry pieca, tryb nocny, legionella, wyjazd, Lato/Zima, alarmy, język błędów", "boiler parameters, night mode, legionella, vacation, summer/winter, alerts, fault language");
     const note = !this.dominus ? (part === "offline" ? this.t("Hub nie czyta tych ustawień z magistral – przepisz je raz z menu pieca; służą paskom czasu, krzywej i kalibracji.",
