@@ -100,6 +100,7 @@ number:
     mode: slider
 
   # T05 — time between ignitions. Boiler operation parameter.
+  # 1.2.1: the boiler takes 1-15 min over T-/T+ (14, 15 accepted; 16, 18, 20 rejected with Modbus exception 3)
   - platform: modbus_controller
     modbus_controller_id: tt_bms
     name: "${n_tt_t05_time_between_ignitions_set}"
@@ -109,6 +110,6 @@ number:
     value_type: U_WORD
     unit_of_measurement: "min"
     min_value: 1
-    max_value: 20
+    max_value: 15
     step: 1
     mode: slider

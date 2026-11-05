@@ -479,9 +479,10 @@ class ImmergasCalibrationCard extends HubCard {
     const modOpts: string[] = this.attr("room_mod", "options") ?? [];
     const maxSet = thermostats ? Math.max(...rooms.map((r) => r.set)) : NaN;
     const z = this.n("zone1_set");
-    // T05 = minimum pause between CH starts: raise it when the compressor cycles, never go below 15 min -
-    // a shorter pause brings nothing for a slow floor and leaves no protection when cycling comes back
-    const t05 = this.n("t05"), t05rec = isNaN(t05) ? NaN : S.coPerH > 3 ? cap(t05 + 5, 15, 20) : Math.max(t05, 15);
+    // T05 = minimum pause between CH starts: 15 min, which is also the most the boiler takes over T-/T+ (a write of
+    // 16-20 min is rejected with Modbus exception 3); a shorter pause brings nothing for a slow floor
+    const T05_MAX = 15;
+    const t05 = this.n("t05"), t05rec = isNaN(t05) ? NaN : T05_MAX;
     // DHW heated by the gas boiler (I01 on, source "boiler"): the setpoint does not cost heat-pump COP - 45-55 °C is fine
     const dhwGas = !!this.eid("i01") && this.on("i01") && this.dhwSource().cur === "boiler";
     const dhw = this.n("dhw_set"), dhwRec = isNaN(dhw) ? NaN : dhwGas ? (dhw > 55 ? 55 : dhw < 45 ? 45 : dhw) : dhw > 50 ? 48 : dhw < 45 ? 45 : dhw;
@@ -489,14 +490,15 @@ class ImmergasCalibrationCard extends HubCard {
 
     // cycling: read-only rows - model, measured, and what to do about it
     const starts = this.n("starts"), later = !isNaN(wait) ? this.t(" (najpierw oceń zmianę krzywej po dobie)", " (first judge the curve change after a day)") : "";
-    const cycTxt: [string, string] = S.coPerH > 3 ? ["podnieś R05 o 2 K i T05 do 20 min", "raise R05 by 2 K and T05 to 20 min"]
+    const cycTxt: [string, string] = S.coPerH > 3 ? (!isNaN(t05) && t05 < T05_MAX ? ["podnieś R05 o 2 K i T05 do 15 min", "raise R05 by 2 K and T05 to 15 min"]
+      : ["podnieś R05 o 2 K (T05 ma już maks. 15 min)", "raise R05 by 2 K (T05 is already at its 15 min maximum)"])
       : short ? ["cieplejsza woda: R05 +2 K (dłuższe cykle)", "warmer water: R05 +2 K (longer cycles)"] : ["w normie", "fine"];
-    // the cycling rows name R05 (+2 K) and T05 (20 min): give them a Set button when the entities exist (after a recent
+    // the cycling rows name R05 (+2 K) and T05 (15 min): give them a Set button when the entities exist (after a recent
     // curve change the text still says to wait - the button stays, the user decides and confirms)
     const r05up = this.eid("r05") && !isNaN(r05) && cap(r05 + 2, 20, 28) !== r05 ? cap(r05 + 2, 20, 28) : NaN;
     const setR05 = (t05too: boolean) => isNaN(r05up) ? undefined : () => {
       this.call("number", "set_value", "r05", { value: r05up });
-      if (t05too && this.eid("t05") && !isNaN(t05) && t05 < 20) this.call("number", "set_value", "t05", { value: 20 });
+      if (t05too && this.eid("t05") && !isNaN(t05) && t05 < T05_MAX) this.call("number", "set_value", "t05", { value: T05_MAX });
     };
     const info: Row[] = [
       { code: "", name: ["Taktowanie: starty CO na godzinę", "Cycling: CH starts per hour"], unit: "/h", d: 1, kind: "info",
@@ -711,7 +713,7 @@ class ImmergasCalibrationCard extends HubCard {
           : ["bez modulacji nie wpływa na zasilanie – bez zmian", "without modulation it does not change the flow – keep"] },
       { k: "t05", code: "T05", name: ["Zegar uruchamiania CO", "CH ignition timer"], unit: "min", d: 0,
         model: 15, why: ["pompa ciepła: najwyżej ~3 starty na godzinę", "heat pump: at most ~3 starts per hour"],
-        rec: t05rec, reason: [`${this.f(S.coPerH, 1, 1)} startu CO na godzinę (24 h)${S.coPerH > 3 ? " – wydłuż przerwę" : " – 15 min chroni przed taktowaniem"}`, `${this.f(S.coPerH, 1, 1)} CH starts per hour (24 h)${S.coPerH > 3 ? " – lengthen the pause" : " – 15 min guards against cycling"}`] },
+        rec: t05rec, reason: [`${this.f(S.coPerH, 1, 1)} startu CO na godzinę (24 h)${S.coPerH > 3 ? " – 15 min to maks. kotła, dalej R05" : " – 15 min chroni przed taktowaniem"}`, `${this.f(S.coPerH, 1, 1)} CH starts per hour (24 h)${S.coPerH > 3 ? " – 15 min is the boiler maximum, then R05" : " – 15 min guards against cycling"}`] },
       { k: "t07", code: "T07", name: ["Opóźnienie żądania z termostatu", "Room thermostat request delay"], unit: "s", d: 0,
         model: 0, why: ["bez opóźnienia – termostaty i tak pracują wolno", "no delay – the thermostats are slow anyway"], rec: 0, reason: ["0 s", "0 s"] },
       { k: "dhw_set", code: "D05", name: ["Nastawa CWU", "DHW setpoint"], unit: "°C", d: 1,

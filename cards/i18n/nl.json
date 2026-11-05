@@ -1158,5 +1158,8 @@
  "DHW by the boiler: the setpoint does not affect the heat-pump COP; above 55 °C cylinder losses and scale grow": "Tapwater via de ketel: het setpoint beïnvloedt de COP van de warmtepomp niet; boven 55 °C nemen boilerverliezen en kalk toe",
  "above 55 °C – cylinder losses": "boven 55 °C – boilerverliezen",
  "DHW by the boiler, 45–55 °C – keep": "Tapwater via de ketel, 45–55 °C – ongewijzigd",
- "· physical panel: its own sensor, the source choice is inactive": "· fysiek paneel: eigen voeler, bronkeuze inactief"
+ "· physical panel: its own sensor, the source choice is inactive": "· fysiek paneel: eigen voeler, bronkeuze inactief",
+ "raise R05 by 2 K and T05 to 15 min": "verhoog R05 met 2 K en T05 naar 15 min",
+ "raise R05 by 2 K (T05 is already at its 15 min maximum)": "verhoog R05 met 2 K (T05 staat al op het maximum van 15 min)",
+ " – 15 min is the boiler maximum, then R05": " – 15 min is het ketelmaximum, daarna R05"
 }

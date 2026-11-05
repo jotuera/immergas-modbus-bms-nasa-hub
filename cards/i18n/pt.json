@@ -1158,5 +1158,8 @@
  "DHW by the boiler: the setpoint does not affect the heat-pump COP; above 55 °C cylinder losses and scale grow": "AQS pela caldeira: o setpoint não afeta o COP da bomba; acima de 55 °C aumentam as perdas do depósito e o calcário",
  "above 55 °C – cylinder losses": "acima de 55 °C – perdas do depósito",
  "DHW by the boiler, 45–55 °C – keep": "AQS pela caldeira, 45–55 °C – manter",
- "· physical panel: its own sensor, the source choice is inactive": "· painel físico: o seu próprio sensor, a escolha da fonte está inativa"
+ "· physical panel: its own sensor, the source choice is inactive": "· painel físico: o seu próprio sensor, a escolha da fonte está inativa",
+ "raise R05 by 2 K and T05 to 15 min": "suba R05 em 2 K e T05 para 15 min",
+ "raise R05 by 2 K (T05 is already at its 15 min maximum)": "suba R05 em 2 K (T05 já está no máximo de 15 min)",
+ " – 15 min is the boiler maximum, then R05": " – 15 min é o máximo da caldeira, depois R05"
 }

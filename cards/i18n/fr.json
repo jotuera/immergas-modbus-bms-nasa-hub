@@ -1158,5 +1158,8 @@
  "DHW by the boiler: the setpoint does not affect the heat-pump COP; above 55 °C cylinder losses and scale grow": "ECS par la chaudière : la consigne n’influe pas sur le COP de la PAC ; au-dessus de 55 °C les pertes du ballon et le tartre augmentent",
  "above 55 °C – cylinder losses": "au-dessus de 55 °C – pertes du ballon",
  "DHW by the boiler, 45–55 °C – keep": "ECS par la chaudière, 45–55 °C – inchangé",
- "· physical panel: its own sensor, the source choice is inactive": "· panneau physique : son propre capteur, le choix de la source est inactif"
+ "· physical panel: its own sensor, the source choice is inactive": "· panneau physique : son propre capteur, le choix de la source est inactif",
+ "raise R05 by 2 K and T05 to 15 min": "augmenter R05 de 2 K et T05 à 15 min",
+ "raise R05 by 2 K (T05 is already at its 15 min maximum)": "augmentez R05 de 2 K (T05 est déjà à son maximum de 15 min)",
+ " – 15 min is the boiler maximum, then R05": " – 15 min est le maximum de la chaudière, ensuite R05"
 }

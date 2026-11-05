@@ -987,8 +987,15 @@
   ]
  },
  {
-  "en": "raise R05 by 2 K and T05 to 20 min",
-  "pl": "podnieś R05 o 2 K i T05 do 20 min",
+  "en": "raise R05 by 2 K and T05 to 15 min",
+  "pl": "podnieś R05 o 2 K i T05 do 15 min",
+  "files": [
+   "calibration.ts"
+  ]
+ },
+ {
+  "en": "raise R05 by 2 K (T05 is already at its 15 min maximum)",
+  "pl": "podnieś R05 o 2 K (T05 ma już maks. 15 min)",
   "files": [
    "calibration.ts"
   ]

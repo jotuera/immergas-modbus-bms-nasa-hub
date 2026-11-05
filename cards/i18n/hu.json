@@ -1158,5 +1158,8 @@
  "DHW by the boiler: the setpoint does not affect the heat-pump COP; above 55 °C cylinder losses and scale grow": "HMV kazánnal: az alapjel nem befolyásolja a hőszivattyú COP-ját; 55 °C felett nő a tároló vesztesége és a vízkő",
  "above 55 °C – cylinder losses": "55 °C felett – tárolóveszteség",
  "DHW by the boiler, 45–55 °C – keep": "HMV kazánnal, 45–55 °C – változatlan",
- "· physical panel: its own sensor, the source choice is inactive": "· fizikai panel: saját érzékelő, a forrás választása inaktív"
+ "· physical panel: its own sensor, the source choice is inactive": "· fizikai panel: saját érzékelő, a forrás választása inaktív",
+ "raise R05 by 2 K and T05 to 15 min": "emelje R05-öt 2 K-nel és T05-öt 15 min-re",
+ "raise R05 by 2 K (T05 is already at its 15 min maximum)": "emelje az R05-öt 2 K-nel (a T05 már a max. 15 percen van)",
+ " – 15 min is the boiler maximum, then R05": " – 15 perc a kazán maximuma, utána R05"
 }

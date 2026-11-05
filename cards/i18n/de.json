@@ -1158,5 +1158,8 @@
  "DHW by the boiler: the setpoint does not affect the heat-pump COP; above 55 °C cylinder losses and scale grow": "Warmwasser über den Kessel: der Sollwert beeinflusst den COP der Wärmepumpe nicht; über 55 °C steigen Speicherverluste und Kalk",
  "above 55 °C – cylinder losses": "über 55 °C – Speicherverluste",
  "DHW by the boiler, 45–55 °C – keep": "Warmwasser über den Kessel, 45–55 °C – unverändert",
- "· physical panel: its own sensor, the source choice is inactive": "· physisches Bedienfeld: eigener Fühler, Quellenwahl inaktiv"
+ "· physical panel: its own sensor, the source choice is inactive": "· physisches Bedienfeld: eigener Fühler, Quellenwahl inaktiv",
+ "raise R05 by 2 K and T05 to 15 min": "R05 um 2 K und T05 auf 15 min anheben",
+ "raise R05 by 2 K (T05 is already at its 15 min maximum)": "R05 um 2 K anheben (T05 steht schon auf max. 15 min)",
+ " – 15 min is the boiler maximum, then R05": " – 15 min ist das Kesselmaximum, dann R05"
 }
