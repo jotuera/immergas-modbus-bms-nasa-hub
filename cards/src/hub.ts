@@ -42,6 +42,12 @@ const DOMINUS: Record<string, Key> = {
   ot_hysteresis: "ot_hyst", ot_building_inertia: "ot_inertia", ot_frost_temperature: "ot_frost_t", ot_ch_min: "ot_ch_min",
   ot_outdoor_sensor: "ot_out_sensor", ot_modulation: "ot_modul", ot_room_sensor: "ot_room_sensor", ot_frost_protection: "ot_frost",
   ot_ntc_use: "ot_ntc", ot_eco_action: "ot_eco_action", ot_legionella: "ot_leg", ot_legionella_temp: "ot_leg_t",
+  // Dominus 1.6.2-1.6.9: what only OpenTherm has (exhaust, fan, capacity, fault flags / history, scan, read only, burner)
+  ot_exhaust_temperature: "ot_exhaust", ot_fan_speed: "ot_fan", ot_fan_speed_setpoint: "ot_fan_set", ot_flame_current: "ot_flame_i",
+  ot_fault_history: "ot_fhist", ot_read_only: "ot_ro", ot_last_write: "ot_lastw", ot_supported_ids: "ot_ids", ot_scan: "ot_scan",
+  ot_scan_report: "ot_report", boiler_model: "dom_model", ot_reset: "ot_reset", ot_max_capacity: "ot_cap", ot_min_modulation: "ot_minmod",
+  ot_service_request: "ot_f_service", ot_low_water_pressure: "ot_f_water", ot_flame_fault: "ot_f_flame", ot_air_pressure_fault: "ot_f_air",
+  ot_water_overtemp: "ot_f_hot", ot_burner_starts_today: "ot_burn_today", ot_burner_starts_hour: "ot_burn_h", ot_burner_hours_today: "ot_burn_hours",
   room_control_mode: "dom_a31", outdoor_probe_correction: "dom_p07", floor_type: "floor_type", zone1_time_program: "prog_mode", heated_area: "heated_area",
   // 1.3.0: statistics, vacation, auto season, alerts
   ch_heating_time_today: "dom_ch_time_today", ch_heating_share_24h: "dom_ch_share", dhw_cycles_today: "dom_dhw_cycles", last_dhw_cycle_duration: "dom_dhw_last_dur", last_dhw_cycle_rise: "dom_dhw_last_rise", ch_starts_per_hour: "dom_starts_h", ch_starts_today: "dom_starts_today", room_deviation: "dom_room_dev", time_to_target: "dom_ttt", degree_days_today: "dom_dd_today", degree_days_month: "dom_dd_month", heating_hours_per_degree_day: "dom_h_per_dd", frost_risk: "dom_frost", module_offline: "dom_offline", vacation_temperature: "dom_vac_temp", season_winter_below: "dom_win_below", season_summer_above: "dom_sum_above", frost_threshold: "dom_frost_thr", offline_minutes: "dom_off_min", vacation_mode: "dom_vacation", alert_notifications: "dom_notify", auto_season: "dom_auto_season", vacation_until: "dom_vac_until",

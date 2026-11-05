@@ -680,7 +680,8 @@
   "en": "Prepare report",
   "pl": "Przygotuj zgłoszenie",
   "files": [
-   "busmap.ts"
+   "busmap.ts",
+   "ot.ts"
   ]
  },
  {
@@ -3971,6 +3972,15 @@
   ]
  },
  {
+  "en": "Exhaust",
+  "pl": "Spaliny",
+  "files": [
+   "charts.ts",
+   "now.ts",
+   "ot.ts"
+  ]
+ },
+ {
   "en": "Flow",
   "pl": "Zasilanie",
   "files": [
@@ -4008,6 +4018,29 @@
    "charts.ts",
    "diagram.ts",
    "now.ts"
+  ]
+ },
+ {
+  "en": "Burner modulation",
+  "pl": "Modulacja palnika",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "ignitions",
+  "pl": "zapłonów",
+  "files": [
+   "charts.ts"
+  ]
+ },
+ {
+  "en": "Modulation",
+  "pl": "Modulacja",
+  "files": [
+   "charts.ts",
+   "now.ts",
+   "settings.ts"
   ]
  },
  {
@@ -4077,6 +4110,14 @@
    "now.ts",
    "schedule.ts",
    "setpoints.ts"
+  ]
+ },
+ {
+  "en": "Burner",
+  "pl": "Palnik",
+  "files": [
+   "charts.ts",
+   "ot.ts"
   ]
  },
  {
@@ -4378,7 +4419,9 @@
   "en": "Fan",
   "pl": "Wentylator",
   "files": [
-   "circuits.ts"
+   "circuits.ts",
+   "now.ts",
+   "ot.ts"
   ]
  },
  {
@@ -5380,7 +5423,8 @@
   "pl": " obr/min",
   "files": [
    "diagram.ts",
-   "now.ts"
+   "now.ts",
+   "ot.ts"
   ]
  },
  {
@@ -6184,6 +6228,13 @@
   ]
  },
  {
+  "en": "Read only – the remote (CAR V2 / Super Amico) sets the mode",
+  "pl": "Tylko odczyt – tryb ustawia pilot (CAR V2 / Super Amico)",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
   "en": "OpenTherm: with a CAR V2 remote the remote also sets the mode – a change here may be overridden by it",
   "pl": "OpenTherm: z pilotem CAR V2 tryb ustawia też pilot – zmiana tutaj może zostać przez niego nadpisana",
   "files": [
@@ -6639,6 +6690,49 @@
   ]
  },
  {
+  "en": "Boiler fault flag",
+  "pl": "Flaga błędu kotła",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "System pressure",
+  "pl": "Ciśnienie instalacji",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "DHW flow rate",
+  "pl": "Przepływ CWU",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Flame current",
+  "pl": "Prąd płomienia",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": "Starts / hour",
+  "pl": "Starty / godz.",
+  "files": [
+   "now.ts"
+  ]
+ },
+ {
+  "en": " · short cycling",
+  "pl": " · taktowanie",
+  "files": [
+   "now.ts",
+   "ot.ts"
+  ]
+ },
+ {
   "en": "Standby",
   "pl": "Czuwanie",
   "files": [
@@ -6702,14 +6796,6 @@
   ]
  },
  {
-  "en": "Modulation",
-  "pl": "Modulacja",
-  "files": [
-   "now.ts",
-   "settings.ts"
-  ]
- },
- {
   "en": "CH demand",
   "pl": "Żądanie CO",
   "files": [
@@ -6726,20 +6812,6 @@
  {
   "en": "no",
   "pl": "nie",
-  "files": [
-   "now.ts"
-  ]
- },
- {
-  "en": "System pressure",
-  "pl": "Ciśnienie instalacji",
-  "files": [
-   "now.ts"
-  ]
- },
- {
-  "en": "DHW flow rate",
-  "pl": "Przepływ CWU",
   "files": [
    "now.ts"
   ]
@@ -6899,6 +6971,314 @@
   ]
  },
  {
+  "en": "Low water pressure",
+  "pl": "Niskie ciśnienie wody",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Gas / flame fault",
+  "pl": "Błąd gazu / płomienia",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Air pressure fault",
+  "pl": "Błąd ciągu powietrza",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Water over-temperature",
+  "pl": "Przegrzanie wody",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Service request",
+  "pl": "Wymagany serwis",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "OpenTherm boiler",
+  "pl": "Kocioł OpenTherm",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "This card is for the Immergas Dominus integration in the OpenTherm mode.",
+  "pl": "Ta karta jest dla integracji Immergas Dominus w trybie OpenTherm.",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "no DHW",
+  "pl": "brak CWU",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "storage tank",
+  "pl": "zasobnik",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "instantaneous",
+  "pl": "przepływowa",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Boiler · OpenTherm",
+  "pl": "Kocioł · OpenTherm",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "read only",
+  "pl": "tylko odczyt",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Max. capacity",
+  "pl": "Moc maks.",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "not reported",
+  "pl": "kocioł nie podaje",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Min. modulation",
+  "pl": "Min. modulacja",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "CH range (boiler)",
+  "pl": "Zakres CO (kocioł)",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "DHW range (boiler)",
+  "pl": "Zakres CWU (kocioł)",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Starts today",
+  "pl": "Starty dziś",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Starts / last hour",
+  "pl": "Starty / ostatnia godzina",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Counted from the flame flag every polling cycle (~45 s) – very short burns may be missed.",
+  "pl": "Liczone z płomienia co cykl odczytu (~45 s) – bardzo krótkie zapłony mogą umknąć.",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Faults",
+  "pl": "Błędy",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Fault flag",
+  "pl": "Flaga błędu",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Fault flags (ID5)",
+  "pl": "Flagi błędów (ID5)",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "none – pressure, flame, air, temperature OK",
+  "pl": "brak – ciśnienie, płomień, ciąg, temperatura OK",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Boiler fault history",
+  "pl": "Historia błędów kotła",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "no entries",
+  "pl": "brak wpisów",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Fault history: enable the “Fault history” entity of the device (disabled by default – not every boiler reports it).",
+  "pl": "Historia błędów: włącz encję „Historia błędów” w urządzeniu (domyślnie wyłączona – nie każdy kocioł ją podaje).",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Confirm reset",
+  "pl": "Potwierdź reset",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Boiler reset",
+  "pl": "Reset kotła",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Read only (remote in charge)",
+  "pl": "Tylko odczyt (steruje pilot)",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "HA writes nothing to the boiler – for a CAR V2 / Super Amico. After switching it on, power-cycle the Dominus once.",
+  "pl": "HA nic nie zapisuje do kotła – dla CAR V2 / Super Amico. Po włączeniu raz zrestartuj moduł Dominus.",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Data-ID map",
+  "pl": "Mapa Data-ID",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "This card is for the Immergas Dominus integration in the OpenTherm mode (1.6.1+).",
+  "pl": "Ta karta jest dla integracji Immergas Dominus w trybie OpenTherm (1.6.1+).",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "what the boiler answers",
+  "pl": "co kocioł podaje",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Boiler model (rating plate)",
+  "pl": "Model kotła (z tabliczki)",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Supported Data-IDs",
+  "pl": "Obsługiwane Data-ID",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "scanning…",
+  "pl": "skanuję…",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "not scanned yet",
+  "pl": "jeszcze nie skanowano",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Boiler parameters (TSP)",
+  "pl": "Parametry kotła (TSP)",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Fault history (scan)",
+  "pl": "Historia błędów (skan)",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Last scan",
+  "pl": "Ostatni skan",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Confirm – about 1 min",
+  "pl": "Potwierdź – ok. 1 min",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "Scan Data-IDs",
+  "pl": "Skanuj Data-ID",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
+  "en": "The scan reads every standard Data-ID once and the boiler parameters (polling pauses meanwhile). Report: a link in the HA notifications opens GitHub with the map and the model filled in – nothing is sent until you press Create.",
+  "pl": "Skan czyta raz każdy standardowy Data-ID i parametry kotła (odczyt w tym czasie pauzuje). Zgłoszenie: link w powiadomieniach HA otwiera GitHub z gotową mapą i modelem – nic nie jest wysyłane, dopóki nie naciśniesz Create.",
+  "files": [
+   "ot.ts"
+  ]
+ },
+ {
   "en": "Calendar",
   "pl": "Kalendarz",
   "files": [
@@ -7049,6 +7429,20 @@
   ]
  },
  {
+  "en": "Last write",
+  "pl": "Ostatni zapis",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": " – the boiler acknowledged it but keeps its own value (remote?)",
+  "pl": " – kocioł potwierdził, ale trzyma swoją wartość (pilot?)",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
   "en": "economy",
   "pl": "comfort",
   "files": [
@@ -7156,6 +7550,13 @@
  {
   "en": "Setpoints",
   "pl": "Nastawy",
+  "files": [
+   "setpoints.ts"
+  ]
+ },
+ {
+  "en": "Read only – the remote (CAR V2 / Super Amico) sets the setpoints.",
+  "pl": "Tylko odczyt – nastawy ustawia pilot (CAR V2 / Super Amico).",
   "files": [
    "setpoints.ts"
   ]

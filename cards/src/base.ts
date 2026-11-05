@@ -117,6 +117,13 @@ export abstract class HubCard extends LitElement {
   protected get ot() { return !!this.idx?.ot; }
   /** F1/F2 write gate: locked only while the "Active ODU control" switch is exposed and off (hub v23+ keeps it armed and hidden) */
   protected get writeLocked() { return !!this.eid("f_arm") && !this.on("f_arm"); }
+  /** Dominus OpenTherm "Read only (remote in charge)" is on: no control writes to the boiler */
+  protected get otRO() { return this.ot && this.on("ot_ro"); }
+  /** a Data-ID the last Data-ID scan found unanswered (no reply / unsupported) - its tile is left out */
+  protected otMissing(id: number) {
+    const a = this.so("ot_ids")?.attributes;
+    return !!a && [...(a.no_reply ?? []), ...(a.unsupported ?? [])].includes(id);
+  }
 
   /** gas boiler present (Magis Combo): option `variant` ("combo" / "pro"), else from the system model (D61); unknown = yes */
   protected get hasGas(): boolean {
@@ -180,8 +187,9 @@ export abstract class HubCard extends LitElement {
     const so = this.so(k);
     if (!so) return nothing;
     const a = so.attributes ?? {}, v = parseFloat(so.state), step = a.step ?? 1, u = unit ?? a.unit_of_measurement ?? "";
-    const sug = parseFloat(String(a.suggested ?? "")), empty = isNaN(v) && !isNaN(sug);
+    const sug = parseFloat(String(a.suggested ?? "")), empty = isNaN(v) && !isNaN(sug), ro = this.otRO;
     const set = (dir: number) => {
+      if (ro) return;
       // an empty declared parameter: the first tap writes the suggested value as the starting point
       if (empty) return this.call("number", "set_value", k, { value: sug });
       if (isNaN(v)) return;
@@ -190,9 +198,9 @@ export abstract class HubCard extends LitElement {
     };
     return html`<div class="nr" style=${empty ? "opacity:.55" : ""}><ha-icon icon=${icon}></ha-icon><span class="nl" @click=${() => this.moreInfo(k)}>${label}${empty
         ? html`<span class="unset">${this.t("nie ustawione – wpisz z pieca", "not set – enter it from the boiler")}</span>` : nothing}</span>
-      <div class="btn xs" @click=${() => set(-1)}><ha-icon icon="mdi:minus"></ha-icon></div>
+      <div class="btn xs" style=${ro ? "opacity:.35;cursor:default" : ""} @click=${() => set(-1)}><ha-icon icon=${ro ? "mdi:lock-outline" : "mdi:minus"}></ha-icon></div>
       <span class="nv" style=${empty ? "opacity:.45;font-weight:600" : ""}>${this.f(empty ? sug : v, d, d)}${u ? " " + u : ""}</span>
-      <div class="btn xs" @click=${() => set(1)}><ha-icon icon="mdi:plus"></ha-icon></div></div>`;
+      <div class="btn xs" style=${ro ? "opacity:.35;cursor:default" : ""} @click=${() => set(1)}><ha-icon icon=${ro ? "mdi:lock-outline" : "mdi:plus"}></ha-icon></div></div>`;
   }
 
   protected ago(k: Key) {
@@ -203,7 +211,7 @@ export abstract class HubCard extends LitElement {
   }
 
   protected switchRow(k: Key, icon: string, col: string, name: string, sub: string | TemplateResult) {
-    const act = this.on(k), dis = this.writeLocked || this.bad(k), tag = "sw_" + k, conf = this.isArmed(tag);
+    const act = this.on(k), dis = this.writeLocked || this.bad(k) || this.otRO, tag = "sw_" + k, conf = this.isArmed(tag);
     return html`<div class="sr" style=${box(col, act)}>
       <ha-icon icon=${icon} style="color:${c(act ? col : "overlay2")}"></ha-icon>
       <div class="cx" @click=${() => this.moreInfo(k)} style="cursor:pointer">
@@ -305,7 +313,8 @@ export abstract class HubCard extends LitElement {
     if (!its.length) return nothing;
     return html`<div class="tgs">${its.map(([k, icon, col, label, sub, wide]) => {
       const sel = this.eid(k)!.startsWith("select."), opts: string[] = sel ? this.attr(k, "options") ?? [] : [];
-      const on = sel ? this.s(k) === opts[1] : this.on(k), bad = this.bad(k) || (sel && opts.length !== 2), tag = "tg_" + k, conf = this.isArmed(tag);
+      // the read-only switch itself stays usable; everything else is locked while it is on
+      const on = sel ? this.s(k) === opts[1] : this.on(k), bad = this.bad(k) || (sel && opts.length !== 2) || (this.otRO && k !== "ot_ro"), tag = "tg_" + k, conf = this.isArmed(tag);
       const flip = () => sel ? this.call("select", "select_option", k, { option: opts[on ? 0 : 1] }) : this.call("switch", on ? "turn_off" : "turn_on", k);
       return html`<div class="tgi ${wide ? "wide" : ""}" style=${on ? `background:${ca(col, 0.2)};border-color:${ca(col, 0.55)}` : ""}>
         <ha-icon icon=${icon} style="color:${c(on ? col : "overlay2")}" @click=${() => this.moreInfo(k)}></ha-icon>

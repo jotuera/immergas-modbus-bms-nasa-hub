@@ -324,6 +324,32 @@ class ImmergasNowCard extends HubCard {
     </div>`;
   }
 
+  /** OpenTherm extras: only what the boiler really reports - pressure / DHW flow are left out when the Data-ID scan
+   *  found them unanswered or they have no value (a DHW flow that stays 0 outside DHW, e.g. a storage-tank boiler) */
+  private otChips(dhw: boolean) {
+    const press = this.n("ot_press"), fl = this.n("ot_dhw_flow"), chips: unknown[] = [];
+    const flag = (["ot_f_water", "ot_f_flame", "ot_f_air", "ot_f_hot", "ot_f_service"] as Key[]).find((k) => this.on(k));
+    if (flag) chips.push(html`<div class="span2">${this.chip(flag, "mdi:alert-octagon", "red", this.t("Flaga błędu kotła", "Boiler fault flag"), this.so(flag)?.attributes?.friendly_name ?? "", true)}</div>`);
+    if (this.eid("ot_press") && !this.bad("ot_press") && !this.otMissing(18))
+      chips.push(this.chip("ot_press", "mdi:gauge", press < 1 || press > 2.5 ? "red" : "green", this.t("Ciśnienie instalacji", "System pressure"), this.f(press, 1, 1) + " bar", false));
+    if (this.eid("ot_dhw_flow") && !this.bad("ot_dhw_flow") && !this.otMissing(19) && (fl > 0 || dhw))
+      chips.push(this.chip("ot_dhw_flow", "mdi:water-pump", "sky", this.t("Przepływ CWU", "DHW flow rate"), this.f(fl, 1, 1) + " l/min", false));
+    if (this.eid("ot_exhaust") && !this.bad("ot_exhaust"))
+      chips.push(this.chip("ot_exhaust", "mdi:smoke", "overlay2", this.t("Spaliny", "Exhaust"), this.f(this.n("ot_exhaust"), 1, 1) + " °C", false));
+    if (this.eid("ot_fan") && !this.bad("ot_fan"))
+      chips.push(this.chip("ot_fan", "mdi:fan", "sky", this.t("Wentylator", "Fan"), this.f(this.n("ot_fan"), 0) + this.t(" obr/min", " rpm"), false));
+    if (this.eid("ot_flame_i") && !this.bad("ot_flame_i"))
+      chips.push(this.chip("ot_flame_i", "mdi:fire-circle", "peach", this.t("Prąd płomienia", "Flame current"), this.f(this.n("ot_flame_i"), 1, 1) + " µA", false));
+    if (this.eid("ot_burn_today") && !this.bad("ot_burn_today")) {
+      const sh = this.n("ot_burn_h");
+      chips.push(this.chip("ot_burn_today", "mdi:fire", "peach", this.t("Palnik dziś", "Burner today"),
+        `${this.f(this.n("ot_burn_hours"), 1, 1)} h · ${this.f(this.n("ot_burn_today"), 0)} ${this.t("startów", "starts")}`, false));
+      chips.push(this.chip("ot_burn_h", "mdi:fire-alert", sh > 6 ? "red" : sh > 3 ? "peach" : "green", this.t("Starty / godz.", "Starts / hour"),
+        this.f(sh, 0) + (sh > 6 ? this.t(" · taktowanie", " · short cycling") : ""), sh > 6));
+    }
+    return chips.length ? html`<div class="chips2">${chips}</div>` : nothing;
+  }
+
   /** Immergas Dominus (no heat-pump data): mode and what the boiler is asked for, setpoints, three temperatures, fault */
   private domBody() {
     const err = this.on("err_active"), ch = this.on("dom_ch_demand"), dhw = this.on("dom_dhw_request");
@@ -369,9 +395,7 @@ class ImmergasNowCard extends HubCard {
         ${ot ? this.tile("ot_mod", flame ? "mdi:fire" : "mdi:fire-off", this.t("Modulacja", "Modulation"), flame ? this.f(mod, 0) + " %" : this.t("płomień zgaszony", "no flame"), flame ? "peach" : "overlay1", flame ? mod : 0)
           : this.tile("dom_ch_demand", ch ? "mdi:fire" : "mdi:fire-off", this.t("Żądanie CO", "CH demand"), ch ? this.t("tak", "yes") : this.t("nie", "no"), ch ? "peach" : "overlay1")}
       </div>
-      ${ot && (this.eid("ot_press") || this.eid("ot_dhw_flow")) ? html`<div class="chips2">
-        ${this.eid("ot_press") ? this.chip("ot_press", "mdi:gauge", press < 1 || press > 2.5 ? "red" : "green", this.t("Ciśnienie instalacji", "System pressure"), this.f(press, 1, 1) + " bar", false) : nothing}
-        ${this.eid("ot_dhw_flow") ? this.chip("ot_dhw_flow", "mdi:water-pump", "sky", this.t("Przepływ CWU", "DHW flow rate"), this.f(this.n("ot_dhw_flow"), 1, 1) + " l/min", false) : nothing}</div>` : nothing}
+      ${ot ? this.otChips(dhw) : nothing}
       ${this.config.show_timers === false || !this.eid("dom_ch_demand") ? nothing : this.domTimers()}
       ${this.eid("dom_ch_time_today") ? html`<div class="chips2">
         ${this.chip("dom_ch_time_today", "mdi:radiator", "peach", this.t("Grzanie CO dziś", "CH heating today"),

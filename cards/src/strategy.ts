@@ -100,6 +100,8 @@ function otDashboard(config: any, t: (a: string, b: string) => string) {
         { type: "grid", cards: [card("immergas-setpoints-card", config.setpoints ?? {})] },
         { type: "grid", cards: [card("immergas-mode-card", config.mode ?? {}), card("immergas-settings-card", { part: "online", ...(config.settings ?? {}) })] },
         { type: "grid", cards: [card("immergas-schedule-card", config.schedule ?? {})] },
+        { type: "grid", cards: [card("immergas-ot-boiler-card", config.ot_boiler ?? {})] },
+        { type: "grid", cards: [card("immergas-ot-map-card", config.ot_map ?? {})] },
         { type: "grid", column_span: 3, cards: [card("immergas-charts-card", config.charts ?? {})] },
       ],
     }],

@@ -5,7 +5,7 @@
 //  - DHW has no presets on the bus: card options dhw_eco / dhw_comfort - an input_number helper (edited under the gear)
 //    or a literal value (default 45 / 55 °C).
 // Options: humidity_entity / humidity_target (shown next to the room temperature), dhw_eco, dhw_comfort.
-import { HubCard, html, css, nothing, c, ca, register } from "../base";
+import { box, HubCard, html, css, nothing, c, ca, register } from "../base";
 import { isDhw, isCool, parseState } from "./timers";
 import { Key } from "../names";
 
@@ -23,6 +23,7 @@ class ImmergasSetpointsCard extends HubCard {
 
   /** −/+ with a short debounce, so several taps add up before one write to the boiler */
   private bump(k: Key, dir: number) {
+    if (this.otRO) return;
     const a = this.so(k)?.attributes ?? {}, step = a.step ?? 0.5, v = this.val(k);
     if (isNaN(v)) return;
     this.pending[k] = Math.round(Math.min(a.max ?? 99, Math.max(a.min ?? 0, v + dir * step)) * 100) / 100;
@@ -38,7 +39,7 @@ class ImmergasSetpointsCard extends HubCard {
     setTimeout(done, 1000);
   }
   private set(k: Key, v: number) {
-    if (isNaN(v)) return;
+    if (isNaN(v) || this.otRO) return;
     clearTimeout(this.timers[k]);
     this.pending[k] = v;
     this.write(k, v);
@@ -58,15 +59,29 @@ class ImmergasSetpointsCard extends HubCard {
       <div class="big" @click=${() => this.moreInfo(o.meas)}><span style="color:${c(o.col)}">${this.f(o.temp, 1, 1)}</span><span class="u" style="color:${c(o.col)}">°C</span>${o.extra ?? nothing}</div>
       <div class="st">${o.status}</div>
       <div class="reg">
-        <div class="rb" @click=${() => this.bump(o.k, -1)}><ha-icon icon="mdi:minus"></ha-icon></div>
+        <div class="rb" style=${this.otRO ? "opacity:.35;cursor:default" : ""} @click=${() => this.bump(o.k, -1)}><ha-icon icon=${this.otRO ? "mdi:lock-outline" : "mdi:minus"}></ha-icon></div>
         <div class="rv" @click=${() => this.moreInfo(o.k)}><span class="rn" style=${pend ? `color:${c(o.col)}` : ""}>${this.f(sp, 1, 1)}°</span><span class="rl">${this.t("NASTAWA", "SETPOINT")}</span></div>
-        <div class="rb" @click=${() => this.bump(o.k, 1)}><ha-icon icon="mdi:plus"></ha-icon></div></div>
+        <div class="rb" style=${this.otRO ? "opacity:.35;cursor:default" : ""} @click=${() => this.bump(o.k, 1)}><ha-icon icon=${this.otRO ? "mdi:lock-outline" : "mdi:plus"}></ha-icon></div></div>
       ${o.profiles.length ? html`<div class="pf">${o.profiles.map(([id, lbl, v]) => {
         const on = !isNaN(v) && Math.abs(sp - v) < 0.01, pc = id === "eco" ? "teal" : "peach";
         return html`<div class="pb" style=${on ? `background:${ca(pc, 0.3)};border-color:${ca(pc, 0.75)};color:${c(pc)}` : ""} @click=${() => !on && this.set(o.k, v)}>
           <span class="pl"><ha-icon icon=${id === "eco" ? "mdi:leaf" : "mdi:sofa-outline"} style="color:${c(pc)}"></ha-icon>${lbl}</span><span class="pv">${this.f(v, 1, 1)}°</span></div>`;
       })}</div>` : nothing}
       ${o.hint ? html`<div class="hint">${o.hint}</div>` : nothing}</div>`;
+  }
+
+  /** OpenTherm: the result of the last write for 3 minutes (the boiler read the value back - taken or not) */
+  private lastWrite() {
+    const so = this.so("ot_lastw");
+    if (!this.ot || !so || this.bad("ot_lastw")) return nothing;
+    const at = Date.parse(String(so.attributes?.at ?? ""));
+    if (isNaN(at) || Date.now() - at > 180000) return nothing;
+    setTimeout(() => this.requestUpdate(), 180000 - (Date.now() - at) + 500);
+    const ok = so.state === "ok", miss = so.state === "mismatch";
+    const col = ok ? "green" : miss ? "red" : "overlay2";
+    return html`<div class="note" style=${box(col, false)} @click=${() => this.moreInfo("ot_lastw")}>
+      <ha-icon icon=${ok ? "mdi:check-circle-outline" : miss ? "mdi:alert-circle-outline" : "mdi:information-outline"} style="color:${c(col)}"></ha-icon>
+      ${this.t("Ostatni zapis", "Last write")}: ${this.txt("ot_lastw")}${miss ? this.t(" – kocioł potwierdził, ale trzyma swoją wartość (pilot?)", " – the boiler acknowledged it but keeps its own value (remote?)") : ""}</div>`;
   }
 
   /** DHW profile value: input_number helper state, a literal, or the default */
@@ -148,6 +163,7 @@ class ImmergasSetpointsCard extends HubCard {
       ${this.head("mdi:thermostat", this.t("Nastawy", "Setpoints"), this.ot ? undefined : html`<span class="gear2" @click=${() => { this.gear = !this.gear; this.requestUpdate(); }}>
         <ha-icon icon=${this.gear ? "mdi:close" : "mdi:cog-outline"}></ha-icon></span>`)}
       <div class="two">${ch}${dhw}</div>
+      ${this.otRO ? html`<div class="note"><ha-icon icon="mdi:lock-outline"></ha-icon> ${this.t("Tylko odczyt – nastawy ustawia pilot (CAR V2 / Super Amico).", "Read only – the remote (CAR V2 / Super Amico) sets the setpoints.")}</div>` : this.lastWrite()}
       ${this.gear && !this.ot ? html`<div class="presets">
         <div class="grp">${cool ? this.t("Profile chłodzenia Strefy 1 (piec)", "Zone 1 cooling profiles (boiler)") : this.t("Profile ogrzewania Strefy 1 (piec)", "Zone 1 heating profiles (boiler)")}</div>
         ${this.numRow(cKey, "mdi:sofa-outline", this.t("Komfort", "Comfort"), 1)}

@@ -46,7 +46,7 @@ class ImmergasModeCard extends HubCard {
     return ui.filter(([o]) => opts.includes(o)).map(([opt, lbl, icon, col]) => {
       const sel = cur === opt, tag = "mode_" + opt, armed = this.isArmed(tag);
       return html`<div class="mb" style=${sel ? box(col, true) : "background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)"}
-        @click=${() => !sel && this.confirm(tag, () => this.call("select", "select_option", "mode", { option: opt }))}>
+        @click=${() => !sel && !this.otRO && this.confirm(tag, () => this.call("select", "select_option", "mode", { option: opt }))}>
         <ha-icon icon=${icon} style="color:${sel ? c(col) : "var(--secondary-text-color)"}"></ha-icon>
         <span style=${sel ? `color:${c(col)}` : "opacity:.7"}>${armed ? this.t("Potwierdź", "Confirm") : lbl}</span></div>`;
     });
@@ -236,7 +236,8 @@ class ImmergasModeCard extends HubCard {
       ${this.head("mdi:tune-variant", this.t("Tryb pracy", "Operating mode"), this.t("dotknij 2× aby zmienić", "tap twice to change"))}
       <div class="modes">${this.modes()}</div>
       ${this.config.show_source === false || this.ot ? nothing : html`${modeIdx === 3 ? this.sourceRow() : nothing}${modeIdx >= 1 ? this.dhwSourceRow() : nothing}`}
-      ${this.ot ? html`<div class="hint">${this.t("OpenTherm: z pilotem CAR V2 tryb ustawia też pilot – zmiana tutaj może zostać przez niego nadpisana", "OpenTherm: with a CAR V2 remote the remote also sets the mode – a change here may be overridden by it")}</div>` : nothing}
+      ${this.otRO ? html`<div class="hint">🔒 ${this.t("Tylko odczyt – tryb ustawia pilot (CAR V2 / Super Amico)", "Read only – the remote (CAR V2 / Super Amico) sets the mode")}</div>`
+        : this.ot ? html`<div class="hint">${this.t("OpenTherm: z pilotem CAR V2 tryb ustawia też pilot – zmiana tutaj może zostać przez niego nadpisana", "OpenTherm: with a CAR V2 remote the remote also sets the mode – a change here may be overridden by it")}</div>` : nothing}
       ${this.eid("u11") ? night : nothing}
       ${this.dominus && !this.eid("prog_mode") ? this.domRows(modeIdx === 2) : nothing}
       ${this.legRow(tchip, hm)}
