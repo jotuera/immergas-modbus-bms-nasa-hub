@@ -1277,5 +1277,21 @@
  "Serviced today": "Ma karbantartva",
  "During the vacation": "Szabadság alatt",
  "CAR V2 emulated – Dominus + HA": "CAR V2 emulálva – Dominus + HA",
- "the Dominus regulator and the HA programs instead of the remote": "a Dominus szabályzó és a HA programok a távvezérlő helyett"
+ "the Dominus regulator and the HA programs instead of the remote": "a Dominus szabályzó és a HA programok a távvezérlő helyett",
+ "paused – the remote is in charge": "szünetel – a távvezérlő irányít",
+ "disinfection running": "fertőtlenítés folyamatban",
+ "HA program · the cylinder to the boiler maximum for 20 min": "HA program · tároló a kazán maximumán 20 percig",
+ "Daily": "Naponta",
+ "Monday": "Hétfő",
+ "HOLD": "IDŐ",
+ "Summer – CH off": "Nyár – fűtés ki",
+ "Standby – CH and DHW off": "Stand-by – fűtés és HMV ki",
+ "lowers the zone 1 target": "csökkenti az 1. zóna alapjelét",
+ "on · ": "be · ",
+ "off · ": "ki · ",
+ "DURING": "ALATT",
+ "TEMPERATURE": "HŐMÉRSÉKLET",
+ "UNTIL": "EDDIG",
+ "Modulation (MODUL)": "Moduláció (MODUL)",
+ "flow by the room / setpoint difference; off = constant flow until the setpoint is reached": "előremenő a szoba / alapjel különbsége szerint; ki = állandó előremenő az alapjelig"
 }

@@ -158,14 +158,6 @@ class ImmergasSettingsCard extends HubCard {
         ${this.selRow(this.eid("floor_type"), this.t("Rodzaj posadzki", "Floor screed type"), "mdi:layers-triple-outline")}
         ${this.numRow("heated_area", "mdi:floor-plan", this.t("Powierzchnia ogrzewana", "Heated floor area"), 0)}` : nothing}
       <div class=${this.otRO ? "locked" : ""}>
-      ${this.eid("dom_vacation") ? html`<div class="grp">${this.t("Tryb wyjazdowy", "Vacation")}</div>
-        ${this.switchRow("dom_vacation", "mdi:bag-suitcase-outline", "sky", this.t("Tryb wyjazdowy", "Vacation mode"),
-          this.ot ? this.t("wyłącza ogrzewanie (Lato), po powrocie przywraca tryb", "switches heating off (Summer), restores the mode on return")
-            : this.t("obniża zadaną Strefy 1, po powrocie przywraca", "lowers the zone 1 target, restores it on return"))}
-        ${this.ot ? this.selRow(this.eid("ot_vac_action"), this.t("Na czas urlopu", "During the vacation"), "mdi:bag-suitcase-outline")
-          : this.numRow("dom_vac_temp", "mdi:thermometer-low", this.t("Temperatura na wyjazd", "Vacation temperature"), 1)}
-        <div class="nr"><ha-icon icon="mdi:calendar-end"></ha-icon><span class="nl" @click=${() => this.moreInfo("dom_vac_until")}>${this.t("Wyjazd do", "Away until")}</span>
-          <span class="nv" style="min-width:auto">${u}</span></div>` : nothing}
       ${this.eid("dom_auto_season") ? html`<div class="grp">${this.t("Automatyczne Lato / Zima", "Automatic summer / winter")}</div>
         ${this.switchRow("dom_auto_season", "mdi:sun-snowflake-variant", "teal", this.t("Automatyczne Lato / Zima", "Automatic summer / winter"),
           isNaN(mean) ? this.t("średnia zewnętrzna z 24 h – zbieram dane", "24 h outdoor mean – collecting data")

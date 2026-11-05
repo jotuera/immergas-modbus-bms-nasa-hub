@@ -283,8 +283,7 @@
   "en": "Vacation mode",
   "pl": "Tryb urlopowy",
   "files": [
-   "automations.ts",
-   "settings.ts"
+   "automations.ts"
   ]
  },
  {
@@ -6185,6 +6184,126 @@
   ]
  },
  {
+  "en": "paused – the remote is in charge",
+  "pl": "wstrzymana – steruje pilot",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "disinfection running",
+  "pl": "dezynfekcja trwa",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "HA program · the cylinder to the boiler maximum for 20 min",
+  "pl": "program HA · zasobnik do maks. kotła przez 20 min",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "DAY",
+  "pl": "DZIEŃ",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "Daily",
+  "pl": "Codziennie",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "Monday",
+  "pl": "Poniedziałek",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "HOLD",
+  "pl": "CZAS",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "until switched off",
+  "pl": "do wyłączenia",
+  "files": [
+   "mode.ts",
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Summer – CH off",
+  "pl": "Lato – CO wył.",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "Standby – CH and DHW off",
+  "pl": "Stand-by – CO i CWU wył.",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "lowers the zone 1 target",
+  "pl": "obniża zadaną Strefy 1",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "on · ",
+  "pl": "włączony · ",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "off · ",
+  "pl": "wyłączony · ",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "Vacation",
+  "pl": "Tryb wyjazdowy",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "DURING",
+  "pl": "NA CZAS URLOPU",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "TEMPERATURE",
+  "pl": "TEMPERATURA",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "UNTIL",
+  "pl": "DO",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
   "en": "not set – enter the hours from the boiler (U12 / U13)",
   "pl": "nie ustawione – wpisz godziny z pieca (U12 / U13)",
   "files": [
@@ -6357,6 +6476,20 @@
  {
   "en": "OpenTherm: with a CAR V2 remote the remote also sets the mode – a change here may be overridden by it",
   "pl": "OpenTherm: z pilotem CAR V2 tryb ustawia też pilot – zmiana tutaj może zostać przez niego nadpisana",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "Modulation (MODUL)",
+  "pl": "Modulacja (MODUL)",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "flow by the room / setpoint difference; off = constant flow until the setpoint is reached",
+  "pl": "zasilanie wg różnicy pokój / zadana; wyłączona = stałe zasilanie do osiągnięcia zadanej",
   "files": [
    "mode.ts"
   ]
@@ -8291,13 +8424,6 @@
   ]
  },
  {
-  "en": "until switched off",
-  "pl": "do wyłączenia",
-  "files": [
-   "settings.ts"
-  ]
- },
- {
   "en": "Zone 1 settings",
   "pl": "Nastawy Strefy 1",
   "files": [
@@ -8328,48 +8454,6 @@
  {
   "en": "Heated floor area",
   "pl": "Powierzchnia ogrzewana",
-  "files": [
-   "settings.ts"
-  ]
- },
- {
-  "en": "Vacation",
-  "pl": "Tryb wyjazdowy",
-  "files": [
-   "settings.ts"
-  ]
- },
- {
-  "en": "switches heating off (Summer), restores the mode on return",
-  "pl": "wyłącza ogrzewanie (Lato), po powrocie przywraca tryb",
-  "files": [
-   "settings.ts"
-  ]
- },
- {
-  "en": "lowers the zone 1 target, restores it on return",
-  "pl": "obniża zadaną Strefy 1, po powrocie przywraca",
-  "files": [
-   "settings.ts"
-  ]
- },
- {
-  "en": "During the vacation",
-  "pl": "Na czas urlopu",
-  "files": [
-   "settings.ts"
-  ]
- },
- {
-  "en": "Vacation temperature",
-  "pl": "Temperatura na wyjazd",
-  "files": [
-   "settings.ts"
-  ]
- },
- {
-  "en": "Away until",
-  "pl": "Wyjazd do",
   "files": [
    "settings.ts"
   ]

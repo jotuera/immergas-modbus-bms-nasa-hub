@@ -91,6 +91,58 @@ class ImmergasModeCard extends HubCard {
 </div>`;
   }
 
+  /** OpenTherm: anti-legionella of the HA programs (CAR V2 "LEGION": 02:00, the boiler maximum held 20 min) - no
+   *  Magis parameter codes, the boiler has no such function of its own */
+  private otLegRow(tchip: (o: string | undefined, l: string, v: string | null, col?: string, faint?: boolean) => unknown) {
+    if (!this.eid("ot_leg")) return nothing;
+    const v = this.s("ot_leg") ?? "off", on = v !== "off", bad = this.bad("ot_leg") || this.otRO, conf = this.isArmed("tg_otleg");
+    const run = !!this.attr("zone1_phase", "anti_legionella_running"), col = bad && !on ? "overlay1" : on ? "red" : "overlay2";
+    const max = parseFloat(String(this.attr("ot_leg_t", "max") ?? "")), temp = Math.min(this.n("ot_leg_t"), isNaN(max) ? 99 : max);
+    const st = this.otRO ? this.t("wstrzymana – steruje pilot", "paused – the remote is in charge")
+      : conf ? this.t("dotknij ponownie, aby potwierdzić", "tap again to confirm")
+      : run ? this.t("dezynfekcja trwa", "disinfection running")
+      : on ? this.t("program HA · zasobnik do maks. kotła przez 20 min", "HA program · the cylinder to the boiler maximum for 20 min")
+      : this.t("wyłączona", "off");
+    return html`<div class="night" style="${box(col, run)}${this.otRO ? ";opacity:.55" : ""}">
+      <ha-icon icon="mdi:bacteria-outline" style="color:${c(col)}" @click=${() => this.moreInfo("ot_leg")}></ha-icon>
+      <div class="cx" @click=${() => this.moreInfo("ot_leg")}><div class="nt">${this.t("Anty-legionella", "Anti-legionella")}</div>
+        <div class="ns" style="color:${c(col)}">${st}</div></div>
+      <div class="tgl ${bad ? "dis" : ""}" style="flex:none;align-self:flex-start;background:${on ? ca("red", 0.35) : "rgba(255,255,255,.08)"}${conf ? `;outline:2px solid ${c("red")}` : ""}"
+        @click=${() => !bad && this.confirm("tg_otleg", () => this.call("select", "select_option", "ot_leg", { option: on ? "off" : "weekly" }))}>
+        <div class="kn" style="left:${on ? 23 : 3}px;background:${on ? c("red") : c("overlay1")}"></div></div>
+      ${on ? html`<div class="tcs full">${tchip(this.eid("ot_leg"), this.t("DZIEŃ", "DAY"), v === "daily" ? this.t("Codziennie", "Daily") : this.t("Poniedziałek", "Monday"), "red")}
+        ${tchip(this.eid("ot_leg"), "START", "02:00", "red")}
+        ${tchip(this.eid("ot_leg_t"), this.t("TEMP.", "TEMP."), isNaN(temp) ? null : this.f(temp, 0) + " °C", "red")}
+        ${tchip(undefined, this.t("CZAS", "HOLD"), "20 min", "red")}</div>` : nothing}
+    </div>`;
+  }
+
+  /** vacation (both modes, under the night mode): Modbus lowers the zone 1 target, OpenTherm switches to Standby or
+   *  Summer (the "Vacation action"); the end date and (Modbus) the vacation temperature below */
+  private vacRow(tchip: (o: string | undefined, l: string, v: string | null, col?: string, faint?: boolean) => unknown) {
+    if (!this.eid("dom_vacation")) return nothing;
+    const on = this.on("dom_vacation"), bad = this.bad("dom_vacation") || this.otRO, conf = this.isArmed("tg_vac"), col = on ? "sky" : "overlay2";
+    const until = this.so("dom_vac_until"), u = until && !["unknown", "unavailable", ""].includes(until.state)
+      ? new Date(until.state).toLocaleString(this.loc, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : this.t("do wyłączenia", "until switched off");
+    const what = this.ot ? (this.s("ot_vac_action") === "summer" ? this.t("Lato – CO wył.", "Summer – CH off") : this.t("Stand-by – CO i CWU wył.", "Standby – CH and DHW off"))
+      : this.t("obniża zadaną Strefy 1", "lowers the zone 1 target");
+    const st = this.otRO ? this.t("wstrzymany – steruje pilot", "paused – the remote is in charge")
+      : conf ? this.t("dotknij ponownie, aby potwierdzić", "tap again to confirm")
+      : on ? this.t("włączony · ", "on · ") + what : this.t("wyłączony · ", "off · ") + what;
+    const vt = this.n("dom_vac_temp");
+    return html`<div class="night" style="${box(col, on)}${this.otRO ? ";opacity:.55" : ""}">
+      <ha-icon icon="mdi:bag-suitcase-outline" style="color:${c(col)}" @click=${() => this.moreInfo("dom_vacation")}></ha-icon>
+      <div class="cx" @click=${() => this.moreInfo("dom_vacation")}><div class="nt">${this.t("Tryb wyjazdowy", "Vacation")}</div>
+        <div class="ns" style="color:${c(on ? "sky" : "overlay2")}">${st}</div></div>
+      <div class="tgl ${bad ? "dis" : ""}" style="flex:none;align-self:flex-start;background:${on ? ca("sky", 0.35) : "rgba(255,255,255,.08)"}${conf ? `;outline:2px solid ${c("sky")}` : ""}"
+        @click=${() => !bad && this.confirm("tg_vac", () => this.call("switch", on ? "turn_off" : "turn_on", "dom_vacation"))}>
+        <div class="kn" style="left:${on ? 23 : 3}px;background:${on ? c("sky") : c("overlay1")}"></div></div>
+      <div class="tcs full">${this.ot ? tchip(this.eid("ot_vac_action"), this.t("NA CZAS URLOPU", "DURING"), this.s("ot_vac_action") === "summer" ? this.t("Lato", "Summer") : "Stand-by", "sky")
+        : tchip(this.eid("dom_vac_temp"), this.t("TEMPERATURA", "TEMPERATURE"), isNaN(vt) ? null : this.f(vt, 1, 1) + " °C", "sky")}
+        ${tchip(this.eid("dom_vac_until"), this.t("DO", "UNTIL"), u, "sky")}</div>
+    </div>`;
+  }
+
   /** Dominus: night function U11 is not readable over TCP - the switch declares it set on the boiler (two-tap), the
    *  window U12 / U13 comes from the integration's time entities; status = inside / outside the window */
   private declaredNight(tchip: (o: string | undefined, l: string, v: string | null, col?: string, faint?: boolean) => unknown, ns: string | null, ne: string | null, inWin: boolean | null) {
@@ -238,13 +290,16 @@ class ImmergasModeCard extends HubCard {
       ${this.config.show_source === false || this.ot ? nothing : html`${modeIdx === 3 ? this.sourceRow() : nothing}${modeIdx >= 1 ? this.dhwSourceRow() : nothing}`}
       ${this.otRO ? html`<div class="hint">🔒 ${this.t("Tylko odczyt – tryb ustawia pilot (CAR V2 / Super Amico)", "Read only – the remote (CAR V2 / Super Amico) sets the mode")}</div>`
         : this.ot ? html`<div class="hint">${this.t("OpenTherm: z pilotem CAR V2 tryb ustawia też pilot – zmiana tutaj może zostać przez niego nadpisana", "OpenTherm: with a CAR V2 remote the remote also sets the mode – a change here may be overridden by it")}</div>` : nothing}
-      ${this.eid("u11") ? night : nothing}
+      ${this.eid("u11") && !this.ot ? night : nothing}
       ${this.dominus && !this.eid("prog_mode") ? this.domRows(modeIdx === 2) : nothing}
-      ${this.legRow(tchip, hm)}
+      ${this.ot ? this.otLegRow(tchip) : this.legRow(tchip, hm)}
+      ${this.vacRow(tchip)}
       ${this.config.show_f1f2 === false ? nothing : this.f1f2Rows()}
       ${this.progRow()}
       ${this.dhwProgRow()}
       ${this.config.show_toggles === false ? nothing : this.toggles([
+        ["ot_modul", "mdi:fire-circle", "peach", this.t("Modulacja (MODUL)", "Modulation (MODUL)"),
+          this.t("zasilanie wg różnicy pokój / zadana; wyłączona = stałe zasilanie do osiągnięcia zadanej", "flow by the room / setpoint difference; off = constant flow until the setpoint is reached"), true],
         ["room_mod", "mdi:home-thermometer-outline", "green", this.t("Modulacja z sondą pokojową", "Room probe modulation"),
           html`${this.t("zasilanie korygowane wg temp. w pokoju", "flow corrected by the room temperature")}
             ${this.physPanel ? html`<span style="color:${c("yellow")}">${this.t("· fizyczny panel: temperatura z jego czujnika, wybór źródła nieaktywny",

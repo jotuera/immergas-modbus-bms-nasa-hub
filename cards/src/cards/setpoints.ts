@@ -119,7 +119,7 @@ class ImmergasSetpointsCard extends HubCard {
     const auto = (() => { const o: string[] = this.attr("prog_mode", "options") ?? []; return o.length === 2 && this.s("prog_mode") === o[1]; })()
       || (this.dominus && ["comfort", "economy"].includes(this.s("zone1_phase") ?? ""));
     const phase = this.bad("zone1_phase") ? "" : this.txt("zone1_phase")!;
-    const otRoom = this.ot && !!this.eid("ot_room_set"), zr = this.n("zone1");
+    const otRoom = this.ot && !!this.eid("ot_room_set") && !this.otRO, zr = this.n("zone1");
     const ch = otRoom ? this.tileView({
       k: "ot_room_set", meas: this.eid("zone1") ? "zone1" : "ot_flow", icon: "mdi:radiator", col: tempCol(zr), title: this.t("Ogrzewanie", "Heating"),
       sub: this.t("CO · pokój", "CH · room"), temp: this.eid("zone1") ? zr : this.n("ot_flow"),

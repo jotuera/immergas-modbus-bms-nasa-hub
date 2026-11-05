@@ -1277,5 +1277,21 @@
  "Serviced today": "Vandaag onderhouden",
  "During the vacation": "Tijdens de vakantie",
  "CAR V2 emulated – Dominus + HA": "CAR V2 geëmuleerd – Dominus + HA",
- "the Dominus regulator and the HA programs instead of the remote": "de Dominus-regelaar en de HA-programma's in plaats van de afstandsbediening"
+ "the Dominus regulator and the HA programs instead of the remote": "de Dominus-regelaar en de HA-programma's in plaats van de afstandsbediening",
+ "paused – the remote is in charge": "gepauzeerd – de afstandsbediening regelt",
+ "disinfection running": "desinfectie bezig",
+ "HA program · the cylinder to the boiler maximum for 20 min": "HA-programma · boiler 20 min op ketelmaximum",
+ "Daily": "Dagelijks",
+ "Monday": "Maandag",
+ "HOLD": "DUUR",
+ "Summer – CH off": "Zomer – CV uit",
+ "Standby – CH and DHW off": "Stand-by – CV en SWW uit",
+ "lowers the zone 1 target": "verlaagt de instelwaarde zone 1",
+ "on · ": "aan · ",
+ "off · ": "uit · ",
+ "DURING": "TIJDENS",
+ "TEMPERATURE": "TEMPERATUUR",
+ "UNTIL": "TOT",
+ "Modulation (MODUL)": "Modulatie (MODUL)",
+ "flow by the room / setpoint difference; off = constant flow until the setpoint is reached": "aanvoer volgens verschil kamer / instelwaarde; uit = constante aanvoer tot de instelwaarde"
 }

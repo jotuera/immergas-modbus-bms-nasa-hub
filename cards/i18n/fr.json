@@ -1277,5 +1277,21 @@
  "Serviced today": "Entretenu aujourd’hui",
  "During the vacation": "Pendant les vacances",
  "CAR V2 emulated – Dominus + HA": "CAR V2 émulée – Dominus + HA",
- "the Dominus regulator and the HA programs instead of the remote": "le régulateur du Dominus et les programmes HA à la place de la télécommande"
+ "the Dominus regulator and the HA programs instead of the remote": "le régulateur du Dominus et les programmes HA à la place de la télécommande",
+ "paused – the remote is in charge": "en pause – la télécommande pilote",
+ "disinfection running": "désinfection en cours",
+ "HA program · the cylinder to the boiler maximum for 20 min": "programme HA · ballon au maximum de la chaudière pendant 20 min",
+ "Daily": "Tous les jours",
+ "Monday": "Lundi",
+ "HOLD": "DURÉE",
+ "Summer – CH off": "Été – chauffage arrêté",
+ "Standby – CH and DHW off": "Stand-by – chauffage et ECS arrêtés",
+ "lowers the zone 1 target": "abaisse la consigne zone 1",
+ "on · ": "activé · ",
+ "off · ": "désactivé · ",
+ "DURING": "PENDANT",
+ "TEMPERATURE": "TEMPÉRATURE",
+ "UNTIL": "JUSQU’AU",
+ "Modulation (MODUL)": "Modulation (MODUL)",
+ "flow by the room / setpoint difference; off = constant flow until the setpoint is reached": "départ selon l’écart pièce / consigne ; désactivée = départ constant jusqu’à la consigne"
 }

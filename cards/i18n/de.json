@@ -1277,5 +1277,21 @@
  "Serviced today": "Heute gewartet",
  "During the vacation": "Während des Urlaubs",
  "CAR V2 emulated – Dominus + HA": "CAR V2 emuliert – Dominus + HA",
- "the Dominus regulator and the HA programs instead of the remote": "Dominus-Regler und HA-Programme statt der Fernbedienung"
+ "the Dominus regulator and the HA programs instead of the remote": "Dominus-Regler und HA-Programme statt der Fernbedienung",
+ "paused – the remote is in charge": "pausiert – die Fernbedienung regelt",
+ "disinfection running": "Desinfektion läuft",
+ "HA program · the cylinder to the boiler maximum for 20 min": "HA-Programm · Speicher 20 min auf Kesselmaximum",
+ "Daily": "Täglich",
+ "Monday": "Montag",
+ "HOLD": "DAUER",
+ "Summer – CH off": "Sommer – HZ aus",
+ "Standby – CH and DHW off": "Standby – HZ und WW aus",
+ "lowers the zone 1 target": "senkt den Sollwert Zone 1",
+ "on · ": "ein · ",
+ "off · ": "aus · ",
+ "DURING": "WÄHREND",
+ "TEMPERATURE": "TEMPERATUR",
+ "UNTIL": "BIS",
+ "Modulation (MODUL)": "Modulation (MODUL)",
+ "flow by the room / setpoint difference; off = constant flow until the setpoint is reached": "Vorlauf nach Differenz Raum / Sollwert; aus = konstanter Vorlauf bis zum Sollwert"
 }

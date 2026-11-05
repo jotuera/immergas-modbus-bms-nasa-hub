@@ -1277,5 +1277,21 @@
  "Serviced today": "Servis proveden dnes",
  "During the vacation": "Během dovolené",
  "CAR V2 emulated – Dominus + HA": "Emulace CAR V2 – Dominus + HA",
- "the Dominus regulator and the HA programs instead of the remote": "regulátor Dominus a programy HA místo ovladače"
+ "the Dominus regulator and the HA programs instead of the remote": "regulátor Dominus a programy HA místo ovladače",
+ "paused – the remote is in charge": "pozastaveno – řídí ovladač",
+ "disinfection running": "dezinfekce probíhá",
+ "HA program · the cylinder to the boiler maximum for 20 min": "program HA · zásobník na maximum kotle po 20 min",
+ "Daily": "Denně",
+ "Monday": "Pondělí",
+ "HOLD": "DOBA",
+ "Summer – CH off": "Léto – ÚT vyp.",
+ "Standby – CH and DHW off": "Stand-by – ÚT i TUV vyp.",
+ "lowers the zone 1 target": "snižuje požadovanou zóny 1",
+ "on · ": "zapnuto · ",
+ "off · ": "vypnuto · ",
+ "DURING": "BĚHEM",
+ "TEMPERATURE": "TEPLOTA",
+ "UNTIL": "DO",
+ "Modulation (MODUL)": "Modulace (MODUL)",
+ "flow by the room / setpoint difference; off = constant flow until the setpoint is reached": "výstup podle rozdílu místnost / požadovaná; vypnuto = stálý výstup do dosažení požadované"
 }
