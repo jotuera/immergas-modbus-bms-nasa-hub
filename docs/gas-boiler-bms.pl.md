@@ -21,6 +21,7 @@ modułów DIM – kocioł zgłosi konflikt mastera albo je pominie.
 | VICTRIX SUPERIOR 2021, VICTRIX ZEUS Superior 25 / 30 / 35 | `gb_superior` | D+ / D−, zworka X40 zostaje | MENU / Serwis / Modbus, Typ = Bms (kod 1122); FW płyty kotła 1.05+, wyświetlacza 1.31+ |
 | VICTRIX EXTRA (28 / 32, 12 / 24 / 35 PLUS) | `gb_extra` | D+ / D−, X40 zostaje | P.18 = 2 (BMS), P.11 = 1 (kod 69) |
 | VICTRIX PRO V2 EU (także prosta kaskada) | `gb_pro` | **T+ / T−** listwy A38, X40 zdjęta | nic nie trzeba włączać (kod 123 tylko dla parametrów portu) |
+| Pompa ciepła **MAGIS M TOP** (R290, E-BOX TOP) | `gb_mtop` | **BMS+ / BMS−** płyty E-BOX TOP (A13), terminacja przełącznikiem SW1.2 | menu P panelu: P021 = On (sterowanie), P022 = 1, P023 = 3 (9600), P024 = 1 (even / 1) – najpierw sprawdź P023 / P024, użytkownicy zastali fabrycznie 2400 bodów |
 
 Port fabrycznie: **9600 bodów, 8E1, adres slave 1** we wszystkich trzech. PRO V2 EU: terminacja 120 Ω mostkiem TRD – T−,
 a gdy master nie ma rezystorów podciągających – mostki TR+ – T+ i TR− – T−.
@@ -33,7 +34,7 @@ a gdy master nie ma rezystorów podciągających – mostki TR+ – T+ i TR− �
 | `gb_control` | *Tryb pracy* (Stand-by / Tylko CWU / Ogrzewanie / Ogrzewanie + CWU), *Nastawa zasilania CO* (514), *Nastawa CWU* (515), *Reset usterki* (257 = 0xAA55) |
 | `gb_status` | bity stanu (płomień, pompa CO / CWU, CO / CWU / ochrona przed zamarzaniem dozwolone, funkcja specjalna, usterka kasowalna / niekasowalna), kod i opis usterki, limity CO / CWU kotła, konfiguracja portu |
 | `gb_sensors` | zasilanie, powrót, CWU, temp. zewnętrzna, modulacja, obliczone zasilanie, temperatura za sprzęgłem (HVDT) |
-| `gb_superior` / `gb_extra` / `gb_pro` | dodatki modelu z tabeli niżej – wczytaj dokładnie jeden |
+| `gb_superior` / `gb_extra` / `gb_pro` / `gb_mtop` | dodatki modelu z tabeli niżej – wczytaj dokładnie jeden |
 | `gb_curve` (opcjonalny) | krzywa pogodowa w hubie: co minutę nastawa zasilania CO z sondy zewnętrznej kotła, między dwoma punktami, w granicach limitów kotła |
 | `lang/gb_en`, `lang/gb_pl` | nazwy encji (`gb_name_prefix`, domyślnie „Immergas Gas”) |
 
@@ -67,6 +68,15 @@ Temperatury i procenty w jednostkach 0,1, chyba że zaznaczono inaczej.
 | 841–842 | input | godziny palnika (słowo starsze, młodsze) | ✓ | – | – |
 | 1024–1027 | input | maks. / min. CO, maks. / min. CWU | ✓ | ✓ | ✓ |
 | 61440–61442 | holding | adres slave, parzystość / stop / prędkość, 0xCC33 = zastosuj | ✓ | ✓ | ✓ |
+
+**MAGIS M TOP** (instrukcja ST.010018/001, rozdz. 1.23) ma tę samą mapę z dodatkiem pompy ciepła: bity stanu 7 pompa
+ciepła aktywna, 8 chłodzenie dozwolone, 9 CWU ECO, 10 ochrona przed zamarzaniem aktywna, 11 odszranianie (bez bitu
+palnika); 256 bit8 zezwala na chłodzenie, bit9 to CWU ECO (zwykła logika); 512 młodszy bajt 0x55 grzanie / **0xAA
+chłodzenie** / 0x00 koniec, starszy bajt bit0 CO przed CWU i bit4 tryb cichy; 513 maks. moc (0–1000 = 0–100 %);
+773 ciśnienie w **0,01 bar**; 782 przepływ instalacji (l/h); 1028 / 1029 maks. / min. chłodzenia. Nie ma COP,
+częstotliwości sprężarki ani energii – pompa przedstawia się jako generator ciepła. `gb_mtop` dodaje *Rodzaj żądania*
+(grzanie / chłodzenie), *Zezwól na chłodzenie*, *CWU ECO*, *CO przed CWU*, *Tryb cichy* i *Górny limit mocy*;
+przełącznik *Żądanie grzania* z `gb_core` wysyła wtedy wybrane żądanie.
 
 **Watchdog.** Ponad 30 s bez ramki od mastera: **E144** „BMS offline” (SUP, EXT) albo błąd **100** (PRO); kasuje się
 sam przy pierwszej poprawnej ramce. Szybkie odpytywanie co 10 s.

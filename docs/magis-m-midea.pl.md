@@ -8,7 +8,7 @@
 Immergas **MAGIS M** (M4 – M30, R32) to pompa Midea M-Thermal: panel przewodowy z portem Modbus H1 / H2, w menu nazwy
 T1S / T4 / T5 / IBH / TBH. Nie ma nic wspólnego z MAGIS PRO / COMBO V2 na Samsungu, które obsługuje reszta huba.
 **MAGIS M TOP** (R290, E-BOX TOP) to jeszcze co innego: jego port BMS mówi protokołem BMS generatora Immergasa – patrz
-[Kotły gazowe po Modbus BMS](gas-boiler-bms.pl.md).
+[Kotły gazowe po Modbus BMS](gas-boiler-bms.pl.md) (pakiet `gb_mtop`).
 
 ## Podłączenie
 

@@ -1,0 +1,234 @@
+# Immergas Modbus BMS - package "gb_mtop" (model)
+# MAGIS M TOP heat pump (R290, E-BOX TOP): the same Immergas generator BMS protocol as the gas boilers, plus cooling
+# (512 low byte 0xAA, 256 bit8), the request priority / silent mode (512 high byte), DHW ECO (bit9, normal logic),
+# heat pump / defrost / antifreeze status bits, system pressure (0.01 bar), system flow (l/h), the cooling limits and
+# the max. power (513). There is no burner: the flame sensor of gb_status is removed.
+# Wiring: BMS+ / BMS- of the E-BOX TOP (A13), termination with dip switch SW1.2; do not touch the internal D+ / D- bus
+# (Nexis, Gateway). Panel menu General / Advanced / P: P021 = On (generator control; Off = read only), P022 = address 1,
+# P023 = 3 (9600), P024 = 1 (even, 1 stop) - users found P023 = 1 (2400) and P024 = 3 at delivery, check them first.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+globals:
+  # parts of the request word written to 512 by gb_core: low byte 0x55 heating / 0xAA cooling, high byte bit0 CH
+  # priority (0 = DHW first), bit4 silent mode
+  - id: gb_mtop_cooling
+    type: bool
+    restore_value: true
+    initial_value: "false"
+  - id: gb_mtop_flags
+    type: uint8_t
+    restore_value: true
+    initial_value: "0"
+
+script:
+  - id: gb_mtop_update_word
+    then:
+      - lambda: |-
+          id(gb_request_word) = (uint16_t) ((id(gb_mtop_flags) << 8) | (id(gb_mtop_cooling) ? 0xAA : 0x55));
+          ESP_LOGI("gb_bms", "request word 0x%04X", id(gb_request_word));
+          if (id(gb_heat_request).state) {
+            auto cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_command(id(gb_bms), 512, id(gb_request_word));
+            id(gb_bms)->queue_command(cmd);
+          }
+
+esphome:
+  on_boot:
+    - priority: -100
+      then:
+        - script.execute: gb_mtop_update_word
+
+binary_sensor:
+  - id: !remove gb_flame
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_hp_active}"
+    id: gb_hp_active
+    icon: mdi:heat-pump
+    device_class: running
+    register_type: read
+    address: 0
+    bitmask: 0x0080
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_cooling_allowed}"
+    id: gb_cooling_allowed
+    icon: mdi:snowflake
+    register_type: read
+    address: 0
+    bitmask: 0x0100
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_antifreeze_active}"
+    id: gb_antifreeze_active
+    icon: mdi:snowflake-alert
+    register_type: read
+    address: 0
+    bitmask: 0x0400
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_defrost}"
+    id: gb_defrost
+    icon: mdi:snowflake-melt
+    register_type: read
+    address: 0
+    bitmask: 0x0800
+
+sensor:
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_pressure}"
+    id: gb_pressure
+    register_type: read
+    address: 773
+    value_type: U_WORD
+    unit_of_measurement: "bar"
+    device_class: pressure
+    state_class: measurement
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01   # M TOP: 0.01 bar (EXTRA / PRO: 0.1 bar)
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_system_flow}"
+    id: gb_system_flow
+    icon: mdi:water-pump
+    register_type: read
+    address: 782
+    value_type: U_WORD
+    unit_of_measurement: "L/h"
+    state_class: measurement
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms_diag
+    name: "${n_gb_cool_max}"
+    id: gb_cool_max
+    entity_category: diagnostic
+    register_type: read
+    address: 1028
+    value_type: U_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.1
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms_diag
+    name: "${n_gb_cool_min}"
+    id: gb_cool_min
+    entity_category: diagnostic
+    register_type: read
+    address: 1029
+    value_type: U_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.1
+
+number:
+  # the flow setpoint also serves cooling (15-75 °C in the M TOP manual)
+  - id: !extend gb_ch_setpoint
+    min_value: 15
+    max_value: 75
+  - id: !extend gb_dhw_setpoint
+    max_value: 75
+  # 513 - max. power 0-1000 = 0-100 %
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_power_limit}"
+    id: gb_power_limit
+    icon: mdi:speedometer-medium
+    entity_category: config
+    register_type: holding
+    address: 513
+    value_type: U_WORD
+    unit_of_measurement: "%"
+    min_value: 0
+    max_value: 100
+    step: 1
+    multiply: 10
+    mode: box
+
+select:
+  # what the request asks for: heating (0x55) or cooling (0xAA); cooling needs "Cooling allowed" on
+  - platform: template
+    name: "${n_gb_request_type}"
+    id: gb_request_type
+    icon: mdi:sun-snowflake-variant
+    options: ["${t_gb_request_heat}", "${t_gb_request_cool}"]
+    lambda: |-
+      return std::string(id(gb_mtop_cooling) ? "${t_gb_request_cool}" : "${t_gb_request_heat}");
+    set_action:
+      - lambda: id(gb_mtop_cooling) = (x == "${t_gb_request_cool}");
+      - script.execute: gb_mtop_update_word
+
+switch:
+  # 256 bit8 - cooling allowed (kept by the mode select of gb_control)
+  - platform: template
+    name: "${n_gb_cooling_enable}"
+    id: gb_cooling_enable
+    icon: mdi:snowflake
+    lambda: |-
+      if (isnan(id(gb_control_raw).state)) return {};
+      return ((int) id(gb_control_raw).state & 0x0100) != 0;
+    turn_on_action:
+      - lambda: |-
+          uint16_t raw = isnan(id(gb_control_raw).state) ? 0 : (uint16_t) id(gb_control_raw).state;
+          uint16_t val = (raw & 0x0306) | 0x0100;
+          auto cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_command(id(gb_bms), 256, val);
+          id(gb_bms)->queue_command(cmd);
+          id(gb_control_raw).publish_state(val);
+    turn_off_action:
+      - lambda: |-
+          uint16_t raw = isnan(id(gb_control_raw).state) ? 0 : (uint16_t) id(gb_control_raw).state;
+          uint16_t val = raw & 0x0206;
+          auto cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_command(id(gb_bms), 256, val);
+          id(gb_bms)->queue_command(cmd);
+          id(gb_control_raw).publish_state(val);
+  # 256 bit9 - DHW ECO (normal logic on the M TOP)
+  - platform: template
+    name: "${n_gb_dhw_eco}"
+    id: gb_dhw_eco
+    icon: mdi:leaf
+    lambda: |-
+      if (isnan(id(gb_control_raw).state)) return {};
+      return ((int) id(gb_control_raw).state & 0x0200) != 0;
+    turn_on_action:
+      - lambda: |-
+          uint16_t raw = isnan(id(gb_control_raw).state) ? 0 : (uint16_t) id(gb_control_raw).state;
+          uint16_t val = (raw & 0x0106) | 0x0200;
+          auto cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_command(id(gb_bms), 256, val);
+          id(gb_bms)->queue_command(cmd);
+          id(gb_control_raw).publish_state(val);
+    turn_off_action:
+      - lambda: |-
+          uint16_t raw = isnan(id(gb_control_raw).state) ? 0 : (uint16_t) id(gb_control_raw).state;
+          uint16_t val = raw & 0x0106;
+          auto cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_command(id(gb_bms), 256, val);
+          id(gb_bms)->queue_command(cmd);
+          id(gb_control_raw).publish_state(val);
+  # 512 high byte bit0: the CH request goes before DHW
+  - platform: template
+    name: "${n_gb_ch_priority}"
+    id: gb_ch_priority
+    icon: mdi:priority-high
+    entity_category: config
+    lambda: return (id(gb_mtop_flags) & 0x01) != 0;
+    turn_on_action:
+      - lambda: id(gb_mtop_flags) |= 0x01;
+      - script.execute: gb_mtop_update_word
+    turn_off_action:
+      - lambda: id(gb_mtop_flags) &= ~0x01;
+      - script.execute: gb_mtop_update_word
+  # 512 high byte bit4: silent mode of the heat pump
+  - platform: template
+    name: "${n_gb_silent}"
+    id: gb_silent
+    icon: mdi:volume-low
+    lambda: return (id(gb_mtop_flags) & 0x10) != 0;
+    turn_on_action:
+      - lambda: id(gb_mtop_flags) |= 0x10;
+      - script.execute: gb_mtop_update_word
+    turn_off_action:
+      - lambda: id(gb_mtop_flags) &= ~0x10;
+      - script.execute: gb_mtop_update_word

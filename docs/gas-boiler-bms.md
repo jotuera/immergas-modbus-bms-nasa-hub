@@ -21,6 +21,7 @@ controller or DIM units – the boiler reports a master conflict or ignores them
 | VICTRIX SUPERIOR 2021, VICTRIX ZEUS Superior 25 / 30 / 35 | `gb_superior` | D+ / D−, jumper X40 stays | MENU / Service / Modbus, Type = Bms (code 1122); boiler board FW 1.05+, display FW 1.31+ |
 | VICTRIX EXTRA (28 / 32, 12 / 24 / 35 PLUS) | `gb_extra` | D+ / D−, X40 stays | P.18 = 2 (BMS), P.11 = 1 (code 69) |
 | VICTRIX PRO V2 EU (and its simple cascade) | `gb_pro` | **T+ / T−** of terminal block A38, X40 removed | nothing to switch on (code 123 only for the port) |
+| **MAGIS M TOP** heat pump (R290, E-BOX TOP) | `gb_mtop` | **BMS+ / BMS−** of the E-BOX TOP (A13), termination dip switch SW1.2 | panel menu P: P021 = On (control), P022 = 1, P023 = 3 (9600), P024 = 1 (even / 1) – check P023 / P024 first, users found 2400 baud at delivery |
 
 Factory port: **9600 baud, 8E1, slave address 1** on all three. PRO V2 EU: 120 Ω termination with the TRD – T− bridge
 and, when the master has no pull-ups, the TR+ – T+ and TR− – T− bridges.
@@ -33,7 +34,7 @@ and, when the master has no pull-ups, the TR+ – T+ and TR− – T− bridges.
 | `gb_control` | *Operating mode* (Standby / DHW only / Heating / Heating + DHW), *CH flow setpoint* (514), *DHW setpoint* (515), *Fault reset* (257 = 0xAA55) |
 | `gb_status` | state bits (flame, CH / DHW pump, CH / DHW / frost allowed, special function, resettable / locked fault), fault code and text, the boiler's CH / DHW limits, port configuration |
 | `gb_sensors` | flow, return, DHW, outdoor, modulation, calculated flow, temperature after the separator (HVDT) |
-| `gb_superior` / `gb_extra` / `gb_pro` | the model extras below – load exactly one |
+| `gb_superior` / `gb_extra` / `gb_pro` / `gb_mtop` | the model extras below – load exactly one |
 | `gb_curve` (optional) | weather curve in the hub: every minute the CH flow setpoint from the boiler's outdoor probe, between two points, clamped to the boiler limits |
 | `lang/gb_en`, `lang/gb_pl` | entity names (`gb_name_prefix`, default "Immergas Gas") |
 
@@ -67,6 +68,14 @@ and percentages are in 0.1 units unless noted.
 | 841–842 | input | burner hours (high, low word) | ✓ | – | – |
 | 1024–1027 | input | CH max / min, DHW max / min | ✓ | ✓ | ✓ |
 | 61440–61442 | holding | slave address, parity / stop / baud, 0xCC33 = apply | ✓ | ✓ | ✓ |
+
+**MAGIS M TOP** (manual ST.010018/001, chapter 1.23) uses the same map with a heat pump on top: state bits 7 heat
+pump active, 8 cooling allowed, 9 DHW ECO, 10 antifreeze active, 11 defrost (no burner bit); 256 bit8 allows cooling and
+bit9 is DHW ECO (normal logic); 512 low byte 0x55 heating / **0xAA cooling** / 0x00 end, high byte bit0 CH before DHW
+and bit4 silent mode; 513 max. power (0–1000 = 0–100 %); 773 pressure in **0.01 bar**; 782 system flow (l/h);
+1028 / 1029 cooling max / min. No COP, compressor frequency or energy – the heat pump shows itself as a heat generator.
+`gb_mtop` adds *Request type* (heating / cooling), *Allow cooling*, *DHW ECO*, *CH before DHW*, *Silent mode* and
+*Upper power limit*; the *Heat request* switch of `gb_core` then sends the chosen request.
 
 **Watchdog.** More than 30 s without a frame from the master: **E144** "BMS offline" (SUP, EXT) or fault **100**
 (PRO); it clears by itself at the first correct frame. The fast poll runs every 10 s.

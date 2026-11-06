@@ -8,7 +8,7 @@
 The Immergas **MAGIS M** (M4 – M30, R32) is a Midea M-Thermal heat pump: wired controller with the H1 / H2 Modbus
 port, the T1S / T4 / T5 / IBH / TBH names in the menu. It has nothing to do with the Samsung-based MAGIS PRO / COMBO V2
 that the rest of this hub serves. The **MAGIS M TOP** (R290, E-BOX TOP) is different again: its BMS port speaks the
-Immergas generator BMS protocol – see [Gas boilers over Modbus BMS](gas-boiler-bms.md).
+Immergas generator BMS protocol – the `gb_mtop` package, see [Gas boilers over Modbus BMS](gas-boiler-bms.md).
 
 ## Wiring
 

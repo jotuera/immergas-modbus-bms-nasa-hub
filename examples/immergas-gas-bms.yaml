@@ -57,5 +57,5 @@ packages:
       - packages/gb_control.yaml
       - packages/gb_status.yaml
       - packages/gb_sensors.yaml
-      - packages/gb_superior.yaml       # or gb_extra.yaml / gb_pro.yaml
+      - packages/gb_superior.yaml       # or gb_extra.yaml / gb_pro.yaml / gb_mtop.yaml (MAGIS M TOP heat pump)
       - packages/gb_curve.yaml          # optional: weather curve in the hub

@@ -38,7 +38,7 @@ select:
           uint16_t bits = x == "${t_gb_mode_dhw_heating}" ? 0x0006 : x == "${t_gb_mode_heating}" ? 0x0004
                         : x == "${t_gb_mode_dhw}" ? 0x0002 : 0x0000;
           uint16_t raw = isnan(id(gb_control_raw).state) ? 0 : (uint16_t) id(gb_control_raw).state;
-          uint16_t val = (raw & 0x0200) | bits;   // keep bit9 (BOOST / ECO), the other bits are reserved = 0
+          uint16_t val = (raw & 0x0300) | bits;   // keep bit8 (cooling allowed, M TOP) and bit9 (BOOST / ECO)
           auto cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_command(id(gb_bms), 256, val);
           id(gb_bms)->queue_command(cmd);
           id(gb_control_raw).publish_state(val);
