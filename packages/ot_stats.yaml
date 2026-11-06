@@ -1,20 +1,8 @@
 # Immergas OpenTherm - package "ot_stats" (optional)
 # Burner statistics counted in the hub from the flame bit of every status frame (about once a second, so no burn is
 # missed): starts today, starts in the last hour (short cycling), burner time today. Reset at midnight (Home Assistant
-# time, SNTP as a fallback); the day's values survive a restart.
+# time from ot_core); the day's values survive a restart.
 # Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
-
-time:
-  - platform: homeassistant
-    id: ot_time
-    on_time:
-      - seconds: 0
-        minutes: 0
-        hours: 0
-        then:
-          - lambda: |-
-              id(ot_starts_day) = 0;
-              id(ot_burn_s_day) = 0;
 
 globals:
   - { id: ot_starts_day, type: int, restore_value: true, initial_value: "0" }
@@ -34,7 +22,7 @@ interval:
   - interval: 30s
     then:
       - lambda: |-
-          // a restart on another day: start the day's counters from zero
+          // a new day (midnight, or a restart on another day): the day's counters from zero
           auto now = id(ot_time).now();
           if (now.is_valid()) {
             if (id(ot_stats_doy) != now.day_of_year && id(ot_stats_doy) != -1) { id(ot_starts_day) = 0; id(ot_burn_s_day) = 0; }

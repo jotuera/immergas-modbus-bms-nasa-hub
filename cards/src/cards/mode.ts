@@ -104,7 +104,8 @@ class ImmergasModeCard extends HubCard {
     const st = this.otRO ? this.t("wstrzymana – steruje pilot", "paused – the remote is in charge")
       : conf ? this.t("dotknij ponownie, aby potwierdzić", "tap again to confirm")
       : run ? this.t("dezynfekcja trwa", "disinfection running")
-      : on ? this.t("program HA · zasobnik do maks. kotła przez 20 min", "HA program · the cylinder to the boiler maximum for 20 min")
+      : on ? (this.esp ? this.t("program hubu · zasobnik do temperatury dezynfekcji, trzymana 20 min", "hub program · the cylinder to the disinfection temperature, held 20 min")
+        : this.t("program HA · zasobnik do maks. kotła przez 20 min", "HA program · the cylinder to the boiler maximum for 20 min"))
       : this.t("wyłączona", "off");
     return html`<div class="night" style="${box(col, run)}${this.otRO ? ";opacity:.55" : ""}">
       <ha-icon icon="mdi:bacteria-outline" style="color:${c(col)}" @click=${() => this.moreInfo("ot_leg")}></ha-icon>
@@ -163,11 +164,11 @@ class ImmergasModeCard extends HubCard {
   /** automatic Summer / Winter by the 24 h outdoor mean (an HA program, both modes; moved from the Online settings) */
   private seasonRow(tchip: (o: string | undefined, l: string, v: string | null, col?: string, faint?: boolean) => unknown) {
     if (!this.eid("dom_auto_season")) return nothing;
-    const a = this.so("dom_auto_season")?.attributes ?? {}, mean = parseFloat(a.outdoor_mean_24h), hrs = parseFloat(a.hours_of_data);
+    const mean = parseFloat(this.attr("dom_auto_season", "outdoor_mean_24h") ?? ""), hrs = parseFloat(this.attr("dom_auto_season", "hours_of_data") ?? "");
     const on = this.on("dom_auto_season"), wb = this.n("dom_win_below"), sa = this.n("dom_sum_above");
     const st = (on ? this.t("włączone · ", "on · ") : this.t("wyłączone · ", "off · "))
       + (isNaN(mean) ? this.t("średnia 24 h – zbieram dane", "24 h mean – collecting data")
-        : this.t(`średnia 24 h ${this.f(mean, 1, 1)} °C (${this.f(hrs, 0)} h)`, `24 h mean ${this.f(mean, 1, 1)} °C (${this.f(hrs, 0)} h)`));
+        : this.t(`średnia 24 h ${this.f(mean, 1, 1)} °C`, `24 h mean ${this.f(mean, 1, 1)} °C`) + (isNaN(hrs) ? "" : ` (${this.f(hrs, 0)} h)`));
     return this.progSwitch("dom_auto_season", "tg_season", "mdi:sun-snowflake-variant", "teal", this.t("Automatyczne Lato / Zima", "Automatic summer / winter"), st,
       html`<div class="tcs full">${tchip(this.eid("dom_win_below"), this.t("ZIMA PONIŻEJ", "WINTER BELOW"), isNaN(wb) ? null : this.f(wb, 1, 1) + " °C", "teal")}
         ${tchip(this.eid("dom_sum_above"), this.t("LATO POWYŻEJ", "SUMMER ABOVE"), isNaN(sa) ? null : this.f(sa, 1, 1) + " °C", "teal")}</div>`);
@@ -381,6 +382,8 @@ class ImmergasModeCard extends HubCard {
       <div class="modes">${this.modes()}</div>
       ${this.config.show_source === false || this.ot ? nothing : html`${modeIdx === 3 ? this.sourceRow() : nothing}${modeIdx >= 1 ? this.dhwSourceRow() : nothing}`}
       ${this.otRO ? html`<div class="hint">🔒 ${this.t("Tylko odczyt – tryb ustawia pilot (CAR V2 / Super Amico)", "Read only – the remote (CAR V2 / Super Amico) sets the mode")}</div>`
+        : this.esp ? (this.on("ot_room_link") && !this.on("ot_standalone") ? html`<div class="hint">${this.t("Bramka: zezwolenia CO / CWU ustawia pilot, dopóki w hubie nie włączysz „Nadpisz zezwolenia CO i CWU”.",
+          "Gateway: the room unit sets CH / DHW enable until you switch on “Override CH and DHW enable” in the hub.")}</div>` : nothing)
         : this.ot ? html`<div class="hint">${this.t("OpenTherm: z pilotem CAR V2 tryb ustawia też pilot – zmiana tutaj może zostać przez niego nadpisana", "OpenTherm: with a CAR V2 remote the remote also sets the mode – a change here may be overridden by it")}</div>` : nothing}
       ${this.eid("u11") && !this.ot ? night : nothing}
       ${this.dominus && !this.eid("prog_mode") ? this.domRows(modeIdx === 2) : nothing}

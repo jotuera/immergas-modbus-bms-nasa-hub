@@ -99,6 +99,29 @@ const ESP_OT: Partial<Record<Key, string[]>> = {
   ot_burn_h: ["Starty palnika / ostatnia godzina", "Burner starts / last hour"], ot_burn_hours: ["Czas palnika dziś", "Burner time today"],
 };
 
+// ot_programs / ot_control: mode, CH / DHW programs (calendars as in the Dominus app), anti-legionella, vacation, season, frost
+Object.assign(ESP_OT, {
+  mode: ["Tryb pracy", "Operating mode"], prog_mode: ["Program CO", "CH program"], comfort_heat: ["Komfort CO", "CH Comfort"],
+  eco_heat: ["Eko CO", "CH Eco"], dhw_sched: ["Program CWU", "DHW program"], dhw_comfort_dd: ["Komfort CWU", "DHW Comfort"],
+  dhw_eco_dd: ["Eko CWU", "DHW Eco"], zone1_phase: ["Faza programu CO", "CH program phase"], dhw_phase: ["Faza programu CWU", "DHW program phase"],
+  ot_leg: ["Anty-legionella", "Anti-legionella"], ot_leg_t: ["Anty-legionella: temperatura", "Anti-legionella: temperature"],
+  ot_leg_run: ["Anty-legionella trwa", "Anti-legionella running"], dom_vacation: ["Tryb wyjazdowy", "Vacation"],
+  dom_vac_until: ["Wyjazd do", "Vacation until"], ot_vac_action: ["Na czas wyjazdu", "During the vacation"],
+  dom_auto_season: ["Automatyczne Lato / Zima", "Automatic summer / winter"], dom_win_below: ["Zima poniżej", "Winter below"],
+  dom_sum_above: ["Lato powyżej", "Summer above"], ot_out_mean: ["Średnia zewnętrzna 24 h", "Outdoor mean 24 h"],
+  ot_frost: ["Ochrona przed zamarzaniem", "Frost protection"], ot_frost_t: ["Próg zamarzania", "Frost threshold"],
+} as Partial<Record<Key, string[]>>);
+const DPL = ["poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota", "niedziela"];
+const DEN = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+["mon", "tue", "wed", "thu", "fri", "sat", "sun"].forEach((d, i) => {
+  ESP_OT[`co_${d}` as Key] = [`Kalendarz CO – ${DPL[i]}`, `CH calendar – ${DEN[i]}`];
+  ESP_OT[`cwu_${d}` as Key] = [`Kalendarz CWU – ${DPL[i]}`, `DHW calendar – ${DEN[i]}`];
+});
+for (let p = 1; p <= 4; p++) for (let f = 1; f <= 4; f++) {
+  ESP_OT[`k${p}z${f}on` as Key] = [`Kalendarz ${p} zakres ${f} od`, `Calendar ${p} range ${f} from`];
+  ESP_OT[`k${p}z${f}off` as Key] = [`Kalendarz ${p} zakres ${f} do`, `Calendar ${p} range ${f} to`];
+}
+
 /** the ESP OpenTherm hub: its "Boiler connection" binary sensor, then the entities with the same name prefix */
 function buildEspOt(hass: any): HubIndex | null {
   const r = findPkg<Key>(hass.states ?? {}, ESP_OT.ot_link!, /^binary_sensor\./, ESP_OT);

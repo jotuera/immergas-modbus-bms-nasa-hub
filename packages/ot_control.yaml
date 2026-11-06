@@ -6,6 +6,36 @@
 # and, with their override switches on, replace what the room unit writes.
 # Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 
+# Operating mode (like the CAR V2 / Dominus): Standby / Summer / Winter / CH only. It sets the DHW enable flag and allows
+# CH; the CH enable flag = the mode allows CH AND the regulator asks for heat (ot_regulator, room hysteresis) - OR the
+# frost protection of ot_programs. Options are keys (the cards translate them): off, water, heating_water, heating.
+globals:
+  - { id: ot_reg_demand, type: bool, initial_value: "true" }   # the regulator wants heat (true without a regulator)
+  - { id: ot_frost_on, type: bool, initial_value: "false" }    # frost protection forces CH
+
+select:
+  - platform: template
+    name: "${n_ot_mode}"
+    id: ot_mode
+    icon: mdi:sun-snowflake-variant
+    options: ["off", "water", "heating_water", "heating"]
+    initial_option: heating_water
+    optimistic: true
+    restore_value: true
+    on_value:
+      - script.execute: ot_apply_flags
+
+script:
+  - id: ot_apply_flags
+    mode: queued
+    then:
+      - lambda: |-
+          std::string m = id(ot_mode).current_option();
+          bool ch = ((m == "heating" || m == "heating_water") && id(ot_reg_demand)) || id(ot_frost_on);
+          bool dhw = m == "water" || m == "heating_water";
+          if (id(ot_ch_enable).state != ch) { if (ch) id(ot_ch_enable).turn_on(); else id(ot_ch_enable).turn_off(); }
+          if (id(ot_dhw_enable).state != dhw) { if (dhw) id(ot_dhw_enable).turn_on(); else id(ot_dhw_enable).turn_off(); }
+
 switch:
   - platform: immergas_ot
     type: ch_enable

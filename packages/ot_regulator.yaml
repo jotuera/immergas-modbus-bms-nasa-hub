@@ -23,6 +23,9 @@ switch:
     icon: mdi:chart-bell-curve-cumulative
     restore_mode: RESTORE_DEFAULT_OFF
     optimistic: true
+    on_turn_off:   # without the regulator the mode alone allows CH
+      - lambda: 'id(ot_reg_demand) = true;'
+      - script.execute: ot_apply_flags
 
 number:
   - { platform: template, name: "${n_ot_room_target}", id: ot_room_target, icon: "mdi:home-thermometer", unit_of_measurement: "°C", min_value: 10, max_value: 28, step: 0.5, initial_value: 21, restore_value: true, optimistic: true, mode: box }
@@ -51,18 +54,21 @@ interval:
             flow = fc + (fw - fc) * t;
           }
           float room = id(ot_room_temp).state, target = id(ot_room_target).state, hyst = id(ot_room_hysteresis).state;
-          bool ch = id(ot_ch_enable).state;
+          bool ch = id(ot_reg_demand);
           if (!isnan(room)) {
             flow += id(ot_room_gain).state * (target - room);
-            if (room >= target + hyst) ch = false;        // warm enough: CH off
-            else if (room <= target - hyst) ch = true;    // too cold: CH on
+            if (room >= target + hyst) ch = false;        // warm enough: no heat demand
+            else if (room <= target - hyst) ch = true;    // too cold: heat demand
+          } else {
+            ch = true;                                    // no room temperature: the curve only
           }
           float lo = isnan(id(ot_ch_min).state) ? 20 : id(ot_ch_min).state;
           float hi = isnan(id(ot_ch_max).state) ? 80 : id(ot_ch_max).state;
           flow = flow < lo ? lo : (flow > hi ? hi : flow);
           flow = roundf(flow * 2) / 2;
-          if (ch != id(ot_ch_enable).state) {
-            if (ch) id(ot_ch_enable).turn_on(); else id(ot_ch_enable).turn_off();
+          if (ch != id(ot_reg_demand)) {
+            id(ot_reg_demand) = ch;
+            id(ot_apply_flags).execute();               // CH enable = the mode allows CH and the room wants heat
           }
           if (fabsf(id(ot_ch_setpoint).state - flow) >= 0.5f) {
             auto call = id(ot_ch_setpoint).make_call();

@@ -36,6 +36,11 @@ immergas_ot:
     in_pin: ${ot_boiler_in_pin}
     out_pin: ${ot_boiler_out_pin}
 
+# wall clock for ot_stats (midnight) and ot_programs (schedules): Home Assistant time
+time:
+  - platform: homeassistant
+    id: ot_time
+
 text_sensor:
   # Data-ID map for the cards: 64 hex characters = 256 bits (which IDs the boiler answers / does not know)
   - { platform: immergas_ot, type: ids_supported, name: "${n_ot_ids_supported}", id: ot_ids_supported, entity_category: diagnostic, icon: "mdi:format-list-checks" }

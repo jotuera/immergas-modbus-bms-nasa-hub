@@ -1,0 +1,249 @@
+# Immergas OpenTherm - package "ot_programs" (optional, master mode with ot_regulator)
+# The programs a CAR V2 / Dominus keeps, run in the hub - they work without Home Assistant (only its time):
+#   - CH program AUTO: Comfort / Eco room target by 4 calendars (4 ranges each) and a calendar per weekday;
+#   - DHW program: Comfort / Eco DHW setpoint by the same calendars, own weekday assignment;
+#   - anti-legionella: weekly (Monday) or daily at 02:00 the DHW setpoint goes to the anti-legionella temperature (capped
+#     by the boiler's DHW max.) until the cylinder holds it for 20 min (at most 2 h);
+#   - vacation: Standby or Summer until the end date (or until switched off), then the mode from before;
+#   - automatic Summer / Winter by the 24 h outdoor mean (Winter below, Summer above the thresholds);
+#   - frost protection: CH on whatever the mode while the room is below the threshold (+1 K to stop).
+# Needs ot_core (time), ot_control (mode) and ot_regulator (room target and temperature).
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+globals:
+  - { id: ot_phase_last, type: int, initial_value: "-1" }       # CH program: 1 Comfort, 0 Eco
+  - { id: ot_dhw_phase_last, type: int, initial_value: "-1" }
+  - { id: ot_leg_run_g, type: bool, initial_value: "false" }
+  - { id: ot_leg_start, type: uint32_t, initial_value: "0" }    # millis() of the start
+  - { id: ot_leg_hold, type: uint32_t, initial_value: "0" }     # millis() when the cylinder reached the temperature
+  - { id: ot_leg_day_done, type: int, initial_value: "-1" }     # day of year of the last run
+  - { id: ot_leg_dhw_before, type: float, initial_value: "NAN" }
+  - { id: ot_vac_mode_before, type: int, restore_value: true, initial_value: "-1" }  # mode index before the vacation
+  - { id: ot_season, type: int, restore_value: true, initial_value: "-1" }         # 1 winter, 0 summer
+  - { id: ot_out_sum, type: float, initial_value: "0" }
+  - { id: ot_out_n, type: int, initial_value: "0" }
+  - { id: ot_out_hist, type: "std::vector<float>" }             # half-hour means, the last 48 = 24 h
+
+datetime:
+  - { platform: template, type: time, name: "${n_ot_k1z1on}", id: ot_k1z1on, optimistic: true, restore_value: true, initial_value: "06:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_ot_k1z1off}", id: ot_k1z1off, optimistic: true, restore_value: true, initial_value: "22:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_ot_k1z2on}", id: ot_k1z2on, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_ot_k1z2off}", id: ot_k1z2off, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_ot_k1z3on}", id: ot_k1z3on, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_ot_k1z3off}", id: ot_k1z3off, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_ot_k1z4on}", id: ot_k1z4on, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_ot_k1z4off}", id: ot_k1z4off, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_ot_k2z1on}", id: ot_k2z1on, optimistic: true, restore_value: true, initial_value: "06:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_ot_k2z1off}", id: ot_k2z1off, optimistic: true, restore_value: true, initial_value: "08:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_ot_k2z2on}", id: ot_k2z2on, optimistic: true, restore_value: true, initial_value: "15:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_ot_k2z2off}", id: ot_k2z2off, optimistic: true, restore_value: true, initial_value: "22:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_ot_k2z3on}", id: ot_k2z3on, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_ot_k2z3off}", id: ot_k2z3off, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_ot_k2z4on}", id: ot_k2z4on, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_ot_k2z4off}", id: ot_k2z4off, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_ot_k3z1on}", id: ot_k3z1on, optimistic: true, restore_value: true, initial_value: "05:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_ot_k3z1off}", id: ot_k3z1off, optimistic: true, restore_value: true, initial_value: "07:30:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_ot_k3z2on}", id: ot_k3z2on, optimistic: true, restore_value: true, initial_value: "17:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_ot_k3z2off}", id: ot_k3z2off, optimistic: true, restore_value: true, initial_value: "21:30:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_ot_k3z3on}", id: ot_k3z3on, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_ot_k3z3off}", id: ot_k3z3off, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_ot_k3z4on}", id: ot_k3z4on, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_ot_k3z4off}", id: ot_k3z4off, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_ot_k4z1on}", id: ot_k4z1on, optimistic: true, restore_value: true, initial_value: "07:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_ot_k4z1off}", id: ot_k4z1off, optimistic: true, restore_value: true, initial_value: "23:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_ot_k4z2on}", id: ot_k4z2on, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_ot_k4z2off}", id: ot_k4z2off, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_ot_k4z3on}", id: ot_k4z3on, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_ot_k4z3off}", id: ot_k4z3off, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_ot_k4z4on}", id: ot_k4z4on, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_ot_k4z4off}", id: ot_k4z4off, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - platform: template
+    type: datetime
+    name: "${n_ot_vac_until}"
+    id: ot_vac_until
+    optimistic: true
+    restore_value: true
+    icon: mdi:calendar-end
+
+select:
+  - { platform: template, name: "${n_ot_co_mon}", id: ot_co_mon, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_ot_cal1}", "${t_ot_cal2}", "${t_ot_cal3}", "${t_ot_cal4}"], initial_option: "${t_ot_cal1}" }
+  - { platform: template, name: "${n_ot_co_tue}", id: ot_co_tue, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_ot_cal1}", "${t_ot_cal2}", "${t_ot_cal3}", "${t_ot_cal4}"], initial_option: "${t_ot_cal1}" }
+  - { platform: template, name: "${n_ot_co_wed}", id: ot_co_wed, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_ot_cal1}", "${t_ot_cal2}", "${t_ot_cal3}", "${t_ot_cal4}"], initial_option: "${t_ot_cal1}" }
+  - { platform: template, name: "${n_ot_co_thu}", id: ot_co_thu, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_ot_cal1}", "${t_ot_cal2}", "${t_ot_cal3}", "${t_ot_cal4}"], initial_option: "${t_ot_cal1}" }
+  - { platform: template, name: "${n_ot_co_fri}", id: ot_co_fri, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_ot_cal1}", "${t_ot_cal2}", "${t_ot_cal3}", "${t_ot_cal4}"], initial_option: "${t_ot_cal1}" }
+  - { platform: template, name: "${n_ot_co_sat}", id: ot_co_sat, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_ot_cal1}", "${t_ot_cal2}", "${t_ot_cal3}", "${t_ot_cal4}"], initial_option: "${t_ot_cal4}" }
+  - { platform: template, name: "${n_ot_co_sun}", id: ot_co_sun, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_ot_cal1}", "${t_ot_cal2}", "${t_ot_cal3}", "${t_ot_cal4}"], initial_option: "${t_ot_cal4}" }
+  - { platform: template, name: "${n_ot_cwu_mon}", id: ot_cwu_mon, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_ot_cal1}", "${t_ot_cal2}", "${t_ot_cal3}", "${t_ot_cal4}"], initial_option: "${t_ot_cal1}" }
+  - { platform: template, name: "${n_ot_cwu_tue}", id: ot_cwu_tue, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_ot_cal1}", "${t_ot_cal2}", "${t_ot_cal3}", "${t_ot_cal4}"], initial_option: "${t_ot_cal1}" }
+  - { platform: template, name: "${n_ot_cwu_wed}", id: ot_cwu_wed, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_ot_cal1}", "${t_ot_cal2}", "${t_ot_cal3}", "${t_ot_cal4}"], initial_option: "${t_ot_cal1}" }
+  - { platform: template, name: "${n_ot_cwu_thu}", id: ot_cwu_thu, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_ot_cal1}", "${t_ot_cal2}", "${t_ot_cal3}", "${t_ot_cal4}"], initial_option: "${t_ot_cal1}" }
+  - { platform: template, name: "${n_ot_cwu_fri}", id: ot_cwu_fri, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_ot_cal1}", "${t_ot_cal2}", "${t_ot_cal3}", "${t_ot_cal4}"], initial_option: "${t_ot_cal1}" }
+  - { platform: template, name: "${n_ot_cwu_sat}", id: ot_cwu_sat, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_ot_cal1}", "${t_ot_cal2}", "${t_ot_cal3}", "${t_ot_cal4}"], initial_option: "${t_ot_cal4}" }
+  - { platform: template, name: "${n_ot_cwu_sun}", id: ot_cwu_sun, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_ot_cal1}", "${t_ot_cal2}", "${t_ot_cal3}", "${t_ot_cal4}"], initial_option: "${t_ot_cal4}" }
+  - { platform: template, name: "${n_ot_prog_mode}", id: ot_prog_mode, optimistic: true, restore_value: true, icon: "mdi:calendar-clock", options: ["manual", "auto"], initial_option: "manual" }
+  - { platform: template, name: "${n_ot_leg}", id: ot_leg, optimistic: true, restore_value: true, icon: "mdi:bacteria-outline", options: ["off", "weekly", "daily"], initial_option: "off" }
+  - { platform: template, name: "${n_ot_vac_action}", id: ot_vac_action, optimistic: true, restore_value: true, icon: "mdi:bag-suitcase-outline", options: ["standby", "summer"], initial_option: "standby" }
+
+number:
+  - { platform: template, name: "${n_ot_comfort}", id: ot_comfort, icon: "mdi:sun-thermometer", unit_of_measurement: "°C", min_value: 10, max_value: 28, step: 0.5, initial_value: 21, restore_value: true, optimistic: true, mode: box }
+  - { platform: template, name: "${n_ot_eco}", id: ot_eco, icon: "mdi:leaf", unit_of_measurement: "°C", min_value: 5, max_value: 25, step: 0.5, initial_value: 18, restore_value: true, optimistic: true, mode: box }
+  - { platform: template, name: "${n_ot_dhw_comfort}", id: ot_dhw_comfort, icon: "mdi:water-thermometer", unit_of_measurement: "°C", min_value: 35, max_value: 60, step: 1, initial_value: 50, restore_value: true, optimistic: true, mode: box }
+  - { platform: template, name: "${n_ot_dhw_eco}", id: ot_dhw_eco, icon: "mdi:leaf", unit_of_measurement: "°C", min_value: 35, max_value: 60, step: 1, initial_value: 42, restore_value: true, optimistic: true, mode: box }
+  - { platform: template, name: "${n_ot_leg_t}", id: ot_leg_t, icon: "mdi:bacteria-outline", unit_of_measurement: "°C", min_value: 55, max_value: 75, step: 1, initial_value: 60, restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_win_below}", id: ot_win_below, icon: "mdi:snowflake-thermometer", unit_of_measurement: "°C", min_value: 5, max_value: 20, step: 0.5, initial_value: 15, restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_sum_above}", id: ot_sum_above, icon: "mdi:sun-thermometer", unit_of_measurement: "°C", min_value: 10, max_value: 25, step: 0.5, initial_value: 18, restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_frost_t}", id: ot_frost_t, icon: "mdi:snowflake-alert", unit_of_measurement: "°C", min_value: 3, max_value: 12, step: 0.5, initial_value: 5, restore_value: true, optimistic: true, mode: box, entity_category: config }
+
+switch:
+  - { platform: template, name: "${n_ot_dhw_prog}", id: ot_dhw_prog, icon: "mdi:water-boiler-auto", optimistic: true, restore_mode: RESTORE_DEFAULT_OFF }
+  - platform: template
+    name: "${n_ot_vac}"
+    id: ot_vac
+    icon: mdi:bag-suitcase-outline
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    on_turn_on:
+      - lambda: |-
+          id(ot_vac_mode_before) = (int) id(ot_mode).active_index().value_or(2);
+          auto c = id(ot_mode).make_call();
+          c.set_option(id(ot_vac_action).current_option() == std::string("summer") ? "water" : "off");
+          c.perform();
+    on_turn_off:
+      - lambda: |-
+          int b = id(ot_vac_mode_before);
+          if (b >= 0) { auto c = id(ot_mode).make_call(); c.set_index(b); c.perform(); }
+          id(ot_vac_mode_before) = -1;
+  - { platform: template, name: "${n_ot_season}", id: ot_season_auto, icon: "mdi:sun-snowflake-variant", optimistic: true, restore_mode: RESTORE_DEFAULT_OFF }
+  - { platform: template, name: "${n_ot_frost}", id: ot_frost, icon: "mdi:snowflake-alert", optimistic: true, restore_mode: RESTORE_DEFAULT_ON }
+
+binary_sensor:
+  - { platform: template, name: "${n_ot_leg_run}", id: ot_leg_run, icon: "mdi:bacteria", lambda: "return id(ot_leg_run_g);" }
+
+text_sensor:
+  # phases as keys (the cards translate them): comfort / economy / manual / legionella
+  - { platform: template, name: "${n_ot_phase}", id: ot_phase, icon: "mdi:calendar-clock" }
+  - { platform: template, name: "${n_ot_dhw_phase}", id: ot_dhw_phase, icon: "mdi:calendar-clock" }
+
+sensor:
+  - { platform: template, name: "${n_ot_out_mean}", id: ot_out_mean, icon: "mdi:thermometer-auto", unit_of_measurement: "°C", device_class: temperature, accuracy_decimals: 1 }
+
+interval:
+  - interval: 30s
+    then:
+      - lambda: |-
+          auto now = id(ot_time).now();
+          // ---- 24 h outdoor mean: a half-hour mean every 60 samples, the last 48 kept
+          float out = id(ot_outdoor_temp).state;
+          if (!std::isnan(out)) { id(ot_out_sum) += out; id(ot_out_n)++; }
+          if (id(ot_out_n) >= 60) {
+            auto &h = id(ot_out_hist);
+            h.push_back(id(ot_out_sum) / id(ot_out_n));
+            if (h.size() > 48) h.erase(h.begin());
+            id(ot_out_sum) = 0; id(ot_out_n) = 0;
+          }
+          {
+            auto &h = id(ot_out_hist);
+            float s = 0; for (float v : h) s += v;
+            int n = h.size();
+            float cur = id(ot_out_n) > 0 ? id(ot_out_sum) / id(ot_out_n) : NAN;
+            float mean = n > 0 ? s / n : cur;
+            if (!std::isnan(mean)) id(ot_out_mean).publish_state(mean);
+            // ---- automatic Summer / Winter (after 6 h of data), only between Summer and Winter, not in a vacation
+            std::string m = id(ot_mode).current_option();
+            if (id(ot_season_auto).state && !id(ot_vac).state && n >= 12 && (m == "water" || m == "heating_water")) {
+              int want = mean < id(ot_win_below).state ? 1 : mean > id(ot_sum_above).state ? 0 : id(ot_season);
+              if (want >= 0 && want != id(ot_season)) {
+                id(ot_season) = want;
+                auto c = id(ot_mode).make_call(); c.set_option(want ? "heating_water" : "water"); c.perform();
+                ESP_LOGI("ot_programs", "24 h mean %.1f -> %s", mean, want ? "Winter" : "Summer");
+              }
+            }
+          }
+          // ---- frost protection: CH on whatever the mode while the room is below the threshold
+          {
+            float room = id(ot_room_temp).state, thr = id(ot_frost_t).state;
+            bool f = id(ot_frost_on);
+            if (!id(ot_frost).state || std::isnan(room)) f = false;
+            else if (room < thr) f = true;
+            else if (room > thr + 1.0f) f = false;
+            if (f != id(ot_frost_on)) { id(ot_frost_on) = f; id(ot_apply_flags).execute(); ESP_LOGW("ot_programs", "frost protection %s (room %.1f)", f ? "ON" : "off", room); }
+          }
+          if (!now.is_valid()) return;
+          // ---- vacation end
+          if (id(ot_vac).state && id(ot_vac_until).has_state()) {
+            auto u = id(ot_vac_until).state_as_esptime();
+            u.recalc_timestamp_local();
+            if (u.is_valid() && now.timestamp >= u.timestamp) { id(ot_vac).turn_off(); ESP_LOGI("ot_programs", "vacation ended"); }
+          }
+          // ---- calendars: Mon..Sun selects, ESPTime day_of_week 1 = Sunday
+          datetime::TimeEntity *cal[4][8] = {
+            {id(ot_k1z1on), id(ot_k1z1off), id(ot_k1z2on), id(ot_k1z2off), id(ot_k1z3on), id(ot_k1z3off), id(ot_k1z4on), id(ot_k1z4off)},
+            {id(ot_k2z1on), id(ot_k2z1off), id(ot_k2z2on), id(ot_k2z2off), id(ot_k2z3on), id(ot_k2z3off), id(ot_k2z4on), id(ot_k2z4off)},
+            {id(ot_k3z1on), id(ot_k3z1off), id(ot_k3z2on), id(ot_k3z2off), id(ot_k3z3on), id(ot_k3z3off), id(ot_k3z4on), id(ot_k3z4off)},
+            {id(ot_k4z1on), id(ot_k4z1off), id(ot_k4z2on), id(ot_k4z2off), id(ot_k4z3on), id(ot_k4z3off), id(ot_k4z4on), id(ot_k4z4off)}
+          };
+          int m = now.hour * 60 + now.minute;
+          auto in_cal = [&](int c) {
+            if (c < 0 || c > 3) return false;
+            for (int f = 0; f < 4; f++) {
+              int a = cal[c][2 * f]->hour * 60 + cal[c][2 * f]->minute;
+              int b = cal[c][2 * f + 1]->hour * 60 + cal[c][2 * f + 1]->minute;
+              if (a == b) continue;        // unused range
+              if (b == 0) b = 1440;        // "until 00:00" = until midnight
+              if (a < b ? (m >= a && m < b) : (m >= a || m < b)) return true;
+            }
+            return false;
+          };
+          int wd = (now.day_of_week + 5) % 7;
+          select::Select *co[7] = {id(ot_co_mon), id(ot_co_tue), id(ot_co_wed), id(ot_co_thu), id(ot_co_fri), id(ot_co_sat), id(ot_co_sun)};
+          select::Select *cw[7] = {id(ot_cwu_mon), id(ot_cwu_tue), id(ot_cwu_wed), id(ot_cwu_thu), id(ot_cwu_fri), id(ot_cwu_sat), id(ot_cwu_sun)};
+          // ---- CH program AUTO: Comfort / Eco room target, written on a phase change (a manual change holds until the next)
+          if (id(ot_prog_mode).current_option() == std::string("auto") && !id(ot_vac).state) {
+            bool comfort = in_cal((int) co[wd]->active_index().value_or(0));
+            float t = comfort ? id(ot_comfort).state : id(ot_eco).state;
+            int ph = comfort ? 1 : 0;
+            if (ph != id(ot_phase_last)) {
+              id(ot_phase_last) = ph;
+              id(ot_phase).publish_state(comfort ? "comfort" : "economy");
+              if (!std::isnan(t)) { auto c = id(ot_room_target).make_call(); c.set_value(t); c.perform(); }
+            }
+          } else if (id(ot_phase_last) != -2) {
+            id(ot_phase_last) = -2;
+            id(ot_phase).publish_state("manual");
+          }
+          // ---- anti-legionella: 02:00 Monday (weekly) or every day, until the cylinder holds the temperature 20 min
+          std::string leg = id(ot_leg).current_option();
+          float tank = id(ot_dhw_temp).state, dmax = id(ot_dhw_max).state;
+          float lt = std::isnan(dmax) ? id(ot_leg_t).state : std::min(id(ot_leg_t).state, dmax);
+          if (!id(ot_leg_run_g) && leg != "off" && now.hour == 2 && now.minute < 5 && id(ot_leg_day_done) != now.day_of_year
+              && (leg == "daily" || now.day_of_week == 2)) {
+            id(ot_leg_run_g) = true; id(ot_leg_start) = millis(); id(ot_leg_hold) = 0; id(ot_leg_day_done) = now.day_of_year;
+            id(ot_leg_dhw_before) = id(ot_dhw_setpoint).state;
+            auto c = id(ot_dhw_setpoint).make_call(); c.set_value(lt); c.perform();
+            id(ot_dhw_phase).publish_state("legionella");
+            ESP_LOGW("ot_programs", "anti-legionella start: DHW %.0f", lt);
+          }
+          if (id(ot_leg_run_g)) {
+            if (!std::isnan(tank) && tank >= lt - 1.0f) { if (!id(ot_leg_hold)) id(ot_leg_hold) = millis(); } else id(ot_leg_hold) = 0;
+            bool done = (id(ot_leg_hold) && millis() - id(ot_leg_hold) >= 1200000UL) || millis() - id(ot_leg_start) >= 7200000UL || leg == "off";
+            if (done) {
+              id(ot_leg_run_g) = false; id(ot_dhw_phase_last) = -1;
+              if (!std::isnan(id(ot_leg_dhw_before))) { auto c = id(ot_dhw_setpoint).make_call(); c.set_value(id(ot_leg_dhw_before)); c.perform(); }
+              ESP_LOGW("ot_programs", "anti-legionella end");
+            }
+            return;  // the DHW program waits
+          }
+          // ---- DHW program: Comfort / Eco DHW setpoint by the DHW weekday calendars
+          if (id(ot_dhw_prog).state) {
+            bool comfort = in_cal((int) cw[wd]->active_index().value_or(0));
+            int ph = comfort ? 1 : 0;
+            if (ph != id(ot_dhw_phase_last)) {
+              id(ot_dhw_phase_last) = ph;
+              id(ot_dhw_phase).publish_state(comfort ? "comfort" : "economy");
+              float t = comfort ? id(ot_dhw_comfort).state : id(ot_dhw_eco).state;
+              if (!std::isnan(t)) { auto c = id(ot_dhw_setpoint).make_call(); c.set_value(t); c.perform(); }
+            }
+          } else if (id(ot_dhw_phase_last) != -2) {
+            id(ot_dhw_phase_last) = -2;
+            id(ot_dhw_phase).publish_state("manual");
+          }

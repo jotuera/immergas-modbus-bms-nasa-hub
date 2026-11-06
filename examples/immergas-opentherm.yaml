@@ -63,4 +63,5 @@ packages:
       - packages/ot_stats.yaml         # optional: burner starts today / last hour, burner time today
       - packages/ot_control.yaml
       - packages/ot_regulator.yaml      # master: weather curve + room correction in the hub
+      - packages/ot_programs.yaml       # optional: CH / DHW programs, anti-legionella, vacation, summer / winter, frost
       # - packages/ot_gateway.yaml      # gateway: the room unit stays (needs the slave adapter)

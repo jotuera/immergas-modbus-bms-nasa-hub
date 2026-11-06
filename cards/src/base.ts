@@ -123,10 +123,17 @@ export abstract class HubCard extends LitElement {
   protected bad(k: Key) { const v = this.s(k); return v === undefined || v === "unavailable" || v === "unknown"; }
   protected attr(k: Key, a: string) {
     if (k === "mode" && a === "options" && this.esp && !this.eid("mode")) return ["off", "water", "heating_water", "heating"];
+    if (this.esp && k === "zone1_phase" && a === "anti_legionella_running") return this.on("ot_leg_run");
+    if (this.esp && k === "dom_auto_season" && a === "outdoor_mean_24h") return this.s("ot_out_mean");
     return this.so(k)?.attributes?.[a];
   }
   /** state as Home Assistant shows it (translated enum / select option), e.g. Dominus "economy" -> "Eko" */
   protected txt(k: Key): string | undefined {
+    if (this.esp && (k === "zone1_phase" || k === "dhw_phase")) {
+      const p: Record<string, [string, string]> = { comfort: ["Komfort", "Comfort"], economy: ["Eko", "Eco"], manual: ["Ręczny", "Manual"], legionella: ["Anty-legionella", "Anti-legionella"] };
+      const v = this.so(k)?.state ?? "";
+      return p[v] ? this.t(p[v][0], p[v][1]) : v || undefined;
+    }
     if (k === "mode" && this.esp && !this.eid("mode")) {
       const m: Record<string, [string, string]> = { off: ["Standby", "Standby"], water: ["Lato", "Summer"], heating_water: ["Zima", "Winter"], heating: ["Tylko CO", "CH only"] };
       const v = this.espMode();
@@ -241,7 +248,14 @@ export abstract class HubCard extends LitElement {
       return;
     }
     const entity_id = this.eid(k);
-    if (entity_id) this.hass.callService(domain, service, { entity_id, ...data });
+    if (!entity_id) return;
+    // stand-in helpers (test dashboards): the input_* domain of the entity
+    const dom = entity_id.split(".")[0];
+    if (dom.startsWith("input_") && dom !== domain) {
+      if (dom === "input_datetime" && service === "set_value") return this.hass.callService(dom, "set_datetime", { entity_id, ...data });
+      if (dom === "input_boolean" || dom === "input_number" || dom === "input_select") return this.hass.callService(dom, service, { entity_id, ...data });
+    }
+    this.hass.callService(domain, service, { entity_id, ...data });
   }
   /** two-tap confirm: first tap arms for 4 s, second tap runs */
   protected confirm(tag: string, run: () => void) {
