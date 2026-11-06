@@ -54,7 +54,7 @@ i z instrukcjami Immergasa i Samsunga. Immergas nie publikuje map rejestrów tyc
 
 ## 1. Szybki start
 
-Instalacja krok po kroku jest w głównym [README](../README.pl.md#instalacja). Po wgraniu sprawdź w Home Assistant:
+Instalacja krok po kroku jest na stronie [MAGIS PRO / COMBO V2](magis-pro-combo-v2.pl.md#instalacja). Po wgraniu sprawdź w Home Assistant:
 
 - *Immergas DD - Połączenie Modbus* = połączono, *Immergas DD - Połączenie Panel Strefy 1* = połączono;
 - *Immergas FF - Ramki NASA RX* stale rosną, *Timeouty odczytu NASA* = 0;

@@ -2,6 +2,8 @@
 
 **English** · [Polski](opentherm-hub.pl.md)
 
+Back to the [protocol overview](../README.md).
+
 > **Experimental – not tested on a boiler yet.** Written from the OpenTherm 2.2 specification and what the
 > [Immergas Dominus integration](https://github.com/jotuera/immergas-dominus/blob/main/docs/opentherm.md) found on
 > Immergas boilers. The frame codec is tested on a PC (exact timing, ±10 % bit rate, jitter, spikes, parity).
@@ -24,6 +26,11 @@ Adapter, DIYLess Master OpenTherm Shield) and, for the gateway, a **slave adapte
 Slave Adapter), each on two GPIOs (in / out). Defaults: master on Port C (in GPIO6, out GPIO5), slave on Port B (in GPIO8,
 out GPIO7) of an AtomS3 + ATOMIC PortABC. The adapters' logic: output LOW = line active, input HIGH = line active
 (`out_active_low: true`, `in_active_low: false`); change them for an adapter that works the other way.
+
+## Wiring
+
+OpenTherm has no polarity. The master adapter goes on the boiler's OpenTherm terminals (where the CAR V2 / Dominus
+was), the slave adapter (gateway) on the room unit's two wires.
 
 | Boiler family | OpenTherm terminals | Without the room unit |
 |---|---|---|
@@ -56,3 +63,11 @@ Example: [`examples/immergas-opentherm.yaml`](../examples/immergas-opentherm.yam
 
 **Still to confirm on a boiler:** the adapters' levels with the hub, the 0xCA low byte with each family, how the CAR
 V2 reacts to the gateway (it may use Immergas-specific IDs), and E31 when the hub takes over.
+
+## Knowledge base
+
+- [Immergas Dominus – OpenTherm](https://github.com/jotuera/immergas-dominus/blob/main/docs/opentherm.md): the
+  Data-ID map read from Immergas boilers, the Immergas specifics (0xCA, E31, the cyclic DHW write, TSP and fault
+  history), replacing the CAR V2, boilers and terminals, the menu profiles of the five boiler families.
+- The OpenTherm 2.2 specification (physical layer, frame, Data-IDs).
+- Installer manuals of the boilers on immergas.pl (terminals, menu P / t / A / M, E31, P33, TERA P7).

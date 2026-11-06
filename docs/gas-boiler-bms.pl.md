@@ -2,6 +2,8 @@
 
 [English](gas-boiler-bms.md) · **Polski**
 
+Powrót do [przeglądu protokołów](../README.pl.md).
+
 > **Eksperymentalne – jeszcze nie testowane na prawdziwym kotle.** Pakiety idą za oficjalnymi specyfikacjami VIPS gas
 > (*Specifikace protokolu Modbus*, wersja 02/2025) dla VICTRIX SUPERIOR 2021, VICTRIX EXTRA i VICTRIX PRO V2 EU.
 > Masz taki kocioł – zgłoś, co widzisz (patrz [Zbieranie logów](collecting-logs.pl.md)).
@@ -14,7 +16,17 @@ pokojowy, strefy i harmonogramy to zadanie Home Assistanta (albo opcjonalnego pa
 Przy BMS nie podłączaj Dominusa, CAR V2 / pilota Immergas, termostatu pokojowego, bezprzewodowej centrali stref ani
 modułów DIM – kocioł zgłosi konflikt mastera albo je pominie.
 
-## Kotły
+## Sprzęt
+
+| Element | |
+|---|---|
+| [M5Stack AtomS3 Lite](https://docs.m5stack.com/en/core/AtomS3%20Lite) + ATOMIC PortABC | ESP32-S3; port C (RX GPIO6, TX GPIO5) |
+| 1× M5Stack Isolated RS485 Unit | izolacja galwaniczna, automatyczny kierunek (bez pinu DE) |
+
+Działa każdy ESP32 z transceiverem RS485: ustaw `gb_uart_rx_pin` / `gb_uart_tx_pin` (i `flow_control_pin` w `gb_modbus`
+przy transceiverze z pinem kierunku). Port: 9600 bodów, 8E1, adres slave 1.
+
+## Kotły i podłączenie
 
 | Kocioł | Pakiet | Magistrala | Menu kotła |
 |---|---|---|---|
@@ -23,7 +35,14 @@ modułów DIM – kocioł zgłosi konflikt mastera albo je pominie.
 | VICTRIX PRO V2 EU (także prosta kaskada) | `gb_pro` | **T+ / T−** listwy A38, X40 zdjęta | nic nie trzeba włączać (kod 123 tylko dla parametrów portu) |
 | Pompa ciepła **MAGIS M TOP** (R290, E-BOX TOP) | `gb_mtop` | **BMS+ / BMS−** płyty E-BOX TOP (A13), terminacja przełącznikiem SW1.2 | menu P panelu: P021 = On (sterowanie), P022 = 1, P023 = 3 (9600), P024 = 1 (even / 1) – najpierw sprawdź P023 / P024, użytkownicy zastali fabrycznie 2400 bodów |
 
-Port fabrycznie: **9600 bodów, 8E1, adres slave 1** we wszystkich trzech. PRO V2 EU: terminacja 120 Ω mostkiem TRD – T−,
+Zasady podłączenia:
+
+- **Polaryzacja:** D+ (BMS+, T+) → A, D− (BMS−, T−) → B; cisza na magistrali to zwykle zamienione przewody.
+- **Terminacja:** kotły na D+ / D− – 120 Ω po stronie huba przy długim kablu; PRO V2 EU – mostek TRD – T− w kotle;
+  MAGIS M TOP – przełącznik SW1.2 płyty E-BOX TOP.
+- **Bez Dominusa** na tej samej magistrali: *Modbus / Typ* to Dominus **albo** BMS.
+
+Port fabrycznie: **9600 bodów, 8E1, adres slave 1** we wszystkich. PRO V2 EU: terminacja 120 Ω mostkiem TRD – T−,
 a gdy master nie ma rezystorów podciągających – mostki TR+ – T+ i TR− – T−.
 
 ## Pakiety
@@ -84,3 +103,13 @@ sam przy pierwszej poprawnej ramce. Szybkie odpytywanie co 10 s.
 **Do potwierdzenia na kotle:** przesunięcie adresów (tabele podają adresy surowe), czy temp. zewnętrzna ma znak i co
 pokazuje „brak sondy”, rozdzielczość przepływów, wzór godzin (PDF podaje 65535 × starsze), a w EXTRA / PRO – czy sam
 bit2 zezwala też na CWU. Żadna specyfikacja nie podaje kodów usterek poza 144 / 100.
+
+## Baza wiedzy
+
+- Oficjalne *Specifikace protokolu Modbus* VIPS gas (wersja 02/2025) dla VICTRIX SUPERIOR 2021, VICTRIX EXTRA
+  i VICTRIX PRO V2 EU – źródło mapy rejestrów powyżej.
+- Instrukcja instalatora MAGIS M TOP ST.010018/001, rozdział 1.23 (konfiguracja BMS, P021–P024).
+- Menu kotłów nowej platformy (Modbus / Typ, Zdalne sterowanie, konflikt mastera E145, Dominus niedostępny E142):
+  instrukcje instalatora ZEUS Superior 25 / 30 / 35, HERCULES 25 / 35 i EXTRA na immergas.pl.
+- Z Dominusem zamiast BMS te same kotły działają przez TCP Dominusa:
+  [Immergas Dominus – mapa Modbus, kotły gazowe](https://github.com/jotuera/immergas-dominus/blob/main/docs/pdu-map.pl.md).

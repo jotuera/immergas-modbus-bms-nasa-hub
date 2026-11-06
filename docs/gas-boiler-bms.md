@@ -2,6 +2,8 @@
 
 **English** · [Polski](gas-boiler-bms.pl.md)
 
+Back to the [protocol overview](../README.md).
+
 > **Experimental – not tested on a real boiler yet.** The packages follow the official VIPS gas specifications
 > (*Specifikace protokolu Modbus*, version 02/2025) for VICTRIX SUPERIOR 2021, VICTRIX EXTRA and VICTRIX PRO V2 EU.
 > If you have one of these boilers, please report what you see (see [Collecting logs](collecting-logs.md)).
@@ -14,7 +16,17 @@ curve, the room thermostat, zones and time programs are Home Assistant's job (or
 terminals. With BMS do not connect a Dominus, a CAR V2 / Immergas remote, a room thermostat, the wireless zone
 controller or DIM units – the boiler reports a master conflict or ignores them.
 
-## Boilers
+## Hardware
+
+| Part | |
+|---|---|
+| [M5Stack AtomS3 Lite](https://docs.m5stack.com/en/core/AtomS3%20Lite) + ATOMIC PortABC | ESP32-S3; Port C (RX GPIO6, TX GPIO5) |
+| 1× M5Stack Isolated RS485 Unit | galvanic isolation, automatic direction (no DE pin) |
+
+Any ESP32 with an RS485 transceiver works: set `gb_uart_rx_pin` / `gb_uart_tx_pin` (and a `flow_control_pin` on
+`gb_modbus` for a transceiver with a direction pin). Port: 9600 baud, 8E1, slave address 1.
+
+## Boilers and wiring
 
 | Boiler | Package | Bus | Boiler menu |
 |---|---|---|---|
@@ -23,7 +35,14 @@ controller or DIM units – the boiler reports a master conflict or ignores them
 | VICTRIX PRO V2 EU (and its simple cascade) | `gb_pro` | **T+ / T−** of terminal block A38, X40 removed | nothing to switch on (code 123 only for the port) |
 | **MAGIS M TOP** heat pump (R290, E-BOX TOP) | `gb_mtop` | **BMS+ / BMS−** of the E-BOX TOP (A13), termination dip switch SW1.2 | panel menu P: P021 = On (control), P022 = 1, P023 = 3 (9600), P024 = 1 (even / 1) – check P023 / P024 first, users found 2400 baud at delivery |
 
-Factory port: **9600 baud, 8E1, slave address 1** on all three. PRO V2 EU: 120 Ω termination with the TRD – T− bridge
+Wiring rules:
+
+- **Polarity:** D+ (BMS+, T+) → A, D− (BMS−, T−) → B; a silent bus means swapped wires.
+- **Termination:** the D+ / D− boilers – 120 Ω on the hub end if the cable is long; PRO V2 EU – the TRD – T− bridge in
+  the boiler; MAGIS M TOP – dip switch SW1.2 of the E-BOX TOP.
+- **No Dominus** on the same bus: *Modbus / Type* is Dominus **or** BMS.
+
+Factory port: **9600 baud, 8E1, slave address 1** on all of them. PRO V2 EU: 120 Ω termination with the TRD – T− bridge
 and, when the master has no pull-ups, the TR+ – T+ and TR− – T− bridges.
 
 ## Packages
@@ -83,3 +102,13 @@ and bit4 silent mode; 513 max. power (0–1000 = 0–100 %); 773 pressure in **0
 **Still to confirm on a boiler:** the address offset (the tables give raw addresses), whether the outdoor value is
 signed and what "no probe" reads, the flow resolution, the hours formula (the PDF says 65535 × high), and on the EXTRA /
 PRO whether bit2 alone also allows DHW. None of the specifications lists the fault codes beyond 144 / 100.
+
+## Knowledge base
+
+- Official VIPS gas *Specifikace protokolu Modbus* (version 02/2025) for VICTRIX SUPERIOR 2021, VICTRIX EXTRA and
+  VICTRIX PRO V2 EU – the source of the register map above.
+- MAGIS M TOP installer manual ST.010018/001, chapter 1.23 (BMS configuration, P021–P024).
+- Boiler menus of the new platform (Modbus / Type, Remote control, master conflict E145, Dominus unavailable E142):
+  the installer manuals of ZEUS Superior 25 / 30 / 35, HERCULES 25 / 35 and EXTRA on immergas.pl.
+- With a Dominus instead of BMS the same boilers run over the Dominus TCP:
+  [Immergas Dominus – Modbus map, gas boilers](https://github.com/jotuera/immergas-dominus/blob/main/docs/pdu-map.md).

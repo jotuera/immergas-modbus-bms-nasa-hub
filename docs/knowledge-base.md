@@ -53,7 +53,7 @@ the Immergas and Samsung manuals. Immergas does not publish register maps for th
 
 ## 1. Quick start
 
-Installation step by step is in the main [README](../README.md#installation). After flashing, check in Home Assistant:
+Installation step by step is on the [MAGIS PRO / COMBO V2](magis-pro-combo-v2.md#installation) page. After flashing, check in Home Assistant:
 
 - *Immergas DD - Connection Modbus* = connected, *Immergas DD - Connection Panel Zone 1* = connected;
 - *Immergas FF - NASA RX Frames* keeps growing, *NASA Read Timeouts* = 0;

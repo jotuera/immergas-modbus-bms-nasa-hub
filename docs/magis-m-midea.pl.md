@@ -2,6 +2,8 @@
 
 [English](magis-m-midea.md) · **Polski**
 
+Powrót do [przeglądu protokołów](../README.pl.md).
+
 > **Eksperymentalne – jeszcze nie testowane na MAGIS M.** Pakiety implementują protokół Modbus Midea M-Thermal, na
 > którym zbudowany jest MAGIS M. Masz taką pompę – zgłoś, co widzisz (patrz [Zbieranie logów](collecting-logs.pl.md)).
 
@@ -9,6 +11,15 @@ Immergas **MAGIS M** (M4 – M30, R32) to pompa Midea M-Thermal: panel przewodow
 T1S / T4 / T5 / IBH / TBH. Nie ma nic wspólnego z MAGIS PRO / COMBO V2 na Samsungu, które obsługuje reszta huba.
 **MAGIS M TOP** (R290, E-BOX TOP) to jeszcze co innego: jego port BMS mówi protokołem BMS generatora Immergasa – patrz
 [Kotły gazowe po Modbus BMS](gas-boiler-bms.pl.md) (pakiet `gb_mtop`).
+
+## Sprzęt
+
+| Element | |
+|---|---|
+| [M5Stack AtomS3 Lite](https://docs.m5stack.com/en/core/AtomS3%20Lite) + ATOMIC PortABC | ESP32-S3; port C (RX GPIO6, TX GPIO5) |
+| 1× M5Stack Isolated RS485 Unit | izolacja galwaniczna, automatyczny kierunek (bez pinu DE) |
+
+Działa każdy ESP32 z transceiverem RS485 (`mt_uart_rx_pin` / `mt_uart_tx_pin`).
 
 ## Podłączenie
 
@@ -76,3 +87,13 @@ Przykład: [`examples/immergas-magis-m.yaml`](../examples/immergas-magis-m.yaml)
 **Do potwierdzenia na MAGIS M:** polaryzacja H1 / H2, jednostka liczników energii, skala ciśnień w danej wersji
 protokołu, czy nastawy rejestru 2 idą za flagą rozdzielczości i numeracja kodów błędów (pokazywana jako liczba).
 Parametrów instalatora od 209 w górę celowo się nie zapisuje.
+
+## Baza wiedzy
+
+- Protokół Modbus Midea M-Thermal panelu przewodowego (rodzina KJR-120) – mapa rejestrów powyżej; wersja protokołu
+  (187) i flaga rozdzielczości (189) mówią, który wariant ma dana jednostka.
+- Instrukcja instalatora MAGIS M ST006126a: zaciski panelu A B X Y E i H1 / H2 / E, menu *FOR SERVICEMAN → 17 HMI
+  ADDRESS SET*, parametry T1S / T4 / T5 / IBH / TBH.
+- Projekty społeczności dla klonów Midea M-Thermal (tylko jako odniesienie dla adresów i skal):
+  [Mosibi/Midea-heat-pump-ESPHome](https://github.com/Mosibi/Midea-heat-pump-ESPHome), wątki na forum Home Assistant
+  o klonach Midea od Immergasa.

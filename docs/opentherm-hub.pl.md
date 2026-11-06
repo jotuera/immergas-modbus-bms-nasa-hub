@@ -2,6 +2,8 @@
 
 [English](opentherm-hub.md) · **Polski**
 
+Powrót do [przeglądu protokołów](../README.pl.md).
+
 > **Eksperymentalne – jeszcze nie testowane na kotle.** Napisane według specyfikacji OpenTherm 2.2 i tego, co
 > [integracja Immergas Dominus](https://github.com/jotuera/immergas-dominus/blob/main/docs/opentherm.pl.md) ustaliła
 > na kotłach Immergas. Kodek ramek jest przetestowany na PC (dokładny zegar, ±10 % prędkości, drgania, zakłócenia,
@@ -26,6 +28,11 @@ OpenTherm Slave Adapter), każdy na dwóch GPIO (wejście / wyjście). Domyślni
 wyjście GPIO5), slave na porcie B (wejście GPIO8, wyjście GPIO7) AtomS3 + ATOMIC PortABC. Logika adapterów: wyjście
 LOW = linia aktywna, wejście HIGH = linia aktywna (`out_active_low: true`, `in_active_low: false`); dla adaptera
 działającego odwrotnie zmień je.
+
+## Podłączenie
+
+OpenTherm nie ma polaryzacji. Adapter master idzie na zaciski OpenTherm kotła (tam, gdzie był CAR V2 / Dominus),
+adapter slave (bramka) na dwa przewody pilota.
 
 | Rodzina kotłów | Zaciski OpenTherm | Bez pilota |
 |---|---|---|
@@ -60,3 +67,11 @@ Przykład: [`examples/immergas-opentherm.yaml`](../examples/immergas-opentherm.y
 
 **Do potwierdzenia na kotle:** poziomy adapterów z hubem, bajt 0xCA w każdej rodzinie, jak CAR V2 reaguje na bramkę
 (może używać ID specyficznych dla Immergasa) i E31 przy przejęciu przez hub.
+
+## Baza wiedzy
+
+- [Immergas Dominus – OpenTherm](https://github.com/jotuera/immergas-dominus/blob/main/docs/opentherm.pl.md): mapa
+  Data-ID odczytana z kotłów Immergas, specyfika Immergasa (0xCA, E31, cykliczny zapis CWU, TSP i historia błędów),
+  zastąpienie CAR V2, kotły i zaciski, profile menu pięciu rodzin kotłów.
+- Specyfikacja OpenTherm 2.2 (warstwa fizyczna, ramka, Data-ID).
+- Instrukcje instalatora kotłów na immergas.pl (zaciski, menu P / t / A / M, E31, P33, TERA P7).
