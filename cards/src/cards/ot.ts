@@ -80,20 +80,16 @@ class ImmergasOtBoilerCard extends HubCard {
         ${this.chip("ot_ch_set", "mdi:radiator", "red", this.t("Zakres CO (kocioł)", "CH range (boiler)"), this.range("ot_ch_set"))}
         ${this.chip("dhw_set", "mdi:water-boiler", "yellow", this.t("Zakres CWU (kocioł)", "DHW range (boiler)"), this.range("dhw_set") + (dhwType ? " · " + dhwType : ""))}
         ${this.eid("ot_exhaust") && !this.bad("ot_exhaust") ? this.chip("ot_exhaust", "mdi:smoke", "overlay2", this.t("Spaliny", "Exhaust"), this.f(this.n("ot_exhaust"), 1, 1) + " °C") : nothing}
+        ${this.esp && this.eid("ot_press") && !this.bad("ot_press") ? (() => { const p = this.n("ot_press"); return this.chip("ot_press", "mdi:gauge", p < 1 || p > 2.5 ? "red" : "green", this.t("Ciśnienie instalacji", "System pressure"), this.f(p, 1, 1) + " bar", p < 1 || p > 2.5); })() : nothing}
         ${this.eid("ot_fan") && !this.bad("ot_fan") ? this.chip("ot_fan", "mdi:fan", "sky", this.t("Wentylator", "Fan"), this.f(this.n("ot_fan"), 0) + this.t(" obr/min", " rpm")) : nothing}
         ${this.eid("ot_flame_i") && !this.bad("ot_flame_i") ? this.chip("ot_flame_i", "mdi:fire-circle", "peach", this.t("Prąd płomienia", "Flame current"), this.f(this.n("ot_flame_i"), 1, 1) + " µA") : nothing}
       </div>
-      ${this.eid("ot_burn_today") ? html`<div class="sec">${this.t("Palnik", "Burner")}</div>
+      ${this.eid("ot_burn_today") && !this.esp ? html`<div class="sec">${this.t("Palnik", "Burner")}</div>
         <div class="grid">
           ${this.chip("ot_burn_today", "mdi:fire-circle", "peach", this.t("Starty dziś", "Starts today"), this.f(st, 0) + (isNaN(bh) ? "" : ` · ${this.f(bh, 1, 1)} h`))}
           ${this.chip("ot_burn_h", "mdi:fire-alert", shCol, this.t("Starty / ostatnia godzina", "Starts / last hour"), this.f(sh, 0) + (sh > 6 ? this.t(" · taktowanie", " · short cycling") : ""), sh > 6)}
         </div>
         <div class="hint">${this.esp ? this.t("Liczone w hubie z bitu płomienia każdej ramki statusu (~1 s) – żaden zapłon nie umyka.", "Counted in the hub from the flame bit of every status frame (~1 s) – no burn is missed.") : this.t("Liczone z płomienia co cykl odczytu (~45 s) – bardzo krótkie zapłony mogą umknąć.", "Counted from the flame flag every polling cycle (~45 s) – very short burns may be missed.")}</div>` : nothing}
-      ${this.esp && (this.eid("ot_starts_total") || this.eid("ot_hours_total")) ? html`${this.eid("ot_burn_today") ? nothing : html`<div class="sec">${this.t("Palnik", "Burner")}</div>`}
-        <div class="grid">
-          ${this.eid("ot_starts_total") ? this.chip("ot_starts_total", "mdi:counter", "overlay2", this.t("Starty palnika (od początku)", "Burner starts (total)"), this.f(this.n("ot_starts_total"), 0)) : nothing}
-          ${this.eid("ot_hours_total") ? this.chip("ot_hours_total", "mdi:timer-outline", "overlay2", this.t("Godziny palnika (od początku)", "Burner hours (total)"), this.f(this.n("ot_hours_total"), 0) + " h") : nothing}
-        </div>` : nothing}
       ${this.esp && this.eid("ot_frames") ? (() => {
         const fr = this.n("ot_frames"), er = this.n("ot_errors"), to = this.n("ot_timeouts"), all = (fr || 0) + (er || 0) + (to || 0);
         const bad = all > 0 ? ((er || 0) + (to || 0)) / all * 100 : NaN, col = isNaN(bad) ? "overlay2" : bad > 5 ? "red" : bad > 1 ? "peach" : "green";

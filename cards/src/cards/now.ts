@@ -358,11 +358,22 @@ class ImmergasNowCard extends HubCard {
 
   /** OpenTherm extras: only what the boiler really reports - pressure / DHW flow are left out when the Data-ID scan
    *  found them unanswered or they have no value (a DHW flow that stays 0 outside DHW, e.g. a storage-tank boiler) */
+  /** ESP hub: the burner counted in the hub (ot_stats) and the boiler's own counters (Data-ID 116 / 120) */
+  private burnerTiles() {
+    const st = this.n("ot_burn_today"), bh = this.n("ot_burn_hours"), sh = this.n("ot_burn_h"), tot = this.n("ot_starts_total"), hrs = this.n("ot_hours_total");
+    const shCol = isNaN(sh) ? "overlay1" : sh > 6 ? "red" : sh > 3 ? "peach" : "green";
+    return html`
+      ${this.eid("ot_burn_today") ? this.tile("ot_burn_today", "mdi:fire-circle", this.t("Starty dziś", "Starts today"), this.f(st, 0) + (isNaN(bh) ? "" : ` · ${this.f(bh, 1, 1)} h`), "peach", Math.min(100, (st || 0) / 48 * 100)) : nothing}
+      ${this.eid("ot_burn_h") ? this.tile("ot_burn_h", "mdi:fire-alert", this.t("Starty / godzina", "Starts / hour"), this.f(sh, 0) + (sh > 6 ? this.t(" · taktowanie", " · cycling") : ""), shCol, Math.min(100, (sh || 0) / 8 * 100)) : nothing}
+      ${this.eid("ot_starts_total") ? this.tile("ot_starts_total", "mdi:counter", this.t("Starty (od początku)", "Starts (total)"), this.f(tot, 0), "overlay2") : nothing}
+      ${this.eid("ot_hours_total") ? this.tile("ot_hours_total", "mdi:timer-outline", this.t("Godziny palnika", "Burner hours"), this.f(hrs, 0) + " h", "overlay2") : nothing}`;
+  }
+
   private otChips(dhw: boolean) {
     const press = this.n("ot_press"), fl = this.n("ot_dhw_flow"), chips: unknown[] = [];
     const flag = (["ot_f_water", "ot_f_flame", "ot_f_air", "ot_f_hot", "ot_f_service"] as Key[]).find((k) => this.on(k));
     if (flag) chips.push(html`<div class="span2">${this.chip(flag, "mdi:alert-octagon", "red", this.t("Flaga błędu kotła", "Boiler fault flag"), this.so(flag)?.attributes?.friendly_name ?? "", true)}</div>`);
-    if (this.eid("ot_press") && !this.bad("ot_press") && !this.otMissing(18))
+    if (!this.esp && this.eid("ot_press") && !this.bad("ot_press") && !this.otMissing(18))  // ESP hub: in the boiler card
       chips.push(this.chip("ot_press", "mdi:gauge", press < 1 || press > 2.5 ? "red" : "green", this.t("Ciśnienie instalacji", "System pressure"), this.f(press, 1, 1) + " bar", false));
     if (this.eid("ot_dhw_flow") && !this.bad("ot_dhw_flow") && !this.otMissing(19) && (fl > 0 || dhw))
       chips.push(this.chip("ot_dhw_flow", "mdi:water-pump", "sky", this.t("Przepływ CWU", "DHW flow rate"), this.f(fl, 1, 1) + " l/min", false));
@@ -413,6 +424,7 @@ class ImmergasNowCard extends HubCard {
         ${this.tile("tank", "mdi:water-boiler", ot ? this.t("Ciepła woda", "Hot water") : this.t("Zasobnik CWU", "DHW cylinder"), this.f(tank, 1, 1) + " °C", tank >= 45 ? "peach" : tank >= 35 ? "yellow" : "sky", (tank - 20) / 45 * 100)}
         ${ot ? this.tile("ot_mod", flame ? "mdi:fire" : "mdi:fire-off", this.t("Modulacja", "Modulation"), flame ? this.f(mod, 0) + " %" : this.t("płomień zgaszony", "no flame"), flame ? "peach" : "overlay1", flame ? mod : 0)
           : this.tile("dom_ch_demand", ch ? "mdi:fire" : "mdi:fire-off", this.t("Żądanie CO", "CH demand"), ch ? this.t("tak", "yes") : this.t("nie", "no"), ch ? "peach" : "overlay1")}
+        ${this.esp ? this.burnerTiles() : nothing}
       </div>
       ${ot ? this.otChips(dhw) : nothing}
       ${this.config.show_timers === false || !this.eid("dom_ch_demand") ? nothing : this.domTimers()}
