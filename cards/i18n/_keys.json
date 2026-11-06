@@ -185,6 +185,43 @@
   ]
  },
  {
+  "en": "off",
+  "pl": "on",
+  "files": [
+   "base.ts",
+   "calibration.ts",
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "M3 · P33 – CH without a working remote",
+  "pl": "M3 · P33 – CO bez działającego pilota",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "set ON on the boiler and declare it in the Boiler parameters (offline) – the boiler keeps heating after E31",
+  "pl": "ustaw ON na kotle i zadeklaruj w Parametrach pieca (offline) – po E31 kocioł dalej grzeje",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "P7 – remote protocol",
+  "pl": "P7 – protokół zdalnego sterowania",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
+  "en": "0 = CAR V2 (IMG BUS), 2 = third-party remote; power-cycle the boiler after the change",
+  "pl": "0 = CAR V2 (IMG BUS), 2 = pilot innej firmy; po zmianie odłącz i włącz zasilanie kotła",
+  "files": [
+   "base.ts"
+  ]
+ },
+ {
   "en": "Running without the CAR V2",
   "pl": "Praca bez CAR V2",
   "files": [
@@ -228,15 +265,6 @@
   "pl": "WŁĄCZONY od ",
   "files": [
    "base.ts"
-  ]
- },
- {
-  "en": "off",
-  "pl": "wyłączony",
-  "files": [
-   "base.ts",
-   "calibration.ts",
-   "mode.ts"
   ]
  },
  {
@@ -8556,8 +8584,8 @@
   ]
  },
  {
-  "en": "Central heating (menu t)",
-  "pl": "Ogrzewanie (menu t)",
+  "en": "CH flow",
+  "pl": "Zasilanie CO",
   "files": [
    "settings.ts"
   ]
@@ -8598,8 +8626,8 @@
   ]
  },
  {
-  "en": "CH ignition (M5)",
-  "pl": "Zapłon CO (M5)",
+  "en": "Ignition and DHW",
+  "pl": "Zapłon i CWU",
   "files": [
    "settings.ts"
   ]
@@ -8619,15 +8647,15 @@
   ]
  },
  {
-  "en": " – lengthen P69 on the boiler (e.g. 200–255 s)",
-  "pl": " – wydłuż P69 na kotle (np. 200–255 s)",
+  "en": " – lengthen the ignitions timer on the boiler",
+  "pl": " – wydłuż na kotle blokadę ponownego zapłonu",
   "files": [
    "settings.ts"
   ]
  },
  {
-  "en": " – lengthen t5 on the boiler (e.g. 300–600 s)",
-  "pl": " – wydłuż t5 na kotle (np. 300–600 s)",
+  "en": " – lengthen {0} on the boiler (e.g. {1} s)",
+  "pl": " – wydłuż {0} na kotle (np. {1} s)",
   "files": [
    "settings.ts"
   ]
@@ -8654,13 +8682,6 @@
   ]
  },
  {
-  "en": "DHW restart below the setpoint",
-  "pl": "start CWU poniżej nastawy",
-  "files": [
-   "settings.ts"
-  ]
- },
- {
   "en": "flow while heating the cylinder",
   "pl": "zasilanie przy grzaniu zasobnika",
   "files": [
@@ -8668,8 +8689,22 @@
   ]
  },
  {
-  "en": "Output (M5 · fan speed)",
-  "pl": "Moc (M5 · obroty wentylatora)",
+  "en": "DHW restart below the setpoint",
+  "pl": "start CWU poniżej nastawy",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "HERCULES: P71.1 = 3 °C, P71.2 = 5 °C (solar)",
+  "pl": "HERCULES: P71.1 = 3 °C, P71.2 = 5 °C (solar)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Output (fan speed / %)",
+  "pl": "Moc (obroty wentylatora / %)",
   "files": [
    "settings.ts"
   ]
@@ -8684,27 +8719,6 @@
  {
   "en": "CH max. output",
   "pl": "maks. moc CO",
-  "files": [
-   "settings.ts"
-  ]
- },
- {
-  "en": "CH min. output",
-  "pl": "min. moc CO",
-  "files": [
-   "settings.ts"
-  ]
- },
- {
-  "en": "DHW max. output",
-  "pl": "maks. moc CWU",
-  "files": [
-   "settings.ts"
-  ]
- },
- {
-  "en": "DHW min. output",
-  "pl": "min. moc CWU",
   "files": [
    "settings.ts"
   ]
@@ -8731,6 +8745,34 @@
   ]
  },
  {
+  "en": "DHW max. output",
+  "pl": "maks. moc CWU",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "CH min. output",
+  "pl": "min. moc CO",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "DHW min. output",
+  "pl": "min. moc CWU",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "The S menu depends on the model: EXA 24 X – fan speeds (S0–S3), S5 / S6 flow, S7 probe; NIKE 24 ECO – output in % (S0 min., S1 max.).",
+  "pl": "Menu S zależy od modelu: EXA 24 X – obroty wentylatora (S0–S3), S5 / S6 zasilanie, S7 sonda; NIKE 24 ECO – moc w % (S0 min., S1 maks.).",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
   "en": "Pump and probe",
   "pl": "Pompa i sonda",
   "files": [
@@ -8747,6 +8789,13 @@
  {
   "en": "pump speed",
   "pl": "prędkość pompy",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "pump control",
+  "pl": "sterowanie pompą",
   "files": [
    "settings.ts"
   ]
@@ -8780,6 +8829,41 @@
   ]
  },
  {
+  "en": "Remote control",
+  "pl": "Zdalne sterowanie",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "remote protocol",
+  "pl": "protokół zdalnego sterowania",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "TERA manual: P7 = 0 IMG BUS (CAR V2), 2 = third-party remote on 44 / 41 (the DHW setpoint and max. flow then stay on the boiler panel); 1 = not available. The forum said P7 = 1 – check on the boiler.",
+  "pl": "Instrukcja TERA: P7 = 0 IMG BUS (CAR V2), 2 = pilot innej firmy na 44 / 41 (nastawa CWU i maks. zasilanie zostają wtedy na panelu kotła); 1 = niedostępne. Na forum podawano P7 = 1 – sprawdź na kotle.",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "CH without a working remote",
+  "pl": "CO bez działającego pilota",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "P33 = ON: the boiler heats also with E31 (no remote) – a safety net when the CAR V2 is removed.",
+  "pl": "P33 = ON: kocioł grzeje CO także przy E31 (brak pilota) – zabezpieczenie przy zdjęciu CAR V2.",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
   "en": "Information (menu M1)",
   "pl": "Informacje (menu M1)",
   "files": [
@@ -8801,8 +8885,8 @@
   ]
  },
  {
-  "en": "Codes P68–P76 read from the VICTRIX ZEUS Superior manual – check them on your boiler.",
-  "pl": "Numery P68–P76 odczytane z instrukcji VICTRIX ZEUS Superior – sprawdź je na swoim kotle.",
+  "en": "Codes P68–P76 read from the VICTRIX ZEUS Superior 26 / 32 manual – check them on your boiler. The new ZEUS Superior 25 / 30 / 35 has Modbus and a text menu – the Dominus connects to it over Modbus.",
+  "pl": "Numery P68–P76 odczytane z instrukcji VICTRIX ZEUS Superior 26 / 32 – sprawdź je na swoim kotle. Nowy ZEUS Superior 25 / 30 / 35 ma Modbus i menu tekstowe – Dominus łączy się z nim po Modbusie.",
   "files": [
    "settings.ts"
   ]

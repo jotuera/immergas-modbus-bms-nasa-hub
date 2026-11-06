@@ -4,6 +4,9 @@ import { LitElement, html, css, nothing, unsafeCSS, TemplateResult, CSSResultGro
 import { hubIndex, HubIndex } from "./hub";
 import { Key } from "./names";
 
+export type Prof = "zeus25" | "tera" | "classic" | "superior" | "hercules" | "generic";
+export const PROFS: Prof[] = ["zeus25", "tera", "classic", "superior", "hercules", "generic"];
+
 export { html, css, nothing };
 export type { TemplateResult };
 
@@ -125,6 +128,15 @@ export abstract class HubCard extends LitElement {
   /** Dominus OpenTherm "Read only (remote in charge)" is on: no control writes to the boiler */
   protected get otRO() { return this.ot && this.on("ot_ro"); }
   /** what is needed to run the boiler without the CAR V2: the Dominus regulator + the programs in Home Assistant */
+  /** the boiler menu family: chosen in "Boiler menu profile", else guessed from the boiler model text */
+  protected get otProfile(): Prof {
+    const p = this.s("ot_menu_profile") as Prof | undefined;
+    if (p && (PROFS as string[]).includes(p)) return p;
+    const m = (this.s("dom_model") ?? "").toLowerCase();
+    return /hercules/.test(m) ? "hercules" : /superior/.test(m) ? "superior" : /tera/.test(m) ? "tera"
+      : /exa\s*24\s*x|nike/.test(m) ? "classic" : /zeus\s*25|exa|omnia/.test(m) ? "zeus25" : "generic";
+  }
+
   protected carReady() {
     const code = String(this.s("err_code") ?? "").replace(/\D/g, "");
     const room = !this.bad("zone1") && !isNaN(this.n("zone1"));
@@ -143,6 +155,15 @@ export abstract class HubCard extends LitElement {
       [this.eid("dhw_sched") ? this.on("dhw_sched") : null, this.t("Program CWU (PR SAN)", "DHW program (PR SAN)"), this.t("tylko z zasobnikiem", "storage tank only")],
       [!this.on("ot_ro"), this.t("Blokada zapisu wyłączona", "Write block off"), this.t("HA steruje, nie pilot", "HA in charge, not the remote")],
     ];
+    // menu families: the parameter that lets the boiler heat without its own remote
+    const prof = this.otProfile;
+    if (prof === "hercules")
+      rows.splice(1, 0, [this.eid("ot_ch_no_remote") && ["on", "off"].includes(this.s("ot_ch_no_remote") ?? "") ? this.s("ot_ch_no_remote") === "on" : null,
+        this.t("M3 · P33 – CO bez działającego pilota", "M3 · P33 – CH without a working remote"),
+        this.t("ustaw ON na kotle i zadeklaruj w Parametrach pieca (offline) – po E31 kocioł dalej grzeje", "set ON on the boiler and declare it in the Boiler parameters (offline) – the boiler keeps heating after E31")]);
+    if (prof === "tera")
+      rows.splice(1, 0, [null, this.t("P7 – protokół zdalnego sterowania", "P7 – remote protocol"),
+        this.t("0 = CAR V2 (IMG BUS), 2 = pilot innej firmy; po zmianie odłącz i włącz zasilanie kotła", "0 = CAR V2 (IMG BUS), 2 = third-party remote; power-cycle the boiler after the change")]);
     const ok = rows.filter(([v]) => v === true).length, need = rows.filter(([v]) => v !== null).length;
     const icon = (v: boolean | null) => v === null ? { ic: "mdi:information-outline", col: "overlay2" } : v ? { ic: "mdi:check-circle", col: "green" } : { ic: "mdi:close-circle-outline", col: "peach" };
     return html`<div class="grp">${this.t("Praca bez CAR V2", "Running without the CAR V2")} · ${ok} / ${need}</div>
