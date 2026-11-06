@@ -8,7 +8,7 @@
 # Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 
 substitutions:
-  ot_project_version: "1.0.0"
+  ot_project_version: "1.1.0"
   ot_name_prefix: "Immergas OT"
   # master adapter (towards the boiler): default AtomS3 + ATOMIC PortABC Port C
   ot_boiler_in_pin: GPIO6
