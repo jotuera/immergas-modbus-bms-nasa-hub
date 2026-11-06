@@ -74,6 +74,7 @@ bity wspólnych rejestrów i korzystają z ostatniej odczytanej wartości.
 | `mt_energy` | liczniki energii elektrycznej i cieplnej, moc grzewcza i pobór, COP jednostki i własny COP huba |
 | `mt_stats` (opcjonalny) | energia cieplna i elektryczna dziś, COP dziś, starty i czas pracy sprężarki dziś – liczone w hubie, zerowane o północy (czas z Home Assistant) |
 | `mt_programs` (opcjonalny, z `mt_stats`) | programy liczone w hubie: program CO AUTO (4 kalendarze × 4 zakresy, kalendarz na każdy dzień; Komfort / Eko jako zadana pokoju przy sterowaniu wg temp. pokoju, inaczej Eko obniża nastawę wody strefy 1 albo wyłącza strefę 1), program CWU (Komfort / Eko), tryb wyjazdowy (strefa 1 i CWU wył. albo tylko strefa 1, do daty), automatyczne Lato / Zima (strefa 1 wł. / wył. wg średniej zewnętrznej 24 h); dezynfekcję robi sama jednostka |
+| `mt_unit_params` (opcjonalny, z `mt_stats`) | przypomnienie o przeglądzie (ostatni przegląd, interwał, przegląd wykonany, termin); karty pokazują parametry instalatora z `mt_params` (tylko odczyt) jako Parametry jednostki (offline) |
 | `mt_control` | wł. / wył. strefa 1 / strefa 2 / CWU / wg pokoju, tryb pracy (auto / chłodzenie / grzanie), nastawy wody strefy 1 / 2, nastawa pokoju i CWU, krzywa pogodowa wł. / numer, tryb cichy, ECO, dezynfekcja, wymuszona CWU / grzałka zasobnika / grzałka IBH |
 | `mt_params` (opcjonalny) | tylko odczyt: limity nastaw, limity temp. zewn. dla grzania, krzywa własna |
 | `lang/mt_en`, `lang/mt_pl` | nazwy encji (`mt_name_prefix`, domyślnie „Immergas M”) |

@@ -51,7 +51,7 @@ integration (local TCP to the Dominus Wi-Fi module) use `type: custom:immergas-d
 Setpoints, Operating mode, Schedule and Connectivity. The integration ships these cards itself; the cards find its
 entities by their keys (no heat-pump data, COP or compressor – those need the hub).
 
-**MAGIS M hub (ESP, `mt_` packages):** found by its entity names (the "Modbus connection" switch and the entities with the same prefix) – the heat pump cards of the hub (Diagram, Now, Setpoints, Operating mode, Charts) show the Midea unit; the mode = zone 1, DHW and the unit mode (heat / cool); kW power is shown in W; automatic without a Magis hub, else `source: mt`.
+**MAGIS M hub (ESP, `mt_` packages):** found by its entity names (the "Modbus connection" switch and the entities with the same prefix) – the heat pump cards of the hub (Diagram, Now, Setpoints, Operating mode with the Midea functions, Weather curve, Connectivity, Schedule with `mt_programs`, Online settings, Unit parameters, Charts) show the Midea unit; the mode = zone 1, DHW and the unit mode (heat / cool); kW power is shown in W; automatic without a Magis hub, else `source: mt`.
 
 **Gas boiler hub (ESP, `gb_` packages):** found by its entity names (the "BMS connection" switch and the entities with the same prefix) – the OpenTherm-style cards (Now, Setpoints, Boiler with the model data, Connectivity, Operating mode, Schedule with `gb_programs`, Online settings, Boiler parameters with `gb_boiler_params`, Charts, Diagram) show the BMS boiler; automatic without a Magis hub, else `source: gb`.
 

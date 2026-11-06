@@ -55,5 +55,6 @@ packages:
       - packages/mt_energy.yaml
       - packages/mt_stats.yaml          # optional: energy / COP / compressor starts and runtime today
       - packages/mt_programs.yaml       # optional: CH / DHW programs, vacation, summer / winter (needs mt_stats)
+      - packages/mt_unit_params.yaml    # optional: service reminder (needs mt_stats)
       - packages/mt_control.yaml
       - packages/mt_params.yaml         # optional: installer parameters, read only

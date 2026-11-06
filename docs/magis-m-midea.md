@@ -74,6 +74,7 @@ shared registers and use the last value read.
 | `mt_energy` | electric and heat energy counters, heating and electric power, the unit's COP and the hub's own COP now |
 | `mt_stats` (optional) | today's heat and electric energy, COP today, compressor starts and runtime today – counted in the hub, reset at midnight (Home Assistant time) |
 | `mt_programs` (optional, with `mt_stats`) | programs run in the hub: CH program AUTO (4 calendars × 4 ranges, a calendar per weekday; Comfort / Eco room setpoint with the room temperature control, else Eco lowers the zone 1 water setpoint or switches zone 1 off), DHW program (Comfort / Eco), vacation (zone 1 and DHW off, or zone 1 only, until a date), automatic summer / winter (zone 1 on / off by the 24 h outdoor mean); the unit keeps its own disinfection |
+| `mt_unit_params` (optional, with `mt_stats`) | the service reminder (last service, interval, service done, due); the cards show the installer parameters of `mt_params` (read only) as Unit parameters (offline) |
 | `mt_control` | on / off zone 1 / zone 2 / DHW / room control, operating mode (auto / cooling / heating), water setpoints zone 1 / 2, room and DHW setpoints, weather curve on / number, silent, ECO, disinfection, forced DHW / tank heater / backup heater |
 | `mt_params` (optional) | read only: setpoint limits, heating outdoor limits, the custom heating curve |
 | `lang/mt_en`, `lang/mt_pl` | entity names (`mt_name_prefix`, default "Immergas M") |

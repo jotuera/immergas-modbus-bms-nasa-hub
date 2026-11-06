@@ -195,3 +195,8 @@ substitutions:
   n_mt_win_below: "${mt_name_prefix} - Zima poniżej"
   n_mt_sum_above: "${mt_name_prefix} - Lato powyżej"
   n_mt_out_mean: "${mt_name_prefix} - Średnia zewnętrzna 24 h"
+  # mt_unit_params
+  n_mt_maint: "${mt_name_prefix} - Przypomnienie o przeglądzie"
+  n_mt_last_srv: "${mt_name_prefix} - Ostatni przegląd"
+  n_mt_srv_done: "${mt_name_prefix} - Przegląd wykonany"
+  n_mt_maint_due: "${mt_name_prefix} - Przegląd kotła"

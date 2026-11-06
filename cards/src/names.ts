@@ -266,5 +266,6 @@ export type Key = keyof typeof NAMES | "dom_ch_demand" | "dom_dhw_request" | "do
   | "gb_conn" | "gb_req" | "gb_reset" | "gb_dhw_flow" | "gb_curve" | "gb_model"
   // the ESP MAGIS M hub (mt_ packages)
   | "mt_conn" | "mt_zone1" | "mt_dhw_on" | "mt_mode" | "mt_fault"
+  | "mt_lhmax" | "mt_lhmin" | "mt_lcmax" | "mt_lcmin" | "mt_ldmax" | "mt_ldmin" | "mt_t4hmax" | "mt_t4hmin" | "mt_c9fc" | "mt_c9fw" | "mt_c9oc" | "mt_c9ow" | "mt_hmi"
   | "mt_silent" | "mt_eco" | "mt_dis" | "mt_curve_on" | "mt_curve_n" | "mt_force_dhw" | "mt_force_tbh" | "mt_force_ibh" | "mt_wset" | "mt_room_ctl" | "mt_ibh2" | "mt_sg" | "mt_evu" | "mt_run" | "mt_flow" | "mt_hours" | "mt_heat_today" | "mt_elec_today" | "mt_sw" | "mt_proto"
   | "gb_boost" | "gb_eco" | "gb_power" | "gb_nodhwprio" | "gb_hp" | "gb_defrost" | "gb_sflow" | "gb_reqtype" | "gb_cool_en" | "gb_ch_prio" | "gb_silent" | "gb_cool_ok" | "gb_antifreeze" | "gb_hvdt" | "gb_dhw_in" | "gb_pump_flow" | "gb_hours_dhw" | "gb_hours_ch" | "gb_fault_res" | "gb_fault_lock" | "gb_special" | "gb_calc" | "gb_ch_ok" | "gb_dhw_ok" | "gb_addr" | "gb_cool_max" | "gb_cool_min";

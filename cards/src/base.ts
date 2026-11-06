@@ -136,7 +136,7 @@ export abstract class HubCard extends LitElement {
     if (k === "mode" && a === "options" && this.mtx) return ["standby", "summer", "cooling", "winter"];
     if (this.esp && k === "zone1_phase" && a === "anti_legionella_running") return this.on("ot_leg_run");
     if ((this.esp || this.mtx) && k === "dom_auto_season" && a === "outdoor_mean_24h") return this.s("ot_out_mean");
-    if (this.esp && k === "ot_maint_due" && (a === "next_service" || a === "days_left")) {
+    if ((this.esp || this.mtx) && k === "ot_maint_due" && (a === "next_service" || a === "days_left")) {
       const m = parseInt(this.s("ot_maint") ?? ""), last = this.s("ot_last_srv") ?? "";
       if (isNaN(m) || !/^\d{4}-\d\d-\d\d/.test(last)) return null;
       const d = new Date(last + "T00:00:00"), due = new Date(d.getFullYear(), d.getMonth() + m, Math.min(d.getDate(), 28));

@@ -290,6 +290,9 @@ for (const k of Object.keys(ESP_OT) as Key[]) {
 }
 ESP_MT.ot_eco_action = ["W fazie Eko", "In the Eco phase"];
 ESP_MT.ot_eco_red = ["Obniżenie zasilania w Eko", "Eco flow reduction"];
+// mt_unit_params (service reminder) and the installer parameters of mt_params (read only)
+for (const k of ["ot_maint", "ot_last_srv", "ot_srv_done", "ot_maint_due"] as Key[]) ESP_MT[k] = ESP_OT[k];
+Object.assign(ESP_MT, {"mt_lhmax": ["Grzanie – maks. woda", "Heating water max."], "mt_lhmin": ["Grzanie – min. woda", "Heating water min."], "mt_lcmax": ["Chłodzenie – maks. woda", "Cooling water max."], "mt_lcmin": ["Chłodzenie – min. woda", "Cooling water min."], "mt_ldmax": ["CWU – maks.", "DHW max."], "mt_ldmin": ["CWU – min.", "DHW min."], "mt_t4hmax": ["Grzanie – maks. temp. zewn. (T4HMAX)", "Heating outdoor max. (T4HMAX)"], "mt_t4hmin": ["Grzanie – min. temp. zewn. (T4HMIN)", "Heating outdoor min. (T4HMIN)"], "mt_c9fc": ["Krzywa własna: zasilanie przy mrozie", "Custom curve: flow at cold"], "mt_c9fw": ["Krzywa własna: zasilanie przy cieple", "Custom curve: flow at warm"], "mt_c9oc": ["Krzywa własna: punkt zimny", "Custom curve: outdoor cold point"], "mt_c9ow": ["Krzywa własna: punkt ciepły", "Custom curve: outdoor warm point"], "mt_hmi": ["Oprogramowanie panelu", "Controller software"]} as Partial<Record<Key, string[]>>);
 
 /** the ESP MAGIS M hub: its "Modbus connection" switch, then the entities with the same name prefix */
 function buildEspMt(hass: any): HubIndex | null {

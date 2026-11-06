@@ -195,3 +195,8 @@ substitutions:
   n_mt_win_below: "${mt_name_prefix} - Winter below"
   n_mt_sum_above: "${mt_name_prefix} - Summer above"
   n_mt_out_mean: "${mt_name_prefix} - Outdoor mean 24 h"
+  # mt_unit_params
+  n_mt_maint: "${mt_name_prefix} - Service reminder"
+  n_mt_last_srv: "${mt_name_prefix} - Last service"
+  n_mt_srv_done: "${mt_name_prefix} - Service done"
+  n_mt_maint_due: "${mt_name_prefix} - Boiler service due"
