@@ -75,8 +75,8 @@ class ImmergasOtBoilerCard extends HubCard {
     return html`
       ${this.head("mdi:water-boiler", this.gbx ? this.t("Kocioł · Modbus BMS", "Boiler · Modbus BMS") : this.t("Kocioł · OpenTherm", "Boiler · OpenTherm"), ro ? html`<span class="ro"><ha-icon icon="mdi:lock-outline"></ha-icon>${this.t("tylko odczyt", "read only")}</span>` : undefined)}
       <div class="grid">
-        ${this.chip("ot_cap", "mdi:lightning-bolt", "peach", this.t("Moc maks.", "Max. capacity"), cap > 0 ? this.f(cap, 0) + " kW" : this.t("kocioł nie podaje", "not reported"))}
-        ${this.chip("ot_minmod", "mdi:percent-outline", "peach", this.t("Min. modulacja", "Min. modulation"), isNaN(mm) ? "–" : this.f(mm, 0) + " %")}
+        ${this.gbx ? nothing : this.chip("ot_cap", "mdi:lightning-bolt", "peach", this.t("Moc maks.", "Max. capacity"), cap > 0 ? this.f(cap, 0) + " kW" : this.t("kocioł nie podaje", "not reported"))}
+        ${this.gbx ? nothing : this.chip("ot_minmod", "mdi:percent-outline", "peach", this.t("Min. modulacja", "Min. modulation"), isNaN(mm) ? "–" : this.f(mm, 0) + " %")}
         ${this.chip("ot_ch_set", "mdi:radiator", "red", this.t("Zakres CO (kocioł)", "CH range (boiler)"), this.range("ot_ch_set"))}
         ${this.chip("dhw_set", "mdi:water-boiler", "yellow", this.t("Zakres CWU (kocioł)", "DHW range (boiler)"), this.range("dhw_set") + (dhwType ? " · " + dhwType : ""))}
         ${this.eid("ot_exhaust") && !this.bad("ot_exhaust") ? this.chip("ot_exhaust", "mdi:smoke", "overlay2", this.t("Spaliny", "Exhaust"), this.f(this.n("ot_exhaust"), 1, 1) + " °C") : nothing}
@@ -90,6 +90,7 @@ class ImmergasOtBoilerCard extends HubCard {
           ${this.chip("ot_burn_h", "mdi:fire-alert", shCol, this.t("Starty / ostatnia godzina", "Starts / last hour"), this.f(sh, 0) + (sh > 6 ? this.t(" · taktowanie", " · short cycling") : ""), sh > 6)}
         </div>
         <div class="hint">${this.esp ? this.t("Liczone w hubie z bitu płomienia każdej ramki statusu (~1 s) – żaden zapłon nie umyka.", "Counted in the hub from the flame bit of every status frame (~1 s) – no burn is missed.") : this.t("Liczone z płomienia co cykl odczytu (~45 s) – bardzo krótkie zapłony mogą umknąć.", "Counted from the flame flag every polling cycle (~45 s) – very short burns may be missed.")}</div>` : nothing}
+      ${this.gbx ? this.gbBlocks() : nothing}
       ${this.esp && this.eid("ot_frames") ? (() => {
         const fr = this.n("ot_frames"), er = this.n("ot_errors"), to = this.n("ot_timeouts"), all = (fr || 0) + (er || 0) + (to || 0);
         const bad = all > 0 ? ((er || 0) + (to || 0)) / all * 100 : NaN, col = isNaN(bad) ? "overlay2" : bad > 5 ? "red" : bad > 1 ? "peach" : "green";
@@ -102,9 +103,10 @@ class ImmergasOtBoilerCard extends HubCard {
           </div>`;
       })() : nothing}
       <div class="sec">${this.t("Błędy", "Faults")}</div>
+      ${this.gbx ? this.gbFaults() : nothing}
       ${this.on("ot_maint_due") ? html`<div class="grid1">${this.chip("ot_maint_due", "mdi:wrench-clock", "peach", this.t("Przegląd kotła", "Boiler service"),
         this.t("termin minął – po przeglądzie naciśnij „Przegląd wykonany”", "due – after the service press “Service done”"), true)}</div>` : nothing}
-      ${active.length ? html`<div class="grid">${active.map(([k, icon, [pl, en]]) => this.chip(k, icon, "red", this.t("Flaga błędu", "Fault flag"), this.t(pl, en), true))}</div>`
+      ${this.gbx ? nothing : active.length ? html`<div class="grid">${active.map(([k, icon, [pl, en]]) => this.chip(k, icon, "red", this.t("Flaga błędu", "Fault flag"), this.t(pl, en), true))}</div>`
         : known ? html`<div class="grid1">${this.chip(FLAGS[0][0], "mdi:check-circle-outline", "green", this.t("Flagi błędów (ID5)", "Fault flags (ID5)"), this.t("brak – ciśnienie, płomień, ciąg, temperatura OK", "none – pressure, flame, air, temperature OK"))}</div>` : nothing}
       ${this.eid("ot_fhist") && !this.bad("ot_fhist") ? html`<div class="hist">
           <div class="hh" @click=${() => this.moreInfo("ot_fhist")}><ha-icon icon="mdi:history"></ha-icon>${this.t("Historia błędów kotła", "Boiler fault history")} · ${this.f(this.n("ot_fhist"), 0)}</div>
@@ -118,6 +120,55 @@ class ImmergasOtBoilerCard extends HubCard {
           <ha-icon icon="mdi:restart-alert"></ha-icon>${armed ? this.t("Potwierdź reset", "Confirm reset") : this.t("Reset kotła", "Boiler reset")}</button>` : nothing}
       </div>
 `;
+  }
+
+  /** gas boiler over Modbus BMS: what the model reports, its functions (BOOST, ECO, power limit, MAGIS M TOP), hours */
+  private gbBlocks() {
+    const v = (k: Key, d = 1, u = " °C") => this.f(this.n(k), d, d ? 1 : 0) + u, has = (k: Key) => !!this.eid(k) && !this.bad(k);
+    const temps: [Key, string, string, string, string][] = [
+      ["gb_calc", "mdi:calculator-variant-outline", "red", this.t("Obliczone zasilanie", "Calculated flow"), v("gb_calc")],
+      ["gb_hvdt", "mdi:pipe", "peach", this.t("Za sprzęgłem (HVDT)", "After the separator (HVDT)"), v("gb_hvdt")],
+      ["gb_dhw_in", "mdi:water-thermometer-outline", "sky", this.t("Woda zimna CWU", "DHW inlet"), v("gb_dhw_in")],
+      ["gb_dhw_flow", "mdi:water-pump", "sky", this.t("Przepływ CWU", "DHW flow"), v("gb_dhw_flow", 1, " l/min")],
+      ["gb_pump_flow", "mdi:pump", "teal", this.t("Przepływ pompy", "Pump flow"), v("gb_pump_flow", 0, " l/h")],
+      ["gb_sflow", "mdi:water-pump", "teal", this.t("Przepływ instalacji", "System flow"), v("gb_sflow", 0, " l/h")],
+    ];
+    const t2 = temps.filter(([k]) => has(k));
+    const hp: [Key, string, string, string][] = [["gb_hp", "mdi:heat-pump", "green", this.t("Pompa ciepła", "Heat pump")], ["gb_defrost", "mdi:snowflake-melt", "sky", this.t("Odszranianie", "Defrost")],
+      ["gb_antifreeze", "mdi:snowflake-alert", "sky", this.t("Ochrona przed zamarzaniem", "Antifreeze")], ["gb_cool_ok", "mdi:snowflake", "sky", this.t("Chłodzenie dozwolone", "Cooling allowed")]];
+    const hp2 = hp.filter(([k]) => this.eid(k));
+    const hours: [Key, string, string][] = [["ot_hours_total", "mdi:timer-outline", this.t("Godziny palnika", "Burner hours")], ["gb_hours_ch", "mdi:radiator", this.t("Godziny palnika CO", "CH burner hours")],
+      ["gb_hours_dhw", "mdi:water-boiler", this.t("Godziny palnika CWU", "DHW burner hours")]];
+    const h2 = hours.filter(([k]) => has(k));
+    const funcs = this.toggles([
+      ["gb_boost", "mdi:water-plus", "yellow", this.t("CWU BOOST", "DHW BOOST"), this.t("jednorazowe szybkie grzanie CWU", "a one-off quick DHW heat-up")],
+      ["gb_eco", "mdi:leaf", "green", this.t("CWU ECO", "DHW ECO"), this.t("niższa temperatura utrzymania CWU", "lower DHW keep-warm")],
+      ["gb_nodhwprio", "mdi:priority-low", "peach", this.t("Grzanie bez priorytetu CWU", "Heat request without DHW priority")],
+      ["gb_ch_prio", "mdi:priority-high", "peach", this.t("CO przed CWU", "CH before DHW")],
+      ["gb_silent", "mdi:volume-low", "lavender", this.t("Tryb cichy", "Silent mode")],
+      ["gb_cool_en", "mdi:snowflake", "sky", this.t("Zezwól na chłodzenie", "Allow cooling")],
+      ["gb_reqtype", "mdi:sun-snowflake-variant", "sky", this.t("Żądanie: grzanie / chłodzenie", "Request: heating / cooling")],
+    ]);
+    return html`
+      ${t2.length ? html`<div class="grid" style="margin-top:8px">${t2.map(([k, ic, col, l, val]) => this.chip(k, ic, col, l, val))}</div>` : nothing}
+      ${hp2.length ? html`<div class="sec">MAGIS M TOP</div><div class="grid">${hp2.map(([k, ic, col, l]) => this.chip(k, ic, this.on(k) ? col : "overlay1", l, this.on(k) ? this.t("tak", "yes") : this.t("nie", "no"), this.on(k)))}</div>
+        ${this.eid("gb_cool_max") ? html`<div class="hint">${this.t("Zakres chłodzenia ", "Cooling range ")}${this.f(this.n("gb_cool_min"), 0)}–${this.f(this.n("gb_cool_max"), 0)} °C</div>` : nothing}` : nothing}
+      ${funcs === nothing && !this.eid("gb_power") ? nothing : html`<div class="sec">${this.t("Funkcje modelu", "Model functions")}</div>${funcs}
+        ${this.eid("gb_power") ? this.numRow("gb_power", "mdi:speedometer-medium", this.t("Górny limit mocy (BMS 513)", "Upper power limit (BMS 513)"), 0) : nothing}`}
+      ${h2.length ? html`<div class="sec">${this.t("Palnik", "Burner")}</div><div class="grid">${h2.map(([k, ic, l]) => this.chip(k, ic, "overlay2", l, this.f(this.n(k), 0) + " h"))}</div>` : nothing}`;
+  }
+
+  /** gas boiler over Modbus BMS: the fault text and code, resettable / locked, the two-tap reset (257 = 0xAA55) */
+  private gbFaults() {
+    const code = this.n("err_code"), desc = this.s("err_desc") ?? "", any = code > 0, res = this.on("gb_fault_res"), lock = this.on("gb_fault_lock");
+    const tag = "gb_reset", armed = this.isArmed(tag);
+    return html`<div class="grid1">${this.chip("err_desc", any ? "mdi:alert-octagon" : "mdi:check-circle-outline", any ? "red" : "green",
+        any ? this.t(`Usterka E${this.f(code, 0)}`, `Fault E${this.f(code, 0)}`) : this.t("Usterka", "Fault"), desc || "–", any)}</div>
+      ${any ? html`<div class="hint">${lock ? this.t("niekasowalna – wymaga serwisu albo usunięcia przyczyny", "not resettable – needs service or the cause removed")
+        : res ? this.t("kasowalna – możesz ją zresetować", "resettable – you can reset it") : ""}</div>` : nothing}
+      ${this.eid("gb_reset") ? html`<div class="row"><button class="act" ?disabled=${!res} style=${armed ? box("red", true) : ""}
+        @click=${() => res && this.confirm(tag, () => this.call("button", "press", "gb_reset"))}>
+        <ha-icon icon="mdi:restart-alert"></ha-icon>${armed ? this.t("Potwierdź reset", "Confirm reset") : this.t("Reset usterki", "Fault reset")}</button></div>` : nothing}`;
   }
 
   static styles = [HubCard.styles, css`

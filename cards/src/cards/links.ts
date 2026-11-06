@@ -56,7 +56,8 @@ class ImmergasLinksCard extends HubCard {
 
     // Dominus in the OpenTherm mode: the module, the boiler behind it and the remote (CAR V2 / Super Amico) instead of
     // the zone 1 panel - with the switch that blocks writes from Home Assistant
-    if (this.esp) this.espLinks(out);
+    if (this.gbx) this.gbLinks(out);
+    else if (this.esp) this.espLinks(out);
     else if (this.dominus && this.ot) this.otLinks(out);
 
     // Immergas Dominus integration: the Wi-Fi module answers local TCP polls (last good poll, failed polls since HA start)
@@ -99,7 +100,7 @@ class ImmergasLinksCard extends HubCard {
     // photovoltaics / dehumidifier
     // Dominus (two columns): boiler + thermostat on the left, Dominus + zone 1 panel / CAR V2 on the right
     if (this.dominus) {
-      const DOM = ["Boiler", "Dominus", "OpenTherm hub", "Thermostat", "Room unit", "Regulator", "Zone 1 panel", "CAR V2 remote"];
+      const DOM = ["Boiler", "BMS master", "Heat request", "Dominus", "OpenTherm hub", "Thermostat", "Room unit", "Regulator", "Zone 1 panel", "CAR V2 remote"];
       return out.sort((a, b) => DOM.indexOf(a.name[1]) - DOM.indexOf(b.name[1]));
     }
     const ORDER = ["Hub", "Dominus", "Modbus", "Zone 1 panel", "BMS", "System controller", "NASA", "EHS panel", "Photovoltaics", "Dehumidifier"];
@@ -147,6 +148,41 @@ class ImmergasLinksCard extends HubCard {
           <div class="kn" style="left:${ro ? 23 : 3}px;background:${ro ? c("sky") : c("overlay1")}"></div></div></div>
         ${ro ? html`<div class="ld">${this.t("HA tylko czyta. Po włączeniu raz odłącz zasilanie modułu Dominus – zapomni ostatnią nastawę z HA.",
           "HA only reads. After switching it on, power-cycle the Dominus once – it forgets the last setpoint from HA.")}</div>` : nothing}` : undefined });
+  }
+
+  /** ESP gas boiler hub: the boiler on the Modbus BMS (fresh readings), the hub as the BMS master (polling switch,
+   *  slave address), the heat request kept alive (the boiler drops it after 30 s - E144) and the hub weather curve */
+  private gbLinks(out: Link[]) {
+    // a Modbus value that does not change keeps its last_changed - judge the link by E144 and the readings being available
+    const conn = this.on("gb_conn"), fresh = !this.bad("ot_flow") || !this.bad("ot_mod") || !this.bad("err_code");
+    const addr = this.n("gb_addr"), code = this.n("err_code");
+    out.push({ k: "ot_flow", icon: "mdi:water-boiler", name: ["Kocioł", "Boiler"], bus: "Modbus BMS",
+      st: !conn ? "off" : code === 144 ? "bad" : fresh ? "ok" : "bad",
+      detail: !conn ? this.t("odpytywanie wyłączone", "polling off") : code === 144 ? this.t("E144 – kocioł nie widzi mastera BMS", "E144 – the boiler does not see the BMS master")
+        : [this.bad("mode") ? "" : this.t("tryb ", "mode ") + this.txt("mode"), this.on("ot_flame") ? this.t("płomień", "flame") : ""].filter(Boolean).join(" · ") });
+    const tag = "lk_bms", armed = this.isArmed(tag);
+    out.push({ k: "gb_conn", icon: "mdi:lan-connect", name: ["Master BMS", "BMS master"], bus: "RS485 · 9600",
+      st: conn ? "ok" : "off",
+      label: conn ? this.t("Hub odpytuje kocioł", "The hub polls the boiler") : this.t("Odpytywanie wyłączone", "Polling off"),
+      detail: (isNaN(addr) ? "" : this.t("adres slave ", "slave address ") + this.f(addr, 0) + " · ") + this.t("bez mastera > 30 s kocioł zgłasza E144", "without a master > 30 s the boiler shows E144"),
+      extra: html`<div class="ro" @click=${(e: Event) => e.stopPropagation()}>
+        <span>${armed ? this.t("Potwierdź – dotknij ponownie", "Confirm – tap again") : this.t("Połączenie BMS", "BMS connection")}</span>
+        <div class="tgl" style="background:${conn ? ca("green", 0.35) : "rgba(255,255,255,.08)"}${armed ? `;outline:2px solid ${c("green")}` : ""}"
+          @click=${() => { const id = this.eid("gb_conn")!; this.confirm(tag, () => this.hass.callService(id.split(".")[0], conn ? "turn_off" : "turn_on", { entity_id: id })); }}>
+          <div class="kn" style="left:${conn ? 23 : 3}px;background:${conn ? c("green") : c("overlay1")}"></div></div></div>` });
+    if (this.eid("gb_req")) {
+      const rq = this.on("gb_req");
+      out.push({ k: "gb_req", icon: "mdi:fire", name: ["Żądanie grzania", "Heat request"], bus: "BMS 512", st: rq ? "ok" : "off",
+        label: rq ? this.t("Żądanie wysyłane", "Request sent") : this.t("Bez żądania", "No request"),
+        detail: rq ? this.t("hub ponawia je co 10 s – kocioł zapomina je po 30 s", "the hub repeats it every 10 s – the boiler forgets it after 30 s")
+          : this.t("kocioł grzeje CO tylko z żądaniem (albo z termostatem 40-41)", "the boiler heats CH only with the request (or a thermostat on 40-41)") });
+    }
+    if (this.eid("gb_curve")) {
+      const r = this.on("gb_curve");
+      out.push({ k: "gb_curve", icon: "mdi:chart-bell-curve-cumulative", name: ["Regulator", "Regulator"], bus: this.t("hub", "hub"), st: r ? "ok" : "off",
+        label: r ? this.t("Krzywa pogodowa hubu działa", "Hub weather curve running") : this.t("Krzywa wyłączona", "Curve off"),
+        detail: r ? this.t("nastawa zasilania z sondy kotła co minutę", "flow setpoint from the boiler probe every minute") : this.t("nastawę zasilania ustawiasz ręcznie", "you set the flow setpoint by hand") });
+    }
   }
 
   /** ESP OpenTherm hub: the boiler on the OpenTherm line, the hub itself (frame counters), the room unit (gateway:
