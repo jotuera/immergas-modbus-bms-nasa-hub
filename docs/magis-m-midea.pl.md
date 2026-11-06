@@ -33,6 +33,37 @@ Działa każdy ESP32 z transceiverem RS485 (`mt_uart_rx_pin` / `mt_uart_tx_pin`)
 Hub jest masterem, panel slave'em: **9600 bodów, 8N1, adres 1** (menu panelu *FOR SERVICEMAN → 17 HMI ADDRESS*).
 Na H1 / H2 tylko jeden master, a panel musi zostać podłączony – to on podaje rejestry.
 
+## Instalacja
+
+> 📄 **Plik konfiguracji: [`examples/immergas-magis-m.yaml`](../examples/immergas-magis-m.yaml)**
+> ([otwórz na GitHubie](https://github.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub/blob/main/examples/immergas-magis-m.yaml) · [pobierz (raw)](https://raw.githubusercontent.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub/main/examples/immergas-magis-m.yaml))
+
+1. **Skopiuj konfigurację.** Zapisz [`immergas-magis-m.yaml`](../examples/immergas-magis-m.yaml) w folderze ESPHome (w Home Assistant: *ESPHome →
+   Nowe urządzenie → Kontynuuj → Pomiń*, a potem wklej treść do nowego pliku).
+2. **Dodaj sekrety**, których używa, do `secrets.yaml`: `wifi_ssid`, `wifi_password`, `immergas_magis_m_api_key`, `immergas_magis_m_ota_password`.
+3. **Wybierz, czego potrzebujesz** w bloku `packages:` na końcu pliku:
+
+   ```yaml
+   files:
+     - packages/lang/mt_en.yaml        # albo mt_pl.yaml
+     - packages/mt_core.yaml
+     - packages/mt_status.yaml
+     - packages/mt_sensors.yaml
+     - packages/mt_energy.yaml
+     - packages/mt_control.yaml
+     - packages/mt_params.yaml         # opcjonalnie: parametry instalatora, tylko odczyt
+   ```
+
+   - Zacznij od wszystkich pakietów; na pierwsze uruchomienie tylko z odczytem pomiń `mt_control`.
+   - `mt_energy_multiply` (podstawienie), jeśli liczniki energii wychodzą 100× za małe.
+4. **Sprawdź piny** (`substitutions:` na górze), jeśli twoja płytka to nie AtomS3 + ATOMIC PortABC.
+5. **Wgraj** urządzenie (pierwszy raz przez USB, potem przez sieć) i **dodaj je w Home Assistant** (*Ustawienia →
+   Urządzenia i usługi* – znajdzie się samo).
+6. **Sprawdź połączenie:** *Immergas M - Wersja protokołu* i *Temperatura wody na wylocie* dostają wartości w ciągu minuty. Nic = zamień H1 / H2, sprawdź rezystor 120 Ω i adres panelu (menu 17).
+
+**Przed jakąkolwiek zmianą poczekaj na pierwsze odczyty** – przełączniki wł. / wył. i funkcji zmieniają pojedyncze
+bity wspólnych rejestrów i korzystają z ostatniej odczytanej wartości.
+
 ## Pakiety
 
 | Pakiet | Co daje |
@@ -45,7 +76,7 @@ Na H1 / H2 tylko jeden master, a panel musi zostać podłączony – to on podaj
 | `mt_params` (opcjonalny) | tylko odczyt: limity nastaw, limity temp. zewn. dla grzania, krzywa własna |
 | `lang/mt_en`, `lang/mt_pl` | nazwy encji (`mt_name_prefix`, domyślnie „Immergas M”) |
 
-Przykład: [`examples/immergas-magis-m.yaml`](../examples/immergas-magis-m.yaml).
+Plik konfiguracji i kroki są w sekcji [Instalacja](#instalacja).
 
 ## Mapa rejestrów (holding, funkcja 0x03 / 0x06)
 

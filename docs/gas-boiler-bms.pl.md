@@ -45,6 +45,40 @@ Zasady podłączenia:
 Port fabrycznie: **9600 bodów, 8E1, adres slave 1** we wszystkich. PRO V2 EU: terminacja 120 Ω mostkiem TRD – T−,
 a gdy master nie ma rezystorów podciągających – mostki TR+ – T+ i TR− – T−.
 
+## Instalacja
+
+> 📄 **Plik konfiguracji: [`examples/immergas-gas-bms.yaml`](../examples/immergas-gas-bms.yaml)**
+> ([otwórz na GitHubie](https://github.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub/blob/main/examples/immergas-gas-bms.yaml) · [pobierz (raw)](https://raw.githubusercontent.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub/main/examples/immergas-gas-bms.yaml))
+
+**Najpierw w menu kotła** przełącz port Modbus na BMS (SUPERIOR: MENU / Serwis / Modbus, Typ = Bms, kod 1122; EXTRA:
+P.18 = 2 i P.11 = 1, kod 69; MAGIS M TOP: P021 = On, P023 = 3, P024 = 1) i odłącz Dominusa, jeśli jest. **Grzanie**
+wymaga potem włączonego przełącznika *Żądanie grzania (CO)* – steruj nim automatyzacją termostatu pokojowego.
+
+1. **Skopiuj konfigurację.** Zapisz [`immergas-gas-bms.yaml`](../examples/immergas-gas-bms.yaml) w folderze ESPHome (w Home Assistant: *ESPHome →
+   Nowe urządzenie → Kontynuuj → Pomiń*, a potem wklej treść do nowego pliku).
+2. **Dodaj sekrety**, których używa, do `secrets.yaml`: `wifi_ssid`, `wifi_password`, `immergas_gas_api_key`, `immergas_gas_ota_password`.
+3. **Wybierz, czego potrzebujesz** w bloku `packages:` na końcu pliku:
+
+   ```yaml
+   files:
+     - packages/lang/gb_en.yaml        # albo gb_pl.yaml
+     - packages/gb_core.yaml
+     - packages/gb_control.yaml
+     - packages/gb_status.yaml
+     - packages/gb_sensors.yaml
+     - packages/gb_superior.yaml       # albo gb_extra / gb_pro / gb_mtop
+     - packages/gb_curve.yaml          # opcjonalnie: krzywa pogodowa w hubie
+   ```
+
+   - **Dokładnie jeden pakiet modelu:** `gb_superior` (VICTRIX SUPERIOR 2021 / ZEUS Superior 25–35), `gb_extra`
+     (VICTRIX EXTRA), `gb_pro` (VICTRIX PRO V2 EU) albo `gb_mtop` (pompa ciepła MAGIS M TOP).
+   - `gb_curve` tylko wtedy, gdy hub ma liczyć nastawę zasilania z sondy zewnętrznej; inaczej *Nastawę zasilania CO*
+     ustawia Home Assistant.
+4. **Sprawdź piny** (`substitutions:` na górze), jeśli twoja płytka to nie AtomS3 + ATOMIC PortABC.
+5. **Wgraj** urządzenie (pierwszy raz przez USB, potem przez sieć) i **dodaj je w Home Assistant** (*Ustawienia →
+   Urządzenia i usługi* – znajdzie się samo).
+6. **Sprawdź połączenie:** *Immergas Gas - Usterka* pokazuje *Brak usterki*, a temperatury idą za kotłem; na wyświetlaczu kotła pojawia się ikona BMS / urządzenia zewnętrznego. E144 (PRO: błąd 100) = brak ramek przez 30 s – sprawdź podłączenie i menu kotła.
+
 ## Pakiety
 
 | Pakiet | Co daje |
@@ -57,8 +91,7 @@ a gdy master nie ma rezystorów podciągających – mostki TR+ – T+ i TR− �
 | `gb_curve` (opcjonalny) | krzywa pogodowa w hubie: co minutę nastawa zasilania CO z sondy zewnętrznej kotła, między dwoma punktami, w granicach limitów kotła |
 | `lang/gb_en`, `lang/gb_pl` | nazwy encji (`gb_name_prefix`, domyślnie „Immergas Gas”) |
 
-Przykład [`examples/immergas-gas-bms.yaml`](../examples/immergas-gas-bms.yaml): jeden AtomS3 + ATOMIC PortABC + jeden
-Isolated RS485 Unit na porcie C.
+Plik konfiguracji i kroki są w sekcji [Instalacja](#instalacja).
 
 ## Mapa rejestrów
 

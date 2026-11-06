@@ -37,6 +37,39 @@ was), the slave adapter (gateway) on the room unit's two wires.
 | VICTRIX ZEUS 25, EXA, TERA, OMNIA | 41 / 44 | jumper X40 back on 40-41, power-cycle (E31); TERA: P7 = 2 for a third-party master |
 | VICTRIX ZEUS Superior 26 / 32, HERCULES Condensing / Solar 26 | 42 / 43 | X40 back; M3 P33 = ON keeps CH working after E31 |
 
+## Installation
+
+> 📄 **Configuration file: [`examples/immergas-opentherm.yaml`](../examples/immergas-opentherm.yaml)**
+> ([open on GitHub](https://github.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub/blob/main/examples/immergas-opentherm.yaml) · [download (raw)](https://raw.githubusercontent.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub/main/examples/immergas-opentherm.yaml))
+
+**Before switching to master** remove the room unit (CAR V2 / Super Amico) or disconnect the Dominus from the OpenTherm
+terminals, put jumper X40 back on 40-41 and power-cycle the boiler (E31). On the HERCULES / ZEUS Superior 26 / 32
+family set M3 P33 = ON first – the boiler then keeps heating even if OpenTherm is lost.
+
+1. **Copy the configuration.** Save [`immergas-opentherm.yaml`](../examples/immergas-opentherm.yaml) into your ESPHome folder (in Home Assistant:
+   *ESPHome → New device → Continue → Skip*, then paste its content into the new file).
+2. **Add the secrets** it uses to `secrets.yaml`: `wifi_ssid`, `wifi_password`, `immergas_ot_api_key`, `immergas_ot_ota_password`.
+3. **Pick what you need** in the `packages:` block at the end of the file:
+
+   ```yaml
+   files:
+     - packages/lang/ot_en.yaml        # or ot_pl.yaml
+     - packages/ot_core.yaml
+     - packages/ot_sensors.yaml
+     - packages/ot_control.yaml
+     - packages/ot_regulator.yaml      # master: weather curve + room correction
+     # - packages/ot_gateway.yaml      # gateway: the room unit stays
+   ```
+
+   - **Master** (the hub replaces the room unit): keep `ot_regulator` and set `ot_room_entity` to a room temperature
+     sensor of Home Assistant (or leave it – the regulator then runs on the curve only).
+   - **Gateway** (the room unit stays): uncomment `ot_gateway` and the `ot_room_in_pin` / `ot_room_out_pin`
+     substitutions; `ot_regulator` is optional (it sets the values the hub uses while the room unit is silent).
+4. **Check the pins** (`substitutions:` at the top) if your board is not an AtomS3 + ATOMIC PortABC.
+5. **Flash** the device (USB the first time, then over the air) and **add it in Home Assistant** (*Settings → Devices
+   & services* – it is found automatically).
+6. **Check the connection:** *Immergas OT - Boiler connection* turns on within a few seconds and *Flow temperature* / *Flame* follow the boiler. *No answer* growing without *Frames OK* = check the adapter wiring and the `in_active_low` / `out_active_low` levels; in the gateway, *Room unit connection* shows the room unit.
+
 ## Packages
 
 | Package | What it gives |
@@ -48,7 +81,7 @@ was), the slave adapter (gateway) on the room unit's two wires.
 | `ot_gateway` | gateway mode: room unit connection, standalone, what the room unit writes (CH setpoint, room setpoint and temperature, DHW setpoint, its CH / DHW enable), the override switches |
 | `lang/ot_en`, `lang/ot_pl` | entity names (`ot_name_prefix`, default "Immergas OT") |
 
-Example: [`examples/immergas-opentherm.yaml`](../examples/immergas-opentherm.yaml).
+The configuration file and the steps are in [Installation](#installation).
 
 ## How it works
 

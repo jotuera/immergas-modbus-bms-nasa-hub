@@ -39,6 +39,39 @@ adapter slave (bramka) na dwa przewody pilota.
 | VICTRIX ZEUS 25, EXA, TERA, OMNIA | 41 / 44 | zworka X40 z powrotem na 40-41, wyłącz i włącz zasilanie (E31); TERA: P7 = 2 dla mastera innej firmy |
 | VICTRIX ZEUS Superior 26 / 32, HERCULES Condensing / Solar 26 | 42 / 43 | X40 z powrotem; M3 P33 = ON utrzymuje CO po E31 |
 
+## Instalacja
+
+> 📄 **Plik konfiguracji: [`examples/immergas-opentherm.yaml`](../examples/immergas-opentherm.yaml)**
+> ([otwórz na GitHubie](https://github.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub/blob/main/examples/immergas-opentherm.yaml) · [pobierz (raw)](https://raw.githubusercontent.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub/main/examples/immergas-opentherm.yaml))
+
+**Zanim przejdziesz na master** zdejmij pilota (CAR V2 / Super Amico) albo odłącz Dominusa od zacisków OpenTherm, załóż
+zworkę X40 z powrotem na 40-41 i wyłącz i włącz zasilanie kotła (E31). W rodzinie HERCULES / ZEUS Superior 26 / 32
+najpierw ustaw M3 P33 = ON – kocioł grzeje wtedy nawet po utracie OpenTherm.
+
+1. **Skopiuj konfigurację.** Zapisz [`immergas-opentherm.yaml`](../examples/immergas-opentherm.yaml) w folderze ESPHome (w Home Assistant: *ESPHome →
+   Nowe urządzenie → Kontynuuj → Pomiń*, a potem wklej treść do nowego pliku).
+2. **Dodaj sekrety**, których używa, do `secrets.yaml`: `wifi_ssid`, `wifi_password`, `immergas_ot_api_key`, `immergas_ot_ota_password`.
+3. **Wybierz, czego potrzebujesz** w bloku `packages:` na końcu pliku:
+
+   ```yaml
+   files:
+     - packages/lang/ot_en.yaml        # albo ot_pl.yaml
+     - packages/ot_core.yaml
+     - packages/ot_sensors.yaml
+     - packages/ot_control.yaml
+     - packages/ot_regulator.yaml      # master: krzywa pogodowa + korekta pokojowa
+     # - packages/ot_gateway.yaml      # bramka: pilot zostaje
+   ```
+
+   - **Master** (hub zastępuje pilota): zostaw `ot_regulator` i ustaw `ot_room_entity` na czujnik temperatury pokoju
+     z Home Assistant (albo zostaw – regulator pracuje wtedy tylko z krzywej).
+   - **Bramka** (pilot zostaje): odkomentuj `ot_gateway` i podstawienia `ot_room_in_pin` / `ot_room_out_pin`;
+     `ot_regulator` jest opcjonalny (ustawia wartości, których hub używa, gdy pilot milczy).
+4. **Sprawdź piny** (`substitutions:` na górze), jeśli twoja płytka to nie AtomS3 + ATOMIC PortABC.
+5. **Wgraj** urządzenie (pierwszy raz przez USB, potem przez sieć) i **dodaj je w Home Assistant** (*Ustawienia →
+   Urządzenia i usługi* – znajdzie się samo).
+6. **Sprawdź połączenie:** *Immergas OT - Połączenie z kotłem* włącza się w kilka sekund, a *Temperatura zasilania* / *Płomień* idą za kotłem. *Brak odpowiedzi* rośnie bez *Ramki poprawne* = sprawdź podłączenie adaptera i poziomy `in_active_low` / `out_active_low`; w bramce *Połączenie z pilotem* pokazuje pilota.
+
 ## Pakiety
 
 | Pakiet | Co daje |
@@ -50,7 +83,7 @@ adapter slave (bramka) na dwa przewody pilota.
 | `ot_gateway` | tryb bramki: połączenie z pilotem, standalone, co zapisuje pilot (nastawa CO, zadana i temperatura pokoju, nastawa CWU, jego zezwolenia CO / CWU), przełączniki nadpisywania |
 | `lang/ot_en`, `lang/ot_pl` | nazwy encji (`ot_name_prefix`, domyślnie „Immergas OT”) |
 
-Przykład: [`examples/immergas-opentherm.yaml`](../examples/immergas-opentherm.yaml).
+Plik konfiguracji i kroki są w sekcji [Instalacja](#instalacja).
 
 ## Jak to działa
 

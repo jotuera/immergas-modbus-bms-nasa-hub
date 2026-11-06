@@ -84,6 +84,9 @@ transceiverze z pinem kierunku) i pomiń `hw_atoms3_portabc.yaml`.
 
 ## Instalacja
 
+> 📄 **Plik konfiguracji: [`examples/immergas-hub.yaml`](../examples/immergas-hub.yaml)**
+> ([otwórz na GitHubie](https://github.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub/blob/main/examples/immergas-hub.yaml) · [pobierz (raw)](https://raw.githubusercontent.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub/main/examples/immergas-hub.yaml))
+
 1. Skopiuj [examples/immergas-hub.yaml](../examples/immergas-hub.yaml) do folderu ESPHome i dodaj sekrety, których używa
    (`wifi_ssid`, `wifi_password`, `immergas_hub_api_key`, `immergas_hub_ota_password`,
    `immergas_hub_web_username`, `immergas_hub_web_password`).

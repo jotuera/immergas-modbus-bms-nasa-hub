@@ -45,6 +45,40 @@ Wiring rules:
 Factory port: **9600 baud, 8E1, slave address 1** on all of them. PRO V2 EU: 120 Ω termination with the TRD – T− bridge
 and, when the master has no pull-ups, the TR+ – T+ and TR− – T− bridges.
 
+## Installation
+
+> 📄 **Configuration file: [`examples/immergas-gas-bms.yaml`](../examples/immergas-gas-bms.yaml)**
+> ([open on GitHub](https://github.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub/blob/main/examples/immergas-gas-bms.yaml) · [download (raw)](https://raw.githubusercontent.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub/main/examples/immergas-gas-bms.yaml))
+
+**In the boiler menu first** switch the Modbus port to BMS (SUPERIOR: MENU / Service / Modbus, Type = Bms, code 1122;
+EXTRA: P.18 = 2 and P.11 = 1, code 69; MAGIS M TOP: P021 = On, P023 = 3, P024 = 1) and disconnect the Dominus if there
+is one. **Heating** then needs the *Heat request (CH)* switch on – drive it from a room thermostat automation.
+
+1. **Copy the configuration.** Save [`immergas-gas-bms.yaml`](../examples/immergas-gas-bms.yaml) into your ESPHome folder (in Home Assistant:
+   *ESPHome → New device → Continue → Skip*, then paste its content into the new file).
+2. **Add the secrets** it uses to `secrets.yaml`: `wifi_ssid`, `wifi_password`, `immergas_gas_api_key`, `immergas_gas_ota_password`.
+3. **Pick what you need** in the `packages:` block at the end of the file:
+
+   ```yaml
+   files:
+     - packages/lang/gb_en.yaml        # or gb_pl.yaml
+     - packages/gb_core.yaml
+     - packages/gb_control.yaml
+     - packages/gb_status.yaml
+     - packages/gb_sensors.yaml
+     - packages/gb_superior.yaml       # or gb_extra / gb_pro / gb_mtop
+     - packages/gb_curve.yaml          # optional: weather curve in the hub
+   ```
+
+   - **Exactly one model package:** `gb_superior` (VICTRIX SUPERIOR 2021 / ZEUS Superior 25–35), `gb_extra`
+     (VICTRIX EXTRA), `gb_pro` (VICTRIX PRO V2 EU) or `gb_mtop` (MAGIS M TOP heat pump).
+   - `gb_curve` only when the hub should compute the flow setpoint from the outdoor probe; otherwise Home Assistant
+     sets *CH flow setpoint*.
+4. **Check the pins** (`substitutions:` at the top) if your board is not an AtomS3 + ATOMIC PortABC.
+5. **Flash** the device (USB the first time, then over the air) and **add it in Home Assistant** (*Settings → Devices
+   & services* – it is found automatically).
+6. **Check the connection:** *Immergas Gas - Fault* shows *No fault* and the temperatures follow the boiler; the boiler display shows the BMS / external device icon. E144 (PRO: fault 100) = no frames for 30 s – check the wiring and the boiler menu.
+
 ## Packages
 
 | Package | What it gives |
@@ -57,8 +91,7 @@ and, when the master has no pull-ups, the TR+ – T+ and TR− – T− bridges.
 | `gb_curve` (optional) | weather curve in the hub: every minute the CH flow setpoint from the boiler's outdoor probe, between two points, clamped to the boiler limits |
 | `lang/gb_en`, `lang/gb_pl` | entity names (`gb_name_prefix`, default "Immergas Gas") |
 
-The example [`examples/immergas-gas-bms.yaml`](../examples/immergas-gas-bms.yaml) runs one AtomS3 + ATOMIC PortABC +
-one Isolated RS485 Unit on Port C.
+The configuration file and the steps are in [Installation](#installation).
 
 ## Register map
 

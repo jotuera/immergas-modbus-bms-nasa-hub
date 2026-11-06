@@ -33,6 +33,37 @@ Any ESP32 with an RS485 transceiver works (`mt_uart_rx_pin` / `mt_uart_tx_pin`).
 The hub is the master, the controller the slave: **9600 baud, 8N1, address 1** (controller menu *FOR SERVICEMAN →
 17 HMI ADDRESS*). Only one master on H1 / H2, and the controller has to stay connected – it serves the registers.
 
+## Installation
+
+> 📄 **Configuration file: [`examples/immergas-magis-m.yaml`](../examples/immergas-magis-m.yaml)**
+> ([open on GitHub](https://github.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub/blob/main/examples/immergas-magis-m.yaml) · [download (raw)](https://raw.githubusercontent.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub/main/examples/immergas-magis-m.yaml))
+
+1. **Copy the configuration.** Save [`immergas-magis-m.yaml`](../examples/immergas-magis-m.yaml) into your ESPHome folder (in Home Assistant:
+   *ESPHome → New device → Continue → Skip*, then paste its content into the new file).
+2. **Add the secrets** it uses to `secrets.yaml`: `wifi_ssid`, `wifi_password`, `immergas_magis_m_api_key`, `immergas_magis_m_ota_password`.
+3. **Pick what you need** in the `packages:` block at the end of the file:
+
+   ```yaml
+   files:
+     - packages/lang/mt_en.yaml        # or mt_pl.yaml
+     - packages/mt_core.yaml
+     - packages/mt_status.yaml
+     - packages/mt_sensors.yaml
+     - packages/mt_energy.yaml
+     - packages/mt_control.yaml
+     - packages/mt_params.yaml         # optional: installer parameters, read only
+   ```
+
+   - Start with all packages; leave out `mt_control` for a read-only first run.
+   - `mt_energy_multiply` (substitution) if the energy counters come out 100× too small.
+4. **Check the pins** (`substitutions:` at the top) if your board is not an AtomS3 + ATOMIC PortABC.
+5. **Flash** the device (USB the first time, then over the air) and **add it in Home Assistant** (*Settings → Devices
+   & services* – it is found automatically).
+6. **Check the connection:** *Immergas M - Protocol version* and *Water outlet temperature* get values within a minute. Nothing = swap H1 / H2, check the 120 Ω resistor and the controller address (menu 17).
+
+**Wait for the first readings before changing anything** – the on / off and function switches change single bits of
+shared registers and use the last value read.
+
 ## Packages
 
 | Package | What it gives |
@@ -45,7 +76,7 @@ The hub is the master, the controller the slave: **9600 baud, 8N1, address 1** (
 | `mt_params` (optional) | read only: setpoint limits, heating outdoor limits, the custom heating curve |
 | `lang/mt_en`, `lang/mt_pl` | entity names (`mt_name_prefix`, default "Immergas M") |
 
-Example: [`examples/immergas-magis-m.yaml`](../examples/immergas-magis-m.yaml).
+The configuration file and the steps are in [Installation](#installation).
 
 ## Register map (holding, function 0x03 / 0x06)
 
