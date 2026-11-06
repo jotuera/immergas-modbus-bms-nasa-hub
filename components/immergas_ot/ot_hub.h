@@ -1,6 +1,6 @@
 // OpenTherm for Immergas boilers: the hub as the OpenTherm master (instead of the CAR V2 / Dominus) or as a gateway
 // between the room unit (CAR V2, Super Amico, a third-party thermostat) and the boiler.
-// Part of jotuera/immergas-modbus-bms-nasa-hub - PolyForm Noncommercial 1.0.0 (c) 2026 JoTu.
+// Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub - PolyForm Noncommercial 1.0.0 (c) 2026 JoTu.
 #pragma once
 
 #include "esphome/core/component.h"

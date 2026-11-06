@@ -1,9 +1,9 @@
-# IMMERGAS Modbus BMS NASA Hub - package "hub_busmap"
+# IMMERGAS Modbus BMS NASA OpenTherm HUB - package "hub_busmap"
 # Bus map report: what the hub has seen on D+/D- (every decoded register), T-/T+ (the PDU scanner) and F1/F2 (every
 # NASA message) that no entity describes yet. "Report bus map …" sends it as an `esphome.immergas_bus_map` event;
 # the "immergas-busmap" card turns it into a link to a pre-filled GitHub issue (boiler model, hub version, the map).
 # Nothing leaves Home Assistant unless the user opens the link and presses Create on GitHub.
-# Needs dd_core (immergas_core), tt_scanner and f1f2_core. Part of jotuera/immergas-modbus-bms-nasa-hub
+# Needs dd_core (immergas_core), tt_scanner and f1f2_core. Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub
 # (PolyForm Noncommercial 1.0.0).
 
 text:

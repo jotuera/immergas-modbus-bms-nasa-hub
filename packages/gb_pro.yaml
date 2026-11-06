@@ -3,7 +3,7 @@
 # ionisation current, upper power limit (513), DHW ECO (bit9, normal logic), heat request without the DHW priority
 # (512 = 0x0155). Wiring: T+ / T- of terminal block A38 (not D+ / D-), jumper X40 removed, 120 ohm termination
 # (TRD - T- bridge) and, without pull-ups in the master, the TR+ - T+ / TR- - T- bridges. Loss of the BMS = fault 100.
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 
 sensor:
   - platform: modbus_controller

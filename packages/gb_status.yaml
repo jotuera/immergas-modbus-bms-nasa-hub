@@ -1,7 +1,7 @@
 # Immergas gas boiler Modbus BMS - package "gb_status"
 # Status: boiler state bits (input 0), fault code (input 1), the boiler's CH / DHW limits (input 1024-1027) and the
 # Modbus port configuration (holding 61440-61441, read only here).
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 
 sensor:
   - platform: modbus_controller

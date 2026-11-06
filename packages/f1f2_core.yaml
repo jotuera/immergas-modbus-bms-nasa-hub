@@ -1,6 +1,6 @@
 # Immergas Magis Pro / Combo F1/F2 (Samsung NASA) - package "f1f2_core"
 # Base: project info, RS485 UART, the f1f2_nasa hub (component fetched from GitHub), device list. Required.
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 # File, id and substitution names start with f1f2_ so this repo can be combined with the D+/D- and T-/T+
 # repos on one device.
 
@@ -23,7 +23,7 @@ substitutions:
 
 esphome:
   project:
-    name: "jotuera.immergas-modbus-bms-nasa-hub"
+    name: "jotuera.immergas-modbus-bms-nasa-opentherm-hub"
     version: "${f1f2_project_version}"
 
 # The components (components/) are loaded once in the main YAML (external_components).

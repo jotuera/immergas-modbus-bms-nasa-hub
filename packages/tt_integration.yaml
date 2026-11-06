@@ -1,6 +1,6 @@
 # Immergas Magis Pro / Combo T-/T+ BMS - package "tt_integration"
 # Gas boiler / heat pump integration (menu I): I01, I02, I03, I04, I05, I07, I09, I10.
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 # File and id names start with tt_ so this repo can be combined with the D+/D- and F1/F2 repos on one device.
 
 switch:

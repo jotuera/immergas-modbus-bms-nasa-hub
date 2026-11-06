@@ -1,7 +1,7 @@
 # Immergas gas boiler Modbus BMS - package "gb_superior" (model)
 # VICTRIX SUPERIOR 2021 / VICTRIX ZEUS Superior 25 / 30 / 35 (boiler board FW 1.05+, display FW 1.31+): flue gas in
 # whole °C, DHW inlet temperature, DHW and pump flow, fan speed, burner hours, DHW BOOST (bit9, inverted logic).
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 
 sensor:
   - platform: modbus_controller

@@ -44,7 +44,7 @@ captive_portal:
 
 packages:
   magis_m:
-    url: https://github.com/jotuera/immergas-modbus-bms-nasa-hub
+    url: https://github.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub
     ref: main
     refresh: 1d
     files:

@@ -1,5 +1,5 @@
 // OpenTherm frame codec - pure C++ (no ESP dependencies) so it can be tested on a PC.
-// Part of jotuera/immergas-modbus-bms-nasa-hub - PolyForm Noncommercial 1.0.0 (c) 2026 JoTu.
+// Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub - PolyForm Noncommercial 1.0.0 (c) 2026 JoTu.
 //
 // Physical layer (OpenTherm 2.2): 1000 bit/s, Manchester (bi-phase-L): every bit has a transition in the middle; a
 // "1" is the active level in the first half and the idle level in the second, a "0" the other way round. A frame is a

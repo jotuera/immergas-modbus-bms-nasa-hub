@@ -1,6 +1,6 @@
 # Immergas Magis Pro / Combo T-/T+ BMS - package "tt_core"
 # Base: project info, RS485 UART, Modbus, the two polling controllers and the "BMS connection" switch.
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 # File and id names start with tt_ so this repo can be combined with the D+/D- and F1/F2 repos on one device.
 
 substitutions:
@@ -18,7 +18,7 @@ substitutions:
 
 esphome:
   project:
-    name: "jotuera.immergas-modbus-bms-nasa-hub"
+    name: "jotuera.immergas-modbus-bms-nasa-opentherm-hub"
     version: "${tt_project_version}"
 
 # Atom Lite + MAX3485 / RS485 TTL 3.3 V. Immergas T+ / T- -> RS485 A/B. If no response or CRC errors, swap T+ and T-.

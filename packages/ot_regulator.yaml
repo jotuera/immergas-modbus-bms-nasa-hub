@@ -5,7 +5,7 @@
 # the room stays too warm for hours).
 # Room temperature: a Home Assistant sensor (substitution ot_room_entity, e.g. sensor.living_room_temperature).
 # Without a room temperature the regulator runs on the curve only (like a boiler with P66 and no thermostat).
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 
 substitutions:
   ot_room_entity: sensor.ot_room_temperature_not_set

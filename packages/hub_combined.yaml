@@ -1,8 +1,8 @@
-# IMMERGAS Modbus BMS NASA Hub - package "hub_combined"
+# IMMERGAS Modbus BMS NASA OpenTherm HUB - package "hub_combined"
 # Values computed from all three buses (D+/D-, T-/T+, F1/F2): heat pump COP, heat output, operating state,
 # DHW cycle (energy, heat, COP, cost), heat cost heat pump vs gas, energy prices. Also hides the entities that the
 # three buses report twice (the D+/D- one stays). Needs the dd_, tt_ and f1f2_ packages.
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 
 substitutions:
   # useful heat from 1 m3 of gas (calorific value ~10.9 kWh/m3 x boiler efficiency ~0.97)

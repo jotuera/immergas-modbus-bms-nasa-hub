@@ -1,6 +1,6 @@
 # Immergas Magis Pro / Combo T-/T+ BMS - package "tt_circuit"
 # Hydraulic circuit: D20/D08 flow/return, boiler flow (3029), D14 flow rate, D06 outdoor, D04 calculated setpoint, D22 3-way valve.
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 # File and id names start with tt_ so this repo can be combined with the D+/D- and F1/F2 repos on one device.
 
 sensor:

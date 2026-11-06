@@ -1,6 +1,6 @@
 """Samsung NASA bus (F1/F2) for ESPHome - Immergas Magis Pro / Combo (Samsung EHS outdoor unit).
 
-Part of jotuera/immergas-modbus-bms-nasa-hub - PolyForm Noncommercial 1.0.0 (c) 2026 JoTu.
+Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub - PolyForm Noncommercial 1.0.0 (c) 2026 JoTu.
 """
 
 import os

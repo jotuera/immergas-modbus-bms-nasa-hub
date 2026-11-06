@@ -1,12 +1,12 @@
 # Immergas Magis Pro / Combo D+/D- emulator - package "dd_core"
 # Base: project info, components from GitHub, HA time (boiler clock drift), RS485 UART (pins via substitutions).
 # Device settings (esp32, logger, Wi-Fi, API, debug sensors) live in the main YAML.
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 # File and id names start with dd_ so this repo can be combined with the T-/T+ and F1/F2 repos on one device.
 
 substitutions:
   dd_author: "JoTu"
-  dd_github_url: "https://github.com/jotuera/immergas-modbus-bms-nasa-hub"
+  dd_github_url: "https://github.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub"
   dd_project_version: "2.4.0"
   # RS485 pins (M5Stack Atom + RS485 unit). Override in your main YAML if your wiring differs.
   dd_uart_tx_pin: GPIO26
@@ -20,7 +20,7 @@ substitutions:
 
 esphome:
   project:
-    name: "jotuera.immergas-modbus-bms-nasa-hub"
+    name: "jotuera.immergas-modbus-bms-nasa-opentherm-hub"
     version: "${dd_project_version}"
   on_boot:
     # v2.0.0: one-time copy of the values saved by v1.x (old global ids) - after restore (priority 600 < 800).

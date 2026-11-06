@@ -5,7 +5,7 @@
 # RS485 unit: OpenTherm is a 2-wire current / voltage loop.
 # Boiler terminals (see the Dominus knowledge base): 41 / 44 (VICTRIX ZEUS 25, EXA, TERA, OMNIA), 42 / 43 (HERCULES
 # Condensing, ZEUS Superior 26 / 32). Without the CAR V2 the jumper X40 goes back on 40-41.
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 
 substitutions:
   ot_project_version: "1.0.0"
@@ -17,7 +17,7 @@ substitutions:
   ot_status_low_byte: "0xCA"
 
 external_components:
-  - source: github://jotuera/immergas-modbus-bms-nasa-hub@main
+  - source: github://jotuera/immergas-modbus-bms-nasa-opentherm-hub@main
     components: [immergas_ot]
 
 immergas_ot:

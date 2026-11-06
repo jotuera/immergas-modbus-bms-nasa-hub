@@ -1,4 +1,4 @@
-# IMMERGAS Modbus BMS NASA Hub — kopalnia wiedzy
+# IMMERGAS Modbus BMS NASA OpenTherm HUB — kopalnia wiedzy
 
 [English](knowledge-base.md) · **Polski** · powrót do [README](../README.pl.md)
 

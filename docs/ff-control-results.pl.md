@@ -63,4 +63,4 @@ COP           = moc_cieplna_W / 0x8413
 
 (przepływ z magistrali T-/T+, ΔT i moc elektryczna z czytnika F1/F2.) Dokładniejsze niż wewnętrzny licznik
 jednostki zewnętrznej. Czytnik read-only to
-[f1f2-nasa](https://github.com/jotuera/immergas-modbus-bms-nasa-hub).
+[f1f2-nasa](https://github.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub).

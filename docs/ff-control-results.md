@@ -63,4 +63,4 @@ COP           = heat_output_W / 0x8413
 
 (Flow from the T-/T+ bus, ΔT and electrical power from the F1/F2 reader.) More accurate than the outdoor
 unit's internal meter. The read-only reader is
-[f1f2-nasa](https://github.com/jotuera/immergas-modbus-bms-nasa-hub).
+[f1f2-nasa](https://github.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub).

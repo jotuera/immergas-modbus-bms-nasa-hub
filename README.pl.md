@@ -1,8 +1,8 @@
-# IMMERGAS Modbus BMS NASA Hub
+# IMMERGAS Modbus BMS NASA OpenTherm HUB
 
 [English](README.md) · **Polski**
 
-[![Release](https://img.shields.io/github/v/release/jotuera/immergas-modbus-bms-nasa-hub?label=release&color=0077b6)](https://github.com/jotuera/immergas-modbus-bms-nasa-hub/releases/latest)
+[![Release](https://img.shields.io/github/v/release/jotuera/immergas-modbus-bms-nasa-opentherm-hub?label=release&color=0077b6)](https://github.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub/releases/latest)
 [![ESPHome](https://img.shields.io/badge/ESPHome-2026.9%2B-41BDF5?logo=esphome&logoColor=white)](https://esphome.io)
 [![Platform](https://img.shields.io/badge/platform-ESP32--S3-41BDF5)](https://docs.m5stack.com/en/core/AtomS3%20Lite)
 [![HACS](https://img.shields.io/badge/HACS-Custom-41BDF5)](https://hacs.xyz)

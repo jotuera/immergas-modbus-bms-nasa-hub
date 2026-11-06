@@ -1,6 +1,6 @@
 # Immergas Magis Pro / Combo T-/T+ BMS - package "tt_installer"
 # Installer parameters: P15 anti-legionella, A12 venting, U50 venting (4600), A03/A04 pump speed, T04, T05, T07.
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 # File and id names start with tt_ so this repo can be combined with the D+/D- and F1/F2 repos on one device.
 
 switch:

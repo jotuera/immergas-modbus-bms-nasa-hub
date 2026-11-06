@@ -6,7 +6,7 @@
 # Wiring: BMS+ / BMS- of the E-BOX TOP (A13), termination with dip switch SW1.2; do not touch the internal D+ / D- bus
 # (Nexis, Gateway). Panel menu General / Advanced / P: P021 = On (generator control; Off = read only), P022 = address 1,
 # P023 = 3 (9600), P024 = 1 (even, 1 stop) - users found P023 = 1 (2400) and P024 = 3 at delivery, check them first.
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 
 globals:
   # parts of the request word written to 512 by gb_core: low byte 0x55 heating / 0xAA cooling, high byte bit0 CH

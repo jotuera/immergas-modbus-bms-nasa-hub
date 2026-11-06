@@ -1,7 +1,7 @@
 # Immergas Magis Pro / Combo D+/D- emulator - package "dd_engine"
 # Bus engine: globals, the 10 ms RX/TX loop (handle_pdu, emulated Dominus 0x33 and zone panels 0x29/0x2A/0x2B,
 # sniffer) and the emulation switches. Every other package depends on it.
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 # File and id names start with dd_ so this repo can be combined with the T-/T+ and F1/F2 repos on one device.
 
 globals:

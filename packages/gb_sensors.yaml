@@ -2,7 +2,7 @@
 # Readings common to SUPERIOR / EXTRA / PRO (input registers, 0.1 units): flow, return, DHW, outdoor, modulation,
 # calculated flow, after the hydraulic separator (HVDT). The flue gas and the model extras are in gb_superior /
 # gb_extra / gb_pro.
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 
 sensor:
   - platform: modbus_controller

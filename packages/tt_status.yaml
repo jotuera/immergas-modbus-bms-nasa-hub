@@ -1,6 +1,6 @@
 # Immergas Magis Pro / Combo T-/T+ BMS - package "tt_status"
 # Status: operating mode (2000), D97/D98/D99 demand/system state, boiler fault code + description, A11, D61, D91, internal clock.
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 # File and id names start with tt_ so this repo can be combined with the D+/D- and F1/F2 repos on one device.
 
 sensor:

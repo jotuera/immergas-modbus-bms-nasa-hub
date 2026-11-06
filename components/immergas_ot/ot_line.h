@@ -1,5 +1,5 @@
 // One OpenTherm line (one adapter): receive by GPIO interrupt (edge times), send by a hardware timer (half bits).
-// Part of jotuera/immergas-modbus-bms-nasa-hub - PolyForm Noncommercial 1.0.0 (c) 2026 JoTu.
+// Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub - PolyForm Noncommercial 1.0.0 (c) 2026 JoTu.
 #pragma once
 
 #include "esphome/core/hal.h"

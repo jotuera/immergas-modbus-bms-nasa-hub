@@ -2,7 +2,7 @@
 # Installer parameters: setpoint limits (201-208), the heating-mode outdoor limits (231 / 232) and the custom heating
 # curve (265-268). Some firmware answers these registers only one at a time, so every one is its own request. Nothing
 # is written - the parameters stay a job for the controller menu.
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 
 sensor:
   # 201-204: water setpoint limits, low byte = zone 1

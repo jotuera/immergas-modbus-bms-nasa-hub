@@ -3,7 +3,7 @@
 # 33 exhaust), modulation (17), pressure (18), DHW flow (19), the setpoint bounds (48 / 49), the setpoints the boiler
 # uses (56 / 57) and the counters (116-123). An ID the boiler answers with UNKNOWN-DATAID is asked again once an hour
 # and its sensor shows "unknown" (many Immergas boilers have no pressure / DHW flow / exhaust sensor).
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 
 binary_sensor:
   # Data-ID 0, low byte of the answer: slave status

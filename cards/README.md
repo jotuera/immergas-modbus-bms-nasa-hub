@@ -2,7 +2,7 @@
 
 **English** · [Polski](README.pl.md)
 
-Lovelace cards for the IMMERGAS Modbus BMS NASA Hub. One JavaScript bundle; the cards appear in
+Lovelace cards for the IMMERGAS Modbus BMS NASA OpenTherm HUB. One JavaScript bundle; the cards appear in
 **Add card** like built-in ones and find the hub and its entities by themselves — no YAML, no entity ids.
 
 | Card | Type | What it shows |
@@ -61,7 +61,7 @@ values.
 
 ## Install with HACS (recommended)
 
-1. HACS → ⋮ → **Custom repositories** → repository `https://github.com/jotuera/immergas-modbus-bms-nasa-hub`,
+1. HACS → ⋮ → **Custom repositories** → repository `https://github.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub`,
    type **Dashboard** → Add.
 2. Find **Immergas Hub cards** in HACS, open it and press **Download**. HACS adds the dashboard resource by itself
    and shows new releases as updates.
@@ -69,7 +69,7 @@ values.
 
 ## Install (manual)
 
-1. Download `immergas-hub-cards.js` from the latest [release](https://github.com/jotuera/immergas-modbus-bms-nasa-hub/releases/latest)
+1. Download `immergas-hub-cards.js` from the latest [release](https://github.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub/releases/latest)
    (or take `dist/immergas-hub-cards.js` from this folder) and copy it to `/config/www/immergas-hub-cards/`.
 2. Settings → Dashboards → ⋮ → Resources → Add resource: `/local/immergas-hub-cards/immergas-hub-cards.js?v=1.0.1`,
    type *JavaScript module*. Bump `?v=` after every update.

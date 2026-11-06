@@ -1,6 +1,6 @@
 # Immergas gas boiler Modbus BMS - package "gb_control"
 # Control: operating mode (256 bits 1 / 2), CH flow and DHW setpoints (514 / 515), fault reset (257 = 0xAA55).
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 
 sensor:
   # 256 "boiler control" as read back - the mode select and the BOOST / ECO switch change only their own bits of it

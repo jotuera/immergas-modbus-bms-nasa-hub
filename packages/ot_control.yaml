@@ -3,7 +3,7 @@
 # the DHW setpoint (56), the max. CH setpoint (57) and the max. modulation (14), each repeated - an OpenTherm master
 # keeps sending its values. In the gateway mode the same values are used while the room unit is silent (standalone)
 # and, with their override switches on, replace what the room unit writes.
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 
 switch:
   - platform: immergas_ot

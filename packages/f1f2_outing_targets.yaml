@@ -2,7 +2,7 @@
 # The Outing-mode target temperatures (FSV 5011-5019) as EDITABLE sliders. Changing one writes the FSV to
 # the indoor unit. Writing is still gated by the "Active ODU control" switch (f1f2_control); needs f1f2_transmit: "true".
 # These set what the Outing switch applies. Cooling values (5011/5012/5015/5016) are inert on a heating Magis.
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0).
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0).
 
 number:
   - {platform: f1f2_nasa, fsv: 5011, id: f1f2_fsv_5011_number, mode: slider, min_value: 5,  max_value: 25, step: 0.5}   # cooling water

@@ -1,6 +1,6 @@
-# IMMERGAS Modbus BMS NASA Hub - package "hw_atoms3_portabc"
+# IMMERGAS Modbus BMS NASA OpenTherm HUB - package "hw_atoms3_portabc"
 # Hardware profile: AtomS3 (Lite) + ATOMIC PortABC + 3x M5Stack Isolated RS485 Unit (auto direction).
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 # The isolated units switch the direction themselves, so the DE pins of the dd_ / tt_ packages are removed; T-/T+ is
 # received with 1 stop bit (the boiler sends 8N2, the ESP32-S3 UART with 2 stop bits corrupted the replies).
 # --- T-/T+: 1 bit stopu po stronie huba ---

@@ -3,7 +3,7 @@
 # request keep-alive. For VICTRIX SUPERIOR 2021 / ZEUS Superior 25-35, VICTRIX EXTRA and VICTRIX PRO V2 EU in the BMS
 # mode (official VIPS gas "Specifikace protokolu Modbus", version 02/2025). Load gb_control, gb_status, gb_sensors and
 # ONE model package (gb_superior / gb_extra / gb_pro) with this one; gb_curve is optional.
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 # File and id names start with gb_ so this package can be combined with the other buses on one device.
 #
 # The boiler is a Modbus RTU slave, the hub is the master. In the BMS mode the boiler is only a heat source: the

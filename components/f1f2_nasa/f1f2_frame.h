@@ -1,5 +1,5 @@
 // Samsung NASA frame codec (encode / decode / CRC).
-// Part of jotuera/immergas-modbus-bms-nasa-hub - PolyForm Noncommercial 1.0.0 (c) 2026 JoTu.
+// Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub - PolyForm Noncommercial 1.0.0 (c) 2026 JoTu.
 // Written from scratch from protocol facts; see NOTICE for the MIT references consulted.
 //
 // Frame layout (all multi-byte fields big-endian):

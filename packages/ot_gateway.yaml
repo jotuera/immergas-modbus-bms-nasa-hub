@@ -6,7 +6,7 @@
 # silent for 8 s the hub runs the boiler itself with the ot_control values (no E31, no cold house) until it is back.
 # Hardware: a MASTER adapter towards the boiler (ot_core) and a SLAVE adapter towards the room unit (e.g. DIYLess
 # Slave OpenTherm Shield / OpenTherm Slave Adapter).
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 
 substitutions:
   # slave adapter (towards the room unit): default AtomS3 + ATOMIC PortABC Port B

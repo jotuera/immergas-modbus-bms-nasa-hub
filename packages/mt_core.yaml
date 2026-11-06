@@ -2,7 +2,7 @@
 # Base: RS485 UART (9600 8N1), Modbus, the polling controllers, the "Modbus connection" switch, the sensor resolution
 # flag (register 189 bit8) and the protocol version (187). Load mt_status, mt_sensors, mt_energy and mt_control with it;
 # mt_params is optional (installer parameters, read only).
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 # File and id names start with mt_ so this package can be combined with the other buses on one device.
 #
 # Wiring: the Modbus port is on the back of the wired controller (HMI): H1 / H2 and E (reference). The hub is the

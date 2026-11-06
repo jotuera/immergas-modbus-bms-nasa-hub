@@ -1,6 +1,6 @@
 # Immergas Magis Pro / Combo F1/F2 (Samsung NASA) - package "f1f2_indoor"
 # Indoor unit (MIM board, 20.00.01): water temperatures, active water target, DHW, zone 1, pump, heaters, modes.
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 # File, id and substitution names start with f1f2_ so this repo can be combined with the D+/D- and T-/T+
 # repos on one device.
 

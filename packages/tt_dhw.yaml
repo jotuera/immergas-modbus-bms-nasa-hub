@@ -1,7 +1,7 @@
 # Immergas Magis Pro / Combo T-/T+ BMS - package "tt_dhw"
 # Domestic hot water: D03 tank temperature, DHW setpoint (2095) as a water_heater entity, T02 DHW thermostat,
 # DHW boost via the BMS DHW temperature register 4011.
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 # File and id names start with tt_ so this repo can be combined with the D+/D- and F1/F2 repos on one device.
 
 # Register 4011 = DHW tank temperature supplied by the BMS, x0.1 °C; 0 = the unit uses its own tank probe.

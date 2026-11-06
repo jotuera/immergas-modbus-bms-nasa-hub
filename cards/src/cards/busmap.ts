@@ -5,7 +5,7 @@
 import { HubCard, html, css, nothing, box, register } from "../base";
 import { Key } from "../names";
 
-const ISSUES = "https://github.com/jotuera/immergas-modbus-bms-nasa-hub/issues/new";
+const ISSUES = "https://github.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub/issues/new";
 const URL_BUDGET = 7000;
 type Bus = "DD" | "TT" | "FF";
 const BUSES: [Bus, Key, Key, string, [string, string]][] = [

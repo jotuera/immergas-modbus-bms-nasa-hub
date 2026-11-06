@@ -1,7 +1,7 @@
 # Immergas Magis Pro / Combo D+/D- emulator - package "dd_boiler_info"
 # Boiler data written to the panel: D04, generators, clock/date, outdoor temperature, A13, A11, D91,
 # fault code/text, status flags.
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 # File and id names start with dd_ so this repo can be combined with the T-/T+ and F1/F2 repos on one device.
 
 select:

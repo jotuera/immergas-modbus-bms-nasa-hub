@@ -1,6 +1,6 @@
-# IMMERGAS Modbus BMS NASA Hub - package "hub_diagnostics"
+# IMMERGAS Modbus BMS NASA OpenTherm HUB - package "hub_diagnostics"
 # Device diagnostics and project info; works with any combination of the buses.
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 
 substitutions:
   hub_project_version: "1.2.0"
@@ -60,4 +60,4 @@ text_sensor:
     entity_category: diagnostic
     update_interval: 3600s
     lambda: |-
-      return std::string("https://github.com/jotuera/immergas-modbus-bms-nasa-hub");
+      return std::string("https://github.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub");

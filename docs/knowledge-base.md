@@ -1,4 +1,4 @@
-# IMMERGAS Modbus BMS NASA Hub — knowledge base
+# IMMERGAS Modbus BMS NASA OpenTherm HUB — knowledge base
 
 **English** · [Polski](knowledge-base.pl.md) · back to the [README](../README.md)
 

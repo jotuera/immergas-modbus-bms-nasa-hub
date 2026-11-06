@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you! Please collect the logs as described in [docs/collecting-logs.md](https://github.com/jotuera/immergas-modbus-bms-nasa-hub/blob/main/docs/collecting-logs.md) first.
+        Thank you! Please collect the logs as described in [docs/collecting-logs.md](https://github.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub/blob/main/docs/collecting-logs.md) first.
   - type: input
     id: indoor
     attributes:

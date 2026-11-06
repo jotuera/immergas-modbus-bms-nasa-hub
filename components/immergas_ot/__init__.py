@@ -1,6 +1,6 @@
 """OpenTherm for Immergas boilers - the hub as the OpenTherm master or as a gateway (room unit <-> boiler).
 
-Part of jotuera/immergas-modbus-bms-nasa-hub - PolyForm Noncommercial 1.0.0 (c) 2026 JoTu.
+Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub - PolyForm Noncommercial 1.0.0 (c) 2026 JoTu.
 """
 
 import esphome.codegen as cg

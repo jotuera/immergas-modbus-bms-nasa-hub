@@ -4,7 +4,7 @@
 # curve number zone 1 / 2 (6), forced DHW / tank heater / backup heater (7-9). Registers 0, 2, 5 and 6 hold several
 # values: a change writes the register again with only its own bits / byte changed (read-modify-write from the last
 # read, so wait for the first reading after a start before changing anything).
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 
 sensor:
   - { platform: modbus_controller, modbus_controller_id: mt_hp, id: mt_r0, name: "${n_mt_r0}", internal: true, register_type: holding, address: 0, value_type: U_WORD, accuracy_decimals: 0 }

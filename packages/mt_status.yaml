@@ -1,7 +1,7 @@
 # Immergas MAGIS M (Midea M-Thermal) Modbus - package "mt_status"
 # State: running mode (101 / 199), current and last three faults (124-127), status bits (128), load outputs (129),
 # software versions (130 / 131).
-# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 
 sensor:
   - platform: modbus_controller
