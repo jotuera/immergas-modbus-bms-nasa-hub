@@ -12,6 +12,7 @@ export interface HubIndex {
   ids: Partial<Record<Key, string>>;
   /** "hub" = the ESPHome hub, "dominus" = the Immergas Dominus integration (fewer entities, no heat-pump data) */
   source: "hub" | "dominus";
+  gas?: boolean;
   /** Dominus in the OpenTherm mode (VICTRIX ZEUS / AVIO …): only the OpenTherm Data-IDs, no zone / schedules / statistics */
   ot?: boolean;
 }
@@ -27,7 +28,7 @@ const DOMINUS: Record<string, Key> = {
   humidity_target: "dom_hum_target", flow_target: "dom_flow_target", fault_language: "err_lang",
   // 1.4.0: boiler programs declared by the user (U11 / P15 are not readable over TCP)
   night_mode: "u11", night_start: "u12", night_stop: "u13", legionella: "p15", legionella_start: "p16", legionella_day: "p17",
-  legionella_hours: "p13",
+  legionella_hours: "p13", device_type: "dom_device",
   // 1.5.0: more declared boiler parameters (curves, T02, T05, boiler integration, A31, P07) - empty until entered
   curve_r02: "dom_r02", curve_r03: "dom_r03", curve_r04: "r04", curve_r05: "r05", curve_r10: "dom_r10", curve_r11: "dom_r11",
   curve_r12: "r12", curve_r13: "r13", dhw_hysteresis: "dom_t02", ch_restart_minutes: "dom_t05", integration_ch_wait: "dom_i04",

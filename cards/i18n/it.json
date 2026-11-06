@@ -1447,5 +1447,9 @@
   "off · Comfort starts at the scheduled time": "spento · il Comfort inizia all'ora programmata",
   "on · Comfort ready at the scheduled time": "acceso · Comfort pronto all'ora programmata",
   "on · works in the CH program AUTO": "acceso · funziona nel programma riscaldamento AUTO",
-  "open: {0} · room {1} °C": "aperto: {0} · stanza {1} °C"
+  "open: {0} · room {1} °C": "aperto: {0} · stanza {1} °C",
+  "Device": "Apparecchio",
+  "Device type": "Tipo di apparecchio",
+  "Gas boiler: no cooling, humidity, night function U11 or integration I01–I10. The R / T / A codes are the Magis menu – on boilers with a text menu the same function has a name instead of a code.": "Caldaia a gas: niente raffrescamento, umidità, funzione notte U11 o integrazione I01–I10. I codici R / T / A sono del menu Magis – nelle caldaie con menu testuale la stessa funzione ha un nome invece del codice.",
+  "burner – not visible over TCP": "bruciatore – non visibile via TCP"
 }

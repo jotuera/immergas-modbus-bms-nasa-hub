@@ -4,6 +4,10 @@ import { LitElement, html, css, nothing, unsafeCSS, TemplateResult, CSSResultGro
 import { hubIndex, HubIndex } from "./hub";
 import { Key } from "./names";
 
+/** card keys that only a heat pump has: dropped from the Dominus index when "Device type" = gas boiler */
+const HP_ONLY: Key[] = ["comfort_cool", "eco_cool", "dom_hum_target", "dom_r10", "dom_r11", "r12", "r13", "dom_i04", "dom_i10",
+  "dom_int_ch", "dom_int_dhw", "u11", "u12", "u13"];
+
 export type Prof = "zeus25" | "tera" | "classic" | "superior" | "hercules" | "generic";
 export const PROFS: Prof[] = ["zeus25", "tera", "classic", "superior", "hercules", "generic"];
 
@@ -123,6 +127,8 @@ export abstract class HubCard extends LitElement {
   protected get dominus() { return this.idx?.source === "dominus"; }
   /** Dominus in the OpenTherm mode: fewer values, no zone / schedules / statistics */
   protected get ot() { return !!this.idx?.ot; }
+  /** Dominus (Modbus) declared as a gas boiler - no heat pump values */
+  protected get gas() { return !!this.idx?.gas; }
   /** F1/F2 write gate: locked only while the "Active ODU control" switch is exposed and off (hub v23+ keeps it armed and hidden) */
   protected get writeLocked() { return !!this.eid("f_arm") && !this.on("f_arm"); }
   /** Dominus OpenTherm "Read only (remote in charge)" is on: no control writes to the boiler */
@@ -227,6 +233,16 @@ export abstract class HubCard extends LitElement {
     // ot_preview: {card key: entity_id} - shows the OpenTherm variant with stand-in entities (a preview without a VICTRIX)
     if (this.idx && this.config.ot_preview && typeof this.config.ot_preview === "object")
       this.idx = { ...this.idx, ot: true, ids: { ...this.idx.ids, ...this.config.ot_preview } };
+    // Dominus (Modbus) on a gas boiler (declared "Device type"): the heat pump entities leave the index, so every card
+    // hides cooling, humidity, the night function U11 and the boiler integration I01-I10 by itself
+    if (this.idx?.source === "dominus" && !this.idx.ot) {
+      const dev = this.idx.ids.dom_device, gas = !!dev && this.hass.states[dev]?.state === "gas_boiler";
+      if (gas) {
+        const ids = { ...this.idx.ids };
+        for (const k of HP_ONLY) delete ids[k];
+        this.idx = { ...this.idx, ids, gas: true };
+      }
+    }
     if (!this.idx) {
       return html`<ha-card><div class="empty">${this.t("Szukam huba Immergas… (urządzenie z encją „Immergas Hub - Stan pracy”) albo integracji Immergas Dominus",
         "Looking for the Immergas hub… (device with the “Immergas Hub - Operating state” entity) or the Immergas Dominus integration")}</div></ha-card>`;

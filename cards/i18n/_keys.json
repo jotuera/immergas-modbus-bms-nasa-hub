@@ -5480,6 +5480,15 @@
   ]
  },
  {
+  "en": "Gas boiler",
+  "pl": "Kocioł gazowy",
+  "files": [
+   "diagram.ts",
+   "gas.ts",
+   "now.ts"
+  ]
+ },
+ {
   "en": "Magis boiler",
   "pl": "Kocioł Magis",
   "files": [
@@ -5527,6 +5536,13 @@
  {
   "en": "below {0} °C (I10): boiler",
   "pl": "poniżej {0} °C (I10): kocioł",
+  "files": [
+   "diagram.ts"
+  ]
+ },
+ {
+  "en": "burner – not visible over TCP",
+  "pl": "palnik – nie widać po TCP",
   "files": [
    "diagram.ts"
   ]
@@ -5631,15 +5647,6 @@
   "pl": "pompa stoi",
   "files": [
    "diagram.ts"
-  ]
- },
- {
-  "en": "Gas boiler",
-  "pl": "Kocioł gazowy",
-  "files": [
-   "diagram.ts",
-   "gas.ts",
-   "now.ts"
   ]
  },
  {
@@ -8404,6 +8411,27 @@
  {
   "en": "inactive – fill in",
   "pl": "nieaktywne – uzupełnij",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Device",
+  "pl": "Urządzenie",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Device type",
+  "pl": "Typ urządzenia",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Gas boiler: no cooling, humidity, night function U11 or integration I01–I10. The R / T / A codes are the Magis menu – on boilers with a text menu the same function has a name instead of a code.",
+  "pl": "Kocioł gazowy: bez chłodzenia, wilgotności, funkcji nocnej U11 i integracji I01–I10. Kody R / T / A z menu Magisa – w kotłach z menu tekstowym ta sama funkcja ma nazwę zamiast kodu.",
   "files": [
    "settings.ts"
   ]

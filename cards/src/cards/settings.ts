@@ -55,12 +55,16 @@ class ImmergasSettingsCard extends HubCard {
       ? html` <span class="need">· ${this.t("nieaktywne – uzupełnij", "inactive – fill in")} ${need.join(", ")}</span>` : nothing}</div>${rows}`;
     const miss = (ks: [string, Key][]) => ks.filter(([, k]) => this.eid(k) && !this.isSet(k)).map(([n]) => n);
     return html`
+      ${this.eid("dom_device") ? html`<div class="grp">${this.t("Urządzenie", "Device")}</div>
+        ${this.selRow(this.eid("dom_device"), this.t("Typ urządzenia", "Device type"), "mdi:water-boiler")}
+        ${this.gas ? html`<div class="note">${this.t("Kocioł gazowy: bez chłodzenia, wilgotności, funkcji nocnej U11 i integracji I01–I10. Kody R / T / A z menu Magisa – w kotłach z menu tekstowym ta sama funkcja ma nazwę zamiast kodu.",
+          "Gas boiler: no cooling, humidity, night function U11 or integration I01–I10. The R / T / A codes are the Magis menu – on boilers with a text menu the same function has a name instead of a code.")}</div>` : nothing}` : nothing}
       ${g(this.t("Krzywa grzewcza (menu R)", "Heating curve (menu R)"), miss([["R02", "dom_r02"], ["R03", "dom_r03"], ["R04", "r04"], ["R05", "r05"]]), html`
         ${this.numRow("dom_r02", "mdi:thermometer-low", this.t("R02 · temp. zewn. przy maks. zasilaniu", "R02 · outdoor at max. flow"), 0)}
         ${this.numRow("dom_r03", "mdi:thermometer-high", this.t("R03 · temp. zewn. przy min. zasilaniu", "R03 · outdoor at min. flow"), 0)}
         ${this.numRow("r04", "mdi:thermometer-chevron-up", this.t("R04 · maks. zasilanie CO", "R04 · max. CH flow"), 0)}
         ${this.numRow("r05", "mdi:thermometer-chevron-down", this.t("R05 · min. zasilanie CO", "R05 · min. CH flow"), 0)}`)}
-      ${g(this.t("Krzywa chłodzenia (menu R)", "Cooling curve (menu R)"), miss([["R10", "dom_r10"], ["R11", "dom_r11"], ["R12", "r12"], ["R13", "r13"]]), html`
+      ${this.gas ? nothing : g(this.t("Krzywa chłodzenia (menu R)", "Cooling curve (menu R)"), miss([["R10", "dom_r10"], ["R11", "dom_r11"], ["R12", "r12"], ["R13", "r13"]]), html`
         ${this.numRow("dom_r10", "mdi:thermometer-high", this.t("R10 · temp. zewn. przy min. zasilaniu", "R10 · outdoor at min. flow"), 0)}
         ${this.numRow("dom_r11", "mdi:thermometer-low", this.t("R11 · temp. zewn. przy maks. zasilaniu", "R11 · outdoor at max. flow"), 0)}
         ${this.numRow("r12", "mdi:snowflake-thermometer", this.t("R12 · min. zasilanie chłodzenia", "R12 · min. cooling flow"), 0)}
@@ -68,7 +72,7 @@ class ImmergasSettingsCard extends HubCard {
       ${g(this.t("Ciepła woda i ogrzewanie (menu T)", "Hot water and heating (menu T)"), [], html`
         ${this.numRow("dom_t02", "mdi:water-thermometer", this.t("T02 · termostat CWU (start przy nastawa − T02)", "T02 · DHW thermostat (starts at setpoint − T02)"), 0)}
         ${this.numRow("dom_t05", "mdi:timer-lock-outline", this.t("T05 · minutnik startów CO", "T05 · CH start timer"), 0)}`)}
-      ${g(this.t("Integracja kotła (menu I, Magis Combo)", "Boiler integration (menu I, Magis Combo)"),
+      ${this.gas ? nothing : g(this.t("Integracja kotła (menu I, Magis Combo)", "Boiler integration (menu I, Magis Combo)"),
         this.on("dom_int_ch") ? miss([["I04", "dom_i04"], ["I10", "dom_i10"]]) : [], html`
         ${this.switchRow("dom_int_ch", "mdi:fire", "peach", this.t("Integracja kotła CO · I02", "CH boiler integration · I02"),
           this.t("ustawiona na piecu – kocioł dołącza do pompy", "set on the boiler – the boiler joins the heat pump"))}

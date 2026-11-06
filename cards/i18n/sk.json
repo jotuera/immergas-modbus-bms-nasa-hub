@@ -1447,5 +1447,9 @@
   "off · Comfort starts at the scheduled time": "vypnuté · Komfort začína v čase z programu",
   "on · Comfort ready at the scheduled time": "zapnuté · Komfort pripravený v čase z programu",
   "on · works in the CH program AUTO": "zapnuté · funguje v programe ÚK AUTO",
-  "open: {0} · room {1} °C": "otvorené: {0} · miestnosť {1} °C"
+  "open: {0} · room {1} °C": "otvorené: {0} · miestnosť {1} °C",
+  "Device": "Zariadenie",
+  "Device type": "Typ zariadenia",
+  "Gas boiler: no cooling, humidity, night function U11 or integration I01–I10. The R / T / A codes are the Magis menu – on boilers with a text menu the same function has a name instead of a code.": "Plynový kotol: bez chladenia, vlhkosti, nočnej funkcie U11 a integrácie I01–I10. Kódy R / T / A sú z menu Magis – pri kotloch s textovým menu má rovnaká funkcia názov namiesto kódu.",
+  "burner – not visible over TCP": "horák – cez TCP nie je vidieť"
 }

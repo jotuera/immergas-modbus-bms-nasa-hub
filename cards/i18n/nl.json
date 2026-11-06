@@ -1447,5 +1447,9 @@
   "off · Comfort starts at the scheduled time": "uit · Comfort begint op de geplande tijd",
   "on · Comfort ready at the scheduled time": "aan · Comfort klaar op de geplande tijd",
   "on · works in the CH program AUTO": "aan · werkt in het CV-programma AUTO",
-  "open: {0} · room {1} °C": "open: {0} · kamer {1} °C"
+  "open: {0} · room {1} °C": "open: {0} · kamer {1} °C",
+  "Device": "Toestel",
+  "Device type": "Toesteltype",
+  "Gas boiler: no cooling, humidity, night function U11 or integration I01–I10. The R / T / A codes are the Magis menu – on boilers with a text menu the same function has a name instead of a code.": "Gasketel: geen koeling, vochtigheid, nachtfunctie U11 of integratie I01–I10. De R / T / A-codes komen uit het Magis-menu – bij ketels met een tekstmenu heeft dezelfde functie een naam in plaats van een code.",
+  "burner – not visible over TCP": "brander – niet zichtbaar via TCP"
 }

@@ -23,12 +23,14 @@ class ImmergasModeCard extends HubCard {
       3: [this.t("Zima", "Winter"), "", "mdi:snowflake-thermometer", "sky"],
       2: [this.t("Chłodz.", "Cooling"), "", "mdi:snowflake", "teal"],
     };
-    const order = [0, 1, 3, 2].filter((i) => i < opts.length);
+    // Dominus: the options are the mode keys (a gas boiler has no "cooling") - match them by name, not by position
+    const known = ["standby", "summer", "cooling", "winter"], byName = this.dominus && opts.length > 0 && opts.every((o) => known.includes(o));
+    const order = [0, 1, 3, 2].filter((i) => byName ? opts.includes(known[i]) : i < opts.length);
     // boiler switched OFF with its own button: the mode select keeps its last (stale) value, so OFF shows on the first
     // button and the modes are locked - the boiler cannot be switched on remotely
     const off = this.boilerOff, cur = off ? opts[0] : this.s("mode");
     return order.map((i) => {
-      const opt = opts[i], [lbl0, , icon0, col0] = ui[i], sel = cur === opt, tag = "mode" + i, armed = this.isArmed(tag);
+      const opt = byName ? known[i] : opts[i], [lbl0, , icon0, col0] = ui[i], sel = cur === opt, tag = "mode" + i, armed = this.isArmed(tag);
       const lbl = i === 0 && off ? "OFF" : lbl0, icon = i === 0 && off ? "mdi:power" : off ? "mdi:lock-outline" : icon0, lock = off && !sel;
       const col = i === 0 && off ? "red" : col0;
       return html`<div class="mb ${lock ? "lock" : ""}" style=${sel ? box(col, true) : "background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)"}

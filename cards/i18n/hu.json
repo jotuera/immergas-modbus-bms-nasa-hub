@@ -1447,5 +1447,9 @@
   "off · Comfort starts at the scheduled time": "ki · a Komfort az ütemezett időben kezdődik",
   "on · Comfort ready at the scheduled time": "be · a Komfort az ütemezett időre kész",
   "on · works in the CH program AUTO": "be · a fűtési AUTO programban működik",
-  "open: {0} · room {1} °C": "nyitva: {0} · szoba {1} °C"
+  "open: {0} · room {1} °C": "nyitva: {0} · szoba {1} °C",
+  "Device": "Készülék",
+  "Device type": "Készülék típusa",
+  "Gas boiler: no cooling, humidity, night function U11 or integration I01–I10. The R / T / A codes are the Magis menu – on boilers with a text menu the same function has a name instead of a code.": "Gázkazán: nincs hűtés, páratartalom, U11 éjszakai funkció és I01–I10 integráció. Az R / T / A kódok a Magis menüből valók – szöveges menüs kazánoknál ugyanaz a funkció név szerint szerepel.",
+  "burner – not visible over TCP": "égő – TCP-n nem látható"
 }

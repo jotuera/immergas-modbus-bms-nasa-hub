@@ -125,10 +125,11 @@ class ImmergasDiagramCard extends HubCard {
         <rect x="300" y="196" width="180" height="170" rx="16" class="dev" style="stroke:${c(act || err ? flame : "overlay1")};${act ? `fill:${ca(flame, 0.1)}` : ""}"/>
         <path d="M 390 236 C 372 258, 378 282, 390 292 C 402 282, 408 258, 390 236 Z M 390 258 C 383 268, 386 280, 390 284 C 394 280, 397 268, 390 258 Z"
           fill=${c(flame)} fill-rule="evenodd" style=${act ? `filter:drop-shadow(0 0 6px ${c(flame)});animation:ih-pulse 1.2s ease-in-out infinite` : ""}/></g>
-      ${this.label(390, 186, ot ? this.t("Kocioł", "Boiler") : this.t("Kocioł Magis", "Magis boiler"), "", 11, "middle", 800)}
+      ${this.label(390, 186, ot ? this.t("Kocioł", "Boiler") : this.gas ? this.t("Kocioł gazowy", "Gas boiler") : this.t("Kocioł Magis", "Magis boiler"), "", 11, "middle", 800)}
       ${this.label(390, 322, err ? this.t("AWARIA", "FAULT") : dw ? this.t("grzeje CWU", "heats DHW") : heat ? this.t("grzeje CO", "heats CH") : this.t("czuwanie", "standby"), flame, 12)}
       ${ot ? this.label(390, 346, flameOn ? this.t("płomień", "flame") + (isNaN(mod) ? "" : ` ${Math.round(mod)} %`) : this.t("płomień zgaszony", "no flame"), flameOn ? "peach" : "", 9, "middle", 600)
         : this.label(390, 346, intOn ? this.t(`poniżej ${this.f(i10, 0)} °C (I10): kocioł`, `below ${this.f(i10, 0)} °C (I10): boiler`)
+        : this.gas ? this.t("palnik – nie widać po TCP", "burner – not visible over TCP")
         : this.t("pompa / gaz – nie widać po TCP", "heat pump / gas – not visible over TCP"), intOn && out < i10 ? "yellow" : "", 8, "middle", 600)}`);
     // CH loop to the house
     g.push(this.pipe("M 480 236 L 600 236 L 600 120 L 680 120", HOT, heat, 1.4));
