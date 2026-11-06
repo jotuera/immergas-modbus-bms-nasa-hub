@@ -6703,6 +6703,97 @@
   ]
  },
  {
+  "en": "off · Comfort starts at the scheduled time",
+  "pl": "wyłączony · Komfort zaczyna się o godzinie z harmonogramu",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "on · works in the CH program AUTO",
+  "pl": "włączony · działa w programie CO AUTO",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "heating early · {0} min before Comfort",
+  "pl": "grzeje z wyprzedzeniem · {0} min przed Komfortem",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "on · Comfort ready at the scheduled time",
+  "pl": "włączony · Komfort gotowy o godzinie z harmonogramu",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "Optimum start",
+  "pl": "Start z wyprzedzeniem",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "HEAT-UP RATE",
+  "pl": "TEMPO NAGRZEWANIA",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "MAX.",
+  "pl": "MAKS.",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "no sensors – add a window or door sensor",
+  "pl": "brak czujników – dodaj czujnik okna lub drzwi",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "open: {0} · room {1} °C",
+  "pl": "otwarte: {0} · pokój {1} °C",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "closed · {0} sensor(s)",
+  "pl": "zamknięte · {0} czujn.",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "Open window",
+  "pl": "Otwarte okno",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "ROOM WHILE OPEN",
+  "pl": "POKÓJ PRZY OTWARTYM",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
+  "en": "+ add a sensor",
+  "pl": "+ dodaj czujnik",
+  "files": [
+   "mode.ts"
+  ]
+ },
+ {
   "en": "on · heats when the room drops below the threshold",
   "pl": "włączona · grzeje, gdy pokój spadnie poniżej progu",
   "files": [

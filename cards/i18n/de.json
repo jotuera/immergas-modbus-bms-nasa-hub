@@ -1434,5 +1434,18 @@
   "The S menu depends on the model: EXA 24 X – fan speeds (S0–S3), S5 / S6 flow, S7 probe; NIKE 24 ECO – output in % (S0 min., S1 max.).": "Das S-Menü hängt vom Modell ab: EXA 24 X – Gebläsedrehzahlen (S0–S3), S5 / S6 Vorlauf, S7 Fühler; NIKE 24 ECO – Leistung in % (S0 min., S1 max.).",
   "pump control": "Pumpensteuerung",
   "remote protocol": "Fernbedienungsprotokoll",
-  "set ON on the boiler and declare it in the Boiler parameters (offline) – the boiler keeps heating after E31": "am Kessel auf ON stellen und in den Kesselparametern (offline) angeben – nach E31 heizt der Kessel weiter"
+  "set ON on the boiler and declare it in the Boiler parameters (offline) – the boiler keeps heating after E31": "am Kessel auf ON stellen und in den Kesselparametern (offline) angeben – nach E31 heizt der Kessel weiter",
+  "+ add a sensor": "+ Sensor hinzufügen",
+  "HEAT-UP RATE": "AUFHEIZRATE",
+  "MAX.": "MAX.",
+  "Open window": "Offenes Fenster",
+  "Optimum start": "Optimierter Start",
+  "ROOM WHILE OPEN": "RAUM BEI OFFENEM FENSTER",
+  "closed · {0} sensor(s)": "geschlossen · {0} Sensor(en)",
+  "heating early · {0} min before Comfort": "heizt vor · {0} min vor Komfort",
+  "no sensors – add a window or door sensor": "keine Sensoren – Fenster- oder Türsensor hinzufügen",
+  "off · Comfort starts at the scheduled time": "aus · Komfort beginnt zur geplanten Zeit",
+  "on · Comfort ready at the scheduled time": "an · Komfort zur geplanten Zeit erreicht",
+  "on · works in the CH program AUTO": "an · wirkt im HZ-Programm AUTO",
+  "open: {0} · room {1} °C": "offen: {0} · Raum {1} °C"
 }

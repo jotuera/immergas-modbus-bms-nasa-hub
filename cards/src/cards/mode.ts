@@ -179,6 +179,49 @@ class ImmergasModeCard extends HubCard {
         : this.t("wyłączona · stałe zasilanie do osiągnięcia zadanej", "off · constant flow until the setpoint is reached"), nothing);
   }
 
+  /** OpenTherm: optimum start (TYBOX "anticipation") - the CH program starts Comfort early by the learned heating rate */
+  private preheatRow(tchip: (o: string | undefined, l: string, v: string | null, col?: string, faint?: boolean) => unknown) {
+    if (!this.ot || !this.eid("ot_preheat")) return nothing;
+    const a = this.so("ot_preheat")?.attributes ?? {}, on = this.on("ot_preheat"), rate = parseFloat(a.heating_rate), lead = parseFloat(a.lead_minutes);
+    const mx = this.n("ot_preheat_max"), auto = this.s("prog_mode") === "auto";
+    const st = !on ? this.t("wyłączony · Komfort zaczyna się o godzinie z harmonogramu", "off · Comfort starts at the scheduled time")
+      : !auto ? this.t("włączony · działa w programie CO AUTO", "on · works in the CH program AUTO")
+      : a.preheating ? this.t(`grzeje z wyprzedzeniem · ${this.f(lead, 0)} min przed Komfortem`, `heating early · ${this.f(lead, 0)} min before Comfort`)
+      : this.t("włączony · Komfort gotowy o godzinie z harmonogramu", "on · Comfort ready at the scheduled time");
+    return this.progSwitch("ot_preheat", "tg_preheat", "mdi:clock-fast", "yellow", this.t("Start z wyprzedzeniem", "Optimum start"), st,
+      html`<div class="tcs full">${tchip(this.eid("ot_preheat"), this.t("TEMPO NAGRZEWANIA", "HEAT-UP RATE"), isNaN(rate) ? null : this.f(rate, 1, 2) + " °C/h", "yellow")}
+        ${tchip(this.eid("ot_preheat_max"), this.t("MAKS.", "MAX."), isNaN(mx) ? null : this.f(mx, 0) + " min", "yellow")}</div>`);
+  }
+
+  /** OpenTherm: open window (TYBOX) - window / door sensors put the room setpoint down while one is open */
+  private windowRow(tchip: (o: string | undefined, l: string, v: string | null, col?: string, faint?: boolean) => unknown) {
+    const sid = this.eid("ot_win_src");
+    if (!this.ot || !sid) return nothing;
+    const ids = String(this.s("ot_win_src") ?? "").split(/[,;]/).map((x) => x.trim()).filter(Boolean);
+    const a = this.so("ot_win_src")?.attributes ?? {}, open = a.window_open === true, opened: string[] = a.sensors_open ?? [];
+    const wt = this.n("ot_win_temp"), col = open ? "sapphire" : "overlay2";
+    const name = (e: string) => String(this.hass.states[e]?.attributes?.friendly_name ?? e);
+    const set = (v: string[]) => this.hass.callService("text", "set_value", { entity_id: sid, value: v.join(", ") });
+    const cand = Object.values(this.hass.states as Record<string, any>)
+      .filter((s) => s.entity_id.startsWith("binary_sensor.") && ["window", "door", "opening", "garage_door"].includes(s.attributes?.device_class) && !ids.includes(s.entity_id))
+      .sort((x, y) => name(x.entity_id).localeCompare(name(y.entity_id)));
+    const st = this.otRO ? this.t("wstrzymane – steruje pilot", "paused – the remote is in charge")
+      : !ids.length ? this.t("brak czujników – dodaj czujnik okna lub drzwi", "no sensors – add a window or door sensor")
+      : open ? this.t(`otwarte: ${opened.map(name).join(", ")} · pokój ${this.f(wt, 1, 1)} °C`, `open: ${opened.map(name).join(", ")} · room ${this.f(wt, 1, 1)} °C`)
+      : this.t(`zamknięte · ${ids.length} czujn.`, `closed · ${ids.length} sensor(s)`);
+    return html`<div class="night" style="${box(col, open)}${this.otRO ? ";opacity:.55" : ""}">
+      <ha-icon icon=${open ? "mdi:window-open-variant" : "mdi:window-closed-variant"} style="color:${c(col)}" @click=${() => this.moreInfo("ot_win_src")}></ha-icon>
+      <div class="cx" @click=${() => this.moreInfo("ot_win_src")}><div class="nt">${this.t("Otwarte okno", "Open window")}</div>
+        <div class="ns" style="color:${c(open ? "sapphire" : "overlay2")}">${st}</div></div>
+      <div class="tcs full">${tchip(this.eid("ot_win_temp"), this.t("POKÓJ PRZY OTWARTYM", "ROOM WHILE OPEN"), isNaN(wt) ? null : this.f(wt, 1, 1) + " °C", "sapphire")}</div>
+      <div class="wins">${ids.map((e) => html`<span class="win" style="border-color:${ca(opened.includes(e) ? "sapphire" : "overlay2", 0.4)}">${name(e)}
+          <ha-icon icon="mdi:close" @click=${() => set(ids.filter((x) => x !== e))}></ha-icon></span>`)}
+        ${cand.length ? html`<select class="langs" @change=${(ev: Event) => { const v = (ev.target as HTMLSelectElement).value; if (v) set([...ids, v]); }}>
+          <option value="">${this.t("+ dodaj czujnik", "+ add a sensor")}</option>
+          ${cand.map((s) => html`<option value=${s.entity_id}>${name(s.entity_id)}</option>`)}</select>` : nothing}</div>
+    </div>`;
+  }
+
   /** OpenTherm: room frost protection of the Dominus regulator (CAR V2 "ANTIGL" - the highest priority) */
   private frostRow(tchip: (o: string | undefined, l: string, v: string | null, col?: string, faint?: boolean) => unknown) {
     if (!this.ot || !this.eid("ot_frost")) return nothing;
@@ -344,6 +387,8 @@ class ImmergasModeCard extends HubCard {
       ${this.seasonRow(tchip)}
       ${this.ot ? this.otLegRow(tchip) : this.legRow(tchip, hm)}
       ${this.frostRow(tchip)}
+      ${this.preheatRow(tchip)}
+      ${this.windowRow(tchip)}
       ${this.config.show_f1f2 === false ? nothing : this.f1f2Rows()}
       ${this.progRow()}
       ${this.dhwProgRow()}
@@ -379,6 +424,10 @@ class ImmergasModeCard extends HubCard {
     /* legionella: time boxes on their own line under the title, the switch stays top right */
     .tcs.full { flex-basis: 100%; }
     .tcs.full .tc { flex: 1 1 0; min-width: 0; }
+    .wins { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin-top: 4px; }
+    .win { display: inline-flex; align-items: center; gap: 2px; font-size: 10.5px; padding: 1px 4px 1px 7px; border: 1px solid; border-radius: 10px; }
+    .win ha-icon { --mdc-icon-size: 13px; cursor: pointer; opacity: .6; }
+    .wins select.langs { font-size: 10.5px; }
     .tc { cursor: pointer; display: flex; flex-direction: column; align-items: center; padding: 4px 10px; border-radius: 10px; }
     .tt { font-size: 14px; font-weight: 800; }
     .tl { font-size: 8.5px; opacity: .5; letter-spacing: .06em; white-space: nowrap; }

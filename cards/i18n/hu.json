@@ -1434,5 +1434,18 @@
   "The S menu depends on the model: EXA 24 X – fan speeds (S0–S3), S5 / S6 flow, S7 probe; NIKE 24 ECO – output in % (S0 min., S1 max.).": "Az S menü modellfüggő: EXA 24 X – ventilátor-fordulatok (S0–S3), S5 / S6 előremenő, S7 érzékelő; NIKE 24 ECO – teljesítmény %-ban (S0 min., S1 max.).",
   "pump control": "szivattyúvezérlés",
   "remote protocol": "távszabályzó protokoll",
-  "set ON on the boiler and declare it in the Boiler parameters (offline) – the boiler keeps heating after E31": "állítsa ON-ra a kazánon, és adja meg a Kazán paraméterei (offline) között – E31 után a kazán tovább fűt"
+  "set ON on the boiler and declare it in the Boiler parameters (offline) – the boiler keeps heating after E31": "állítsa ON-ra a kazánon, és adja meg a Kazán paraméterei (offline) között – E31 után a kazán tovább fűt",
+  "+ add a sensor": "+ érzékelő hozzáadása",
+  "HEAT-UP RATE": "FELFŰTÉSI SEBESSÉG",
+  "MAX.": "MAX.",
+  "Open window": "Nyitott ablak",
+  "Optimum start": "Előfűtés",
+  "ROOM WHILE OPEN": "SZOBA NYITOTT ABLAKNÁL",
+  "closed · {0} sensor(s)": "zárva · {0} érzékelő",
+  "heating early · {0} min before Comfort": "előre fűt · {0} perccel a Komfort előtt",
+  "no sensors – add a window or door sensor": "nincs érzékelő – adjon hozzá ablak- vagy ajtóérzékelőt",
+  "off · Comfort starts at the scheduled time": "ki · a Komfort az ütemezett időben kezdődik",
+  "on · Comfort ready at the scheduled time": "be · a Komfort az ütemezett időre kész",
+  "on · works in the CH program AUTO": "be · a fűtési AUTO programban működik",
+  "open: {0} · room {1} °C": "nyitva: {0} · szoba {1} °C"
 }

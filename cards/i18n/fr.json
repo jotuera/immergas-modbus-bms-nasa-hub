@@ -1434,5 +1434,18 @@
   "The S menu depends on the model: EXA 24 X – fan speeds (S0–S3), S5 / S6 flow, S7 probe; NIKE 24 ECO – output in % (S0 min., S1 max.).": "Le menu S dépend du modèle : EXA 24 X – vitesses du ventilateur (S0–S3), S5 / S6 départ, S7 sonde ; NIKE 24 ECO – puissance en % (S0 min., S1 max.).",
   "pump control": "commande de la pompe",
   "remote protocol": "protocole de la commande",
-  "set ON on the boiler and declare it in the Boiler parameters (offline) – the boiler keeps heating after E31": "réglez ON sur la chaudière et déclarez-le dans Paramètres de la chaudière (hors ligne) – après E31 la chaudière continue de chauffer"
+  "set ON on the boiler and declare it in the Boiler parameters (offline) – the boiler keeps heating after E31": "réglez ON sur la chaudière et déclarez-le dans Paramètres de la chaudière (hors ligne) – après E31 la chaudière continue de chauffer",
+  "+ add a sensor": "+ ajouter un capteur",
+  "HEAT-UP RATE": "VITESSE DE MONTÉE",
+  "MAX.": "MAX.",
+  "Open window": "Fenêtre ouverte",
+  "Optimum start": "Anticipation",
+  "ROOM WHILE OPEN": "PIÈCE FENÊTRE OUVERTE",
+  "closed · {0} sensor(s)": "fermé · {0} capteur(s)",
+  "heating early · {0} min before Comfort": "chauffe en avance · {0} min avant Confort",
+  "no sensors – add a window or door sensor": "aucun capteur – ajoutez un capteur de fenêtre ou de porte",
+  "off · Comfort starts at the scheduled time": "arrêt · le Confort commence à l'heure programmée",
+  "on · Comfort ready at the scheduled time": "marche · Confort atteint à l'heure programmée",
+  "on · works in the CH program AUTO": "marche · agit dans le programme chauffage AUTO",
+  "open: {0} · room {1} °C": "ouvert : {0} · pièce {1} °C"
 }

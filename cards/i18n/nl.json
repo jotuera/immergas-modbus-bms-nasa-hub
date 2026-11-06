@@ -1434,5 +1434,18 @@
   "The S menu depends on the model: EXA 24 X – fan speeds (S0–S3), S5 / S6 flow, S7 probe; NIKE 24 ECO – output in % (S0 min., S1 max.).": "Het S-menu hangt af van het model: EXA 24 X – ventilatortoerentallen (S0–S3), S5 / S6 aanvoer, S7 voeler; NIKE 24 ECO – vermogen in % (S0 min., S1 max.).",
   "pump control": "pompregeling",
   "remote protocol": "bedieningsprotocol",
-  "set ON on the boiler and declare it in the Boiler parameters (offline) – the boiler keeps heating after E31": "zet ON op de ketel en geef het op in Ketelparameters (offline) – na E31 blijft de ketel verwarmen"
+  "set ON on the boiler and declare it in the Boiler parameters (offline) – the boiler keeps heating after E31": "zet ON op de ketel en geef het op in Ketelparameters (offline) – na E31 blijft de ketel verwarmen",
+  "+ add a sensor": "+ sensor toevoegen",
+  "HEAT-UP RATE": "OPWARMSNELHEID",
+  "MAX.": "MAX.",
+  "Open window": "Open raam",
+  "Optimum start": "Optimale start",
+  "ROOM WHILE OPEN": "KAMER BIJ OPEN RAAM",
+  "closed · {0} sensor(s)": "dicht · {0} sensor(en)",
+  "heating early · {0} min before Comfort": "verwarmt vooraf · {0} min voor Comfort",
+  "no sensors – add a window or door sensor": "geen sensoren – voeg een raam- of deursensor toe",
+  "off · Comfort starts at the scheduled time": "uit · Comfort begint op de geplande tijd",
+  "on · Comfort ready at the scheduled time": "aan · Comfort klaar op de geplande tijd",
+  "on · works in the CH program AUTO": "aan · werkt in het CV-programma AUTO",
+  "open: {0} · room {1} °C": "open: {0} · kamer {1} °C"
 }

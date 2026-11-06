@@ -51,7 +51,8 @@ const DOMINUS: Record<string, Key> = {
   // Dominus 1.6.9: the rest of the CAR V2 (VACANZ action, MANUTZ, RIDOTT ON, AUTO A)
   ot_vacation_action: "ot_vac_action", ot_maintenance: "ot_maint", ot_eco_flow_reduction: "ot_eco_red", ot_self_learning: "ot_self_learn",
   ot_last_service: "ot_last_srv", ot_service_done: "ot_srv_done", ot_maintenance_due: "ot_maint_due",
-  ot_thermostat: "ot_thermo", ot_room_source: "ot_room_src",
+  ot_thermostat: "ot_thermo", ot_room_source: "ot_room_src", ot_preheat: "ot_preheat", ot_preheat_max: "ot_preheat_max",
+  ot_window_temp: "ot_win_temp", ot_window_sensors: "ot_win_src",
   ot_sup_out_min: "ot_sup_out_min", ot_sup_out_max: "ot_sup_out_max", ot_sup_dhw_max_rpm: "ot_sup_dhw_max_rpm", ot_sup_dhw_min_rpm: "ot_sup_dhw_min_rpm", ot_sup_ch_max_rpm: "ot_sup_ch_max_rpm", ot_sup_ch_min_rpm: "ot_sup_ch_min_rpm", ot_sup_hours: "ot_sup_hours", ot_sup_ignitions: "ot_sup_ignitions", ot_menu_profile: "ot_menu_profile", ot_sup_pump_speed: "ot_sup_pump_speed", ot_sup_dhw_restart: "ot_sup_dhw_restart", ot_remote_protocol: "ot_remote_protocol", ot_her_pump: "ot_her_pump", ot_ch_no_remote: "ot_ch_no_remote",
   // Dominus 1.6.9: the P / t / A menu of an OpenTherm boiler, declared by the user (offline settings)
   ot_t0: "ot_t0", ot_t1: "ot_t1", ot_t2: "ot_t2", ot_t4: "ot_t4", ot_t5: "ot_t5", ot_t6: "ot_t6", ot_t7: "ot_t7", ot_p0: "ot_p0", ot_p1: "ot_p1", ot_p2: "ot_p2", ot_p6: "ot_p6", ot_p7: "ot_p7", ot_a3: "ot_a3", ot_a4: "ot_a4", ot_a5: "ot_a5",

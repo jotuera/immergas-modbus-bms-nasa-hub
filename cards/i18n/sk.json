@@ -1434,5 +1434,18 @@
   "The S menu depends on the model: EXA 24 X – fan speeds (S0–S3), S5 / S6 flow, S7 probe; NIKE 24 ECO – output in % (S0 min., S1 max.).": "Menu S závisí od modelu: EXA 24 X – otáčky ventilátora (S0–S3), S5 / S6 výstup, S7 snímač; NIKE 24 ECO – výkon v % (S0 min., S1 max.).",
   "pump control": "riadenie čerpadla",
   "remote protocol": "protokol diaľkového ovládania",
-  "set ON on the boiler and declare it in the Boiler parameters (offline) – the boiler keeps heating after E31": "nastavte ON na kotle a zadajte v Parametroch kotla (offline) – po E31 kotol ďalej kúri"
+  "set ON on the boiler and declare it in the Boiler parameters (offline) – the boiler keeps heating after E31": "nastavte ON na kotle a zadajte v Parametroch kotla (offline) – po E31 kotol ďalej kúri",
+  "+ add a sensor": "+ pridať snímač",
+  "HEAT-UP RATE": "RÝCHLOSŤ OHREVU",
+  "MAX.": "MAX.",
+  "Open window": "Otvorené okno",
+  "Optimum start": "Optimalizovaný štart",
+  "ROOM WHILE OPEN": "MIESTNOSŤ PRI OTVORENÍ",
+  "closed · {0} sensor(s)": "zatvorené · {0} snímačov",
+  "heating early · {0} min before Comfort": "kúri s predstihom · {0} min pred Komfortom",
+  "no sensors – add a window or door sensor": "žiadne snímače – pridajte snímač okna alebo dverí",
+  "off · Comfort starts at the scheduled time": "vypnuté · Komfort začína v čase z programu",
+  "on · Comfort ready at the scheduled time": "zapnuté · Komfort pripravený v čase z programu",
+  "on · works in the CH program AUTO": "zapnuté · funguje v programe ÚK AUTO",
+  "open: {0} · room {1} °C": "otvorené: {0} · miestnosť {1} °C"
 }
