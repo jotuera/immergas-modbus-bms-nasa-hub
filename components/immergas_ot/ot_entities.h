@@ -23,7 +23,8 @@
 namespace esphome {
 namespace immergas_ot {
 
-enum ValueType : uint8_t { VT_F88 = 0, VT_U16, VT_S16, VT_U8_HB, VT_U8_LB, VT_S8_HB, VT_S8_LB };
+// VT_U88: unsigned 8.8 (Data-ID 17 relative modulation can exceed 100 % during DHW; as signed f8.8 it would wrap)
+enum ValueType : uint8_t { VT_F88 = 0, VT_U16, VT_S16, VT_U8_HB, VT_U8_LB, VT_S8_HB, VT_S8_LB, VT_U88 };
 
 inline float decode_value(uint16_t v, uint8_t vt) {
   switch (vt) {
@@ -34,6 +35,7 @@ inline float decode_value(uint16_t v, uint8_t vt) {
     case VT_U8_LB: return v & 0xFF;
     case VT_S8_HB: return int8_t(v >> 8);
     case VT_S8_LB: return int8_t(v & 0xFF);
+    case VT_U88: return v / 256.0f;
   }
   return NAN;
 }
@@ -46,6 +48,7 @@ inline uint16_t encode_value(float x, uint8_t vt) {
     case VT_S8_HB: return uint16_t(uint8_t(int8_t(lroundf(x)))) << 8;
     case VT_U8_LB: return uint8_t(lroundf(x));
     case VT_S8_LB: return uint8_t(int8_t(lroundf(x)));
+    case VT_U88: { long r = lroundf(x * 256.0f); return uint16_t(r < 0 ? 0 : (r > 65535 ? 65535 : r)); }
     default: return uint16_t(lroundf(x));
   }
 }

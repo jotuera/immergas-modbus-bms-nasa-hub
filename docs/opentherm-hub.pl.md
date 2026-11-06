@@ -87,7 +87,7 @@ najpierw ustaw M3 P33 = ON – kocioł grzeje wtedy nawet po utracie OpenTherm.
 
 | Pakiet | Co daje |
 |---|---|
-| `ot_core` | komponent (master), połączenie z kotłem, liczniki ramek / błędów / braku odpowiedzi, `ot_status_low_byte` (domyślnie **0xCA**, „poprawka Immergas”), `ot_max_ch_follows_setpoint` (domyślnie **true**: 57 = nastawa CO) |
+| `ot_core` | komponent (master), połączenie z kotłem, liczniki ramek / błędów / braku odpowiedzi, `ot_status_low_byte` (domyślnie **0xCA**, „poprawka Immergas”), `ot_max_ch_follows_setpoint` (domyślnie **true**: 57 = nastawa CO), `ot_ch_off_setpoint` (domyślnie **10** °C, 0 = wył.) |
 | `ot_sensors` | status (usterka, CO, CWU, płomień, diagnostyka), flagi i kod usterki (5), kod OEM (115), zasilanie, powrót, CWU, temp. zewnętrzna, spaliny, modulacja, ciśnienie, przepływ CWU, nastawy używane przez kocioł (56 / 57), zakresy (48 / 49), starty / godziny palnika |
 | `ot_control` | zezwolenie CO / CWU, nastawa zasilania CO, nastawa CWU, maks. nastawa CO, maks. modulacja |
 | `ot_regulator` (master) | krzywa pogodowa (dwa punkty) + powolna korekta pokojowa z temperatury z Home Assistant, CO wł. / wył. z histerezą – regulator, którym byłby pilot / Dominus |
@@ -113,6 +113,11 @@ Plik konfiguracji i kroki są w sekcji [Instalacja](#instalacja).
   nastawa CO” ogranicza wtedy nastawę CO. Bramka: zapis 57 od pilota niesie nastawę CO, którą pilot zapisał; pilot,
   który 57 nie zapisuje, dostaje go od huba zaraz po swojej wymianie (przy zmianie i co 10 s). `false` = zwykły
   OpenTherm (57 = własna wartość liczby).
+- **CO wyłączone**: przy zdjętym zezwoleniu CO hub wysyła Data-ID 1 = `ot_ch_off_setpoint` (10 °C) – część kotłów
+  dalej odpala palnik do ostatniej nastawy, gdy zdjęty jest tylko bit CO; 57 trzyma prawdziwą nastawę. 0 = wysyłaj
+  zwykłą nastawę (kocioł, który niską wartość odrzuca jako błędną).
+- **Modulacja (Data-ID 17)** czytana jako 8.8 bez znaku – w czasie CWU potrafi przekroczyć 100 %, a jako f8.8 ze
+  znakiem zawinęłaby się do wartości ujemnej (`value_type: u88`).
 - **Czasy bramki**: pilot czeka na odpowiedź do 800 ms; hub przekazuje żądanie od razu i porzuca starsze niż 650 ms.
   Kotły Immergas odpowiadają w kilkadziesiąt ms.
 
@@ -127,4 +132,6 @@ Plik konfiguracji i kroki są w sekcji [Instalacja](#instalacja).
 - Specyfikacja OpenTherm 2.2 (warstwa fizyczna, ramka, Data-ID).
 - Sekwencja oryginalnego pilota i bajt 0xCA: wątek arduino.ru „Термостат OpenTherm на ESP8266” (strona 16,
   EOLO Star 24 E) i wątek społeczności Home Assistant „OpenTherm component with Immergas EOLO Star 24 boiler”.
+- Zgłoszenia użytkowników bramki OT-thing (wątek społeczności Home Assistant „OT-thing – an OpenTherm WiFi
+  gateway”): nastawa CO przy wyłączonym CO i modulacja powyżej 100 %.
 - Instrukcje instalatora kotłów na immergas.pl (zaciski, menu P / t / A / M, E31, P33, TERA P7).

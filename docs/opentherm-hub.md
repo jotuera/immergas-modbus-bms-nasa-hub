@@ -85,7 +85,7 @@ family set M3 P33 = ON first – the boiler then keeps heating even if OpenTherm
 
 | Package | What it gives |
 |---|---|
-| `ot_core` | the component (master), boiler connection, frame / error / timeout counters, `ot_status_low_byte` (default **0xCA**, the "Immergas fix"), `ot_max_ch_follows_setpoint` (default **true**: 57 = CH setpoint) |
+| `ot_core` | the component (master), boiler connection, frame / error / timeout counters, `ot_status_low_byte` (default **0xCA**, the "Immergas fix"), `ot_max_ch_follows_setpoint` (default **true**: 57 = CH setpoint), `ot_ch_off_setpoint` (default **10** °C, 0 = off) |
 | `ot_sensors` | status (fault, CH, DHW, flame, diagnostic), fault flags and code (5), OEM code (115), flow, return, DHW, outdoor, exhaust, modulation, pressure, DHW flow, the setpoints the boiler uses (56 / 57), bounds (48 / 49), burner starts / hours |
 | `ot_control` | CH / DHW enable, CH flow setpoint, DHW setpoint, max. CH setpoint, max. modulation |
 | `ot_regulator` (master) | weather curve (two points) + a slow room correction from a Home Assistant room temperature, CH on / off with a hysteresis – the regulator the room unit / Dominus would be |
@@ -110,6 +110,11 @@ The configuration file and the steps are in [Installation](#installation).
   the "max. CH setpoint" number then caps the CH setpoint. Gateway: a 57 write of the room unit carries the CH
   setpoint it wrote; a room unit that never writes 57 gets it from the hub right after its own exchange (on a
   change and every 10 s). `false` = plain OpenTherm (57 = the number's own value).
+- **CH off**: with the CH enable flag cleared the hub sends Data-ID 1 = `ot_ch_off_setpoint` (10 °C) – some boilers
+  keep firing to the last flow setpoint with only the CH bit cleared; 57 keeps the real setpoint. 0 = keep sending
+  the normal setpoint (a boiler that rejects a low value as invalid).
+- **Modulation (Data-ID 17)** is read as unsigned 8.8 – it can go over 100 % during DHW and would wrap negative as
+  signed f8.8 (`value_type: u88`).
 - **Gateway timing**: the room unit expects the answer within 800 ms; the hub forwards a request at once and drops one
   older than 650 ms. Immergas boilers answer in a few tens of ms.
 
@@ -125,4 +130,6 @@ V2 reacts to the gateway (it may use Immergas-specific IDs), and E31 when the hu
 - The sequence of the original room unit and the 0xCA byte: the arduino.ru thread "Термостат OpenTherm на ESP8266"
   (page 16, EOLO Star 24 E) and the Home Assistant community thread "OpenTherm component with Immergas EOLO Star
   24 boiler".
+- Field reports of the OT-thing gateway (Home Assistant community thread "OT-thing – an OpenTherm WiFi gateway"):
+  the CH off setpoint and the modulation above 100 %.
 - Installer manuals of the boilers on immergas.pl (terminals, menu P / t / A / M, E31, P33, TERA P7).

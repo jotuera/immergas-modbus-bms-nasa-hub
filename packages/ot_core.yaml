@@ -18,6 +18,9 @@ substitutions:
   # true = the max. CH setpoint (57) is written with the CH setpoint (1), same value, as the original Immergas room
   # unit does (some boilers heat to 57 and ignore 1); the "max. CH setpoint" number then caps the CH setpoint
   ot_max_ch_follows_setpoint: "true"
+  # CH flow setpoint sent while CH is off (some boilers keep heating to the last setpoint with the CH bit cleared);
+  # 0 = keep sending the normal setpoint
+  ot_ch_off_setpoint: "10"
 
 external_components:
   - source: github://jotuera/immergas-modbus-bms-nasa-opentherm-hub@main
@@ -28,6 +31,7 @@ immergas_ot:
   mode: master
   status_low_byte: ${ot_status_low_byte}
   max_ch_follows_setpoint: ${ot_max_ch_follows_setpoint}
+  ch_off_setpoint: ${ot_ch_off_setpoint}
   boiler:
     in_pin: ${ot_boiler_in_pin}
     out_pin: ${ot_boiler_out_pin}

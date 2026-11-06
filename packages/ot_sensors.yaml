@@ -68,6 +68,7 @@ sensor:
     disabled_by_default: true
   - platform: immergas_ot
     data_id: 17
+    value_type: u88   # can exceed 100 % during DHW on some boilers (signed f8.8 would wrap negative)
     name: "${n_ot_modulation}"
     id: ot_modulation
     icon: mdi:fire-circle

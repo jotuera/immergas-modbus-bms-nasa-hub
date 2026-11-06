@@ -7,6 +7,7 @@
 #include "esphome/core/hal.h"
 #include "ot_line.h"
 
+#include <cmath>
 #include <map>
 #include <vector>
 
@@ -56,6 +57,8 @@ class OtHub : public esphome::Component {
   // the original Immergas room unit writes the max. CH setpoint (57) together with the CH setpoint (1), same value -
   // some Immergas boilers heat to Data-ID 57 and ignore Data-ID 1
   void set_max_ch_follows(bool on) { this->follow_ = on; }
+  // Data-ID 1 sent while CH is off (0 = the normal setpoint): some boilers heat to Data-ID 1 with the CH bit cleared
+  void set_ch_off_setpoint(float c) { this->ch_off_raw_ = c > 0 ? uint16_t(lroundf(c * 256.0f)) : 0; }
 
   void setup() override;
   void loop() override;
@@ -166,6 +169,7 @@ class OtHub : public esphome::Component {
 
   // max. CH setpoint follows the CH setpoint
   bool follow_{true};
+  uint16_t ch_off_raw_{10 * 256};
   bool follow_known_{false};  // a CH setpoint has been sent (by the hub or the room unit)
   uint16_t follow_raw_{0};    // that CH setpoint
   uint16_t sent57_{0};        // last Data-ID 57 written to the boiler

@@ -23,6 +23,7 @@ CONF_STATUS_LOW_BYTE = "status_low_byte"
 CONF_STANDALONE_AFTER = "standalone_after"
 CONF_CACHE_READS = "cache_reads"
 CONF_MAX_CH_FOLLOWS_SETPOINT = "max_ch_follows_setpoint"
+CONF_CH_OFF_SETPOINT = "ch_off_setpoint"
 
 # shared platform keys
 CONF_DATA_ID = "data_id"
@@ -37,7 +38,7 @@ Mode = immergas_ot_ns.enum("Mode")
 MODES = {"master": Mode.MODE_MASTER, "gateway": Mode.MODE_GATEWAY}
 
 # value types: how the 16-bit value of a Data-ID is read (index = the C++ ValueType enum)
-VALUE_TYPES = {"f88": 0, "u16": 1, "s16": 2, "u8_hb": 3, "u8_lb": 4, "s8_hb": 5, "s8_lb": 6}
+VALUE_TYPES = {"f88": 0, "u16": 1, "s16": 2, "u8_hb": 3, "u8_lb": 4, "s8_hb": 5, "s8_lb": 6, "u88": 7}
 SOURCES = {"boiler": False, "room": True}
 
 LINE_SCHEMA = cv.Schema(
@@ -75,6 +76,9 @@ CONFIG_SCHEMA = cv.All(
             # the original Immergas room unit writes the max. CH setpoint (57) with the CH setpoint (1), same value;
             # some Immergas boilers heat to 57 and ignore 1. The hub's own 57 then caps the CH setpoint.
             cv.Optional(CONF_MAX_CH_FOLLOWS_SETPOINT, default=True): cv.boolean,
+            # CH flow setpoint (Data-ID 1) sent while CH is off (master flag cleared): some boilers keep heating to
+            # the last setpoint with the CH bit cleared; 0 = keep sending the normal setpoint
+            cv.Optional(CONF_CH_OFF_SETPOINT, default=10): cv.float_range(min=0, max=40),
         }
     ).extend(cv.COMPONENT_SCHEMA),
     _gateway_needs_room,
@@ -100,3 +104,4 @@ async def to_code(config):
     cg.add(var.set_standalone_after(config[CONF_STANDALONE_AFTER].total_milliseconds))
     cg.add(var.set_cache_reads(config[CONF_CACHE_READS].total_milliseconds))
     cg.add(var.set_max_ch_follows(config[CONF_MAX_CH_FOLLOWS_SETPOINT]))
+    cg.add(var.set_ch_off_setpoint(config[CONF_CH_OFF_SETPOINT]))

@@ -33,6 +33,7 @@ void OtHub::dump_config() {
   ESP_LOGCONFIG(TAG, "  Mode: %s", this->mode_ == MODE_MASTER ? "master (instead of the room unit)" : "gateway (room unit <-> boiler)");
   ESP_LOGCONFIG(TAG, "  Status low byte: 0x%02X", this->status_lb_);
   ESP_LOGCONFIG(TAG, "  Max. CH setpoint (57) follows the CH setpoint (1): %s", YESNO(this->follow_));
+  if (this->ch_off_raw_) ESP_LOGCONFIG(TAG, "  CH setpoint while CH is off: %.1f", this->ch_off_raw_ / 256.0f);
   if (this->mode_ == MODE_GATEWAY) ESP_LOGCONFIG(TAG, "  Standalone after: %u ms without the room unit", (unsigned) this->standalone_after_ms_);
   ESP_LOGCONFIG(TAG, "  Polled Data-IDs: %u", (unsigned) this->polls_.size());
 }
@@ -98,8 +99,9 @@ uint32_t OtHub::next_own_request_() {
       auto it = this->writes_.find(1);
       if (it != this->writes_.end()) {
         uint16_t v = this->limit_ch_(it->second.value);
-        this->follow_raw_ = v;
+        this->follow_raw_ = v;  // 57 keeps the real setpoint, also while CH is off
         this->follow_known_ = true;
+        if (this->ch_off_raw_ && !(this->flags_ & FLAG_CH)) v = this->ch_off_raw_;
         return make_frame(WRITE_DATA, 1, v);
       }
       continue;
