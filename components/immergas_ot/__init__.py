@@ -22,6 +22,7 @@ CONF_OUT_ACTIVE_LOW = "out_active_low"
 CONF_STATUS_LOW_BYTE = "status_low_byte"
 CONF_STANDALONE_AFTER = "standalone_after"
 CONF_CACHE_READS = "cache_reads"
+CONF_MAX_CH_FOLLOWS_SETPOINT = "max_ch_follows_setpoint"
 
 # shared platform keys
 CONF_DATA_ID = "data_id"
@@ -71,6 +72,9 @@ CONFIG_SCHEMA = cv.All(
             # gateway: answer a read of the room unit from a value younger than this (0 = never) and use the boiler
             # slot for the hub's own reads
             cv.Optional(CONF_CACHE_READS, default="0s"): cv.positive_time_period_milliseconds,
+            # the original Immergas room unit writes the max. CH setpoint (57) with the CH setpoint (1), same value;
+            # some Immergas boilers heat to 57 and ignore 1. The hub's own 57 then caps the CH setpoint.
+            cv.Optional(CONF_MAX_CH_FOLLOWS_SETPOINT, default=True): cv.boolean,
         }
     ).extend(cv.COMPONENT_SCHEMA),
     _gateway_needs_room,
@@ -95,3 +99,4 @@ async def to_code(config):
     cg.add(var.set_status_low_byte(config[CONF_STATUS_LOW_BYTE]))
     cg.add(var.set_standalone_after(config[CONF_STANDALONE_AFTER].total_milliseconds))
     cg.add(var.set_cache_reads(config[CONF_CACHE_READS].total_milliseconds))
+    cg.add(var.set_max_ch_follows(config[CONF_MAX_CH_FOLLOWS_SETPOINT]))

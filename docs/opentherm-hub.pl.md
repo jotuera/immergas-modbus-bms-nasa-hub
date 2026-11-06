@@ -87,7 +87,7 @@ najpierw ustaw M3 P33 = ON – kocioł grzeje wtedy nawet po utracie OpenTherm.
 
 | Pakiet | Co daje |
 |---|---|
-| `ot_core` | komponent (master), połączenie z kotłem, liczniki ramek / błędów / braku odpowiedzi, `ot_status_low_byte` (domyślnie **0xCA**, „poprawka Immergas”) |
+| `ot_core` | komponent (master), połączenie z kotłem, liczniki ramek / błędów / braku odpowiedzi, `ot_status_low_byte` (domyślnie **0xCA**, „poprawka Immergas”), `ot_max_ch_follows_setpoint` (domyślnie **true**: 57 = nastawa CO) |
 | `ot_sensors` | status (usterka, CO, CWU, płomień, diagnostyka), flagi i kod usterki (5), kod OEM (115), zasilanie, powrót, CWU, temp. zewnętrzna, spaliny, modulacja, ciśnienie, przepływ CWU, nastawy używane przez kocioł (56 / 57), zakresy (48 / 49), starty / godziny palnika |
 | `ot_control` | zezwolenie CO / CWU, nastawa zasilania CO, nastawa CWU, maks. nastawa CO, maks. modulacja |
 | `ot_regulator` (master) | krzywa pogodowa (dwa punkty) + powolna korekta pokojowa z temperatury z Home Assistant, CO wł. / wył. z histerezą – regulator, którym byłby pilot / Dominus |
@@ -101,11 +101,18 @@ Plik konfiguracji i kroki są w sekcji [Instalacja](#instalacja).
 - **Ramki**: 1000 bit/s Manchester, 34 bity; wysyłane sprzętowym timerem (półbity), odbierane przerwaniem GPIO i
   dekodowane po czasie zboczy w połowie bitu (prędkość odchylona do ~20 % nadal się dekoduje, zakłócenia krótsze niż
   100 µs są pomijane).
-- **Cykl mastera** (ok. 3 ramki na sekundę, co najmniej 100 ms odstępu): status → nastawa CO → zaległy zapis →
-  odczyt. ID, na które kocioł odpowiada UNKNOWN-DATAID / DATA-INVALID, jest pomijane przez godzinę; jego czujnik
+- **Cykl mastera** (ok. 3 ramki na sekundę, co najmniej 100 ms odstępu): status → nastawa CO → maks. nastawa CO →
+  zaległy zapis → odczyt. ID, na które kocioł odpowiada UNKNOWN-DATAID / DATA-INVALID, jest pomijane przez godzinę; jego czujnik
   pokazuje „nieznany”.
 - **Zapisy się powtarzają** – każdy master OpenTherm wysyła swoje wartości raz po raz (dlatego wartość wpisana obok
   CAR V2 się nie utrzymuje); nastawa CO co cykl, nastawa CWU co 30 s, maks. CO / modulacja co minutę.
+- **Maks. nastawa CO podąża za nastawą CO** (`ot_max_ch_follows_setpoint`, domyślnie włączone). Oryginalny pilot
+  Immergas wysyła w kółko: status z młodszym bajtem **0xCA** → odczyt 48 → odczyt 49 → zapis **1** → zapis 56 →
+  zapis **57** z tą samą wartością co 1. Część kotłów Immergas (EOLO Star, Mini EOLO) potwierdza Data-ID 1, a grzeje
+  do Data-ID 57. Dlatego hub co cykl zapisuje 57 = nastawa CO (w granicach kotła, Data-ID 49); liczba „maks.
+  nastawa CO” ogranicza wtedy nastawę CO. Bramka: zapis 57 od pilota niesie nastawę CO, którą pilot zapisał; pilot,
+  który 57 nie zapisuje, dostaje go od huba zaraz po swojej wymianie (przy zmianie i co 10 s). `false` = zwykły
+  OpenTherm (57 = własna wartość liczby).
 - **Czasy bramki**: pilot czeka na odpowiedź do 800 ms; hub przekazuje żądanie od razu i porzuca starsze niż 650 ms.
   Kotły Immergas odpowiadają w kilkadziesiąt ms.
 
@@ -118,4 +125,6 @@ Plik konfiguracji i kroki są w sekcji [Instalacja](#instalacja).
   Data-ID odczytana z kotłów Immergas, specyfika Immergasa (0xCA, E31, cykliczny zapis CWU, TSP i historia błędów),
   zastąpienie CAR V2, kotły i zaciski, profile menu pięciu rodzin kotłów.
 - Specyfikacja OpenTherm 2.2 (warstwa fizyczna, ramka, Data-ID).
+- Sekwencja oryginalnego pilota i bajt 0xCA: wątek arduino.ru „Термостат OpenTherm на ESP8266” (strona 16,
+  EOLO Star 24 E) i wątek społeczności Home Assistant „OpenTherm component with Immergas EOLO Star 24 boiler”.
 - Instrukcje instalatora kotłów na immergas.pl (zaciski, menu P / t / A / M, E31, P33, TERA P7).

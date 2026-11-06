@@ -85,7 +85,7 @@ family set M3 P33 = ON first – the boiler then keeps heating even if OpenTherm
 
 | Package | What it gives |
 |---|---|
-| `ot_core` | the component (master), boiler connection, frame / error / timeout counters, `ot_status_low_byte` (default **0xCA**, the "Immergas fix") |
+| `ot_core` | the component (master), boiler connection, frame / error / timeout counters, `ot_status_low_byte` (default **0xCA**, the "Immergas fix"), `ot_max_ch_follows_setpoint` (default **true**: 57 = CH setpoint) |
 | `ot_sensors` | status (fault, CH, DHW, flame, diagnostic), fault flags and code (5), OEM code (115), flow, return, DHW, outdoor, exhaust, modulation, pressure, DHW flow, the setpoints the boiler uses (56 / 57), bounds (48 / 49), burner starts / hours |
 | `ot_control` | CH / DHW enable, CH flow setpoint, DHW setpoint, max. CH setpoint, max. modulation |
 | `ot_regulator` (master) | weather curve (two points) + a slow room correction from a Home Assistant room temperature, CH on / off with a hysteresis – the regulator the room unit / Dominus would be |
@@ -98,10 +98,18 @@ The configuration file and the steps are in [Installation](#installation).
 
 - **Frames**: 1000 bit/s Manchester, 34 bits; sent by a hardware timer (half bits), received by a GPIO interrupt and
   decoded by the timing of the mid-bit edges (bit rate off by up to ~20 % still decodes, spikes under 100 µs ignored).
-- **Master cycle** (about 3 frames a second, at least 100 ms apart): status → CH setpoint → a due write → a read.
+- **Master cycle** (about 3 frames a second, at least 100 ms apart): status → CH setpoint → max. CH setpoint → a due
+  write → a read.
   An ID the boiler answers UNKNOWN-DATAID / DATA-INVALID is skipped for an hour; its sensor shows unknown.
 - **Writes repeat** – every OpenTherm master keeps sending its values (that is also why a value written past the CAR
   V2 does not stay); CH setpoint every cycle, DHW setpoint every 30 s, max. CH / modulation every minute.
+- **Max. CH setpoint follows the CH setpoint** (`ot_max_ch_follows_setpoint`, default on). The original Immergas
+  room unit sends, over and over: status with the low byte **0xCA** → read 48 → read 49 → write **1** → write 56 →
+  write **57** with the same value as 1. Some Immergas boilers (EOLO Star, Mini EOLO) acknowledge Data-ID 1 and heat
+  to Data-ID 57. So the hub writes 57 = the CH setpoint (kept within the boiler's bounds, Data-ID 49) every cycle;
+  the "max. CH setpoint" number then caps the CH setpoint. Gateway: a 57 write of the room unit carries the CH
+  setpoint it wrote; a room unit that never writes 57 gets it from the hub right after its own exchange (on a
+  change and every 10 s). `false` = plain OpenTherm (57 = the number's own value).
 - **Gateway timing**: the room unit expects the answer within 800 ms; the hub forwards a request at once and drops one
   older than 650 ms. Immergas boilers answer in a few tens of ms.
 
@@ -114,4 +122,7 @@ V2 reacts to the gateway (it may use Immergas-specific IDs), and E31 when the hu
   Data-ID map read from Immergas boilers, the Immergas specifics (0xCA, E31, the cyclic DHW write, TSP and fault
   history), replacing the CAR V2, boilers and terminals, the menu profiles of the five boiler families.
 - The OpenTherm 2.2 specification (physical layer, frame, Data-IDs).
+- The sequence of the original room unit and the 0xCA byte: the arduino.ru thread "Термостат OpenTherm на ESP8266"
+  (page 16, EOLO Star 24 E) and the Home Assistant community thread "OpenTherm component with Immergas EOLO Star
+  24 boiler".
 - Installer manuals of the boilers on immergas.pl (terminals, menu P / t / A / M, E31, P33, TERA P7).

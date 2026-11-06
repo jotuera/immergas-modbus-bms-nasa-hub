@@ -53,6 +53,9 @@ class OtHub : public esphome::Component {
   void set_status_low_byte(uint8_t lb) { this->status_lb_ = lb; }
   void set_standalone_after(uint32_t ms) { this->standalone_after_ms_ = ms; }
   void set_cache_reads(uint32_t ms) { this->cache_ms_ = ms; }
+  // the original Immergas room unit writes the max. CH setpoint (57) together with the CH setpoint (1), same value -
+  // some Immergas boilers heat to Data-ID 57 and ignore Data-ID 1
+  void set_max_ch_follows(bool on) { this->follow_ = on; }
 
   void setup() override;
   void loop() override;
@@ -113,6 +116,8 @@ class OtHub : public esphome::Component {
   void on_boiler_response_(uint32_t req, uint32_t resp);
   void on_room_request_(uint32_t req);
   void notify_(uint8_t id, bool from_room);
+  uint16_t limit_ch_(uint16_t raw) const;   // CH setpoint capped by the hub's own max. CH setpoint (master)
+  uint16_t follow_raw57_() const;           // the value 57 gets: the CH setpoint within the boiler's bounds (49)
 
   Mode mode_{MODE_MASTER};
   OtLine boiler_;  // hub = master, boiler = slave (master adapter)
@@ -158,6 +163,13 @@ class OtHub : public esphome::Component {
   bool free_slot_{false};      // the room unit's request was answered by the hub: the boiler slot is ours
   uint32_t last_room_ms_{0};
   bool standalone_{true};
+
+  // max. CH setpoint follows the CH setpoint
+  bool follow_{true};
+  bool follow_known_{false};  // a CH setpoint has been sent (by the hub or the room unit)
+  uint16_t follow_raw_{0};    // that CH setpoint
+  uint16_t sent57_{0};        // last Data-ID 57 written to the boiler
+  uint32_t sent57_ms_{0};
 };
 
 }  // namespace immergas_ot

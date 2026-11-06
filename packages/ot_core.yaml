@@ -15,6 +15,9 @@ substitutions:
   ot_boiler_out_pin: GPIO5
   # 0xCA = the "Immergas fix" in the status request (without it some boilers ignore Data-ID 1 / 57); 0x00 = plain
   ot_status_low_byte: "0xCA"
+  # true = the max. CH setpoint (57) is written with the CH setpoint (1), same value, as the original Immergas room
+  # unit does (some boilers heat to 57 and ignore 1); the "max. CH setpoint" number then caps the CH setpoint
+  ot_max_ch_follows_setpoint: "true"
 
 external_components:
   - source: github://jotuera/immergas-modbus-bms-nasa-opentherm-hub@main
@@ -24,6 +27,7 @@ immergas_ot:
   id: ot_hub
   mode: master
   status_low_byte: ${ot_status_low_byte}
+  max_ch_follows_setpoint: ${ot_max_ch_follows_setpoint}
   boiler:
     in_pin: ${ot_boiler_in_pin}
     out_pin: ${ot_boiler_out_pin}

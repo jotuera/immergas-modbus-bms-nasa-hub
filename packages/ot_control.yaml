@@ -1,7 +1,8 @@
 # Immergas OpenTherm - package "ot_control"
 # What the hub sends to the boiler: CH and DHW enable (Data-ID 0 master flags), the CH flow setpoint (1, every cycle),
 # the DHW setpoint (56), the max. CH setpoint (57) and the max. modulation (14), each repeated - an OpenTherm master
-# keeps sending its values. In the gateway mode the same values are used while the room unit is silent (standalone)
+# keeps sending its values. With max_ch_follows_setpoint (default) Data-ID 57 carries the CH setpoint every cycle,
+# like the original Immergas room unit, and the max. CH setpoint number caps the CH setpoint instead. In the gateway mode the same values are used while the room unit is silent (standalone)
 # and, with their override switches on, replace what the room unit writes.
 # Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 

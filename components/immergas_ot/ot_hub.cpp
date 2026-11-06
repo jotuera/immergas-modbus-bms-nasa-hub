@@ -13,6 +13,9 @@ static const uint32_t REPLY_TIMEOUT_MS = 850;  // 34 ms frame + 800 ms the boile
 static const uint32_t ROOM_MIN_REPLY_MS = 20;  // a slave answers 20-800 ms after the request
 static const uint32_t ROOM_MAX_AGE_MS = 650;   // a room request older than this is not forwarded any more
 static const uint32_t UNKNOWN_RETRY_MS = 3600000;
+static const uint32_t FOLLOW_REPEAT_MS = 10000;  // gateway: 57 again after this even when unchanged
+static const uint32_t FOLLOW_ROOM_WINDOW_MS = 400;  // gateway: our 57 only right after a room unit exchange
+static const uint8_t CYCLE_STEPS = 5;
 
 void OtHub::setup() {
   if (!this->boiler_.setup("boiler")) {
@@ -29,6 +32,7 @@ void OtHub::dump_config() {
   ESP_LOGCONFIG(TAG, "Immergas OpenTherm:");
   ESP_LOGCONFIG(TAG, "  Mode: %s", this->mode_ == MODE_MASTER ? "master (instead of the room unit)" : "gateway (room unit <-> boiler)");
   ESP_LOGCONFIG(TAG, "  Status low byte: 0x%02X", this->status_lb_);
+  ESP_LOGCONFIG(TAG, "  Max. CH setpoint (57) follows the CH setpoint (1): %s", YESNO(this->follow_));
   if (this->mode_ == MODE_GATEWAY) ESP_LOGCONFIG(TAG, "  Standalone after: %u ms without the room unit", (unsigned) this->standalone_after_ms_);
   ESP_LOGCONFIG(TAG, "  Polled Data-IDs: %u", (unsigned) this->polls_.size());
 }
@@ -57,6 +61,27 @@ void OtHub::set_flag(uint8_t flag, bool on) {
 void OtHub::set_override(uint8_t id, uint16_t value) { this->overrides_[id] = value; }
 void OtHub::clear_override(uint8_t id) { this->overrides_.erase(id); }
 
+// f8.8 values compared as signed (a CH setpoint is never negative, but stay correct)
+uint16_t OtHub::limit_ch_(uint16_t raw) const {
+  if (!this->follow_) return raw;
+  auto it = this->writes_.find(57);
+  if (it != this->writes_.end() && int16_t(raw) > int16_t(it->second.value)) return it->second.value;
+  return raw;
+}
+
+uint16_t OtHub::follow_raw57_() const {
+  int16_t v = int16_t(this->follow_raw_);
+  const IdState &b = this->ids_[49];  // CH setpoint bounds: high byte = upper, low byte = lower (s8)
+  if (b.seen) {
+    int8_t hi = int8_t(b.value >> 8), lo = int8_t(b.value & 0xFF);
+    if (hi > lo && lo > 0) {
+      if (v < int16_t(lo) * 256) v = int16_t(lo) * 256;
+      if (v > int16_t(hi) * 256) v = int16_t(hi) * 256;
+    }
+  }
+  return uint16_t(v);
+}
+
 void OtHub::notify_(uint8_t id, bool from_room) {
   for (auto *l : this->listeners_) l->ot_update(id, from_room);
 }
@@ -64,19 +89,29 @@ void OtHub::notify_(uint8_t id, bool from_room) {
 uint32_t OtHub::next_own_request_() {
   uint32_t now = esphome::millis();
   bool slot_only = this->mode_ == MODE_GATEWAY && !this->standalone_;  // the room unit sends 0 and 1 itself
-  for (int guard = 0; guard < 4; guard++) {
+  for (int guard = 0; guard < CYCLE_STEPS; guard++) {
     uint8_t step = this->cycle_step_;
-    this->cycle_step_ = (this->cycle_step_ + 1) % 4;
+    this->cycle_step_ = (this->cycle_step_ + 1) % CYCLE_STEPS;
     if (step == 0 && !slot_only)  // status: master flags + the low byte (0xCA = the "Immergas fix")
       return make_frame(READ_DATA, 0, (uint16_t(this->flags_) << 8) | this->status_lb_);
     if (step == 1 && !slot_only) {
       auto it = this->writes_.find(1);
-      if (it != this->writes_.end()) return make_frame(WRITE_DATA, 1, it->second.value);
+      if (it != this->writes_.end()) {
+        uint16_t v = this->limit_ch_(it->second.value);
+        this->follow_raw_ = v;
+        this->follow_known_ = true;
+        return make_frame(WRITE_DATA, 1, v);
+      }
       continue;
     }
-    if (step == 2) {  // a write that is due
+    if (step == 2) {  // max. CH setpoint = CH setpoint, every cycle like the original room unit
+      if (this->follow_ && this->follow_known_ && !slot_only) return make_frame(WRITE_DATA, 57, this->follow_raw57_());
+      continue;
+    }
+    if (step == 3) {  // a write that is due
       for (auto &kv : this->writes_) {
         if (kv.first == 1 && !slot_only) continue;
+        if (kv.first == 57 && this->follow_) continue;  // 57 follows the CH setpoint (own value = cap of 1)
         if (kv.second.last_ms != 0 && now - kv.second.last_ms < kv.second.period_ms) continue;
         if (this->ids_[kv.first].unknown && now - this->ids_[kv.first].ms < UNKNOWN_RETRY_MS) continue;
         kv.second.last_ms = now == 0 ? 1 : now;
@@ -102,6 +137,10 @@ void OtHub::send_boiler_(uint32_t frame, Origin origin) {
   this->pending_req_ = frame;
   this->pending_origin_ = origin;
   this->sent_ms_ = esphome::millis();
+  if (frame_type(frame) == WRITE_DATA && frame_id(frame) == 57) {
+    this->sent57_ = frame_value(frame);
+    this->sent57_ms_ = this->sent_ms_ == 0 ? 1 : this->sent_ms_;
+  }
   ESP_LOGV(TAG, "-> boiler %08X (type %u id %u)", (unsigned) frame, frame_type(frame), frame_id(frame));
 }
 
@@ -165,6 +204,12 @@ void OtHub::on_room_request_(uint32_t req) {
   } else if (type == WRITE_DATA) {
     auto it = this->overrides_.find(id);
     if (it != this->overrides_.end()) value = it->second;
+    if (id == 1) {
+      this->follow_raw_ = value;
+      this->follow_known_ = true;
+    } else if (id == 57 && this->follow_ && this->follow_known_) {
+      value = this->follow_raw57_();  // a third-party unit writes its own limit here
+    }
   }
   this->room_req_ = make_frame(type, id, value);
   this->room_req_ms_ = now;
@@ -224,6 +269,15 @@ void OtHub::loop() {
   if (this->standalone()) {
     if (now - this->done_ms_ >= OWN_GAP_MS) this->send_boiler_(this->next_own_request_(), ORIGIN_OWN);
     return;
+  }
+  // a room unit that does not write 57 itself: the hub sends it right after the room unit's exchange, when it
+  // differs from the last one sent or every 10 s
+  if (this->follow_ && this->follow_known_ && now - this->last_room_ms_ < FOLLOW_ROOM_WINDOW_MS) {
+    uint16_t v = this->follow_raw57_();
+    if (this->sent57_ms_ == 0 || v != this->sent57_ || now - this->sent57_ms_ > FOLLOW_REPEAT_MS) {
+      this->send_boiler_(make_frame(WRITE_DATA, 57, v), ORIGIN_OWN);
+      return;
+    }
   }
   if (this->free_slot_) {
     this->free_slot_ = false;
