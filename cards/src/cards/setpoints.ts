@@ -132,7 +132,10 @@ class ImmergasSetpointsCard extends HubCard {
     }) : this.ot ? this.tileView({
       k: "ot_ch_set", meas: "ot_flow", icon: "mdi:radiator", col: "peach", title: this.t("Ogrzewanie", "Heating"), sub: this.t("CO · temperatura zasilania", "CH · flow temperature"),
       temp: this.n("ot_flow"), status: chRun ? this.t("grzeje", "heating") : this.t("czuwa", "standby"), active: chRun, profiles: [],
-      hint: this.t("nastawa = maks. temperatura zasilania; z pilotem CAR V2 pilot prowadzi krzywą grzewczą", "setpoint = max flow temperature; with a CAR V2 remote the remote runs the heating curve"),
+      hint: this.esp ? (this.on("ot_regulator") ? this.t("nastawę liczy regulator hubu (krzywa pogodowa + korekta pokojowa)", "the hub regulator computes the setpoint (weather curve + room correction)")
+          : this.on("ot_room_link") && !this.on("ot_standalone") ? this.t("bramka: nastawę wysyła pilot (nadpiszesz ją w hubie)", "gateway: the room unit sends the setpoint (the hub can override it)")
+          : this.t("hub wysyła nastawę zasilania co cykl", "the hub sends the flow setpoint every cycle"))
+        : this.t("nastawa = maks. temperatura zasilania; z pilotem CAR V2 pilot prowadzi krzywą grzewczą", "setpoint = max flow temperature; with a CAR V2 remote the remote runs the heating curve"),
     }) : this.tileView({
       k: "zone1_set", meas: "zone1", icon: cool ? "mdi:snowflake" : "mdi:radiator", col: cool ? "sky" : tempCol(z),
       title: cool ? this.t("Chłodzenie", "Cooling") : this.t("Ogrzewanie", "Heating"), sub: this.t("CO · strefa 1", "CH · zone 1"), temp: z,
@@ -152,6 +155,8 @@ class ImmergasSetpointsCard extends HubCard {
       status: dhwRun ? this.t("grzeje", "heating") : this.t("czuwa", "standby"), active: dhwRun,
       profiles: this.eid("dhw_comfort_dd") ? [["eco", this.t("EKO", "ECO"), this.n("dhw_eco_dd")], ["comfort", this.t("KOMFORT", "COMFORT"), this.n("dhw_comfort_dd")]] : [],
       hint: this.on("dhw_sched") ? this.t("Komfort / Eko wg kalendarza CWU", "Comfort / Eco by the DHW calendar")
+        : this.esp ? (this.on("ot_room_link") && !this.on("ot_standalone") ? this.t("bramka: nastawę CWU wysyła pilot (nadpiszesz ją w hubie)", "gateway: the room unit sends the DHW setpoint (the hub can override it)")
+          : this.t("hub wysyła nastawę CWU co 30 s", "the hub sends the DHW setpoint every 30 s"))
         : this.t("z pilotem CAR V2 nastawę CWU ustawia pokrętło pilota", "with a CAR V2 remote its dial sets the DHW setpoint"),
     }) : this.tileView({
       k: "dhw_set", meas: "tank", icon: "mdi:water-boiler", col: "peach", title: this.t("Ciepła woda", "Hot water"), sub: this.t("CWU · zasobnik", "DHW · cylinder"), temp: tank,

@@ -108,13 +108,30 @@ export abstract class HubCard extends LitElement {
 
   protected eid(k: Key) { return this.idx?.ids[k]; }
   protected so(k: Key) { const i = this.eid(k); return i ? this.hass.states[i] : undefined; }
-  protected s(k: Key): string | undefined { return this.so(k)?.state; }
+  protected s(k: Key): string | undefined {
+    if (k === "mode" && this.esp && !this.eid("mode")) return this.espMode();
+    return this.so(k)?.state;
+  }
+  /** ESP OpenTherm hub: no mode select - the mode is the pair CH enable + DHW enable (Data-ID 0 master flags) */
+  protected espMode(): string | undefined {
+    const ch = this.so("ot_ch_en")?.state, dhw = this.so("ot_dhw_en")?.state;
+    if (!ch || !dhw || ch === "unavailable" || dhw === "unavailable") return undefined;
+    return ch === "on" ? (dhw === "on" ? "heating_water" : "heating") : dhw === "on" ? "water" : "off";
+  }
   protected n(k: Key): number { return parseFloat(this.s(k) ?? ""); }
   protected on(k: Key) { return this.s(k) === "on"; }
   protected bad(k: Key) { const v = this.s(k); return v === undefined || v === "unavailable" || v === "unknown"; }
-  protected attr(k: Key, a: string) { return this.so(k)?.attributes?.[a]; }
+  protected attr(k: Key, a: string) {
+    if (k === "mode" && a === "options" && this.esp && !this.eid("mode")) return ["off", "water", "heating_water", "heating"];
+    return this.so(k)?.attributes?.[a];
+  }
   /** state as Home Assistant shows it (translated enum / select option), e.g. Dominus "economy" -> "Eko" */
   protected txt(k: Key): string | undefined {
+    if (k === "mode" && this.esp && !this.eid("mode")) {
+      const m: Record<string, [string, string]> = { off: ["Standby", "Standby"], water: ["Lato", "Summer"], heating_water: ["Zima", "Winter"], heating: ["Tylko CO", "CH only"] };
+      const v = this.espMode();
+      return v ? this.t(m[v][0], m[v][1]) : undefined;
+    }
     const so = this.so(k);
     // OpenTherm mode select: the app's names also when the entity has no translation (e.g. a stand-in helper)
     if (so && k === "mode" && this.ot) {
@@ -127,6 +144,8 @@ export abstract class HubCard extends LitElement {
   protected get dominus() { return this.idx?.source === "dominus"; }
   /** Dominus in the OpenTherm mode: fewer values, no zone / schedules / statistics */
   protected get ot() { return !!this.idx?.ot; }
+  /** the ESP OpenTherm hub (immergas_ot): OpenTherm cards, the hub instead of the Dominus module */
+  protected get esp() { return !!this.idx?.esp; }
   /** Dominus (Modbus) declared as a gas boiler - no heat pump values */
   protected get gas() { return !!this.idx?.gas; }
   /** F1/F2 write gate: locked only while the "Active ODU control" switch is exposed and off (hub v23+ keeps it armed and hidden) */
@@ -214,6 +233,13 @@ export abstract class HubCard extends LitElement {
     this.dispatchEvent(new CustomEvent("hass-more-info", { detail: { entityId }, bubbles: true, composed: true }));
   }
   protected call(domain: string, service: string, k: Key, data: Record<string, unknown> = {}) {
+    // ESP hub: a mode change sets CH enable + DHW enable
+    if (k === "mode" && this.esp && !this.eid("mode") && service === "select_option") {
+      const o = String(data.option), sw = (kk: Key, on: boolean) => { const id = this.eid(kk); if (id) this.hass.callService(id.split(".")[0], on ? "turn_on" : "turn_off", { entity_id: id }); };
+      sw("ot_ch_en", o === "heating_water" || o === "heating");
+      sw("ot_dhw_en", o === "heating_water" || o === "water");
+      return;
+    }
     const entity_id = this.eid(k);
     if (entity_id) this.hass.callService(domain, service, { entity_id, ...data });
   }

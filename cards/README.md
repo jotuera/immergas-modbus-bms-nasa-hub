@@ -51,6 +51,12 @@ integration (local TCP to the Dominus Wi-Fi module) use `type: custom:immergas-d
 Setpoints, Operating mode, Schedule and Connectivity. The integration ships these cards itself; the cards find its
 entities by their keys (no heat-pump data, COP or compressor – those need the hub).
 
+**OpenTherm hub (ESP, `immergas_ot`):** a device with the `ot_` packages is found by its entity names (the
+"Boiler connection" / "Połączenie z kotłem" binary sensor and the entities with the same name prefix) and the OpenTherm
+cards (Now, Setpoints, Boiler, Charts, Diagram) work with it like with Dominus in the OpenTherm mode; the operating mode is
+the pair CH enable + DHW enable. Without a Magis hub it is picked automatically; with one, set `source: ot` on the cards.
+Use `custom:immergas-hub-mode-card` and `custom:immergas-hub-curve-card` for the mode and the weather curve.
+
 ## How entities are found
 
 The cards look for the device that has the entity "Immergas Hub - Operating state" ("Immergas Hub - Stan pracy") and

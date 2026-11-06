@@ -5,6 +5,7 @@
 // Without a hub the cards fall back to the Immergas Dominus integration (local TCP to the Dominus Wi-Fi module): its
 // entities are matched by their key (the unique_id after the config entry id), so a reduced dashboard works with it too.
 import { NAMES, Key } from "./names";
+import { findPkg } from "./hubpkg";
 
 export interface HubIndex {
   deviceId: string;
@@ -15,6 +16,9 @@ export interface HubIndex {
   gas?: boolean;
   /** Dominus in the OpenTherm mode (VICTRIX ZEUS / AVIO …): only the OpenTherm Data-IDs, no zone / schedules / statistics */
   ot?: boolean;
+  /** the ESP OpenTherm hub (immergas_ot + ot_ packages): the OpenTherm cards with its entities; `source` stays
+   *  "dominus" so the OpenTherm branches of the cards apply, texts and the extras check `esp` */
+  esp?: boolean;
 }
 
 // Immergas Dominus entity key -> card key; the schedule entities are generated below
@@ -70,6 +74,37 @@ for (let p = 1; p <= 4; p++) for (let f = 1; f <= 4; f++) {
   DOMINUS[`profile${p}_fascia${f}_end`] = `k${p}z${f}off` as Key;
 }
 
+// ESP OpenTherm hub: card key -> entity names of the ot_ packages (PL, EN), after the "<prefix> - " of the device
+const ESP_OT: Partial<Record<Key, string[]>> = {
+  outdoor: ["Temperatura zewnętrzna", "Outdoor temperature"], tank: ["Temperatura CWU", "DHW temperature"],
+  err_active: ["Usterka", "Fault"], err_code: ["Kod usterki", "Fault code"], ot_oem: ["Kod diagnostyczny OEM", "OEM diagnostic code"],
+  dhw_set: ["Nastawa CWU", "DHW setpoint"], dom_ch_demand: ["CO aktywne", "CH active"], dom_dhw_request: ["CWU aktywna", "DHW active"],
+  ot_flame: ["Płomień", "Flame"], ot_flow: ["Temperatura zasilania", "Flow temperature"], ot_ret: ["Temperatura powrotu", "Return temperature"],
+  ot_mod: ["Modulacja", "Modulation"], ot_press: ["Ciśnienie wody", "Water pressure"], ot_dhw_flow: ["Przepływ CWU", "DHW flow"],
+  ot_exhaust: ["Temperatura spalin", "Exhaust temperature"], ot_ch_set: ["Nastawa zasilania CO", "CH flow setpoint"],
+  ot_max_ch: ["Maks. nastawa CO", "Max. CH setpoint"], ot_max_ch_used: ["Maks. nastawa CO (kocioł)", "Max. CH setpoint (boiler)"],
+  ot_f_service: ["Wymagany serwis", "Service request"], ot_f_water: ["Niskie ciśnienie wody", "Low water pressure"],
+  ot_f_flame: ["Usterka gazu lub płomienia", "Gas or flame fault"], ot_f_air: ["Usterka ciśnienia powietrza", "Air pressure fault"],
+  ot_f_hot: ["Przegrzanie wody", "Water over-temperature"], ot_lockout: ["Blokada (wymaga resetu)", "Lockout (reset needed)"],
+  ot_room_set: ["Zadana pokoju", "Room target"], zone1: ["Pilot: temperatura pokoju", "Room unit: room temperature"],
+  ot_ch_en: ["Zezwolenie CO", "CH enable"], ot_dhw_en: ["Zezwolenie CWU", "DHW enable"], ot_link: ["Połączenie z kotłem", "Boiler connection"],
+  ot_frames: ["Ramki poprawne", "Frames OK"], ot_errors: ["Błędy ramek", "Frame errors"], ot_timeouts: ["Brak odpowiedzi", "No answer"],
+  ot_room_link: ["Połączenie z pilotem", "Room unit connection"], ot_standalone: ["Hub prowadzi kocioł", "Hub runs the boiler"],
+  ot_ov_flags: ["Nadpisz zezwolenia CO i CWU", "Override CH and DHW enable"], ot_regulator: ["Regulator w hubie", "Regulator in the hub"],
+  ot_starts_total: ["Starty palnika", "Burner starts"], ot_hours_total: ["Godziny palnika", "Burner hours"],
+  ot_chb_min: ["CO min.", "CH min."], ot_chb_max: ["CO maks.", "CH max."], ot_dhwb_min: ["CWU min.", "DHW min."], ot_dhwb_max: ["CWU maks.", "DHW max."],
+};
+
+/** the ESP OpenTherm hub: its "Boiler connection" binary sensor, then the entities with the same name prefix */
+function buildEspOt(hass: any): HubIndex | null {
+  const r = findPkg<Key>(hass.states ?? {}, ESP_OT.ot_link!, /^binary_sensor\./, ESP_OT);
+  if (!r) return null;
+  const ids: Partial<Record<Key, string>> = { ...r.ids, ot_link: r.anchorId };
+  const lang = hass.states[r.anchorId]?.attributes?.friendly_name?.endsWith("Boiler connection") ? "en" : "pl";
+  const deviceId = hass.entities?.[r.anchorId]?.device_id ?? "";
+  return { deviceId, lang, ids, source: "dominus", ot: true, esp: true };
+}
+
 let cache: { index: HubIndex | null; count: number; at: number } | null = null;
 let pending: Promise<void> | null = null;
 let registry: Record<string, string> | null = null; // entity_id -> original_name (admin users only)
@@ -123,7 +158,7 @@ function build(hass: any): HubIndex | null {
       break;
     }
   }
-  if (!deviceId) return buildDominus(hass);
+  if (!deviceId) return buildEspOt(hass) ?? buildDominus(hass);
   const dev = hass.devices?.[deviceId];
   const dn = dev?.name_by_user || dev?.name || "";
   // tail -> [entity_id, full name] of every entity of the hub device
@@ -167,6 +202,7 @@ function buildDominus(hass: any): HubIndex | null {
 }
 
 let dominusCache: { index: HubIndex | null; count: number; at: number } | null = null;
+let espCache: { index: HubIndex | null; count: number; at: number } | null = null;
 
 /** Returns the hub index (null until found). Rebuilds when the entity count changes. `source: "dominus"` (card option,
  *  set by the Dominus strategy) uses the Dominus integration even when a hub is present too. */
@@ -174,9 +210,15 @@ export function hubIndex(hass: any, onReady: () => void, source?: string): HubIn
   if (registry === null) {
     if (!pending) pending = loadRegistry(hass).then(() => { cache = null; dominusCache = null; onReady(); });
     // Dominus: translation keys are enough to start; the registry (entity keys) refines it when it arrives
-    if (source !== "dominus") return null;
+    if (source !== "dominus" && source !== "ot") return null;
   }
   const count = Object.keys(hass.entities ?? {}).length;
+  // source: "ot" = the ESP OpenTherm hub even when a Magis hub / Dominus is present too
+  if (source === "ot") {
+    if (!espCache || espCache.count !== count || (!espCache.index && Date.now() - espCache.at > 10000))
+      espCache = { index: buildEspOt(hass), count, at: Date.now() };
+    return espCache.index;
+  }
   if (source === "dominus") {
     if (!dominusCache || dominusCache.count !== count || (!dominusCache.index && Date.now() - dominusCache.at > 10000))
       dominusCache = { index: buildDominus(hass), count, at: Date.now() };

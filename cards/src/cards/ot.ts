@@ -18,6 +18,11 @@ const hex = (v: unknown) => (typeof v === "string" && /^0x[0-9a-f]+$/i.test(v) ?
 
 class ImmergasOtBoilerCard extends HubCard {
   private range(k: Key) {
+    // ESP hub: the boiler's bounds (Data-ID 48 / 49) are sensors, the numbers keep their own fixed range
+    if (this.esp) {
+      const [lo, hi] = k === "ot_ch_set" ? [this.n("ot_chb_min"), this.n("ot_chb_max")] : [this.n("ot_dhwb_min"), this.n("ot_dhwb_max")];
+      return isNaN(lo) || isNaN(hi) ? this.t("kocioł nie podaje", "not reported") : `${this.f(lo, 0)}–${this.f(hi, 0)} °C`;
+    }
     const a = this.so(k)?.attributes;
     return a && a.min !== undefined && a.max !== undefined ? `${this.f(a.min, 0)}–${this.f(a.max, 0)} °C` : "–";
   }
