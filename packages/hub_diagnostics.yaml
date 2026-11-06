@@ -3,7 +3,7 @@
 # Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 
 substitutions:
-  hub_project_version: "1.2.0"
+  hub_project_version: "1.3.0"
 
 binary_sensor:
   - platform: status
