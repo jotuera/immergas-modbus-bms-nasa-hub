@@ -7,6 +7,7 @@
 // fw, out, set, flow, min, max, target, gain, hyst, room); room_entity (ot: the HA room temperature the regulator uses).
 import { svg, SVGTemplateResult } from "lit";
 import { HubCard, html, css, nothing, c, ca, box, register } from "../base";
+import { findPkg } from "../hubpkg";
 
 type K = "on" | "oc" | "fc" | "ow" | "fw" | "out" | "set" | "flow" | "min" | "max" | "target" | "gain" | "hyst" | "room";
 type Fam = "gb" | "ot";
@@ -38,22 +39,8 @@ class ImmergasHubCurveCard extends HubCard {
 
   /** finds the curve switch of a family, then the other entities with the same name prefix */
   private find(fam: Fam): Partial<Record<K, string>> | null {
-    const st = this.hass.states as Record<string, any>, names = FAM[fam];
-    const fn = (id: string) => String(st[id]?.attributes?.friendly_name ?? "");
-    let prefix: string | null = null, onId = "";
-    for (const id of Object.keys(st)) {
-      if (!/^(switch|input_boolean)\./.test(id)) continue;
-      const n = fn(id), hit = names.on!.find((x) => n === x || n.endsWith(" - " + x) || n.endsWith(" " + x));
-      if (hit) { prefix = n.slice(0, n.length - hit.length); onId = id; break; }
-    }
-    if (prefix === null) return null;
-    const m: Partial<Record<K, string>> = { on: onId };
-    for (const [k, list] of Object.entries(names) as [K, string[]][]) {
-      if (k === "on") continue;
-      const want = list.map((x) => prefix + x), id = Object.keys(st).find((i) => want.includes(fn(i)));
-      if (id) m[k] = id;
-    }
-    return m;
+    const { on, ...rest } = FAM[fam], r = findPkg<K>(this.hass.states, on!, /^(switch|input_boolean)\./, rest);
+    return r ? { ...r.ids, on: r.anchorId } : null;
   }
 
   private v(k: K) { const id = this.m[k]; return id ? parseFloat(this.hass.states[id]?.state ?? "") : NaN; }

@@ -7,6 +7,7 @@ import "./cards/mode";
 import "./cards/gas";
 import "./cards/curve";
 import "./cards/hubcurve";
+import "./cards/hubmode";
 import "./cards/circuits";
 import "./cards/schedule";
 import "./cards/f1f2";
