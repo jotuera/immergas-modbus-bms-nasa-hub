@@ -12,7 +12,7 @@
 # The controller must stay connected - the registers are served by it.
 
 substitutions:
-  mt_project_version: "1.0.0"
+  mt_project_version: "1.1.0"
   mt_name_prefix: "Immergas M"
   # RS485 pins - default: AtomS3 + ATOMIC PortABC Port C + M5Stack Isolated RS485 Unit (auto direction, no DE pin).
   mt_uart_tx_pin: GPIO5

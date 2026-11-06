@@ -14,7 +14,7 @@
 # (code 69), PRO nothing to switch on (code 123 only for the port parameters).
 
 substitutions:
-  gb_project_version: "1.0.0"
+  gb_project_version: "1.1.0"
   gb_name_prefix: "Immergas Gas"
   # RS485 pins - default: AtomS3 + ATOMIC PortABC Port C + M5Stack Isolated RS485 Unit (auto direction, no DE pin).
   # A unit that needs a DE pin: add `flow_control_pin:` to the gb_modbus below with !extend in your main YAML.
