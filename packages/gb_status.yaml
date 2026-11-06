@@ -1,0 +1,193 @@
+# Immergas gas boiler Modbus BMS - package "gb_status"
+# Status: boiler state bits (input 0), fault code (input 1), the boiler's CH / DHW limits (input 1024-1027) and the
+# Modbus port configuration (holding 61440-61441, read only here).
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+sensor:
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_status_raw}"
+    id: gb_status_raw
+    entity_category: diagnostic
+    register_type: read
+    address: 0
+    value_type: U_WORD
+    accuracy_decimals: 0
+
+  # fault code as a number (e.g. 144 = BMS offline); 0 = no fault
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_fault_code}"
+    id: gb_fault_code
+    icon: mdi:alert-circle-outline
+    register_type: read
+    address: 1
+    value_type: U_WORD
+    accuracy_decimals: 0
+
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms_diag
+    name: "${n_gb_ch_max}"
+    id: gb_ch_max
+    entity_category: diagnostic
+    register_type: read
+    address: 1024
+    value_type: U_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.1
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms_diag
+    name: "${n_gb_ch_min}"
+    id: gb_ch_min
+    entity_category: diagnostic
+    register_type: read
+    address: 1025
+    value_type: U_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.1
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms_diag
+    name: "${n_gb_dhw_max}"
+    id: gb_dhw_max
+    entity_category: diagnostic
+    register_type: read
+    address: 1026
+    value_type: U_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.1
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms_diag
+    name: "${n_gb_dhw_min}"
+    id: gb_dhw_min
+    entity_category: diagnostic
+    register_type: read
+    address: 1027
+    value_type: U_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.1
+
+  # port configuration of the boiler (61440 slave address, 61441 HB parity + stop / LB baud) - read only; a change is
+  # made in the boiler menu (writing it needs 61442 = 0xCC33 and cuts the connection)
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms_diag
+    name: "${n_gb_port_address}"
+    id: gb_port_address
+    entity_category: diagnostic
+    disabled_by_default: true
+    register_type: holding
+    address: 61440
+    value_type: U_WORD
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms_diag
+    name: "${n_gb_port_format}"
+    id: gb_port_format
+    entity_category: diagnostic
+    disabled_by_default: true
+    register_type: holding
+    address: 61441
+    value_type: U_WORD
+    accuracy_decimals: 0
+
+binary_sensor:
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_special_function}"
+    id: gb_special_function
+    icon: mdi:wrench-clock
+    register_type: read
+    address: 0
+    bitmask: 0x0001
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_dhw_allowed}"
+    id: gb_dhw_allowed
+    icon: mdi:water-boiler
+    register_type: read
+    address: 0
+    bitmask: 0x0002
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_ch_allowed}"
+    id: gb_ch_allowed
+    icon: mdi:radiator
+    register_type: read
+    address: 0
+    bitmask: 0x0004
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_frost_allowed}"
+    id: gb_frost_allowed
+    icon: mdi:snowflake-alert
+    register_type: read
+    address: 0
+    bitmask: 0x0008
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_flame}"
+    id: gb_flame
+    icon: mdi:fire
+    device_class: heat
+    register_type: read
+    address: 0
+    bitmask: 0x0010
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_pump_ch}"
+    id: gb_pump_ch
+    icon: mdi:pump
+    device_class: running
+    register_type: read
+    address: 0
+    bitmask: 0x0020
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_pump_dhw}"
+    id: gb_pump_dhw
+    icon: mdi:water-pump
+    device_class: running
+    register_type: read
+    address: 0
+    bitmask: 0x0040
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_fault_resettable}"
+    id: gb_fault_resettable
+    device_class: problem
+    register_type: read
+    address: 0
+    bitmask: 0x1000
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_fault_locked}"
+    id: gb_fault_locked
+    device_class: problem
+    register_type: read
+    address: 0
+    bitmask: 0x2000
+
+text_sensor:
+  - platform: template
+    name: "${n_gb_fault}"
+    id: gb_fault
+    icon: mdi:alert-circle-outline
+    update_interval: 10s
+    lambda: |-
+      if (isnan(id(gb_fault_code).state)) return {};
+      int code = (int) id(gb_fault_code).state;
+      if (code == 0) return std::string("${t_gb_no_fault}");
+      if (code == 144) return std::string("E144 - ${t_gb_fault_144}");
+      if (code == 100) return std::string("100 - ${t_gb_fault_100}");
+      return std::string("E") + to_string(code);

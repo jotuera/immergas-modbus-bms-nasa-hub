@@ -1,0 +1,107 @@
+# Immergas gas boiler Modbus BMS - package "gb_sensors"
+# Readings common to SUPERIOR / EXTRA / PRO (input registers, 0.1 units): flow, return, DHW, outdoor, modulation,
+# calculated flow, after the hydraulic separator (HVDT). The flue gas and the model extras are in gb_superior /
+# gb_extra / gb_pro.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+sensor:
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_flow_temp}"
+    id: gb_flow_temp
+    register_type: read
+    address: 768
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: |-
+          return x == -32768 ? NAN : x * 0.1f;
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_return_temp}"
+    id: gb_return_temp
+    register_type: read
+    address: 769
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: |-
+          return x == -32768 ? NAN : x * 0.1f;
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_dhw_temp}"
+    id: gb_dhw_temp
+    register_type: read
+    address: 770
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: |-
+          return x == -32768 ? NAN : x * 0.1f;
+  # only with the outdoor probe on the boiler (signed; the "no probe" value is not documented)
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_outdoor_temp}"
+    id: gb_outdoor_temp
+    register_type: read
+    address: 772
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: |-
+          return (x == -32768 || x == 32767) ? NAN : x * 0.1f;
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_modulation}"
+    id: gb_modulation
+    icon: mdi:fire-circle
+    register_type: read
+    address: 775
+    value_type: U_WORD
+    unit_of_measurement: "%"
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.1
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_calc_flow}"
+    id: gb_calc_flow
+    register_type: read
+    address: 776
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: |-
+          return x == -32768 ? NAN : x * 0.1f;
+  # only with the probe after the hydraulic separator (HVDT)
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_hvdt_temp}"
+    id: gb_hvdt_temp
+    disabled_by_default: true
+    register_type: read
+    address: 777
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: |-
+          return (x == -32768 || x == 32767) ? NAN : x * 0.1f;

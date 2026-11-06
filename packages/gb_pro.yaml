@@ -1,0 +1,103 @@
+# Immergas gas boiler Modbus BMS - package "gb_pro" (model)
+# VICTRIX PRO V2 EU (also the simple cascade: the hub talks to the MASTER boiler): flue gas 0.1 °C, system pressure,
+# ionisation current, upper power limit (513), DHW ECO (bit9, normal logic), heat request without the DHW priority
+# (512 = 0x0155). Wiring: T+ / T- of terminal block A38 (not D+ / D-), jumper X40 removed, 120 ohm termination
+# (TRD - T- bridge) and, without pull-ups in the master, the TR+ - T+ / TR- - T- bridges. Loss of the BMS = fault 100.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+sensor:
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_flue_temp}"
+    id: gb_flue_temp
+    register_type: read
+    address: 771
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.1
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_pressure}"
+    id: gb_pressure
+    register_type: read
+    address: 773
+    value_type: U_WORD
+    unit_of_measurement: "bar"
+    device_class: pressure
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.1
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_ionisation}"
+    id: gb_ionisation
+    icon: mdi:flash-outline
+    entity_category: diagnostic
+    register_type: read
+    address: 774
+    value_type: U_WORD
+    unit_of_measurement: "µA"
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.1
+
+number:
+  # 513 - upper power limit in 0.1 % of the used output
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_power_limit}"
+    id: gb_power_limit
+    icon: mdi:speedometer-medium
+    entity_category: config
+    register_type: holding
+    address: 513
+    value_type: U_WORD
+    unit_of_measurement: "%"
+    min_value: 0
+    max_value: 100
+    step: 1
+    multiply: 10
+    mode: box
+
+switch:
+  # DHW ECO: 256 bit9 = 1 switches the ECO function on
+  - platform: template
+    name: "${n_gb_dhw_eco}"
+    id: gb_dhw_eco
+    icon: mdi:leaf
+    lambda: |-
+      if (isnan(id(gb_control_raw).state)) return {};
+      return ((int) id(gb_control_raw).state & 0x0200) != 0;
+    turn_on_action:
+      - lambda: |-
+          uint16_t raw = isnan(id(gb_control_raw).state) ? 0 : (uint16_t) id(gb_control_raw).state;
+          uint16_t val = (raw & 0x0006) | 0x0200;
+          auto cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_command(id(gb_bms), 256, val);
+          id(gb_bms)->queue_command(cmd);
+          id(gb_control_raw).publish_state(val);
+    turn_off_action:
+      - lambda: |-
+          uint16_t raw = isnan(id(gb_control_raw).state) ? 0 : (uint16_t) id(gb_control_raw).state;
+          uint16_t val = (raw & 0x0006);
+          auto cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_command(id(gb_bms), 256, val);
+          id(gb_bms)->queue_command(cmd);
+          id(gb_control_raw).publish_state(val);
+
+  # the heat request without the DHW priority (512 = 0x0155 instead of 0x0055)
+  - platform: template
+    name: "${n_gb_no_dhw_priority}"
+    id: gb_no_dhw_priority
+    icon: mdi:priority-low
+    entity_category: config
+    restore_mode: RESTORE_DEFAULT_OFF
+    optimistic: true
+    on_turn_on:
+      - lambda: id(gb_request_word) = 0x0155;
+    on_turn_off:
+      - lambda: id(gb_request_word) = 0x0055;

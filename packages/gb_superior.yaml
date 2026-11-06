@@ -1,0 +1,103 @@
+# Immergas gas boiler Modbus BMS - package "gb_superior" (model)
+# VICTRIX SUPERIOR 2021 / VICTRIX ZEUS Superior 25 / 30 / 35 (boiler board FW 1.05+, display FW 1.31+): flue gas in
+# whole °C, DHW inlet temperature, DHW and pump flow, fan speed, burner hours, DHW BOOST (bit9, inverted logic).
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+sensor:
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_flue_temp}"
+    id: gb_flue_temp
+    register_type: read
+    address: 771
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 0   # SUPERIOR: whole °C (EXTRA / PRO: 0.1 °C)
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms_diag
+    name: "${n_gb_dhw_inlet_temp}"
+    id: gb_dhw_inlet_temp
+    disabled_by_default: true
+    register_type: read
+    address: 778
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: |-
+          return (x == -32768 || x == 32767) ? NAN : x * 0.1f;
+  # flows: l/min, the resolution is not given in the specification (read as whole l/min - to be confirmed)
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_dhw_flow}"
+    id: gb_dhw_flow
+    icon: mdi:water
+    register_type: read
+    address: 779
+    value_type: U_WORD
+    unit_of_measurement: "L/min"
+    state_class: measurement
+    accuracy_decimals: 1
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_pump_flow}"
+    id: gb_pump_flow
+    icon: mdi:pump
+    register_type: read
+    address: 780
+    value_type: U_WORD
+    unit_of_measurement: "L/min"
+    state_class: measurement
+    accuracy_decimals: 1
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_fan_speed}"
+    id: gb_fan_speed
+    icon: mdi:fan
+    register_type: read
+    address: 781
+    value_type: U_WORD
+    unit_of_measurement: "rpm"
+    state_class: measurement
+    accuracy_decimals: 0
+  # burner hours: 841 high word, 842 low word
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms_diag
+    name: "${n_gb_burner_hours}"
+    id: gb_burner_hours
+    icon: mdi:timer-outline
+    entity_category: diagnostic
+    register_type: read
+    address: 841
+    value_type: U_DWORD
+    unit_of_measurement: "h"
+    state_class: total_increasing
+    accuracy_decimals: 0
+
+switch:
+  # DHW BOOST: 256 bit9 = 1 switches BOOST OFF (inverted logic in the specification)
+  - platform: template
+    name: "${n_gb_dhw_boost}"
+    id: gb_dhw_boost
+    icon: mdi:water-plus
+    lambda: |-
+      if (isnan(id(gb_control_raw).state)) return {};
+      return !((int) id(gb_control_raw).state & 0x0200);
+    turn_on_action:
+      - lambda: |-
+          uint16_t raw = isnan(id(gb_control_raw).state) ? 0 : (uint16_t) id(gb_control_raw).state;
+          uint16_t val = (raw & 0x0006);
+          auto cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_command(id(gb_bms), 256, val);
+          id(gb_bms)->queue_command(cmd);
+          id(gb_control_raw).publish_state(val);
+    turn_off_action:
+      - lambda: |-
+          uint16_t raw = isnan(id(gb_control_raw).state) ? 0 : (uint16_t) id(gb_control_raw).state;
+          uint16_t val = (raw & 0x0006) | 0x0200;
+          auto cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_command(id(gb_bms), 256, val);
+          id(gb_bms)->queue_command(cmd);
+          id(gb_control_raw).publish_state(val);

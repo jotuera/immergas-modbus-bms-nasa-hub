@@ -1,0 +1,105 @@
+# Immergas gas boiler Modbus BMS - package "gb_core"
+# Base: RS485 UART (9600 8E1), Modbus, the fast / slow polling controllers, the "BMS connection" switch and the heat
+# request keep-alive. For VICTRIX SUPERIOR 2021 / ZEUS Superior 25-35, VICTRIX EXTRA and VICTRIX PRO V2 EU in the BMS
+# mode (official VIPS gas "Specifikace protokolu Modbus", version 02/2025). Load gb_control, gb_status, gb_sensors and
+# ONE model package (gb_superior / gb_extra / gb_pro) with this one; gb_curve is optional.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# File and id names start with gb_ so this package can be combined with the other buses on one device.
+#
+# The boiler is a Modbus RTU slave, the hub is the master. In the BMS mode the boiler is only a heat source: the
+# weather curve, the room thermostat, zones and time programs are done by Home Assistant (or the optional gb_curve).
+# BMS and Dominus exclude each other (boiler menu Modbus / Type = Dominus OR BMS): remove the Dominus first.
+# Wiring: SUPERIOR / EXTRA on D+ / D- (jumper X40 stays), PRO V2 EU on T+ / T- of terminal block A38 (X40 removed,
+# 120 ohm termination). Boiler menu: SUPERIOR MENU/Service/Modbus Type = Bms (code 1122), EXTRA P.18 = 2 and P.11 = 1
+# (code 69), PRO nothing to switch on (code 123 only for the port parameters).
+
+substitutions:
+  gb_project_version: "1.0.0"
+  gb_name_prefix: "Immergas Gas"
+  # RS485 pins - default: AtomS3 + ATOMIC PortABC Port C + M5Stack Isolated RS485 Unit (auto direction, no DE pin).
+  # A unit that needs a DE pin: add `flow_control_pin:` to the gb_modbus below with !extend in your main YAML.
+  gb_uart_tx_pin: GPIO5
+  gb_uart_rx_pin: GPIO6
+  gb_modbus_address: "1"         # factory slave address of the boiler
+  # The boiler raises E144 (PRO: fault 100) after 30 s without a frame: keep the fast interval well below 30 s.
+  gb_fast_interval: 10s
+  gb_diag_interval: 300s
+  gb_request_period: 10s         # the heat request (512 = 0x0055) expires after 30 s, it is repeated this often
+
+uart:
+  - id: gb_uart
+    tx_pin: ${gb_uart_tx_pin}
+    rx_pin: ${gb_uart_rx_pin}
+    baud_rate: 9600
+    data_bits: 8
+    parity: EVEN
+    stop_bits: 1   # factory 8E1 on all three boilers
+
+modbus:
+  - id: gb_modbus
+    uart_id: gb_uart
+    send_wait_time: 150ms
+    turnaround_time: 80ms
+
+modbus_controller:
+  - id: gb_bms
+    address: ${gb_modbus_address}
+    modbus_id: gb_modbus
+    update_interval: ${gb_fast_interval}
+  - id: gb_bms_diag
+    address: ${gb_modbus_address}
+    modbus_id: gb_modbus
+    update_interval: ${gb_diag_interval}
+
+globals:
+  # word written to 512 while the heat request is on: 0x0055; PRO only: 0x0155 = request without the DHW priority
+  - id: gb_request_word
+    type: uint16_t
+    restore_value: false
+    initial_value: "0x0055"
+
+switch:
+  - platform: template
+    name: "${n_gb_bms_connection}"
+    id: gb_bms_connection
+    icon: mdi:lan-connect
+    entity_category: config
+    restore_mode: RESTORE_DEFAULT_ON
+    optimistic: true
+    turn_on_action:
+      - lambda: |-
+          id(gb_bms).start_poller();
+          id(gb_bms_diag).start_poller();
+          ESP_LOGI("gb_bms", "BMS connection ON - polling resumed");
+    turn_off_action:
+      - lambda: |-
+          id(gb_bms).stop_poller();
+          id(gb_bms_diag).stop_poller();
+          ESP_LOGW("gb_bms", "BMS connection OFF - polling paused (the boiler shows E144 / 100 after 30 s)");
+
+  # Heat request (CH): while on, the hub writes 0x0055 to 512 every ${gb_request_period}; the boiler heats to the CH
+  # flow setpoint (514) and stops by itself 30 s after the last request. Switch it from a room thermostat automation
+  # in Home Assistant (e.g. a Salus / climate entity). Off writes 0 = the request ends at once.
+  # The request is kept by the hub, so heating goes on while Home Assistant restarts.
+  - platform: template
+    name: "${n_gb_heat_request}"
+    id: gb_heat_request
+    icon: mdi:fire
+    restore_mode: RESTORE_DEFAULT_OFF
+    optimistic: true
+    turn_on_action:
+      - lambda: |-
+          auto cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_command(id(gb_bms), 512, id(gb_request_word));
+          id(gb_bms)->queue_command(cmd);
+    turn_off_action:
+      - lambda: |-
+          auto cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_command(id(gb_bms), 512, 0);
+          id(gb_bms)->queue_command(cmd);
+
+interval:
+  - interval: ${gb_request_period}
+    then:
+      - lambda: |-
+          if (!id(gb_bms_connection).state || !id(gb_heat_request).state) return;
+          auto cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_command(id(gb_bms), 512, id(gb_request_word));
+          id(gb_bms)->queue_command(cmd);

@@ -1,0 +1,119 @@
+# Immergas gas boiler Modbus BMS - package "gb_extra" (model)
+# VICTRIX EXTRA (28 / 32 combi, 12 / 24 / 35 PLUS system): flue gas 0.1 °C, system pressure, DHW inlet temperature,
+# pump flow, fan speed, burner hours DHW / CH, DHW BOOST (bit9, inverted logic). Boiler menu: P.18 = 2 (BMS), P.11 = 1.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+sensor:
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_flue_temp}"
+    id: gb_flue_temp
+    register_type: read
+    address: 771
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.1
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_pressure}"
+    id: gb_pressure
+    register_type: read
+    address: 773
+    value_type: U_WORD
+    unit_of_measurement: "bar"
+    device_class: pressure
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.1
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms_diag
+    name: "${n_gb_dhw_inlet_temp}"
+    id: gb_dhw_inlet_temp
+    disabled_by_default: true
+    register_type: read
+    address: 778
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: |-
+          return (x == -32768 || x == 32767) ? NAN : x * 0.1f;
+  # 779 DHW flow: "not for VICTRIX EXTRA" - left out
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_pump_flow}"
+    id: gb_pump_flow
+    icon: mdi:pump
+    register_type: read
+    address: 780
+    value_type: U_WORD
+    unit_of_measurement: "L/min"
+    state_class: measurement
+    accuracy_decimals: 1
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_fan_speed}"
+    id: gb_fan_speed
+    icon: mdi:fan
+    register_type: read
+    address: 781
+    value_type: U_WORD
+    unit_of_measurement: "rpm"
+    state_class: measurement
+    accuracy_decimals: 0
+  # burner hours: DHW 837 high / 838 low, CH 839 high / 840 low
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms_diag
+    name: "${n_gb_burner_hours_dhw}"
+    id: gb_burner_hours_dhw
+    icon: mdi:timer-outline
+    entity_category: diagnostic
+    register_type: read
+    address: 837
+    value_type: U_DWORD
+    unit_of_measurement: "h"
+    state_class: total_increasing
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms_diag
+    name: "${n_gb_burner_hours_ch}"
+    id: gb_burner_hours_ch
+    icon: mdi:timer-outline
+    entity_category: diagnostic
+    register_type: read
+    address: 839
+    value_type: U_DWORD
+    unit_of_measurement: "h"
+    state_class: total_increasing
+    accuracy_decimals: 0
+
+switch:
+  # DHW BOOST: 256 bit9 = 1 switches BOOST OFF (inverted logic in the specification)
+  - platform: template
+    name: "${n_gb_dhw_boost}"
+    id: gb_dhw_boost
+    icon: mdi:water-plus
+    lambda: |-
+      if (isnan(id(gb_control_raw).state)) return {};
+      return !((int) id(gb_control_raw).state & 0x0200);
+    turn_on_action:
+      - lambda: |-
+          uint16_t raw = isnan(id(gb_control_raw).state) ? 0 : (uint16_t) id(gb_control_raw).state;
+          uint16_t val = (raw & 0x0006);
+          auto cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_command(id(gb_bms), 256, val);
+          id(gb_bms)->queue_command(cmd);
+          id(gb_control_raw).publish_state(val);
+    turn_off_action:
+      - lambda: |-
+          uint16_t raw = isnan(id(gb_control_raw).state) ? 0 : (uint16_t) id(gb_control_raw).state;
+          uint16_t val = (raw & 0x0006) | 0x0200;
+          auto cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_command(id(gb_bms), 256, val);
+          id(gb_bms)->queue_command(cmd);
+          id(gb_control_raw).publish_state(val);

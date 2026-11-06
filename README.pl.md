@@ -201,6 +201,10 @@ to, czego hub potrzebuje, żeby się go nauczyć, a szablon zgłoszenia *New mod
 rejestr, jedna wielkość widziana na trzech magistralach, wiedza o instalacji, rozwiązywanie problemów i to, czego
 jeszcze nie rozszyfrowano. Mapy rejestrów i PDU, lista FSV, kody błędów i wyniki testów są w [docs/](docs/).
 
+**Kotły gazowe bez pompy ciepła** (VICTRIX SUPERIOR 2021 / ZEUS Superior 25-35, VICTRIX EXTRA, VICTRIX PRO V2 EU)
+hub może prowadzić jako master Modbus BMS – eksperymentalne pakiety `gb_`, patrz
+**[Kotły gazowe po Modbus BMS](docs/gas-boiler-bms.pl.md)**.
+
 ## Wsparcie
 
 Jeśli hub ci się przydaje, rozważ wsparcie – postaw mi kawę. Dziękuję!

@@ -199,6 +199,10 @@ The **[knowledge base](docs/knowledge-base.md)** is the long read: how each bus 
 one quantity seen on three buses, installation know-how, troubleshooting and what is not decoded yet. Register and PDU
 maps, the FSV list, error codes and test results are in [docs/](docs/).
 
+**Gas boilers without a heat pump** (VICTRIX SUPERIOR 2021 / ZEUS Superior 25-35, VICTRIX EXTRA, VICTRIX PRO V2 EU)
+can be run by the hub as a Modbus BMS master – the experimental `gb_` packages, see
+**[Gas boilers over Modbus BMS](docs/gas-boiler-bms.md)**.
+
 ## Support
 
 If you find this hub useful, please consider supporting me by buying me a coffee. Thank you!

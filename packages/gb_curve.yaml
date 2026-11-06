@@ -1,0 +1,90 @@
+# Immergas gas boiler Modbus BMS - package "gb_curve" (optional)
+# Weather curve in the hub: in the BMS mode the boiler has no curve of its own, so the hub writes the CH flow setpoint
+# (514) from the boiler's outdoor probe (772) every minute - straight line between two points, like the Immergas
+# P66 / A-D curve: flow at the coldest outdoor temperature and flow at the warmest one. Off = the setpoint stays as set.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+switch:
+  - platform: template
+    name: "${n_gb_curve}"
+    id: gb_curve
+    icon: mdi:chart-bell-curve-cumulative
+    restore_mode: RESTORE_DEFAULT_OFF
+    optimistic: true
+
+number:
+  - platform: template
+    name: "${n_gb_curve_outdoor_cold}"
+    id: gb_curve_outdoor_cold
+    icon: mdi:snowflake-thermometer
+    entity_category: config
+    unit_of_measurement: "°C"
+    min_value: -25
+    max_value: 0
+    step: 1
+    initial_value: -15
+    restore_value: true
+    optimistic: true
+    mode: box
+  - platform: template
+    name: "${n_gb_curve_flow_cold}"
+    id: gb_curve_flow_cold
+    icon: mdi:thermometer-high
+    entity_category: config
+    unit_of_measurement: "°C"
+    min_value: 25
+    max_value: 85
+    step: 1
+    initial_value: 65
+    restore_value: true
+    optimistic: true
+    mode: box
+  - platform: template
+    name: "${n_gb_curve_outdoor_warm}"
+    id: gb_curve_outdoor_warm
+    icon: mdi:sun-thermometer
+    entity_category: config
+    unit_of_measurement: "°C"
+    min_value: 5
+    max_value: 25
+    step: 1
+    initial_value: 18
+    restore_value: true
+    optimistic: true
+    mode: box
+  - platform: template
+    name: "${n_gb_curve_flow_warm}"
+    id: gb_curve_flow_warm
+    icon: mdi:thermometer-low
+    entity_category: config
+    unit_of_measurement: "°C"
+    min_value: 20
+    max_value: 60
+    step: 1
+    initial_value: 30
+    restore_value: true
+    optimistic: true
+    mode: box
+
+interval:
+  - interval: 60s
+    then:
+      - lambda: |-
+          if (!id(gb_curve).state || !id(gb_bms_connection).state) return;
+          float out = id(gb_outdoor_temp).state;
+          if (isnan(out)) { ESP_LOGW("gb_curve", "no outdoor temperature (772) - setpoint not changed"); return; }
+          float oc = id(gb_curve_outdoor_cold).state, ow = id(gb_curve_outdoor_warm).state;
+          float fc = id(gb_curve_flow_cold).state, fw = id(gb_curve_flow_warm).state;
+          float t = ow > oc ? (out - oc) / (ow - oc) : 0.0f;
+          t = t < 0 ? 0 : (t > 1 ? 1 : t);
+          float flow = fc + (fw - fc) * t;
+          float lo = isnan(id(gb_ch_min).state) ? 20.0f : id(gb_ch_min).state;
+          float hi = isnan(id(gb_ch_max).state) ? 85.0f : id(gb_ch_max).state;
+          flow = flow < lo ? lo : (flow > hi ? hi : flow);
+          flow = roundf(flow * 2.0f) / 2.0f;
+          float cur = id(gb_ch_setpoint).state;
+          if (!isnan(cur) && fabsf(cur - flow) < 0.5f) return;
+          auto call = id(gb_ch_setpoint).make_call();
+          call.set_value(flow);
+          call.perform();
+          ESP_LOGI("gb_curve", "outdoor %.1f °C -> CH flow setpoint %.1f °C", out, flow);

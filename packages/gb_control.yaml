@@ -1,0 +1,91 @@
+# Immergas gas boiler Modbus BMS - package "gb_control"
+# Control: operating mode (256 bits 1 / 2), CH flow and DHW setpoints (514 / 515), fault reset (257 = 0xAA55).
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+sensor:
+  # 256 "boiler control" as read back - the mode select and the BOOST / ECO switch change only their own bits of it
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_control_raw}"
+    id: gb_control_raw
+    internal: true
+    register_type: holding
+    address: 256
+    value_type: U_WORD
+    accuracy_decimals: 0
+
+select:
+  # Mode: bit1 = DHW allowed, bit2 = CH allowed (on the SUPERIOR bit2 sets bit1 too). Winter heats only with the heat
+  # request switched on (gb_heat_request).
+  - platform: template
+    name: "${n_gb_mode}"
+    id: gb_mode
+    icon: mdi:radiator
+    options:
+      - "${t_gb_mode_standby}"
+      - "${t_gb_mode_dhw}"
+      - "${t_gb_mode_heating}"
+      - "${t_gb_mode_dhw_heating}"
+    lambda: |-
+      if (isnan(id(gb_control_raw).state)) return {};
+      int v = (int) id(gb_control_raw).state & 0x0006;
+      if (v == 0x0006) return std::string("${t_gb_mode_dhw_heating}");
+      if (v == 0x0004) return std::string("${t_gb_mode_heating}");
+      if (v == 0x0002) return std::string("${t_gb_mode_dhw}");
+      return std::string("${t_gb_mode_standby}");
+    set_action:
+      - lambda: |-
+          uint16_t bits = x == "${t_gb_mode_dhw_heating}" ? 0x0006 : x == "${t_gb_mode_heating}" ? 0x0004
+                        : x == "${t_gb_mode_dhw}" ? 0x0002 : 0x0000;
+          uint16_t raw = isnan(id(gb_control_raw).state) ? 0 : (uint16_t) id(gb_control_raw).state;
+          uint16_t val = (raw & 0x0200) | bits;   // keep bit9 (BOOST / ECO), the other bits are reserved = 0
+          auto cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_command(id(gb_bms), 256, val);
+          id(gb_bms)->queue_command(cmd);
+          id(gb_control_raw).publish_state(val);
+
+number:
+  # 514 - CH flow setpoint in 0.1 °C (the boiler limits: 1025 min / 1024 max)
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_ch_setpoint}"
+    id: gb_ch_setpoint
+    icon: mdi:thermometer-water
+    register_type: holding
+    address: 514
+    value_type: U_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    min_value: 20
+    max_value: 90
+    step: 0.5
+    multiply: 10
+    mode: box
+
+  # 515 - DHW setpoint in 0.1 °C (PRO: only with a cylinder probe; limits 1027 min / 1026 max)
+  - platform: modbus_controller
+    modbus_controller_id: gb_bms
+    name: "${n_gb_dhw_setpoint}"
+    id: gb_dhw_setpoint
+    icon: mdi:water-thermometer
+    register_type: holding
+    address: 515
+    value_type: U_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    min_value: 10
+    max_value: 65
+    step: 0.5
+    multiply: 10
+    mode: box
+
+button:
+  # 257 = 0xAA55 resets the resettable faults (status bit12)
+  - platform: template
+    name: "${n_gb_fault_reset}"
+    id: gb_fault_reset
+    icon: mdi:restart-alert
+    on_press:
+      - lambda: |-
+          auto cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_command(id(gb_bms), 257, 0xAA55);
+          id(gb_bms)->queue_command(cmd);
+          ESP_LOGW("gb_bms", "Fault reset sent (257 = 0xAA55)");
