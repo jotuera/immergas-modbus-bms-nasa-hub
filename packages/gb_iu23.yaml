@@ -1,0 +1,28 @@
+# Immergas Modbus BMS - package "gb_iu23" (model, EXPERIMENTAL HYPOTHESIS)
+# Boilers with the IMG-BUS remote bus (VICTRIX ZEUS, ZEUS SUPERIOR, EXA, TERA, OMNIA, HERCULES (MINI) CONDENSING,
+# MAIOR TT, KW TT, ARES CONDENSING 32 ...) through the Immergas IU23 interface (kit 3.029912, instructions 1.043047):
+# IMG BUS <-> Modbus RTU slave, 9600 8N2, address 21-36 by 4 dip switches (default 21), powered from the IMG BUS,
+# wired on the remote terminals 44 / 41 instead of the CAR V2.
+# Why gb_: the Immergas System Manager (3.021522, chapter 8.2) drives the BMS boilers and the IU23 boilers with the
+# same slave address 21, the same 8N2 frame and the same functions (CH / DHW mode, flow setpoint, DHW setpoint, remote
+# reading of parameters and faults) - so the IU23 most likely serves the same generator BMS register map. The IU23
+# instructions do not list the registers: NOT confirmed on a module yet. Only the common registers are loaded
+# (gb_control, gb_status, gb_sensors); the model extras (flue gas, pressure, hours ...) are left out until a module
+# shows which ones answer.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+substitutions:
+  gb_iu23_address: "21"   # dip switches all OFF = 21; 21 + N for N = 0...15
+
+# 8N2: no parity. The hub receives with 1 stop bit - the second stop bit is idle time, and the ESP32-S3 UART set to
+# 2 stop bits corrupts the replies (seen on the Magis T-/T+ bus, which is 8N2 too); the IU23 takes our 8N1 frames.
+uart:
+  - id: !extend gb_uart
+    parity: NONE
+    stop_bits: 1
+
+modbus_controller:
+  - id: !extend gb_bms
+    address: ${gb_iu23_address}
+  - id: !extend gb_bms_diag
+    address: ${gb_iu23_address}

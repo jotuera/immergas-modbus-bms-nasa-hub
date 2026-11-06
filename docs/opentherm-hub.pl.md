@@ -38,6 +38,9 @@ działającego odwrotnie zmień je.
 > **ok. 24–35 V DC (np. 28 V) = CAR-BUS**. Zgłoszony kocioł z CAR-BUS: VICTRIX TT. W TERA kocioł może też czekać na CAR V2,
 > dopóki nie ustawisz **P7 = 2** (pilot innej firmy) i nie wyłączysz i włączysz zasilania – jeszcze niepotwierdzone.
 > Źródło: [OTGateway #284](https://github.com/Laxilef/OTGateway/issues/284), instrukcja CAR V2 1.038958 (dane techniczne).
+>
+> Kocioł IMG-BUS da się też obsłużyć po Modbusie przez interfejs Immergas **IU23** – patrz
+> [Kotły gazowe po Modbus BMS](gas-boiler-bms.pl.md) (`gb_iu23`, hipoteza).
 
 OpenTherm nie ma polaryzacji. Adapter master idzie na zaciski OpenTherm kotła (tam, gdzie był CAR V2 / Dominus),
 adapter slave (bramka) na dwa przewody pilota.

@@ -33,6 +33,7 @@ przy transceiverze z pinem kierunku). Port: 9600 bodów, 8E1, adres slave 1.
 | VICTRIX SUPERIOR 2021, VICTRIX ZEUS Superior 25 / 30 / 35 | `gb_superior` | D+ / D−, zworka X40 zostaje | MENU / Serwis / Modbus, Typ = Bms (kod 1122); FW płyty kotła 1.05+, wyświetlacza 1.31+ |
 | VICTRIX EXTRA (28 / 32, 12 / 24 / 35 PLUS) | `gb_extra` | D+ / D−, X40 zostaje | P.18 = 2 (BMS), P.11 = 1 (kod 69) |
 | VICTRIX PRO V2 EU (także prosta kaskada) | `gb_pro` | **T+ / T−** listwy A38, X40 zdjęta | nic nie trzeba włączać (kod 123 tylko dla parametrów portu) |
+| **Kotły IMG-BUS przez interfejs IU23** (VICTRIX ZEUS, ZEUS SUPERIOR, EXA, TERA, OMNIA, HERCULES (MINI) CONDENSING, MAIOR TT, KW TT, ARES CONDENSING 32 …) – *hipoteza* | `gb_iu23` | IU23 (kit 3.029912) na zaciskach pilota **44 / 41** zamiast CAR V2; hub na jego RS485 A / B | nic w kotle; dipswitche IU23 = adres 21–36 (wszystkie OFF = 21); port 9600 **8N2** |
 | Pompa ciepła **MAGIS M TOP** (R290, E-BOX TOP) | `gb_mtop` | **BMS+ / BMS−** płyty E-BOX TOP (A13), terminacja przełącznikiem SW1.2 | menu P panelu: P021 = On (sterowanie), P022 = 1, P023 = 3 (9600), P024 = 1 (even / 1) – najpierw sprawdź P023 / P024, użytkownicy zastali fabrycznie 2400 bodów |
 
 Zasady podłączenia:
@@ -66,12 +67,13 @@ wymaga potem włączonego przełącznika *Żądanie grzania (CO)* – steruj nim
      - packages/gb_control.yaml
      - packages/gb_status.yaml
      - packages/gb_sensors.yaml
-     - packages/gb_superior.yaml       # albo gb_extra / gb_pro / gb_mtop
+     - packages/gb_superior.yaml       # albo gb_extra / gb_pro / gb_mtop / gb_iu23
      - packages/gb_curve.yaml          # opcjonalnie: krzywa pogodowa w hubie
    ```
 
    - **Dokładnie jeden pakiet modelu:** `gb_superior` (VICTRIX SUPERIOR 2021 / ZEUS Superior 25–35), `gb_extra`
-     (VICTRIX EXTRA), `gb_pro` (VICTRIX PRO V2 EU) albo `gb_mtop` (pompa ciepła MAGIS M TOP).
+     (VICTRIX EXTRA), `gb_pro` (VICTRIX PRO V2 EU), `gb_mtop` (pompa ciepła MAGIS M TOP) albo `gb_iu23` (kocioł IMG-BUS
+     przez interfejs IU23).
    - `gb_curve` tylko wtedy, gdy hub ma liczyć nastawę zasilania z sondy zewnętrznej; inaczej *Nastawę zasilania CO*
      ustawia Home Assistant.
 4. **Sprawdź piny** (`substitutions:` na górze), jeśli twoja płytka to nie AtomS3 + ATOMIC PortABC.
@@ -87,7 +89,7 @@ wymaga potem włączonego przełącznika *Żądanie grzania (CO)* – steruj nim
 | `gb_control` | *Tryb pracy* (Stand-by / Tylko CWU / Ogrzewanie / Ogrzewanie + CWU), *Nastawa zasilania CO* (514), *Nastawa CWU* (515), *Reset usterki* (257 = 0xAA55) |
 | `gb_status` | bity stanu (płomień, pompa CO / CWU, CO / CWU / ochrona przed zamarzaniem dozwolone, funkcja specjalna, usterka kasowalna / niekasowalna), kod i opis usterki, limity CO / CWU kotła, konfiguracja portu |
 | `gb_sensors` | zasilanie, powrót, CWU, temp. zewnętrzna, modulacja, obliczone zasilanie, temperatura za sprzęgłem (HVDT) |
-| `gb_superior` / `gb_extra` / `gb_pro` / `gb_mtop` | dodatki modelu z tabeli niżej – wczytaj dokładnie jeden |
+| `gb_superior` / `gb_extra` / `gb_pro` / `gb_mtop` / `gb_iu23` | dodatki modelu z tabeli niżej – wczytaj dokładnie jeden |
 | `gb_curve` (opcjonalny) | krzywa pogodowa w hubie: co minutę nastawa zasilania CO z sondy zewnętrznej kotła, między dwoma punktami, w granicach limitów kotła |
 | `lang/gb_en`, `lang/gb_pl` | nazwy encji (`gb_name_prefix`, domyślnie „Immergas Gas”) |
 
@@ -129,6 +131,15 @@ chłodzenie** / 0x00 koniec, starszy bajt bit0 CO przed CWU i bit4 tryb cichy; 5
 częstotliwości sprężarki ani energii – pompa przedstawia się jako generator ciepła. `gb_mtop` dodaje *Rodzaj żądania*
 (grzanie / chłodzenie), *Zezwól na chłodzenie*, *CWU ECO*, *CO przed CWU*, *Tryb cichy* i *Górny limit mocy*;
 przełącznik *Żądanie grzania* z `gb_core` wysyła wtedy wybrane żądanie.
+
+**IU23 – kotły IMG-BUS (hipoteza).** Interfejs Immergas IU23 (kit 3.029912, instrukcja 1.043047) zamienia magistralę
+pilota IMG-BUS kotła na slave Modbus RTU: 9600 bodów, 8N2, adres 21–36 czterema dipswitchami, zasilany z IMG BUS
+(< 5 mA), bez terminacji. Jego instrukcja nie podaje rejestrów. Centralka systemu Immergas (3.021522, rozdział 8.2)
+łączy kotły BMS i kotły z IU23 z tym samym adresem slave 21, tą samą ramką 8N2 i tymi samymi funkcjami – tryb CO / CWU,
+nastawa zasilania, nastawa CWU, zdalny odczyt parametrów i błędów – więc IU23 najpewniej wystawia tę samą mapę
+rejestrów. `gb_iu23` wczytuje tylko wspólne rejestry (stan, sterowanie, nastawy, usterka, temperatury, modulacja) z 8N2
+i adresem 21; dodatki modeli zostają poza nim, dopóki moduł nie pokaże, które rejestry odpowiadają. Jeszcze
+niepotwierdzone na module. Kocioł z CAR-BUS (CAR V2 pokazuje *VER PC*) nie ma IMG BUS dla IU23.
 
 **Watchdog.** Ponad 30 s bez ramki od mastera: **E144** „BMS offline” (SUP, EXT) albo błąd **100** (PRO); kasuje się
 sam przy pierwszej poprawnej ramce. Szybkie odpytywanie co 10 s.

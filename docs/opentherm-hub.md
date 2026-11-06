@@ -36,6 +36,9 @@ out GPIO7) of an AtomS3 + ATOMIC PortABC. The adapters' logic: output LOW = line
 > **about 24–35 V DC (e.g. 28 V) = CAR-BUS**. Reported CAR-BUS boiler: VICTRIX TT. On a TERA the boiler may also wait
 > for the CAR V2 until **P7 = 2** (third-party remote) is set and the boiler power-cycled – not confirmed yet.
 > Source: [OTGateway #284](https://github.com/Laxilef/OTGateway/issues/284), CAR V2 manual 1.038958 (technical data).
+>
+> An IMG-BUS boiler can also be reached over Modbus through the Immergas **IU23** interface – see
+> [Gas boilers over Modbus BMS](gas-boiler-bms.md) (`gb_iu23`, hypothesis).
 
 OpenTherm has no polarity. The master adapter goes on the boiler's OpenTherm terminals (where the CAR V2 / Dominus
 was), the slave adapter (gateway) on the room unit's two wires.

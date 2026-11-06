@@ -33,6 +33,7 @@ Any ESP32 with an RS485 transceiver works: set `gb_uart_rx_pin` / `gb_uart_tx_pi
 | VICTRIX SUPERIOR 2021, VICTRIX ZEUS Superior 25 / 30 / 35 | `gb_superior` | D+ / D−, jumper X40 stays | MENU / Service / Modbus, Type = Bms (code 1122); boiler board FW 1.05+, display FW 1.31+ |
 | VICTRIX EXTRA (28 / 32, 12 / 24 / 35 PLUS) | `gb_extra` | D+ / D−, X40 stays | P.18 = 2 (BMS), P.11 = 1 (code 69) |
 | VICTRIX PRO V2 EU (and its simple cascade) | `gb_pro` | **T+ / T−** of terminal block A38, X40 removed | nothing to switch on (code 123 only for the port) |
+| **IMG-BUS boilers through the IU23 interface** (VICTRIX ZEUS, ZEUS SUPERIOR, EXA, TERA, OMNIA, HERCULES (MINI) CONDENSING, MAIOR TT, KW TT, ARES CONDENSING 32 …) – *hypothesis* | `gb_iu23` | IU23 (kit 3.029912) on the remote terminals **44 / 41** instead of the CAR V2; the hub on its RS485 A / B | nothing in the boiler; IU23 dip switches = address 21–36 (all OFF = 21); port 9600 **8N2** |
 | **MAGIS M TOP** heat pump (R290, E-BOX TOP) | `gb_mtop` | **BMS+ / BMS−** of the E-BOX TOP (A13), termination dip switch SW1.2 | panel menu P: P021 = On (control), P022 = 1, P023 = 3 (9600), P024 = 1 (even / 1) – check P023 / P024 first, users found 2400 baud at delivery |
 
 Wiring rules:
@@ -66,12 +67,13 @@ is one. **Heating** then needs the *Heat request (CH)* switch on – drive it fr
      - packages/gb_control.yaml
      - packages/gb_status.yaml
      - packages/gb_sensors.yaml
-     - packages/gb_superior.yaml       # or gb_extra / gb_pro / gb_mtop
+     - packages/gb_superior.yaml       # or gb_extra / gb_pro / gb_mtop / gb_iu23
      - packages/gb_curve.yaml          # optional: weather curve in the hub
    ```
 
    - **Exactly one model package:** `gb_superior` (VICTRIX SUPERIOR 2021 / ZEUS Superior 25–35), `gb_extra`
-     (VICTRIX EXTRA), `gb_pro` (VICTRIX PRO V2 EU) or `gb_mtop` (MAGIS M TOP heat pump).
+     (VICTRIX EXTRA), `gb_pro` (VICTRIX PRO V2 EU), `gb_mtop` (MAGIS M TOP heat pump) or `gb_iu23` (an IMG-BUS boiler
+     through the IU23 interface).
    - `gb_curve` only when the hub should compute the flow setpoint from the outdoor probe; otherwise Home Assistant
      sets *CH flow setpoint*.
 4. **Check the pins** (`substitutions:` at the top) if your board is not an AtomS3 + ATOMIC PortABC.
@@ -87,7 +89,7 @@ is one. **Heating** then needs the *Heat request (CH)* switch on – drive it fr
 | `gb_control` | *Operating mode* (Standby / DHW only / Heating / Heating + DHW), *CH flow setpoint* (514), *DHW setpoint* (515), *Fault reset* (257 = 0xAA55) |
 | `gb_status` | state bits (flame, CH / DHW pump, CH / DHW / frost allowed, special function, resettable / locked fault), fault code and text, the boiler's CH / DHW limits, port configuration |
 | `gb_sensors` | flow, return, DHW, outdoor, modulation, calculated flow, temperature after the separator (HVDT) |
-| `gb_superior` / `gb_extra` / `gb_pro` / `gb_mtop` | the model extras below – load exactly one |
+| `gb_superior` / `gb_extra` / `gb_pro` / `gb_mtop` / `gb_iu23` | the model extras below – load exactly one |
 | `gb_curve` (optional) | weather curve in the hub: every minute the CH flow setpoint from the boiler's outdoor probe, between two points, clamped to the boiler limits |
 | `lang/gb_en`, `lang/gb_pl` | entity names (`gb_name_prefix`, default "Immergas Gas") |
 
@@ -128,6 +130,15 @@ and bit4 silent mode; 513 max. power (0–1000 = 0–100 %); 773 pressure in **0
 1028 / 1029 cooling max / min. No COP, compressor frequency or energy – the heat pump shows itself as a heat generator.
 `gb_mtop` adds *Request type* (heating / cooling), *Allow cooling*, *DHW ECO*, *CH before DHW*, *Silent mode* and
 *Upper power limit*; the *Heat request* switch of `gb_core` then sends the chosen request.
+
+**IU23 – IMG-BUS boilers (hypothesis).** The Immergas IU23 interface (kit 3.029912, instructions 1.043047) turns the
+IMG-BUS remote bus of a boiler into a Modbus RTU slave: 9600 baud, 8N2, address 21–36 by four dip switches, powered from
+the IMG BUS (< 5 mA), no termination. Its instructions do not list the registers. The Immergas System Manager
+(3.021522, chapter 8.2) connects the BMS boilers and the IU23 boilers with the same slave address 21, the same 8N2 frame
+and the same functions – CH / DHW mode, flow setpoint, DHW setpoint, remote reading of parameters and faults – so the
+IU23 most likely serves this same register map. `gb_iu23` loads only the common registers (state, control, setpoints,
+fault, temperatures, modulation) with 8N2 and address 21; the model extras stay out until a module shows which
+registers answer. Not confirmed on a module yet. A CAR-BUS boiler (CAR V2 shows *VER PC*) has no IMG BUS for the IU23.
 
 **Watchdog.** More than 30 s without a frame from the master: **E144** "BMS offline" (SUP, EXT) or fault **100**
 (PRO); it clears by itself at the first correct frame. The fast poll runs every 10 s.

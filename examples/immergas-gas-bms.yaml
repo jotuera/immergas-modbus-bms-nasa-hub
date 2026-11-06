@@ -58,4 +58,5 @@ packages:
       - packages/gb_status.yaml
       - packages/gb_sensors.yaml
       - packages/gb_superior.yaml       # or gb_extra.yaml / gb_pro.yaml / gb_mtop.yaml (MAGIS M TOP heat pump)
+                                        # / gb_iu23.yaml (IMG-BUS boiler + IU23 interface, hypothesis)
       - packages/gb_curve.yaml          # optional: weather curve in the hub
