@@ -1,0 +1,73 @@
+# Immergas OpenTherm - package "ot_boiler_params" (optional)
+# The boiler menu copied once from the boiler (OpenTherm does not carry it): the menu family of the boiler and its t / P / A
+# (ZEUS 25, TERA, EXA 24 X / NIKE) or M1 / M3 / M5 (ZEUS Superior 26 / 32, HERCULES) values. Nothing is sent to the boiler -
+# the cards use them for the codes, the curve and the hints (short cycling -> lengthen the ignitions timer, TERA P7 = 2,
+# HERCULES P33 against E31 without the CAR V2). Plus the service reminder (CAR V2 "MANUTZ").
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+number:
+  - { platform: template, name: "${n_ot_t0}", id: ot_t0, icon: "mdi:thermometer-low", min_value: 20, max_value: 50, step: 1, initial_value: 25, unit_of_measurement: "°C", restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_t1}", id: ot_t1, icon: "mdi:thermometer-high", min_value: 25, max_value: 85, step: 1, initial_value: 85, unit_of_measurement: "°C", restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_t4}", id: ot_t4, icon: "mdi:timer-sand", min_value: 0, max_value: 100, step: 10, initial_value: 20, unit_of_measurement: "s", restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_t5}", id: ot_t5, icon: "mdi:timer-lock-outline", min_value: 0, max_value: 600, step: 10, initial_value: 180, unit_of_measurement: "s", restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_t6}", id: ot_t6, icon: "mdi:chart-line-variant", min_value: 0, max_value: 840, step: 10, initial_value: 180, unit_of_measurement: "s", restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_t7}", id: ot_t7, icon: "mdi:timer-play-outline", min_value: 0, max_value: 600, step: 10, initial_value: 0, unit_of_measurement: "s", restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_p0}", id: ot_p0, icon: "mdi:water-boiler", min_value: 0, max_value: 99, step: 1, initial_value: 99, unit_of_measurement: "%", restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_p1}", id: ot_p1, icon: "mdi:fire-circle", min_value: 0, max_value: 99, step: 1, initial_value: 0, unit_of_measurement: "%", restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_p2}", id: ot_p2, icon: "mdi:fire", min_value: 0, max_value: 99, step: 1, initial_value: 80, unit_of_measurement: "%", restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_p7}", id: ot_p7, icon: "mdi:thermometer-plus", min_value: -15, max_value: 15, step: 1, initial_value: 0, unit_of_measurement: "K", restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_a3}", id: ot_a3, icon: "mdi:pump", min_value: 1, max_value: 9, step: 1, initial_value: 9, restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_a4}", id: ot_a4, icon: "mdi:pump-off", min_value: 1, max_value: 9, step: 1, initial_value: 6, restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_a5}", id: ot_a5, icon: "mdi:delta", min_value: 0, max_value: 25, step: 1, initial_value: 15, unit_of_measurement: "K", restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_sup_out_min}", id: ot_sup_out_min, icon: "mdi:snowflake-thermometer", min_value: -20, max_value: 0, step: 1, initial_value: -15, unit_of_measurement: "°C", restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_sup_out_max}", id: ot_sup_out_max, icon: "mdi:sun-thermometer", min_value: 5, max_value: 25, step: 1, initial_value: 20, unit_of_measurement: "°C", restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_sup_dhw_max_rpm}", id: ot_sup_dhw_max_rpm, icon: "mdi:fan-chevron-up", min_value: 500, max_value: 7000, step: 50, initial_value: 6000, unit_of_measurement: "rpm", restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_sup_dhw_min_rpm}", id: ot_sup_dhw_min_rpm, icon: "mdi:fan-chevron-down", min_value: 500, max_value: 7000, step: 50, initial_value: 1500, unit_of_measurement: "rpm", restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_sup_ch_max_rpm}", id: ot_sup_ch_max_rpm, icon: "mdi:fan-plus", min_value: 500, max_value: 7000, step: 50, initial_value: 5000, unit_of_measurement: "rpm", restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_sup_ch_min_rpm}", id: ot_sup_ch_min_rpm, icon: "mdi:fan-minus", min_value: 500, max_value: 7000, step: 50, initial_value: 1500, unit_of_measurement: "rpm", restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_sup_hours}", id: ot_sup_hours, icon: "mdi:timer-outline", min_value: 0, max_value: 500000, step: 1, initial_value: 0, unit_of_measurement: "h", restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_ot_sup_ignitions}", id: ot_sup_ignitions, icon: "mdi:fire-circle", min_value: 0, max_value: 5000000, step: 1, initial_value: 0, restore_value: true, optimistic: true, mode: box, entity_category: config }
+
+select:
+  - { platform: template, name: "${n_ot_menu_profile}", id: ot_menu_profile, icon: "mdi:book-cog-outline", options: ["zeus25", "tera", "classic", "superior", "hercules", "generic"], initial_option: "generic", restore_value: true, optimistic: true, entity_category: config }
+  - { platform: template, name: "${n_ot_t2}", id: ot_t2, icon: "mdi:water-thermometer", options: ["0", "1", "2", "3"], initial_option: "1", restore_value: true, optimistic: true, entity_category: config }
+  - { platform: template, name: "${n_ot_p6}", id: ot_p6, icon: "mdi:pump", options: ["intermittent", "continuous", "flow_probe"], initial_option: "intermittent", restore_value: true, optimistic: true, entity_category: config }
+  - { platform: template, name: "${n_ot_sup_pump_speed}", id: ot_sup_pump_speed, icon: "mdi:pump", options: ["1", "2", "3", "auto"], initial_option: "auto", restore_value: true, optimistic: true, entity_category: config }
+  - { platform: template, name: "${n_ot_sup_dhw_restart}", id: ot_sup_dhw_restart, icon: "mdi:water-thermometer", options: ["3", "5", "10"], initial_option: "3", restore_value: true, optimistic: true, entity_category: config }
+  - { platform: template, name: "${n_ot_remote_protocol}", id: ot_remote_protocol, icon: "mdi:remote", options: ["img_bus", "commercial"], initial_option: "commercial", restore_value: true, optimistic: true, entity_category: config }
+  - { platform: template, name: "${n_ot_her_pump}", id: ot_her_pump, icon: "mdi:pump", options: ["auto", "fix"], initial_option: "auto", restore_value: true, optimistic: true, entity_category: config }
+  - { platform: template, name: "${n_ot_ch_no_remote}", id: ot_ch_no_remote, icon: "mdi:remote-off", options: ["off", "on"], initial_option: "off", restore_value: true, optimistic: true, entity_category: config }
+  - { platform: template, name: "${n_ot_maint}", id: ot_maint, icon: "mdi:wrench-clock", options: ["off", "6", "12", "18", "24"], initial_option: "12", restore_value: true, optimistic: true, entity_category: config }
+
+datetime:
+  - { platform: template, type: date, name: "${n_ot_last_srv}", id: ot_last_srv, icon: "mdi:calendar-check", optimistic: true, restore_value: true, entity_category: config }
+
+button:
+  - platform: template
+    name: "${n_ot_srv_done}"
+    id: ot_srv_done
+    icon: mdi:wrench-check
+    on_press:
+      - lambda: |-
+          auto now = id(ot_time).now();
+          if (!now.is_valid()) return;
+          auto c = id(ot_last_srv).make_call();
+          c.set_date(now.year, now.month, now.day_of_month);
+          c.perform();
+
+binary_sensor:
+  # due: the last service + the reminder interval (months) reached
+  - platform: template
+    name: "${n_ot_maint_due}"
+    id: ot_maint_due
+    icon: mdi:wrench-clock
+    device_class: problem
+    lambda: |-
+      std::string m = id(ot_maint).current_option();
+      auto now = id(ot_time).now();
+      if (m == "off" || !id(ot_last_srv).has_state() || !now.is_valid()) return false;
+      int months = atoi(m.c_str());
+      int y = id(ot_last_srv).year, mo = id(ot_last_srv).month - 1 + months, d = std::min((int) id(ot_last_srv).day, 28);
+      y += mo / 12; mo = mo % 12 + 1;
+      long due = (long) y * 10000 + mo * 100 + d, today = (long) now.year * 10000 + now.month * 100 + now.day_of_month;
+      return today >= due;

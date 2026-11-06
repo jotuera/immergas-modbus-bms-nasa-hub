@@ -51,7 +51,7 @@ strategy:
 Nastawy, Tryb pracy, Harmonogram i Łączność. Integracja ma te karty w sobie; karty znajdują jej encje po kluczach (bez
 danych pompy ciepła, COP i sprężarki – do tego potrzebny jest hub).
 
-**Hub OpenTherm (ESP, `immergas_ot`):** z `ot_programs` działają też karty Tryb pracy (wyjazd, auto Lato / Zima, anty-legionella, zamarzanie, program CO / CWU) i Harmonogram – jak z Dominusem.  urządzenie z pakietami `ot_` jest znajdowane po nazwach encji (czujnik
+**Hub OpenTherm (ESP, `immergas_ot`):** działają Ustawienia online (praca bez CAR V2, regulator hubu, limity OpenTherm, programy, przegląd) i Parametry pieca offline (z `ot_boiler_params`). Z `ot_programs` działają też karty Tryb pracy (wyjazd, auto Lato / Zima, anty-legionella, zamarzanie, program CO / CWU) i Harmonogram – jak z Dominusem.  urządzenie z pakietami `ot_` jest znajdowane po nazwach encji (czujnik
 binarny „Połączenie z kotłem” / „Boiler connection” i encje z tym samym prefiksem nazwy), a karty OpenTherm (Teraz,
 Nastawy, Kocioł, Wykresy, Diagram) działają z nim jak z Dominusem w trybie OpenTherm; tryb pracy to para zezwoleń CO +
 CWU. Bez huba Magis wybierany jest sam; przy hubie Magis ustaw w kartach `source: ot`. Tryb i krzywą obsługują

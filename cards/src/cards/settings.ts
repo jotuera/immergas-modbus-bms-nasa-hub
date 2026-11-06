@@ -5,6 +5,9 @@
 import { HubCard, html, css, nothing, c, register, Prof, PROFS } from "../base";
 import { Key } from "../names";
 
+// the ESP hub selects carry keys as options (no HA translation): their labels, PL / EN
+const ESP_OPTS: Record<string, Record<string, [string, string]>> = {"ot_t2": {"0": ["0: nastawa CWU + 25 °C", "0: DHW setpoint + 25 °C"], "1": ["1: wg mocy kotła", "1: by the boiler output"], "2": ["2: 1,1 × nastawa CWU + 6 °C", "2: 1.1 × DHW setpoint + 6 °C"], "3": ["3: 85 °C", "3: 85 °C"]}, "ot_p6": {"intermittent": ["Przerywana (wg termostatu)", "Intermittent (by the thermostat)"], "continuous": ["Ciągła", "Continuous"], "flow_probe": ["Wg termostatu i sondy zasilania", "By the thermostat and the flow probe"]}, "ot_menu_profile": {"zeus25": ["VICTRIX ZEUS 25 / EXA 28 / OMNIA (menu G / P / t / A)", "VICTRIX ZEUS 25 / EXA 28 / OMNIA (menu G / P / t / A)"], "tera": ["VICTRIX TERA V2 / V3 (menu P / t / A / S)", "VICTRIX TERA V2 / V3 (menu P / t / A / S)"], "classic": ["VICTRIX EXA 24 X / NIKE 24 ECO (menu S / P / t)", "VICTRIX EXA 24 X / NIKE 24 ECO (menu S / P / t)"], "superior": ["VICTRIX ZEUS Superior 26 / 32 (menu M1 / M3 / M5)", "VICTRIX ZEUS Superior 26 / 32 (menu M1 / M3 / M5)"], "hercules": ["HERCULES Condensing / Solar 26 (menu M1 / M3 / M5)", "HERCULES Condensing / Solar 26 (menu M1 / M3 / M5)"], "generic": ["Inny / ogólny", "Other / generic"]}, "ot_sup_pump_speed": {"auto": ["AUTO (ΔT)", "AUTO (ΔT)"]}, "ot_sup_dhw_restart": {"3": ["3 °C poniżej", "3 °C below"], "5": ["5 °C poniżej (solar)", "5 °C below (solar)"], "10": ["10 °C poniżej (solar)", "10 °C below (solar)"]}, "ot_remote_protocol": {"img_bus": ["IMG BUS (CAR V2)", "IMG BUS (CAR V2)"], "commercial": ["Pilot innej firmy (OpenTherm)", "Third-party remote (OpenTherm)"]}, "ot_her_pump": {"auto": ["AUTO (ΔT)", "AUTO (ΔT)"], "fix": ["FIX (stała prędkość)", "FIX (constant speed)"]}, "ot_ch_no_remote": {"off": ["Wyłączone", "Off"], "on": ["Włączone", "On"]}, "ot_maint": {"off": ["Wyłączone", "Off"], "6": ["co 6 miesięcy", "every 6 months"], "12": ["co 12 miesięcy", "every 12 months"], "18": ["co 18 miesięcy", "every 18 months"], "24": ["co 24 miesiące", "every 24 months"]}, "ot_leg": {"off": ["Wyłączona", "Off"], "weekly": ["Co tydzień (pon. 02:00)", "Weekly (Mon 02:00)"], "daily": ["Codziennie 02:00", "Daily 02:00"]}};
+
 class ImmergasSettingsCard extends HubCard {
   private open: boolean | null = null;
 
@@ -34,12 +37,14 @@ class ImmergasSettingsCard extends HubCard {
     if (!entity || !st || !/^(input_)?select\./.test(entity)) return nothing;
     const dom = entity.startsWith("select.") ? "select" : "input_select";
     const sug = st.attributes?.suggested, empty = !(st.attributes?.options ?? []).includes(st.state) && sug !== undefined;
+    // ESP hub: the option key -> its label (the select of the package has raw keys)
+    const key = this.esp ? (Object.entries(this.idx?.ids ?? {}).find(([, v]) => v === entity)?.[0] ?? "") : "", lab = ESP_OPTS[key]?.[st.state];
     const step = (d: number) => empty ? this.hass.callService(dom, "select_option", { entity_id: entity, option: sug })
       : this.hass.callService(dom, d < 0 ? "select_previous" : "select_next", { entity_id: entity, cycle: true });
     return html`<div class="nr" style=${empty ? "opacity:.55" : ""}><ha-icon icon=${icon}></ha-icon>
       <span class="nl" @click=${() => this.dispatchEvent(new CustomEvent("hass-more-info", { detail: { entityId: entity }, bubbles: true, composed: true }))}>${label}${this.unsetNote(empty)}</span>
       <div class="btn xs" @click=${() => step(-1)}><ha-icon icon="mdi:minus"></ha-icon></div><span class="nv" style=${empty ? "opacity:.45;font-weight:600" : ""}>${empty
-        ? this.hass.formatEntityState?.(st, sug) ?? sug : this.hass.formatEntityState?.(st) ?? st.state}</span>
+        ? this.hass.formatEntityState?.(st, sug) ?? sug : lab ? this.t(lab[0], lab[1]) : this.hass.formatEntityState?.(st) ?? st.state}</span>
       <div class="btn xs" @click=${() => step(1)}><ha-icon icon="mdi:plus"></ha-icon></div></div>`;
   }
 
@@ -132,7 +137,8 @@ class ImmergasSettingsCard extends HubCard {
     const r = (k: Key, icon: string, cd: Codes, txt: string) => has(cd) ? this.numRow(k, icon, lbl(cd, txt), 0, undefined, true) : nothing;
     const sel = (k: Key, icon: string, cd: Codes, txt: string) => has(cd) ? this.selRow(this.eid(k), lbl(cd, txt), icon) : nothing;
     const sh = this.n("ot_burn_h"), t5 = this.n("ot_t5");
-    const ch = this.so("ot_ch_set")?.attributes, mm = this.n("ot_minmod");
+    const ch = this.esp ? { min: isNaN(this.n("ot_chb_min")) ? undefined : this.n("ot_chb_min"), max: isNaN(this.n("ot_chb_max")) ? undefined : this.n("ot_chb_max") }
+      : this.so("ot_ch_set")?.attributes, mm = this.n("ot_minmod");
     const tsp = (this.attr("ot_ids", "boiler_parameters") ?? {}) as Record<string, unknown>, tsp12 = tsp["12"];
     const hint = (txt: string, col = "overlay2") => html`<div class="note" style="color:${c(col)}">${txt}</div>`;
     const guessed = !(PROFS as string[]).includes(this.s("ot_menu_profile") ?? "");
@@ -205,7 +211,8 @@ class ImmergasSettingsCard extends HubCard {
       ${this.toggles([["ot_ro", "mdi:lock-outline", "sky", this.t("Tylko odczyt (steruje pilot)", "Read only (remote in charge)"),
         this.t("HA nic nie zapisuje do kotła – dla CAR V2 / Super Amico. Po włączeniu raz zrestartuj moduł Dominus.",
           "HA writes nothing to the boiler – for a CAR V2 / Super Amico. After switching it on, power-cycle the Dominus once."), true]])}
-      ${this.eid("comfort_heat") ? html`<div class="grp">${this.t("Program CO i CWU (Home Assistant)", "CH and DHW program (Home Assistant)")}</div>
+      ${this.esp ? this.espRegRows() : nothing}
+      ${this.eid("comfort_heat") ? html`<div class="grp">${this.esp ? this.t("Program CO i CWU (hub)", "CH and DHW program (hub)") : this.t("Program CO i CWU (Home Assistant)", "CH and DHW program (Home Assistant)")}</div>
         ${this.progLock()}<div class=${this.otRO ? "locked" : ""}>
         ${this.numRow("comfort_heat", "mdi:sofa-outline", this.t("Pokój · Komfort", "Room · Comfort"), 1)}
         ${this.numRow("eco_heat", "mdi:leaf", this.t("Pokój · Eko", "Room · Eco"), 1)}
@@ -217,7 +224,7 @@ class ImmergasSettingsCard extends HubCard {
         ${this.numRow("dhw_eco_dd", "mdi:leaf", this.t("CWU · Eko", "DHW · Eco"), 0)}
         ${this.selRow(this.eid("ot_leg"), this.t("Anty-legionella", "Anti-legionella"), "mdi:bacteria-outline")}
         ${this.numRow("ot_leg_t", "mdi:thermometer-high", this.t("Temperatura anty-legionella", "Anti-legionella temperature"), 0)}
-        ${this.so("ot_leg_t")?.attributes?.max !== undefined ? html`<div class="note">${this.t("Maks. ", "Max. ")}${this.f(+this.attr("ot_leg_t", "max"), 0)} °C – ${this.t("tyle przyjmuje kocioł (Data-ID 48)", "what the boiler accepts (Data-ID 48)")}</div>` : nothing}</div>` : nothing}
+        ${(this.esp ? !isNaN(this.n("ot_dhwb_max")) : this.so("ot_leg_t")?.attributes?.max !== undefined) ? html`<div class="note">${this.t("Maks. ", "Max. ")}${this.f(this.esp ? this.n("ot_dhwb_max") : +this.attr("ot_leg_t", "max"), 0)} °C – ${this.t("tyle przyjmuje kocioł (Data-ID 48)", "what the boiler accepts (Data-ID 48)")}</div>` : nothing}</div>` : nothing}
       ${this.eid("ot_curve") ? html`<div class="grp">${this.t("Regulator Dominusa (jak menu CAR V2)", "Dominus regulator (like the CAR V2 menu)")}</div>
         ${this.switchRow("ot_room_sensor", "mdi:home-thermometer-outline", "green", this.t("Czujnik pokojowy", "Room sensor"), this.t("AMB – regulacja wg temperatury pokoju", "AMB – control by the room temperature"))}
         ${this.selRow(this.eid("ot_ntc"), this.t("Sonda Dominusa mierzy", "Dominus probe measures"), "mdi:thermometer-probe")}
@@ -231,9 +238,27 @@ class ImmergasSettingsCard extends HubCard {
         ${this.numRow("ot_frost_t", "mdi:snowflake-thermometer", this.t("Próg ochrony przed zamarzaniem", "Frost protection threshold"), 1)}` : nothing}`;
   }
 
+  /** ESP hub: the regulator of ot_regulator and the OpenTherm limits the hub writes */
+  private espRegRows() {
+    return html`${this.eid("ot_regulator") ? html`<div class="grp">${this.t("Regulator hubu", "Hub regulator")}</div>
+        ${this.switchRow("ot_regulator", "mdi:chart-bell-curve-cumulative", "peach", this.t("Regulator w hubie", "Regulator in the hub"), this.t("nastawa CO co minutę z krzywej + korekta pokojowa", "CH setpoint every minute from the curve + room correction"))}
+        ${this.numRow("ot_room_set", "mdi:home-thermometer", this.t("Zadana pokoju", "Room target"), 1)}
+        ${this.numRow("ot_c_oc", "mdi:snowflake-thermometer", this.t("Krzywa: punkt mrozu (temp. zewn.)", "Curve: cold point (outdoor)"), 0)}
+        ${this.numRow("ot_c_fc", "mdi:thermometer-high", this.t("Krzywa: zasilanie przy mrozie", "Curve: flow when cold"), 0)}
+        ${this.numRow("ot_c_ow", "mdi:sun-thermometer", this.t("Krzywa: punkt ciepła (temp. zewn.)", "Curve: warm point (outdoor)"), 0)}
+        ${this.numRow("ot_c_fw", "mdi:thermometer-low", this.t("Krzywa: zasilanie przy cieple", "Curve: flow when warm"), 0)}
+        ${this.numRow("ot_gain", "mdi:plus-minus-variant", this.t("Korekta pokojowa (°C zasilania na °C)", "Room correction (°C flow per °C)"), 1)}
+        ${this.numRow("ot_hyst", "mdi:arrow-expand-vertical", this.t("Histereza pokoju", "Room hysteresis"), 1)}` : nothing}
+      <div class="grp">${this.t("Limity OpenTherm", "OpenTherm limits")}</div>
+      ${this.numRow("ot_max_ch", "mdi:thermometer-high", this.t("Maks. nastawa CO (Data-ID 57)", "Max. CH setpoint (Data-ID 57)"), 0)}
+      ${this.numRow("ot_max_mod", "mdi:fire-circle", this.t("Maks. modulacja (Data-ID 14)", "Max. modulation (Data-ID 14)"), 0)}
+      ${this.eid("ot_frost_t") ? html`${this.numRow("ot_frost_t", "mdi:snowflake-thermometer", this.t("Próg ochrony przed zamarzaniem", "Frost protection threshold"), 1)}` : nothing}`;
+  }
+
   /** OpenTherm: CAR V2 "MANUTZ" - the service reminder (interval, last service, "service done") */
   private maintRows() {
-    const due = this.on("ot_maint_due"), next = this.attr("ot_maint_due", "next_service") as string | null, left = this.attr("ot_maint_due", "days_left");
+    const next = this.attr("ot_maint_due", "next_service") as string | null, left = this.attr("ot_maint_due", "days_left");
+    const due = this.on("ot_maint_due") || (typeof left === "number" && left < 0);
     const last = this.s("ot_last_srv"), fmt = (s: string | null | undefined) => s && !["unknown", "unavailable", ""].includes(s)
       ? new Date(s).toLocaleDateString(this.loc, { dateStyle: "medium" }) : "–";
     const tag = "srv_done", armed = this.isArmed(tag);
@@ -283,15 +308,20 @@ class ImmergasSettingsCard extends HubCard {
     const sum = !this.dominus ? (part === "online" ? this.t("ceny, zasobnik, szacowanie gazu, posadzka, powierzchnia, język błędów", "prices, cylinder, gas estimate, screed, floor area, fault language")
         : part === "offline" ? this.t("U12/U13, P16/P17/P13, limit podłogi, tania taryfa, R02/R03, R10/R11, P07", "U12/U13, P16/P17/P13, floor limit, cheap tariff, R02/R03, R10/R11, P07")
         : this.t("ceny, zasobnik, tryb nocny, legionella…", "prices, cylinder, night mode, legionella…"))
-      : part === "online" ? (this.ot ? this.t("praca bez CAR V2, programy CO / CWU, regulator Dominusa, przegląd, Lato/Zima, alarmy", "running without the CAR V2, CH / DHW programs, Dominus regulator, service, summer/winter, alerts")
+      : part === "online" ? (this.esp ? this.t("praca bez CAR V2, regulator hubu, limity OpenTherm, programy CO / CWU, przegląd", "running without the CAR V2, hub regulator, OpenTherm limits, CH / DHW programs, service")
+        : this.ot ? this.t("praca bez CAR V2, programy CO / CWU, regulator Dominusa, przegląd, Lato/Zima, alarmy", "running without the CAR V2, CH / DHW programs, Dominus regulator, service, summer/winter, alerts")
         : this.t("zasilanie, wilgotność, posadzka, powierzchnia, Lato/Zima, alarmy, język błędów", "flow, humidity, screed, floor area, summer/winter, alerts, fault language"))
       : part === "offline" ? (this.ot ? this.t("termostat, menu kotła wg modelu: zasilanie, zapłon, moc, pompa, sonda", "thermostat, boiler menu by model: flow, ignition, output, pump, probe")
         : this.t("U11, P15, krzywe R, T02/T05, integracja I, A31, P07", "U11, P15, R curves, T02/T05, I integration, A31, P07"))
       : this.t("parametry pieca, tryb nocny, legionella, wyjazd, Lato/Zima, alarmy, język błędów", "boiler parameters, night mode, legionella, vacation, summer/winter, alerts, fault language");
     const note = !this.dominus ? (part === "offline" ? this.t("Hub nie czyta tych ustawień z magistral – przepisz je raz z menu pieca; służą paskom czasu, krzywej i kalibracji.",
         "The hub cannot read these from the buses – copy them once from the boiler menu; they drive the timer bars, the curve and the calibration.") : "")
+      : part === "online" && this.esp ? this.t("Działają od razu: hub liczy regulator i programy sam (bez Home Assistant – tylko jego czas) i wysyła nastawy do kotła po OpenTherm.",
+        "Work right away: the hub runs the regulator and the programs itself (without Home Assistant – only its time) and sends the setpoints to the boiler over OpenTherm.")
       : part === "online" ? this.t("Działają od razu: nastawy strefy, wyjazd i Lato/Zima zapisują do kotła przez Dominusa, alarmy i język liczy Home Assistant.",
         "Work right away: zone setpoints, vacation and summer/winter write to the boiler through Dominus, alerts and language run in Home Assistant.")
+      : part === "offline" && this.esp ? this.t("OpenTherm nie przenosi menu kotła – przepisz je raz z kotła (pakiet ot_boiler_params). Nic nie trafia do kotła; służą kodom i podpowiedziom.",
+        "OpenTherm does not carry the boiler menu – copy it once from the boiler (ot_boiler_params package). Nothing is sent to the boiler; they drive the codes and the hints.")
       : part === "offline" ? this.t("Dominus nie czyta tych ustawień – przepisz je raz z menu pieca. Nic nie trafia do kotła; służą paskom czasu, krzywej i podpowiedziom.",
         "Dominus cannot read these – copy them once from the boiler menu. Nothing is sent to the boiler; they drive the timer bars, the curve and the hints.") : "";
     return html`

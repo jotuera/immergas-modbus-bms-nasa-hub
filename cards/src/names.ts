@@ -260,4 +260,5 @@ export type Key = keyof typeof NAMES | "dom_ch_demand" | "dom_dhw_request" | "do
   | "ot_t0" | "ot_t1" | "ot_t2" | "ot_t4" | "ot_t5" | "ot_t6" | "ot_t7" | "ot_p0" | "ot_p1" | "ot_p2" | "ot_p6" | "ot_p7" | "ot_a3" | "ot_a4" | "ot_a5"
   // the ESP OpenTherm hub (ot_ packages, see hub.ts ESP_OT)
   | "ot_ch_en" | "ot_dhw_en" | "ot_link" | "ot_frames" | "ot_errors" | "ot_timeouts" | "ot_room_link" | "ot_standalone" | "ot_ov_flags" | "ot_regulator" | "ot_oem" | "ot_lockout" | "ot_starts_total" | "ot_hours_total" | "ot_chb_min" | "ot_chb_max" | "ot_dhwb_min" | "ot_dhwb_max" | "ot_max_ch_used"
-  | "ot_ids_sup" | "ot_ids_unk" | "ot_ids_room" | "ot_leg_run" | "ot_out_mean";
+  | "ot_ids_sup" | "ot_ids_unk" | "ot_ids_room" | "ot_leg_run" | "ot_out_mean"
+  | "ot_c_oc" | "ot_c_fc" | "ot_c_ow" | "ot_c_fw" | "ot_gain" | "ot_max_mod";

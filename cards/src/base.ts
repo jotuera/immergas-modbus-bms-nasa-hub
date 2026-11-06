@@ -125,6 +125,12 @@ export abstract class HubCard extends LitElement {
     if (k === "mode" && a === "options" && this.esp && !this.eid("mode")) return ["off", "water", "heating_water", "heating"];
     if (this.esp && k === "zone1_phase" && a === "anti_legionella_running") return this.on("ot_leg_run");
     if (this.esp && k === "dom_auto_season" && a === "outdoor_mean_24h") return this.s("ot_out_mean");
+    if (this.esp && k === "ot_maint_due" && (a === "next_service" || a === "days_left")) {
+      const m = parseInt(this.s("ot_maint") ?? ""), last = this.s("ot_last_srv") ?? "";
+      if (isNaN(m) || !/^\d{4}-\d\d-\d\d/.test(last)) return null;
+      const d = new Date(last + "T00:00:00"), due = new Date(d.getFullYear(), d.getMonth() + m, Math.min(d.getDate(), 28));
+      return a === "next_service" ? due.toISOString() : Math.ceil((due.getTime() - Date.now()) / 86400e3);
+    }
     return this.so(k)?.attributes?.[a];
   }
   /** state as Home Assistant shows it (translated enum / select option), e.g. Dominus "economy" -> "Eko" */
@@ -170,6 +176,7 @@ export abstract class HubCard extends LitElement {
   }
 
   protected carReady() {
+    if (this.esp) return this.espReady();
     const code = String(this.s("err_code") ?? "").replace(/\D/g, "");
     const room = !this.bad("zone1") && !isNaN(this.n("zone1"));
     type Row = [boolean | null, string, string];
@@ -199,6 +206,38 @@ export abstract class HubCard extends LitElement {
     const ok = rows.filter(([v]) => v === true).length, need = rows.filter(([v]) => v !== null).length;
     const icon = (v: boolean | null) => v === null ? { ic: "mdi:information-outline", col: "overlay2" } : v ? { ic: "mdi:check-circle", col: "green" } : { ic: "mdi:close-circle-outline", col: "peach" };
     return html`<div class="grp">${this.t("Praca bez CAR V2", "Running without the CAR V2")} · ${ok} / ${need}</div>
+      <div class="ready">${rows.map(([v, lbl, sub]) => { const { ic, col } = icon(v); return html`<div class="rr">
+        <ha-icon icon=${ic} style="color:var(--ih-${col})"></ha-icon><div><div class="rl">${lbl}</div>${sub ? html`<div class="rs">${sub}</div>` : nothing}</div></div>`; })}</div>`;
+  }
+
+  /** ESP hub (master): what the hub needs to run the boiler without the CAR V2 */
+  protected espReady() {
+    const code = String(this.s("err_code") ?? "").replace(/\D/g, ""), room = !isNaN(this.n("zone1"));
+    const gw = !!this.eid("ot_room_link") && this.on("ot_room_link") && !this.on("ot_standalone");
+    type Row = [boolean | null, string, string];
+    const rows: Row[] = [
+      [this.eid("ot_link") ? this.on("ot_link") : null, this.t("Kocioł odpowiada na OpenTherm", "The boiler answers OpenTherm"), this.t("adapter master na zaciskach pilota (41 / 44 albo 42 / 43)", "master adapter on the remote terminals (41 / 44 or 42 / 43)")],
+      [code !== "31", this.t("Kocioł nie czeka na pilota (brak E31)", "The boiler does not wait for the remote (no E31)"),
+        this.t("po zdjęciu CAR V2: odłącz i włącz zasilanie kotła", "after removing the CAR V2: power-cycle the boiler")],
+      [null, this.t("Mostek X40 na zaciskach 40-41 kotła", "Jumper X40 on boiler terminals 40-41"),
+        this.t("bez CAR V2 załóż go z powrotem (albo termostat), inaczej kocioł nie włączy CO", "without the CAR V2 put it back (or a thermostat), else the boiler will not heat")],
+      [this.eid("ot_regulator") ? this.on("ot_regulator") : null, this.t("Regulator hubu włączony", "Hub regulator on"), this.t("krzywa pogodowa + korekta pokojowa", "weather curve + room correction")],
+      [this.eid("ot_regulator") ? room : null, this.t("Temperatura pokoju dla regulatora", "Room temperature for the regulator"), room ? `${this.f(this.n("zone1"), 1, 1)} °C` : this.t("ustaw ot_room_entity (czujnik z Home Assistant)", "set ot_room_entity (a Home Assistant sensor)")],
+      [this.eid("ot_frost") ? this.on("ot_frost") : null, this.t("Ochrona przed zamarzaniem", "Frost protection"), ""],
+      [this.eid("prog_mode") ? this.s("prog_mode") === "auto" : null, this.t("Program CO AUTO", "CH program AUTO"), this.t("kalendarze Komfort / Eko w karcie Harmonogram", "Comfort / Eco calendars in the Schedule card")],
+      [this.eid("dhw_sched") ? this.on("dhw_sched") : null, this.t("Program CWU", "DHW program"), this.t("tylko z zasobnikiem", "storage tank only")],
+    ];
+    if (gw) rows.unshift([null, this.t("Tryb bramki – pilot jest podłączony", "Gateway mode – the room unit is connected"), this.t("lista dotyczy pracy bez pilota (master)", "the list is about running without the remote (master)")]);
+    const prof = this.otProfile;
+    if (prof === "hercules")
+      rows.splice(3, 0, [this.eid("ot_ch_no_remote") ? this.s("ot_ch_no_remote") === "on" : null, this.t("M3 · P33 – CO bez działającego pilota", "M3 · P33 – CH without a working remote"),
+        this.t("ustaw ON na kotle i zadeklaruj w Parametrach pieca", "set ON on the boiler and declare it in the Boiler parameters")]);
+    if (prof === "tera")
+      rows.splice(3, 0, [this.eid("ot_remote_protocol") ? this.s("ot_remote_protocol") === "commercial" : null, this.t("P7 = 2 – pilot innej firmy", "P7 = 2 – third-party remote"),
+        this.t("na kotle; po zmianie odłącz i włącz zasilanie", "on the boiler; power-cycle it after the change")]);
+    const ok = rows.filter(([v]) => v === true).length, need = rows.filter(([v]) => v !== null).length;
+    const icon = (v: boolean | null) => v === null ? { ic: "mdi:information-outline", col: "overlay2" } : v ? { ic: "mdi:check-circle", col: "green" } : { ic: "mdi:close-circle-outline", col: "peach" };
+    return html`<div class="grp">${this.t("Praca bez CAR V2 (hub)", "Running without the CAR V2 (hub)")} · ${ok} / ${need}</div>
       <div class="ready">${rows.map(([v, lbl, sub]) => { const { ic, col } = icon(v); return html`<div class="rr">
         <ha-icon icon=${ic} style="color:var(--ih-${col})"></ha-icon><div><div class="rl">${lbl}</div>${sub ? html`<div class="rs">${sub}</div>` : nothing}</div></div>`; })}</div>`;
   }

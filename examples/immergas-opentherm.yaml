@@ -64,4 +64,5 @@ packages:
       - packages/ot_control.yaml
       - packages/ot_regulator.yaml      # master: weather curve + room correction in the hub
       - packages/ot_programs.yaml       # optional: CH / DHW programs, anti-legionella, vacation, summer / winter, frost
+      - packages/ot_boiler_params.yaml  # optional: the boiler menu copied once (codes, hints) + service reminder
       # - packages/ot_gateway.yaml      # gateway: the room unit stays (needs the slave adapter)
