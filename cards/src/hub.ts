@@ -283,6 +283,14 @@ const ESP_MT: Partial<Record<Key, string[]>> = {
   mt_proto: ["Wersja protokołu", "Protocol version"],
 };
 
+// mt_programs: the same entity names as ot_programs / gb_programs
+for (const k of Object.keys(ESP_OT) as Key[]) {
+  if (/^(co_|cwu_|k\d)/.test(k) || ["prog_mode", "dhw_sched", "dhw_comfort_dd", "dhw_eco_dd", "zone1_phase", "dhw_phase", "comfort_heat", "eco_heat",
+    "dom_vacation", "dom_vac_until", "ot_vac_action", "dom_auto_season", "dom_win_below", "dom_sum_above", "ot_out_mean"].includes(k)) ESP_MT[k] = ESP_OT[k];
+}
+ESP_MT.ot_eco_action = ["W fazie Eko", "In the Eco phase"];
+ESP_MT.ot_eco_red = ["Obniżenie zasilania w Eko", "Eco flow reduction"];
+
 /** the ESP MAGIS M hub: its "Modbus connection" switch, then the entities with the same name prefix */
 function buildEspMt(hass: any): HubIndex | null {
   const r = findPkg<Key>(hass.states ?? {}, ESP_MT.mt_conn!, /^(switch|input_boolean)\./, ESP_MT);

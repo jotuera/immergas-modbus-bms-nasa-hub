@@ -135,7 +135,7 @@ export abstract class HubCard extends LitElement {
     if (k === "mode" && a === "options" && this.gbx) return this.gbModeKeys();
     if (k === "mode" && a === "options" && this.mtx) return ["standby", "summer", "cooling", "winter"];
     if (this.esp && k === "zone1_phase" && a === "anti_legionella_running") return this.on("ot_leg_run");
-    if (this.esp && k === "dom_auto_season" && a === "outdoor_mean_24h") return this.s("ot_out_mean");
+    if ((this.esp || this.mtx) && k === "dom_auto_season" && a === "outdoor_mean_24h") return this.s("ot_out_mean");
     if (this.esp && k === "ot_maint_due" && (a === "next_service" || a === "days_left")) {
       const m = parseInt(this.s("ot_maint") ?? ""), last = this.s("ot_last_srv") ?? "";
       if (isNaN(m) || !/^\d{4}-\d\d-\d\d/.test(last)) return null;
@@ -151,7 +151,7 @@ export abstract class HubCard extends LitElement {
       const v = this.mtMode();
       return v ? this.t(m[v][0], m[v][1]) : undefined;
     }
-    if (this.esp && (k === "zone1_phase" || k === "dhw_phase")) {
+    if ((this.esp || this.mtx) && (k === "zone1_phase" || k === "dhw_phase")) {
       const p: Record<string, [string, string]> = { comfort: ["Komfort", "Comfort"], economy: ["Eko", "Eco"], manual: ["Ręczny", "Manual"], legionella: ["Anty-legionella", "Anti-legionella"] };
       const v = this.so(k)?.state ?? "";
       return p[v] ? this.t(p[v][0], p[v][1]) : v || undefined;

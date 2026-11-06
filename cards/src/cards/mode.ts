@@ -128,7 +128,7 @@ class ImmergasModeCard extends HubCard {
     const on = this.on("dom_vacation"), bad = this.bad("dom_vacation") || this.otRO, conf = this.isArmed("tg_vac"), col = on ? "sky" : "overlay2";
     const until = this.so("dom_vac_until"), u = until && !["unknown", "unavailable", ""].includes(until.state)
       ? new Date(until.state).toLocaleString(this.loc, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : this.t("do wyłączenia", "until switched off");
-    const what = this.ot ? (this.s("ot_vac_action") === "summer" ? this.t("Lato – CO wył.", "Summer – CH off") : this.t("Stand-by – CO i CWU wył.", "Standby – CH and DHW off"))
+    const what = this.ot || this.mtx ? (this.s("ot_vac_action") === "summer" ? this.t("Lato – CO wył.", "Summer – CH off") : this.t("Stand-by – CO i CWU wył.", "Standby – CH and DHW off"))
       : this.t("obniża zadaną Strefy 1", "lowers the zone 1 target");
     const st = this.otRO ? this.t("wstrzymany – steruje pilot", "paused – the remote is in charge")
       : conf ? this.t("dotknij ponownie, aby potwierdzić", "tap again to confirm")
@@ -141,7 +141,7 @@ class ImmergasModeCard extends HubCard {
       <div class="tgl ${bad ? "dis" : ""}" style="flex:none;align-self:flex-start;background:${on ? ca("sky", 0.35) : "rgba(255,255,255,.08)"}${conf ? `;outline:2px solid ${c("sky")}` : ""}"
         @click=${() => !bad && this.confirm("tg_vac", () => this.call("switch", on ? "turn_off" : "turn_on", "dom_vacation"))}>
         <div class="kn" style="left:${on ? 23 : 3}px;background:${on ? c("sky") : c("overlay1")}"></div></div>
-      <div class="tcs full">${this.ot ? tchip(this.eid("ot_vac_action"), this.t("NA CZAS URLOPU", "DURING"), this.s("ot_vac_action") === "summer" ? this.t("Lato", "Summer") : "Stand-by", "sky")
+      <div class="tcs full">${this.ot || this.mtx ? tchip(this.eid("ot_vac_action"), this.t("NA CZAS URLOPU", "DURING"), this.s("ot_vac_action") === "summer" ? this.t("Lato", "Summer") : "Stand-by", "sky")
         : tchip(this.eid("dom_vac_temp"), this.t("TEMPERATURA", "TEMPERATURE"), isNaN(vt) ? null : this.f(vt, 1, 1) + " °C", "sky")}
         ${tchip(this.eid("dom_vac_until"), this.t("DO", "UNTIL"), u, "sky")}</div>
     </div>`;

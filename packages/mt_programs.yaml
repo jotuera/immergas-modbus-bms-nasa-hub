@@ -1,0 +1,208 @@
+# Immergas MAGIS M (Midea M-Thermal) Modbus - package "mt_programs" (optional)
+# Programs run in the hub on top of the unit (it works without Home Assistant, only its time):
+#   - CH program AUTO by 4 calendars (4 ranges each) and a calendar per weekday: Comfort / Eco room setpoint with the
+#     room temperature control on; without it Eco lowers the zone 1 water setpoint (or switches zone 1 off);
+#   - DHW program: Comfort / Eco DHW setpoint by the same calendars, own weekday assignment;
+#   - vacation: zone 1 and DHW off (or zone 1 only) until the end date, then back as before;
+#   - automatic summer / winter: zone 1 on / off by the 24 h outdoor mean.
+# The unit keeps its own disinfection (anti-legionella) and antifreeze - switched in the Operating mode card.
+# Needs mt_core, mt_sensors, mt_control and mt_stats (Home Assistant time).
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+globals:
+  - { id: mt_phase_last, type: int, initial_value: "-1" }
+  - { id: mt_wset_before, type: float, initial_value: "NAN" }
+  - { id: mt_dhw_phase_last, type: int, initial_value: "-1" }
+  - { id: mt_vac_z_before, type: int, restore_value: true, initial_value: "-1" }
+  - { id: mt_vac_d_before, type: int, restore_value: true, initial_value: "-1" }
+  - { id: mt_season, type: int, restore_value: true, initial_value: "-1" }
+  - { id: mt_out_sum, type: float, initial_value: "0" }
+  - { id: mt_out_n, type: int, initial_value: "0" }
+  - { id: mt_out_hist, type: "std::vector<float>" }
+
+datetime:
+  - { platform: template, type: time, name: "${n_mt_k1z1on}", id: mt_k1z1on, optimistic: true, restore_value: true, initial_value: "06:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_mt_k1z1off}", id: mt_k1z1off, optimistic: true, restore_value: true, initial_value: "22:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_mt_k1z2on}", id: mt_k1z2on, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_mt_k1z2off}", id: mt_k1z2off, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_mt_k1z3on}", id: mt_k1z3on, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_mt_k1z3off}", id: mt_k1z3off, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_mt_k1z4on}", id: mt_k1z4on, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_mt_k1z4off}", id: mt_k1z4off, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_mt_k2z1on}", id: mt_k2z1on, optimistic: true, restore_value: true, initial_value: "06:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_mt_k2z1off}", id: mt_k2z1off, optimistic: true, restore_value: true, initial_value: "08:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_mt_k2z2on}", id: mt_k2z2on, optimistic: true, restore_value: true, initial_value: "15:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_mt_k2z2off}", id: mt_k2z2off, optimistic: true, restore_value: true, initial_value: "22:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_mt_k2z3on}", id: mt_k2z3on, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_mt_k2z3off}", id: mt_k2z3off, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_mt_k2z4on}", id: mt_k2z4on, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_mt_k2z4off}", id: mt_k2z4off, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_mt_k3z1on}", id: mt_k3z1on, optimistic: true, restore_value: true, initial_value: "05:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_mt_k3z1off}", id: mt_k3z1off, optimistic: true, restore_value: true, initial_value: "07:30:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_mt_k3z2on}", id: mt_k3z2on, optimistic: true, restore_value: true, initial_value: "17:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_mt_k3z2off}", id: mt_k3z2off, optimistic: true, restore_value: true, initial_value: "21:30:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_mt_k3z3on}", id: mt_k3z3on, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_mt_k3z3off}", id: mt_k3z3off, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_mt_k3z4on}", id: mt_k3z4on, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_mt_k3z4off}", id: mt_k3z4off, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_mt_k4z1on}", id: mt_k4z1on, optimistic: true, restore_value: true, initial_value: "07:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_mt_k4z1off}", id: mt_k4z1off, optimistic: true, restore_value: true, initial_value: "23:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_mt_k4z2on}", id: mt_k4z2on, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_mt_k4z2off}", id: mt_k4z2off, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_mt_k4z3on}", id: mt_k4z3on, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_mt_k4z3off}", id: mt_k4z3off, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: time, name: "${n_mt_k4z4on}", id: mt_k4z4on, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-start" }
+  - { platform: template, type: time, name: "${n_mt_k4z4off}", id: mt_k4z4off, optimistic: true, restore_value: true, initial_value: "00:00:00", entity_category: config, icon: "mdi:clock-end" }
+  - { platform: template, type: datetime, name: "${n_mt_vac_until}", id: mt_vac_until, optimistic: true, restore_value: true, icon: "mdi:calendar-end" }
+
+select:
+  - { platform: template, name: "${n_mt_co_mon}", id: mt_co_mon, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_mt_cal1}", "${t_mt_cal2}", "${t_mt_cal3}", "${t_mt_cal4}"], initial_option: "${t_mt_cal1}" }
+  - { platform: template, name: "${n_mt_co_tue}", id: mt_co_tue, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_mt_cal1}", "${t_mt_cal2}", "${t_mt_cal3}", "${t_mt_cal4}"], initial_option: "${t_mt_cal1}" }
+  - { platform: template, name: "${n_mt_co_wed}", id: mt_co_wed, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_mt_cal1}", "${t_mt_cal2}", "${t_mt_cal3}", "${t_mt_cal4}"], initial_option: "${t_mt_cal1}" }
+  - { platform: template, name: "${n_mt_co_thu}", id: mt_co_thu, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_mt_cal1}", "${t_mt_cal2}", "${t_mt_cal3}", "${t_mt_cal4}"], initial_option: "${t_mt_cal1}" }
+  - { platform: template, name: "${n_mt_co_fri}", id: mt_co_fri, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_mt_cal1}", "${t_mt_cal2}", "${t_mt_cal3}", "${t_mt_cal4}"], initial_option: "${t_mt_cal1}" }
+  - { platform: template, name: "${n_mt_co_sat}", id: mt_co_sat, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_mt_cal1}", "${t_mt_cal2}", "${t_mt_cal3}", "${t_mt_cal4}"], initial_option: "${t_mt_cal4}" }
+  - { platform: template, name: "${n_mt_co_sun}", id: mt_co_sun, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_mt_cal1}", "${t_mt_cal2}", "${t_mt_cal3}", "${t_mt_cal4}"], initial_option: "${t_mt_cal4}" }
+  - { platform: template, name: "${n_mt_cwu_mon}", id: mt_cwu_mon, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_mt_cal1}", "${t_mt_cal2}", "${t_mt_cal3}", "${t_mt_cal4}"], initial_option: "${t_mt_cal1}" }
+  - { platform: template, name: "${n_mt_cwu_tue}", id: mt_cwu_tue, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_mt_cal1}", "${t_mt_cal2}", "${t_mt_cal3}", "${t_mt_cal4}"], initial_option: "${t_mt_cal1}" }
+  - { platform: template, name: "${n_mt_cwu_wed}", id: mt_cwu_wed, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_mt_cal1}", "${t_mt_cal2}", "${t_mt_cal3}", "${t_mt_cal4}"], initial_option: "${t_mt_cal1}" }
+  - { platform: template, name: "${n_mt_cwu_thu}", id: mt_cwu_thu, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_mt_cal1}", "${t_mt_cal2}", "${t_mt_cal3}", "${t_mt_cal4}"], initial_option: "${t_mt_cal1}" }
+  - { platform: template, name: "${n_mt_cwu_fri}", id: mt_cwu_fri, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_mt_cal1}", "${t_mt_cal2}", "${t_mt_cal3}", "${t_mt_cal4}"], initial_option: "${t_mt_cal1}" }
+  - { platform: template, name: "${n_mt_cwu_sat}", id: mt_cwu_sat, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_mt_cal1}", "${t_mt_cal2}", "${t_mt_cal3}", "${t_mt_cal4}"], initial_option: "${t_mt_cal4}" }
+  - { platform: template, name: "${n_mt_cwu_sun}", id: mt_cwu_sun, optimistic: true, restore_value: true, entity_category: config, icon: "mdi:calendar-today", options: ["${t_mt_cal1}", "${t_mt_cal2}", "${t_mt_cal3}", "${t_mt_cal4}"], initial_option: "${t_mt_cal4}" }
+  - { platform: template, name: "${n_mt_prog_mode}", id: mt_prog_mode, optimistic: true, restore_value: true, icon: "mdi:calendar-clock", options: ["manual", "auto"], initial_option: "manual" }
+  - { platform: template, name: "${n_mt_eco_action}", id: mt_eco_action, optimistic: true, restore_value: true, icon: "mdi:leaf", options: ["reduce_flow", "zone_off"], initial_option: "reduce_flow" }
+  - { platform: template, name: "${n_mt_vac_action}", id: mt_vac_action, optimistic: true, restore_value: true, icon: "mdi:bag-suitcase-outline", options: ["standby", "summer"], initial_option: "standby" }
+
+number:
+  - { platform: template, name: "${n_mt_comfort}", id: mt_comfort, icon: "mdi:sun-thermometer", unit_of_measurement: "°C", min_value: 17, max_value: 30, step: 0.5, initial_value: 21, restore_value: true, optimistic: true, mode: box }
+  - { platform: template, name: "${n_mt_eco_room}", id: mt_eco_room, icon: "mdi:leaf", unit_of_measurement: "°C", min_value: 17, max_value: 30, step: 0.5, initial_value: 18, restore_value: true, optimistic: true, mode: box }
+  - { platform: template, name: "${n_mt_eco_red}", id: mt_eco_red, icon: "mdi:thermometer-minus", unit_of_measurement: "K", min_value: 0, max_value: 20, step: 1, initial_value: 5, restore_value: true, optimistic: true, mode: box }
+  - { platform: template, name: "${n_mt_dhw_comfort}", id: mt_dhw_comfort, icon: "mdi:water-thermometer", unit_of_measurement: "°C", min_value: 20, max_value: 65, step: 1, initial_value: 50, restore_value: true, optimistic: true, mode: box }
+  - { platform: template, name: "${n_mt_dhw_eco}", id: mt_dhw_eco, icon: "mdi:leaf", unit_of_measurement: "°C", min_value: 20, max_value: 65, step: 1, initial_value: 42, restore_value: true, optimistic: true, mode: box }
+  - { platform: template, name: "${n_mt_win_below}", id: mt_win_below, icon: "mdi:snowflake-thermometer", unit_of_measurement: "°C", min_value: 5, max_value: 20, step: 0.5, initial_value: 15, restore_value: true, optimistic: true, mode: box, entity_category: config }
+  - { platform: template, name: "${n_mt_sum_above}", id: mt_sum_above, icon: "mdi:sun-thermometer", unit_of_measurement: "°C", min_value: 10, max_value: 25, step: 0.5, initial_value: 18, restore_value: true, optimistic: true, mode: box, entity_category: config }
+
+switch:
+  - { platform: template, name: "${n_mt_dhw_prog}", id: mt_dhw_prog, icon: "mdi:water-boiler-auto", optimistic: true, restore_mode: RESTORE_DEFAULT_OFF }
+  - platform: template
+    name: "${n_mt_vac}"
+    id: mt_vac
+    icon: mdi:bag-suitcase-outline
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    on_turn_on:
+      - lambda: |-
+          id(mt_vac_z_before) = id(mt_power_zone1).state ? 1 : 0;
+          id(mt_vac_d_before) = id(mt_power_dhw).state ? 1 : 0;
+          id(mt_power_zone1).turn_off();
+          if (id(mt_vac_action).current_option() != std::string("summer")) id(mt_power_dhw).turn_off();
+    on_turn_off:
+      - lambda: |-
+          if (id(mt_vac_z_before) == 1) id(mt_power_zone1).turn_on();
+          if (id(mt_vac_d_before) == 1) id(mt_power_dhw).turn_on();
+          id(mt_vac_z_before) = -1; id(mt_vac_d_before) = -1;
+  - { platform: template, name: "${n_mt_season}", id: mt_season_auto, icon: "mdi:sun-snowflake-variant", optimistic: true, restore_mode: RESTORE_DEFAULT_OFF }
+
+text_sensor:
+  - { platform: template, name: "${n_mt_phase}", id: mt_phase, icon: "mdi:calendar-clock" }
+  - { platform: template, name: "${n_mt_dhw_phase}", id: mt_dhw_phase, icon: "mdi:calendar-clock" }
+
+sensor:
+  - { platform: template, name: "${n_mt_out_mean}", id: mt_out_mean, icon: "mdi:thermometer-auto", unit_of_measurement: "°C", device_class: temperature, accuracy_decimals: 1 }
+
+interval:
+  - interval: 30s
+    then:
+      - lambda: |-
+          auto now = id(mt_time).now();
+          float out = id(mt_outdoor_temp).state;
+          if (!std::isnan(out)) { id(mt_out_sum) += out; id(mt_out_n)++; }
+          if (id(mt_out_n) >= 60) {
+            auto &h = id(mt_out_hist);
+            h.push_back(id(mt_out_sum) / id(mt_out_n));
+            if (h.size() > 48) h.erase(h.begin());
+            id(mt_out_sum) = 0; id(mt_out_n) = 0;
+          }
+          {
+            auto &h = id(mt_out_hist);
+            float s = 0; for (float v : h) s += v;
+            int n = h.size();
+            float cur = id(mt_out_n) > 0 ? id(mt_out_sum) / id(mt_out_n) : NAN;
+            float mean = n > 0 ? s / n : cur;
+            if (!std::isnan(mean)) id(mt_out_mean).publish_state(mean);
+            // ---- automatic summer / winter: zone 1 on / off (after 6 h of data, not in a vacation)
+            if (id(mt_season_auto).state && !id(mt_vac).state && n >= 12) {
+              int want = mean < id(mt_win_below).state ? 1 : mean > id(mt_sum_above).state ? 0 : id(mt_season);
+              if (want >= 0 && want != id(mt_season)) {
+                id(mt_season) = want;
+                if (want) id(mt_power_zone1).turn_on(); else id(mt_power_zone1).turn_off();
+                ESP_LOGI("mt_programs", "24 h mean %.1f -> %s", mean, want ? "Winter" : "Summer");
+              }
+            }
+          }
+          if (!now.is_valid()) return;
+          if (id(mt_vac).state && id(mt_vac_until).has_state()) {
+            auto u = id(mt_vac_until).state_as_esptime();
+            u.recalc_timestamp_local();
+            if (u.is_valid() && now.timestamp >= u.timestamp) { id(mt_vac).turn_off(); ESP_LOGI("mt_programs", "vacation ended"); }
+          }
+          datetime::TimeEntity *cal[4][8] = {
+            {id(mt_k1z1on), id(mt_k1z1off), id(mt_k1z2on), id(mt_k1z2off), id(mt_k1z3on), id(mt_k1z3off), id(mt_k1z4on), id(mt_k1z4off)},
+            {id(mt_k2z1on), id(mt_k2z1off), id(mt_k2z2on), id(mt_k2z2off), id(mt_k2z3on), id(mt_k2z3off), id(mt_k2z4on), id(mt_k2z4off)},
+            {id(mt_k3z1on), id(mt_k3z1off), id(mt_k3z2on), id(mt_k3z2off), id(mt_k3z3on), id(mt_k3z3off), id(mt_k3z4on), id(mt_k3z4off)},
+            {id(mt_k4z1on), id(mt_k4z1off), id(mt_k4z2on), id(mt_k4z2off), id(mt_k4z3on), id(mt_k4z3off), id(mt_k4z4on), id(mt_k4z4off)}
+          };
+          int m = now.hour * 60 + now.minute;
+          auto in_cal = [&](int c) {
+            if (c < 0 || c > 3) return false;
+            for (int f = 0; f < 4; f++) {
+              int a = cal[c][2 * f]->hour * 60 + cal[c][2 * f]->minute;
+              int b = cal[c][2 * f + 1]->hour * 60 + cal[c][2 * f + 1]->minute;
+              if (a == b) continue;
+              if (b == 0) b = 1440;
+              if (a < b ? (m >= a && m < b) : (m >= a || m < b)) return true;
+            }
+            return false;
+          };
+          int wd = (now.day_of_week + 5) % 7;
+          select::Select *co[7] = {id(mt_co_mon), id(mt_co_tue), id(mt_co_wed), id(mt_co_thu), id(mt_co_fri), id(mt_co_sat), id(mt_co_sun)};
+          select::Select *cw[7] = {id(mt_cwu_mon), id(mt_cwu_tue), id(mt_cwu_wed), id(mt_cwu_thu), id(mt_cwu_fri), id(mt_cwu_sat), id(mt_cwu_sun)};
+          // ---- CH program AUTO
+          bool autop = id(mt_prog_mode).current_option() == std::string("auto") && !id(mt_vac).state;
+          int ph = autop ? (in_cal((int) co[wd]->active_index().value_or(0)) ? 1 : 0) : -2;
+          if (ph != id(mt_phase_last)) {
+            int was = id(mt_phase_last);
+            id(mt_phase_last) = ph;
+            id(mt_phase).publish_state(ph == 1 ? "comfort" : ph == 0 ? "economy" : "manual");
+            bool zoneoff = id(mt_eco_action).current_option() == std::string("zone_off");
+            if (ph >= 0 && id(mt_power_room).state) {
+              // room temperature control: Comfort / Eco room setpoint
+              float t = ph == 1 ? id(mt_comfort).state : id(mt_eco_room).state;
+              if (!std::isnan(t)) { auto c = id(mt_room_set).make_call(); c.set_value(t); c.perform(); }
+            } else if (ph == 0 && zoneoff) {
+              id(mt_power_zone1).turn_off();
+            } else if (ph == 0) {
+              id(mt_wset_before) = id(mt_water_set_z1).state;
+              auto c = id(mt_water_set_z1).make_call(); c.set_value(id(mt_water_set_z1).state - id(mt_eco_red).state); c.perform();
+            }
+            if (was == 0 && ph != 0) {
+              if (zoneoff) id(mt_power_zone1).turn_on();
+              else if (!std::isnan(id(mt_wset_before))) { auto c = id(mt_water_set_z1).make_call(); c.set_value(id(mt_wset_before)); c.perform(); id(mt_wset_before) = NAN; }
+            }
+            ESP_LOGI("mt_programs", "CH program: %s", ph == 1 ? "Comfort" : ph == 0 ? "Eco" : "manual");
+          }
+          // ---- DHW program
+          if (id(mt_dhw_prog).state && !id(mt_vac).state) {
+            bool comfort = in_cal((int) cw[wd]->active_index().value_or(0));
+            int dph = comfort ? 1 : 0;
+            if (dph != id(mt_dhw_phase_last)) {
+              id(mt_dhw_phase_last) = dph;
+              id(mt_dhw_phase).publish_state(comfort ? "comfort" : "economy");
+              float t = comfort ? id(mt_dhw_comfort).state : id(mt_dhw_eco).state;
+              if (!std::isnan(t)) { auto c = id(mt_dhw_set).make_call(); c.set_value(t); c.perform(); }
+            }
+          } else if (id(mt_dhw_phase_last) != -2) {
+            id(mt_dhw_phase_last) = -2;
+            id(mt_dhw_phase).publish_state("manual");
+          }

@@ -143,7 +143,7 @@ class ImmergasSetpointsCard extends HubCard {
       title: cool ? this.t("Chłodzenie", "Cooling") : this.t("Ogrzewanie", "Heating"), sub: this.t("CO · strefa 1", "CH · zone 1"), temp: z,
       extra: !isNaN(hum) ? html`<span class="hum"><ha-icon icon="mdi:water-percent"></ha-icon>${Math.round(hum)}%${!isNaN(ht) ? html`<span style="opacity:.55"> / ${Math.round(ht)}%</span>` : nothing}</span>` : nothing,
       status: chRun ? (cool ? this.t("chłodzi", "cooling") : this.t("grzeje", "heating")) : this.t("czuwa", "standby"), active: chRun,
-      profiles: this.mtx ? [] : [["eco", this.t("EKO", "ECO"), this.n(eKey)], ["comfort", this.t("KOMFORT", "COMFORT"), this.n(cKey)]],
+      profiles: this.mtx && !this.eid(eKey) ? [] : [["eco", this.t("EKO", "ECO"), this.n(eKey)], ["comfort", this.t("KOMFORT", "COMFORT"), this.n(cKey)]],
       hint: this.mtx ? (this.on("mt_room_ctl") ? this.t("Midea: sterowanie wg temperatury pokoju", "Midea: room temperature control")
           : this.t("Midea: nastawa wody strefy 1 ", "Midea: zone 1 water setpoint ") + this.f(this.n("mt_wset"), 0) + " °C" + (this.on("mt_curve_on") ? this.t(" · krzywa nr ", " · curve no. ") + (this.s("mt_curve_n") ?? "–") : ""))
         : auto ? this.t("program AUTO: nastawę zmienia harmonogram", "AUTO program: the schedule changes the setpoint") + (phase ? this.t(" · teraz ", " · now ") + phase : "") : undefined,
@@ -166,7 +166,7 @@ class ImmergasSetpointsCard extends HubCard {
     }) : this.tileView({
       k: "dhw_set", meas: "tank", icon: "mdi:water-boiler", col: "peach", title: this.t("Ciepła woda", "Hot water"), sub: this.t("CWU · zasobnik", "DHW · cylinder"), temp: tank,
       status: dhwRun ? this.t("grzeje", "heating") : this.t("czuwa", "standby"), active: dhwRun,
-      profiles: this.mtx ? [] : [["eco", this.t("EKO", "ECO"), dEco], ["comfort", this.t("KOMFORT", "COMFORT"), dCom]],
+      profiles: this.mtx && !dd ? [] : [["eco", this.t("EKO", "ECO"), dEco], ["comfort", this.t("KOMFORT", "COMFORT"), dCom]],
       hint: !isNaN(act) && !isNaN(set) && Math.abs(act - set) >= 1 ? this.t("piec grzeje teraz do ", "the boiler now heats to ") + this.f(act, 0) + " °C"
         : undefined,
     });
