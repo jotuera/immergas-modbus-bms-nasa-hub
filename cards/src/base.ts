@@ -232,7 +232,11 @@ export abstract class HubCard extends LitElement {
     this.idx = hubIndex(this.hass, () => this.requestUpdate(), this.config.source);
     // ot_preview: {card key: entity_id} - shows the OpenTherm variant with stand-in entities (a preview without a VICTRIX)
     if (this.idx && this.config.ot_preview && typeof this.config.ot_preview === "object")
-      this.idx = { ...this.idx, ot: true, ids: { ...this.idx.ids, ...this.config.ot_preview } };
+      this.idx = { ...this.idx, ot: true, ids: this.config.preview_only ? { ...this.config.ot_preview } : { ...this.idx.ids, ...this.config.ot_preview } };
+    // preview: {card key: entity_id} - any variant with stand-in entities (test dashboards of the ot_ / gb_ / mt_ packages);
+    // preview_only: true = only these entities, nothing of the real hub / Dominus leaks in
+    if (this.idx && this.config.preview && typeof this.config.preview === "object")
+      this.idx = { ...this.idx, ids: this.config.preview_only ? { ...this.config.preview } : { ...this.idx.ids, ...this.config.preview } };
     // Dominus (Modbus) on a gas boiler (declared "Device type"): the heat pump entities leave the index, so every card
     // hides cooling, humidity, the night function U11 and the boiler integration I01-I10 by itself
     if (this.idx?.source === "dominus" && !this.idx.ot) {
