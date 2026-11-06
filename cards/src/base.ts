@@ -159,6 +159,11 @@ export abstract class HubCard extends LitElement {
   protected get ot() { return !!this.idx?.ot; }
   /** the ESP OpenTherm hub (immergas_ot): OpenTherm cards, the hub instead of the Dominus module */
   protected get esp() { return !!this.idx?.esp; }
+  /** ESP hub in the gateway mode with the room unit relayed (not standalone) */
+  protected get espRelay() {
+    const st = this.s("ot_standalone") ?? "";
+    return this.esp && !!this.eid("ot_room_link") && this.on("ot_room_link") && !["on", "tak", "yes"].includes(st);
+  }
   /** Dominus (Modbus) declared as a gas boiler - no heat pump values */
   protected get gas() { return !!this.idx?.gas; }
   /** F1/F2 write gate: locked only while the "Active ODU control" switch is exposed and off (hub v23+ keeps it armed and hidden) */
@@ -213,7 +218,7 @@ export abstract class HubCard extends LitElement {
   /** ESP hub (master): what the hub needs to run the boiler without the CAR V2 */
   protected espReady() {
     const code = String(this.s("err_code") ?? "").replace(/\D/g, ""), room = !isNaN(this.n("zone1"));
-    const gw = !!this.eid("ot_room_link") && this.on("ot_room_link") && !this.on("ot_standalone");
+    const gw = this.espRelay;
     type Row = [boolean | null, string, string];
     const rows: Row[] = [
       [this.eid("ot_link") ? this.on("ot_link") : null, this.t("Kocioł odpowiada na OpenTherm", "The boiler answers OpenTherm"), this.t("adapter master na zaciskach pilota (41 / 44 albo 42 / 43)", "master adapter on the remote terminals (41 / 44 or 42 / 43)")],

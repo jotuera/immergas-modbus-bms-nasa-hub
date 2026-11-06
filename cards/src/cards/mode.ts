@@ -382,7 +382,7 @@ class ImmergasModeCard extends HubCard {
       <div class="modes">${this.modes()}</div>
       ${this.config.show_source === false || this.ot ? nothing : html`${modeIdx === 3 ? this.sourceRow() : nothing}${modeIdx >= 1 ? this.dhwSourceRow() : nothing}`}
       ${this.otRO ? html`<div class="hint">🔒 ${this.t("Tylko odczyt – tryb ustawia pilot (CAR V2 / Super Amico)", "Read only – the remote (CAR V2 / Super Amico) sets the mode")}</div>`
-        : this.esp ? (this.on("ot_room_link") && !this.on("ot_standalone") ? html`<div class="hint">${this.t("Bramka: zezwolenia CO / CWU ustawia pilot, dopóki w hubie nie włączysz „Nadpisz zezwolenia CO i CWU”.",
+        : this.esp ? (this.espRelay && !this.on("ot_ov_flags") ? html`<div class="hint">${this.t("Bramka: zezwolenia CO / CWU ustawia pilot, dopóki w hubie nie włączysz „Nadpisz zezwolenia CO i CWU”.",
           "Gateway: the room unit sets CH / DHW enable until you switch on “Override CH and DHW enable” in the hub.")}</div>` : nothing)
         : this.ot ? html`<div class="hint">${this.t("OpenTherm: z pilotem CAR V2 tryb ustawia też pilot – zmiana tutaj może zostać przez niego nadpisana", "OpenTherm: with a CAR V2 remote the remote also sets the mode – a change here may be overridden by it")}</div>` : nothing}
       ${this.eid("u11") && !this.ot ? night : nothing}

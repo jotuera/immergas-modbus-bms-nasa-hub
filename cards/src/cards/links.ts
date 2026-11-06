@@ -165,7 +165,7 @@ class ImmergasLinksCard extends HubCard {
         + this.t(" · bez odp. ", " · no answer ") + Math.round(tos || 0) + (isNaN(bad) ? "" : ` · ${this.f(bad, 1)} %`) });
     // the room unit: only with the gateway package (slave adapter); without it the hub is the master
     if (this.eid("ot_room_link")) {
-      const rOn = this.on("ot_room_link"), alone = this.on("ot_standalone") || this.s("ot_standalone") === "tak" || this.s("ot_standalone") === "yes";
+      const rOn = this.on("ot_room_link"), alone = !this.espRelay;
       const ov = this.on("ot_ov_flags"), room = this.n("zone1"), tag = "lk_ovf", armed = this.isArmed(tag);
       out.push({ k: "ot_room_link", icon: "mdi:remote", name: ["Pilot", "Room unit"], bus: this.t("OpenTherm · bramka", "OpenTherm · gateway"),
         st: rOn && !alone ? "ok" : "emu",
