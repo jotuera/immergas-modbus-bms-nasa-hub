@@ -52,6 +52,7 @@ modbus_controller:
     update_interval: ${gb_diag_interval}
 
 globals:
+  - { id: gb_eco_shift, type: float, initial_value: "0" }   # K added to the flow by gb_programs (Eco)
   # word written to 512 while the heat request is on: 0x0055; PRO only: 0x0155 = request without the DHW priority
   - id: gb_request_word
     type: uint16_t

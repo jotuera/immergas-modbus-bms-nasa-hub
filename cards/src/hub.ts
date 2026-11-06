@@ -220,6 +220,14 @@ const ESP_GB: Partial<Record<Key, string[]>> = {
   gb_cool_min: ["Min. temperatura chłodzenia", "Cooling min. temperature"],
 };
 
+// gb_programs: the same entity names as ot_programs (calendars, CH / DHW programs, anti-legionella, vacation, season)
+for (const k of Object.keys(ESP_OT) as Key[]) {
+  if (/^(co_|cwu_|k\d)/.test(k) || ["prog_mode", "dhw_sched", "dhw_comfort_dd", "dhw_eco_dd", "zone1_phase", "dhw_phase", "ot_leg", "ot_leg_t", "ot_leg_run",
+    "dom_vacation", "dom_vac_until", "ot_vac_action", "dom_auto_season", "dom_win_below", "dom_sum_above", "ot_out_mean"].includes(k)) ESP_GB[k] = ESP_OT[k];
+}
+ESP_GB.ot_eco_action = ["W fazie Eko", "In the Eco phase"];
+ESP_GB.ot_eco_red = ["Obniżenie zasilania w Eko", "Eco flow reduction"];
+
 /** the ESP gas boiler hub: its "BMS connection" switch, then the entities with the same name prefix */
 function buildEspGb(hass: any): HubIndex | null {
   const r = findPkg<Key>(hass.states ?? {}, ESP_GB.gb_conn!, /^(switch|input_boolean)\./, ESP_GB);

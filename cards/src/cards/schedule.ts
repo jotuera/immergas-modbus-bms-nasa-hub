@@ -143,6 +143,8 @@ class ImmergasScheduleCard extends HubCard {
     const sets = cwu
       ? ddDhw ? [["dhw_eco_dd", "mdi:leaf", this.t("Eko", "Eco")], ["dhw_comfort_dd", "mdi:sun-thermometer", this.t("Komfort", "Comfort")]]
         : [["dhw_set", "mdi:water-thermometer", this.t("Nastawa CWU", "DHW setpoint")]]
+      // gas boiler over BMS: no room temperature - Eco lowers the flow (or drops the heat request)
+      : this.gbx ? (this.eid("ot_eco_red") && this.s("ot_eco_action") !== "no_request" ? [["ot_eco_red", "mdi:thermometer-minus", this.t("Eko: obniżenie zasilania", "Eco: flow reduction")]] : [])
       : [["eco_heat", "mdi:leaf", this.t("Eko", "Eco")], ["comfort_heat", "mdi:sun-thermometer", this.t("Komfort", "Comfort")]];
     return html`
       <div class="top">
@@ -164,9 +166,12 @@ class ImmergasScheduleCard extends HubCard {
         const set = (d: number) => !isNaN(v) && this.call("number", "set_value", k as Key, { value: Math.max(a.min ?? 5, Math.min(a.max ?? 60, v + d * step)) });
         return html`<div class="price" style="background:${ca("peach", 0.07)};border:1px solid ${ca("peach", 0.22)}">
           <div class="btn" @click=${() => set(-1)}><ha-icon icon="mdi:minus"></ha-icon></div>
-          <div class="pc" @click=${() => this.moreInfo(k as Key)}><div class="lbl"><ha-icon icon=${icon} style="--mdc-icon-size:13px"></ha-icon> ${lbl}</div><div class="pv">${this.f(v, 1, 1)} °C</div></div>
+          <div class="pc" @click=${() => this.moreInfo(k as Key)}><div class="lbl"><ha-icon icon=${icon} style="--mdc-icon-size:13px"></ha-icon> ${lbl}</div><div class="pv">${this.f(v, 1, a.unit_of_measurement === "K" ? 0 : 1)} ${a.unit_of_measurement ?? "°C"}</div></div>
           <div class="btn" @click=${() => set(1)}><ha-icon icon="mdi:plus"></ha-icon></div></div>`;
       })}</div>
+      ${!cwu && this.gbx && this.eid("ot_eco_action") ? this.toggles([["ot_eco_action", "mdi:leaf", "green", this.t("Eko bez żądania grzania", "Eco without a heat request"),
+        this.s("ot_eco_action") === "no_request" ? this.t("w fazie Eko CO stoi (hub nie wysyła żądania)", "in the Eco phase CH stands (no heat request)")
+          : this.t("wył. – Eko obniża zasilanie (krzywą albo nastawę)", "off – Eco lowers the flow (the curve or the setpoint)"), true]]) : nothing}
       ${cwu && ddDhw && this.eid("dhw_sched") ? this.toggles([["dhw_sched", "mdi:calendar-clock", "peach", this.t("Komfort / Eko wg harmonogramu CWU", "Comfort / Eco by the DHW schedule"),
         this.on("dhw_sched") ? this.t("teraz ", "now ") + (this.bad("dhw_phase") ? "–" : this.txt("dhw_phase")) + " · " + this.t("nastawa", "setpoint") + " " + this.f(this.n("dhw_set"), 1, 1) + " °C"
           : this.t("wył. – piec trzyma jedną nastawę CWU", "off – the boiler keeps one DHW setpoint"), true]]) : nothing}

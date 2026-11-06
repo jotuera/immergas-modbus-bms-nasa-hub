@@ -77,7 +77,7 @@ interval:
           float fc = id(gb_curve_flow_cold).state, fw = id(gb_curve_flow_warm).state;
           float t = ow > oc ? (out - oc) / (ow - oc) : 0.0f;
           t = t < 0 ? 0 : (t > 1 ? 1 : t);
-          float flow = fc + (fw - fc) * t;
+          float flow = fc + (fw - fc) * t + id(gb_eco_shift);   // gb_programs: Eco lowers the curve
           float lo = isnan(id(gb_ch_min).state) ? 20.0f : id(gb_ch_min).state;
           float hi = isnan(id(gb_ch_max).state) ? 85.0f : id(gb_ch_max).state;
           flow = flow < lo ? lo : (flow > hi ? hi : flow);

@@ -69,6 +69,7 @@ wymaga potem włączonego przełącznika *Żądanie grzania (CO)* – steruj nim
      - packages/gb_sensors.yaml
      - packages/gb_superior.yaml       # albo gb_extra / gb_pro / gb_mtop / gb_iu23
      - packages/gb_curve.yaml          # opcjonalnie: krzywa pogodowa w hubie
+     - packages/gb_programs.yaml       # opcjonalnie: programy CO / CWU, anty-legionella, wyjazd, Lato / Zima
    ```
 
    - **Dokładnie jeden pakiet modelu:** `gb_superior` (VICTRIX SUPERIOR 2021 / ZEUS Superior 25–35), `gb_extra`
@@ -91,6 +92,7 @@ wymaga potem włączonego przełącznika *Żądanie grzania (CO)* – steruj nim
 | `gb_sensors` | zasilanie, powrót, CWU, temp. zewnętrzna, modulacja, obliczone zasilanie, temperatura za sprzęgłem (HVDT) |
 | `gb_superior` / `gb_extra` / `gb_pro` / `gb_mtop` / `gb_iu23` | dodatki modelu z tabeli niżej – wczytaj dokładnie jeden |
 | `gb_curve` (opcjonalny) | krzywa pogodowa w hubie: co minutę nastawa zasilania CO z sondy zewnętrznej kotła, między dwoma punktami, w granicach limitów kotła |
+| `gb_programs` (opcjonalny, z `gb_curve`) | programy pilota liczone w hubie: program CO AUTO (4 kalendarze × 4 zakresy, kalendarz na każdy dzień; Eko obniża zasilanie – krzywą albo nastawę – albo zdejmuje żądanie grzania), program CWU (nastawa Komfort / Eko), anty-legionella (co tydzień / codziennie o 02:00, trzymana 20 min), tryb wyjazdowy (Stand-by / tylko CWU do daty), automatyczne Lato / Zima wg średniej zewnętrznej 24 h |
 | `lang/gb_en`, `lang/gb_pl` | nazwy encji (`gb_name_prefix`, domyślnie „Immergas Gas”) |
 
 Plik konfiguracji i kroki są w sekcji [Instalacja](#instalacja).
