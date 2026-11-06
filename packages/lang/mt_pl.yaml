@@ -200,3 +200,8 @@ substitutions:
   n_mt_last_srv: "${mt_name_prefix} - Ostatni przegląd"
   n_mt_srv_done: "${mt_name_prefix} - Przegląd wykonany"
   n_mt_maint_due: "${mt_name_prefix} - Przegląd kotła"
+  # mt_busmap
+  n_mt_map_status: "${mt_name_prefix} - Mapa magistrali: skan"
+  n_mt_map_unknown: "${mt_name_prefix} - Mapa magistrali: nieopisane rejestry"
+  n_mt_map_scan: "${mt_name_prefix} - Skanuj rejestry"
+  n_mt_map_report: "${mt_name_prefix} - Zgłoś mapę magistrali"

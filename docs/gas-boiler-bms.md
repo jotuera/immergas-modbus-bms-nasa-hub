@@ -95,6 +95,7 @@ is one. **Heating** then needs the *Heat request (CH)* switch on – drive it fr
 | `gb_curve` (optional) | weather curve in the hub: every minute the CH flow setpoint from the boiler's outdoor probe, between two points, clamped to the boiler limits |
 | `gb_programs` (optional, with `gb_curve`) | the programs of a room unit run in the hub: CH program AUTO (4 calendars × 4 ranges, a calendar per weekday; Eco lowers the flow – the curve or the setpoint – or drops the heat request), DHW program (Comfort / Eco DHW setpoint), anti-legionella (weekly / daily at 02:00, held 20 min), vacation (Standby / DHW only until a date), automatic Summer / Winter by the 24 h outdoor mean |
 | `gb_boiler_params` (optional) | the boiler model / interface (the cards show how to switch BMS on at the boiler) and the service reminder (last service, interval, service done, due) |
+| `gb_busmap` (optional) | register scanner for the Bus map card: reads the usual BMS register ranges one by one (a few minutes) and keeps those that answer and that no gb_ package reads; *Report bus map* turns them into a pre-filled GitHub issue |
 | `lang/gb_en`, `lang/gb_pl` | entity names (`gb_name_prefix`, default "Immergas Gas") |
 
 The configuration file and the steps are in [Installation](#installation).

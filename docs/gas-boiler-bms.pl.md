@@ -95,6 +95,7 @@ wymaga potem włączonego przełącznika *Żądanie grzania (CO)* – steruj nim
 | `gb_curve` (opcjonalny) | krzywa pogodowa w hubie: co minutę nastawa zasilania CO z sondy zewnętrznej kotła, między dwoma punktami, w granicach limitów kotła |
 | `gb_programs` (opcjonalny, z `gb_curve`) | programy pilota liczone w hubie: program CO AUTO (4 kalendarze × 4 zakresy, kalendarz na każdy dzień; Eko obniża zasilanie – krzywą albo nastawę – albo zdejmuje żądanie grzania), program CWU (nastawa Komfort / Eko), anty-legionella (co tydzień / codziennie o 02:00, trzymana 20 min), tryb wyjazdowy (Stand-by / tylko CWU do daty), automatyczne Lato / Zima wg średniej zewnętrznej 24 h |
 | `gb_boiler_params` (opcjonalny) | model kotła / interfejs (karty pokazują, jak włączyć BMS na kotle) i przypomnienie o przeglądzie (ostatni przegląd, interwał, przegląd wykonany, termin) |
+| `gb_busmap` (opcjonalny) | skaner rejestrów dla karty Mapa magistral: czyta po kolei typowe zakresy rejestrów BMS (kilka minut) i zostawia te, które odpowiadają, a żaden pakiet gb_ ich nie czyta; *Zgłoś mapę magistrali* robi z nich gotowe zgłoszenie na GitHubie |
 | `lang/gb_en`, `lang/gb_pl` | nazwy encji (`gb_name_prefix`, domyślnie „Immergas Gas”) |
 
 Plik konfiguracji i kroki są w sekcji [Instalacja](#instalacja).

@@ -151,3 +151,8 @@ substitutions:
   n_gb_last_srv: "${gb_name_prefix} - Ostatni przegląd"
   n_gb_srv_done: "${gb_name_prefix} - Przegląd wykonany"
   n_gb_maint_due: "${gb_name_prefix} - Przegląd kotła"
+  # gb_busmap
+  n_gb_map_status: "${gb_name_prefix} - Mapa magistrali: skan"
+  n_gb_map_unknown: "${gb_name_prefix} - Mapa magistrali: nieopisane rejestry"
+  n_gb_map_scan: "${gb_name_prefix} - Skanuj rejestry"
+  n_gb_map_report: "${gb_name_prefix} - Zgłoś mapę magistrali"

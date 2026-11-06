@@ -7,12 +7,16 @@ import { Key } from "../names";
 
 const ISSUES = "https://github.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub/issues/new";
 const URL_BUDGET = 7000;
-type Bus = "DD" | "TT" | "FF";
+type Bus = "DD" | "TT" | "FF" | "GB" | "MT";
 const BUSES: [Bus, Key, Key, string, [string, string]][] = [
   ["DD", "map_dd", "map_dd_rep", "D+/D-", ["rejestry odczytane i zapisane przez piec", "registers read and written by the boiler"]],
   ["TT", "map_tt", "map_tt_rep", "T-/T+", ["wyniki skanera PDU (Skanuj PDU …)", "results of the PDU scanner (Scan PDU …)"]],
   ["FF", "map_ff", "map_ff_rep", "F1/F2", ["wszystkie wiadomości NASA", "every NASA message"]],
+  ["GB", "map_gb", "map_gb_rep", "Modbus BMS", ["rejestry, na które kocioł odpowiada, a żaden pakiet gb_ ich nie czyta (skan)", "registers the boiler answers that no gb_ package reads (scan)"]],
+  ["MT", "map_mt", "map_mt_rep", "Modbus · Midea", ["rejestry, na które jednostka odpowiada, a żaden pakiet mt_ ich nie czyta (skan)", "registers the unit answers that no mt_ package reads (scan)"]],
 ];
+// the buses with a register scanner in the hub: [scan button, scan status]
+const SCAN: Partial<Record<Bus, [Key, Key]>> = { GB: ["map_gb_scan", "map_gb_st"], MT: ["map_mt_scan", "map_mt_st"] };
 
 class ImmergasBusMapCard extends HubCard {
   private report: { bus: Bus; url: string; text: string } | null = null;
@@ -54,7 +58,8 @@ class ImmergasBusMapCard extends HubCard {
       this.unsub = null;
       this.requestUpdate();
     }, "esphome.immergas_bus_map");
-    this.hass.callService("button", "press", { entity_id: this.eid(btn) });
+    const bid = this.eid(btn)!;
+    this.hass.callService(bid.split(".")[0], "press", { entity_id: bid });
     setTimeout(() => {
       if (done) return;
       this.waiting = null;
@@ -72,16 +77,18 @@ class ImmergasBusMapCard extends HubCard {
         <div class="hint">${this.t("Wgraj pakiet hub_busmap.yaml, żeby zbierać mapę magistral.", "Add the hub_busmap.yaml package to collect the bus map.")}</div>`;
     return html`
       ${this.head("mdi:map-search-outline", this.t("Mapa magistral", "Bus map"), this.t("nieopisane PDU", "undescribed PDUs"))}
-      <div class="model">
+      ${this.eid("hub_model") ? html`<div class="model">
         <ha-icon icon="mdi:water-boiler"></ha-icon>
         <input .value=${model} placeholder=${this.t("Model kotła i pompy (z tabliczki)", "Boiler and heat pump model (rating plate)")}
           @change=${(e: Event) => this.call("text", "set_value", "hub_model", { value: (e.target as HTMLInputElement).value.trim() })}>
-      </div>
+      </div>` : nothing}
       <div class="rows">${BUSES.filter(([, k]) => this.eid(k)).map(([bus, k, btn, label, sub]) => {
-        const n = this.n(k);
-        return html`<div class="row" style=${box("sky", false)}>
+        const n = this.n(k), sc = SCAN[bus], st = sc ? this.s(sc[1]) ?? "" : "", running = /%$/.test(st), tag = "scan_" + bus, armed = this.isArmed(tag);
+        return html`<div class="row" style=${box(running ? "yellow" : "sky", running)}>
           <div class="cx"><div class="ln">${bus}<span class="bus">${label}</span></div>
-            <div class="ld">${this.t(sub[0], sub[1])}</div></div>
+            <div class="ld">${this.t(sub[0], sub[1])}${sc ? html` · <b>${running ? this.t("skanuję ", "scanning ") + st : st === "done" ? this.t("skan zakończony", "scan done") : this.t("jeszcze nie skanowano", "not scanned yet")}</b>` : nothing}</div></div>
+          ${sc && this.eid(sc[0]) ? html`<button class="go" ?disabled=${running} style=${armed ? box("yellow", true) : ""}
+            @click=${() => this.confirm(tag, () => this.call("button", "press", sc[0]))}><ha-icon icon="mdi:radar"></ha-icon>${armed ? this.t("Potwierdź – kilka minut", "Confirm – a few minutes") : this.t("Skanuj", "Scan")}</button>` : nothing}
           <div class="cnt" @click=${() => this.moreInfo(k)}>${isNaN(n) ? "–" : Math.round(n)}</div>
           <button class="go" ?disabled=${!!this.waiting || !this.eid(btn)} @click=${() => this.prepare(bus, btn)}>
             <ha-icon icon=${this.waiting === bus ? "mdi:timer-sand" : "mdi:github"}></ha-icon>${this.t("Przygotuj zgłoszenie", "Prepare report")}</button>
@@ -93,7 +100,9 @@ class ImmergasBusMapCard extends HubCard {
             "Nothing has been sent: the link opens GitHub with the issue filled in (model, hub version, the map – no addresses or passwords). Check it and press Create, or close the page.")}</div>
           <pre>${this.report.text}</pre></div>`
         : html`<div class="rep" style=${box("red", true)}><div class="ld">${this.t("Hub nie odpowiedział w 15 s – czy jest online?", "The hub did not answer within 15 s – is it online?")}</div></div>`) : nothing}
-      <div class="hint">${this.t("Mapa zbiera się od startu huba. TT wypełnia skaner PDU (przyciski Skanuj PDU …). Stałe zera zimą też mogą ożyć – zgłoszenie z innego modelu pomaga najbardziej.",
+      <div class="hint">${this.gbx || this.mtx ? this.t("Skan czyta po kolei każdy rejestr z typowych zakresów (kilka minut, zwykłe odpytywanie działa dalej) i zostawia te, które odpowiadają, a żaden pakiet ich nie opisuje. Potem Przygotuj zgłoszenie – nic nie jest wysyłane, dopóki nie naciśniesz Create na GitHubie.",
+        "The scan reads every register of the usual ranges one by one (a few minutes, the normal polling keeps running) and keeps the ones that answer and that no package describes. Then Prepare report – nothing is sent until you press Create on GitHub.")
+        : this.t("Mapa zbiera się od startu huba. TT wypełnia skaner PDU (przyciski Skanuj PDU …). Stałe zera zimą też mogą ożyć – zgłoszenie z innego modelu pomaga najbardziej.",
         "The map builds up from the hub start. TT is filled by the PDU scanner (Scan PDU … buttons). Constant zeros may come alive in winter – a report from another model helps the most.")}</div>`;
   }
 

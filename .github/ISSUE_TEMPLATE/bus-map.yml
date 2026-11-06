@@ -19,7 +19,7 @@ body:
     id: bus
     attributes:
       label: Bus
-      description: DD (D+/D-), TT (T-/T+) or FF (F1/F2)
+      description: DD (D+/D-), TT (T-/T+), FF (F1/F2), GB (gas boiler Modbus BMS) or MT (MAGIS M Midea)
   - type: input
     id: hub_version
     attributes:

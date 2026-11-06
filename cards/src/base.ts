@@ -344,7 +344,7 @@ export abstract class HubCard extends LitElement {
     const dom = entity_id.split(".")[0];
     if (dom.startsWith("input_") && dom !== domain) {
       if (dom === "input_datetime" && service === "set_value") return this.hass.callService(dom, "set_datetime", { entity_id, ...data });
-      if (dom === "input_boolean" || dom === "input_number" || dom === "input_select") return this.hass.callService(dom, service, { entity_id, ...data });
+      if (dom === "input_boolean" || dom === "input_number" || dom === "input_select" || dom === "input_button") return this.hass.callService(dom, service, { entity_id, ...data });
     }
     this.hass.callService(domain, service, { entity_id, ...data });
   }

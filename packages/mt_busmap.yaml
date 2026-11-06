@@ -1,0 +1,133 @@
+# Immergas MAGIS M (Midea) - package "mt_busmap" (optional)
+# Register scanner for the bus map: "Scan registers" reads every register of the blocks below one by one (about 300 reads,
+# a few minutes, the normal polling keeps running) and keeps the ones that answer and that no entity of the mt_
+# packages reads yet. "Report bus map" sends them as an `esphome.immergas_bus_map` event; the Bus map card turns it into
+# a link to a pre-filled GitHub issue (model, hub version, the registers). Nothing leaves Home Assistant unless the user
+# opens the link and presses Create on GitHub.
+# Uses the modbus_client actions of ESPHome 2026.9+.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+globals:
+  - { id: mt_scan_run, type: bool, initial_value: "false" }
+  - { id: mt_scan_wait, type: bool, initial_value: "false" }
+  - { id: mt_scan_blk, type: int, initial_value: "0" }
+  - { id: mt_scan_off, type: int, initial_value: "0" }
+  - { id: mt_scan_sent, type: uint32_t, initial_value: "0" }
+  - { id: mt_scan_found, type: "std::map<uint32_t, uint16_t>" }   # (type << 16 | register) -> value, undescribed only
+  - { id: mt_scan_done, type: int, initial_value: "0" }
+
+script:
+  - id: mt_scan_read
+    mode: single
+    then:
+      - if:
+          condition:
+            lambda: 'static const int B[][3] = {{1, 0, 300}}; return B[id(mt_scan_blk)][0] == 1;'
+          then:
+            - modbus_client.read_holding_registers:
+                modbus_id: mt_modbus
+                address: !lambda 'return id(mt_hp)->device_address();'
+                start_address: !lambda 'static const int B[][3] = {{1, 0, 300}}; return (uint16_t) (B[id(mt_scan_blk)][1] + id(mt_scan_off));'
+                count: 1
+                on_response:
+                  - lambda: 'id(mt_scan_store)->execute(1, (int) values[0]);'
+                on_error:
+                  - lambda: 'id(mt_scan_wait) = false;'
+                on_no_response:
+                  then:
+                    - lambda: 'id(mt_scan_wait) = false;'
+          else:
+            - modbus_client.read_input_registers:
+                modbus_id: mt_modbus
+                address: !lambda 'return id(mt_hp)->device_address();'
+                start_address: !lambda 'static const int B[][3] = {{1, 0, 300}}; return (uint16_t) (B[id(mt_scan_blk)][1] + id(mt_scan_off));'
+                count: 1
+                on_response:
+                  - lambda: 'id(mt_scan_store)->execute(0, (int) values[0]);'
+                on_error:
+                  - lambda: 'id(mt_scan_wait) = false;'
+                on_no_response:
+                  then:
+                    - lambda: 'id(mt_scan_wait) = false;'
+  - id: mt_scan_store
+    mode: queued
+    parameters:
+      type: int
+      value: int
+    then:
+      - lambda: |-
+          static const int B[][3] = {{1, 0, 300}};
+          static const std::set<int> KH = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 100, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 135, 136, 137, 138, 140, 143, 145, 148, 150, 151, 187, 189, 199, 201, 202, 203, 204, 207, 208, 231, 232, 265, 266, 267, 268}, KI = {};
+          int reg = B[id(mt_scan_blk)][1] + id(mt_scan_off);
+          bool known = type == 1 ? KH.count(reg) > 0 : KI.count(reg) > 0;
+          if (!known) id(mt_scan_found)[((uint32_t) type << 16) | (uint32_t) reg] = (uint16_t) value;
+          id(mt_scan_wait) = false;
+
+interval:
+  - interval: 200ms
+    then:
+      - lambda: |-
+          static const int B[][3] = {{1, 0, 300}};
+          static const int NB = sizeof(B) / sizeof(B[0]);
+          if (!id(mt_scan_run)) return;
+          if (id(mt_scan_wait) && millis() - id(mt_scan_sent) < 3000) return;   // a lost reply: move on after 3 s
+          if (id(mt_scan_sent) != 0) {                                            // advance past the register just read
+            id(mt_scan_done)++;
+            if (++id(mt_scan_off) >= B[id(mt_scan_blk)][2]) { id(mt_scan_off) = 0; id(mt_scan_blk)++; }
+          }
+          if (id(mt_scan_blk) >= NB) {
+            id(mt_scan_run) = false; id(mt_scan_sent) = 0;
+            id(mt_map_status).publish_state("done");
+            id(mt_map_unknown).publish_state(id(mt_scan_found).size());
+            ESP_LOGI("mt_busmap", "scan done: %u undescribed registers", (unsigned) id(mt_scan_found).size());
+            return;
+          }
+          id(mt_scan_wait) = true; id(mt_scan_sent) = millis() | 1;
+          id(mt_scan_read)->execute();
+  - interval: 10s
+    then:
+      - lambda: |-
+          if (!id(mt_scan_run)) return;
+          id(mt_map_status).publish_state(std::to_string(id(mt_scan_done) * 100 / 300) + " %");
+          id(mt_map_unknown).publish_state(id(mt_scan_found).size());
+
+text_sensor:
+  - { platform: template, name: "${n_mt_map_status}", id: mt_map_status, icon: "mdi:radar", entity_category: diagnostic }
+
+sensor:
+  - { platform: template, name: "${n_mt_map_unknown}", id: mt_map_unknown, icon: "mdi:map-search-outline", entity_category: diagnostic, accuracy_decimals: 0 }
+
+button:
+  - platform: template
+    name: "${n_mt_map_scan}"
+    id: mt_map_scan
+    icon: mdi:radar
+    entity_category: diagnostic
+    on_press:
+      - lambda: |-
+          if (id(mt_scan_run)) return;
+          id(mt_scan_found).clear();
+          id(mt_scan_blk) = 0; id(mt_scan_off) = 0; id(mt_scan_sent) = 0; id(mt_scan_done) = 0;
+          id(mt_scan_wait) = false; id(mt_scan_run) = true;
+          id(mt_map_status).publish_state("0 %");
+  - platform: template
+    name: "${n_mt_map_report}"
+    id: mt_map_report
+    icon: mdi:github
+    entity_category: diagnostic
+    on_press:
+      - homeassistant.event:
+          event: esphome.immergas_bus_map
+          data:
+            bus: MT
+            hub_version: "${mt_project_version}"
+            model: "MAGIS M (Midea)"
+            map: !lambda |-
+              std::string s;
+              char b[40];
+              for (auto &kv : id(mt_scan_found)) {
+                snprintf(b, sizeof(b), "%s %u = %u (0x%04X)\n", (kv.first >> 16) ? "H" : "I", (unsigned) (kv.first & 0xFFFF), kv.second, kv.second);
+                if (s.size() + strlen(b) > 5500) { s += "... (more)\n"; break; }
+                s += b;
+              }
+              return s.empty() ? std::string("(no undescribed registers - run Scan registers first)") : s;

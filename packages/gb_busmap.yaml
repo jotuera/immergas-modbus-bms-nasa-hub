@@ -1,0 +1,133 @@
+# Immergas Modbus BMS - package "gb_busmap" (optional)
+# Register scanner for the bus map: "Scan registers" reads every register of the blocks below one by one (about 640 reads,
+# a few minutes, the normal polling keeps running) and keeps the ones that answer and that no entity of the gb_
+# packages reads yet. "Report bus map" sends them as an `esphome.immergas_bus_map` event; the Bus map card turns it into
+# a link to a pre-filled GitHub issue (model, hub version, the registers). Nothing leaves Home Assistant unless the user
+# opens the link and presses Create on GitHub.
+# Uses the modbus_client actions of ESPHome 2026.9+.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+globals:
+  - { id: gb_scan_run, type: bool, initial_value: "false" }
+  - { id: gb_scan_wait, type: bool, initial_value: "false" }
+  - { id: gb_scan_blk, type: int, initial_value: "0" }
+  - { id: gb_scan_off, type: int, initial_value: "0" }
+  - { id: gb_scan_sent, type: uint32_t, initial_value: "0" }
+  - { id: gb_scan_found, type: "std::map<uint32_t, uint16_t>" }   # (type << 16 | register) -> value, undescribed only
+  - { id: gb_scan_done, type: int, initial_value: "0" }
+
+script:
+  - id: gb_scan_read
+    mode: single
+    then:
+      - if:
+          condition:
+            lambda: 'static const int B[][3] = {{0, 0, 64}, {0, 256, 64}, {0, 512, 64}, {0, 768, 128}, {0, 1024, 64}, {1, 0, 64}, {1, 256, 64}, {1, 512, 64}, {1, 1024, 64}}; return B[id(gb_scan_blk)][0] == 1;'
+          then:
+            - modbus_client.read_holding_registers:
+                modbus_id: gb_modbus
+                address: !lambda 'return id(gb_bms)->device_address();'
+                start_address: !lambda 'static const int B[][3] = {{0, 0, 64}, {0, 256, 64}, {0, 512, 64}, {0, 768, 128}, {0, 1024, 64}, {1, 0, 64}, {1, 256, 64}, {1, 512, 64}, {1, 1024, 64}}; return (uint16_t) (B[id(gb_scan_blk)][1] + id(gb_scan_off));'
+                count: 1
+                on_response:
+                  - lambda: 'id(gb_scan_store)->execute(1, (int) values[0]);'
+                on_error:
+                  - lambda: 'id(gb_scan_wait) = false;'
+                on_no_response:
+                  then:
+                    - lambda: 'id(gb_scan_wait) = false;'
+          else:
+            - modbus_client.read_input_registers:
+                modbus_id: gb_modbus
+                address: !lambda 'return id(gb_bms)->device_address();'
+                start_address: !lambda 'static const int B[][3] = {{0, 0, 64}, {0, 256, 64}, {0, 512, 64}, {0, 768, 128}, {0, 1024, 64}, {1, 0, 64}, {1, 256, 64}, {1, 512, 64}, {1, 1024, 64}}; return (uint16_t) (B[id(gb_scan_blk)][1] + id(gb_scan_off));'
+                count: 1
+                on_response:
+                  - lambda: 'id(gb_scan_store)->execute(0, (int) values[0]);'
+                on_error:
+                  - lambda: 'id(gb_scan_wait) = false;'
+                on_no_response:
+                  then:
+                    - lambda: 'id(gb_scan_wait) = false;'
+  - id: gb_scan_store
+    mode: queued
+    parameters:
+      type: int
+      value: int
+    then:
+      - lambda: |-
+          static const int B[][3] = {{0, 0, 64}, {0, 256, 64}, {0, 512, 64}, {0, 768, 128}, {0, 1024, 64}, {1, 0, 64}, {1, 256, 64}, {1, 512, 64}, {1, 1024, 64}};
+          static const std::set<int> KH = {256, 257, 512, 513, 514, 515, 1024, 1025, 1026, 1027, 61440, 61441}, KI = {0, 1, 768, 769, 770, 771, 772, 773, 774, 775, 776, 777, 778, 779, 780, 781, 782, 837, 839, 841, 1024, 1025, 1026, 1027, 1028, 1029};
+          int reg = B[id(gb_scan_blk)][1] + id(gb_scan_off);
+          bool known = type == 1 ? KH.count(reg) > 0 : KI.count(reg) > 0;
+          if (!known) id(gb_scan_found)[((uint32_t) type << 16) | (uint32_t) reg] = (uint16_t) value;
+          id(gb_scan_wait) = false;
+
+interval:
+  - interval: 200ms
+    then:
+      - lambda: |-
+          static const int B[][3] = {{0, 0, 64}, {0, 256, 64}, {0, 512, 64}, {0, 768, 128}, {0, 1024, 64}, {1, 0, 64}, {1, 256, 64}, {1, 512, 64}, {1, 1024, 64}};
+          static const int NB = sizeof(B) / sizeof(B[0]);
+          if (!id(gb_scan_run)) return;
+          if (id(gb_scan_wait) && millis() - id(gb_scan_sent) < 3000) return;   // a lost reply: move on after 3 s
+          if (id(gb_scan_sent) != 0) {                                            // advance past the register just read
+            id(gb_scan_done)++;
+            if (++id(gb_scan_off) >= B[id(gb_scan_blk)][2]) { id(gb_scan_off) = 0; id(gb_scan_blk)++; }
+          }
+          if (id(gb_scan_blk) >= NB) {
+            id(gb_scan_run) = false; id(gb_scan_sent) = 0;
+            id(gb_map_status).publish_state("done");
+            id(gb_map_unknown).publish_state(id(gb_scan_found).size());
+            ESP_LOGI("gb_busmap", "scan done: %u undescribed registers", (unsigned) id(gb_scan_found).size());
+            return;
+          }
+          id(gb_scan_wait) = true; id(gb_scan_sent) = millis() | 1;
+          id(gb_scan_read)->execute();
+  - interval: 10s
+    then:
+      - lambda: |-
+          if (!id(gb_scan_run)) return;
+          id(gb_map_status).publish_state(std::to_string(id(gb_scan_done) * 100 / 640) + " %");
+          id(gb_map_unknown).publish_state(id(gb_scan_found).size());
+
+text_sensor:
+  - { platform: template, name: "${n_gb_map_status}", id: gb_map_status, icon: "mdi:radar", entity_category: diagnostic }
+
+sensor:
+  - { platform: template, name: "${n_gb_map_unknown}", id: gb_map_unknown, icon: "mdi:map-search-outline", entity_category: diagnostic, accuracy_decimals: 0 }
+
+button:
+  - platform: template
+    name: "${n_gb_map_scan}"
+    id: gb_map_scan
+    icon: mdi:radar
+    entity_category: diagnostic
+    on_press:
+      - lambda: |-
+          if (id(gb_scan_run)) return;
+          id(gb_scan_found).clear();
+          id(gb_scan_blk) = 0; id(gb_scan_off) = 0; id(gb_scan_sent) = 0; id(gb_scan_done) = 0;
+          id(gb_scan_wait) = false; id(gb_scan_run) = true;
+          id(gb_map_status).publish_state("0 %");
+  - platform: template
+    name: "${n_gb_map_report}"
+    id: gb_map_report
+    icon: mdi:github
+    entity_category: diagnostic
+    on_press:
+      - homeassistant.event:
+          event: esphome.immergas_bus_map
+          data:
+            bus: GB
+            hub_version: "${gb_project_version}"
+            model: "Modbus BMS"
+            map: !lambda |-
+              std::string s;
+              char b[40];
+              for (auto &kv : id(gb_scan_found)) {
+                snprintf(b, sizeof(b), "%s %u = %u (0x%04X)\n", (kv.first >> 16) ? "H" : "I", (unsigned) (kv.first & 0xFFFF), kv.second, kv.second);
+                if (s.size() + strlen(b) > 5500) { s += "... (more)\n"; break; }
+                s += b;
+              }
+              return s.empty() ? std::string("(no undescribed registers - run Scan registers first)") : s;

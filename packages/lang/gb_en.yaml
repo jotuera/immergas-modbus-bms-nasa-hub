@@ -151,3 +151,8 @@ substitutions:
   n_gb_last_srv: "${gb_name_prefix} - Last service"
   n_gb_srv_done: "${gb_name_prefix} - Service done"
   n_gb_maint_due: "${gb_name_prefix} - Boiler service due"
+  # gb_busmap
+  n_gb_map_status: "${gb_name_prefix} - Bus map: scan"
+  n_gb_map_unknown: "${gb_name_prefix} - Bus map: undescribed registers"
+  n_gb_map_scan: "${gb_name_prefix} - Scan registers"
+  n_gb_map_report: "${gb_name_prefix} - Report bus map"
