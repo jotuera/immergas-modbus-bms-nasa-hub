@@ -73,7 +73,7 @@ class ImmergasOtBoilerCard extends HubCard {
     const shCol = isNaN(sh) ? "overlay1" : sh > 6 ? "red" : sh > 3 ? "peach" : "green";
     const resetTag = "ot_reset", armed = this.isArmed(resetTag);
     return html`
-      ${this.head("mdi:water-boiler", this.t("Kocioł · OpenTherm", "Boiler · OpenTherm"), ro ? html`<span class="ro"><ha-icon icon="mdi:lock-outline"></ha-icon>${this.t("tylko odczyt", "read only")}</span>` : undefined)}
+      ${this.head("mdi:water-boiler", this.gbx ? this.t("Kocioł · Modbus BMS", "Boiler · Modbus BMS") : this.t("Kocioł · OpenTherm", "Boiler · OpenTherm"), ro ? html`<span class="ro"><ha-icon icon="mdi:lock-outline"></ha-icon>${this.t("tylko odczyt", "read only")}</span>` : undefined)}
       <div class="grid">
         ${this.chip("ot_cap", "mdi:lightning-bolt", "peach", this.t("Moc maks.", "Max. capacity"), cap > 0 ? this.f(cap, 0) + " kW" : this.t("kocioł nie podaje", "not reported"))}
         ${this.chip("ot_minmod", "mdi:percent-outline", "peach", this.t("Min. modulacja", "Min. modulation"), isNaN(mm) ? "–" : this.f(mm, 0) + " %")}

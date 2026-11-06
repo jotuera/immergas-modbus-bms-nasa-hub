@@ -16,6 +16,8 @@ export interface HubIndex {
   gas?: boolean;
   /** Dominus in the OpenTherm mode (VICTRIX ZEUS / AVIO …): only the OpenTherm Data-IDs, no zone / schedules / statistics */
   ot?: boolean;
+  /** the ESP gas boiler hub over Modbus BMS (gb_ packages): the same OpenTherm-style cards, texts say Modbus BMS */
+  gb?: boolean;
   /** the ESP OpenTherm hub (immergas_ot + ot_ packages): the OpenTherm cards with its entities; `source` stays
    *  "dominus" so the OpenTherm branches of the cards apply, texts and the extras check `esp` */
   esp?: boolean;
@@ -175,6 +177,32 @@ function buildEspOt(hass: any): HubIndex | null {
   return { deviceId, lang, ids, source: "dominus", ot: true, esp: true };
 }
 
+// ESP gas boiler hub over Modbus BMS: card key -> entity names of the gb_ packages (PL, EN); the OpenTherm-style keys
+// where the meaning matches, so the OpenTherm cards show a BMS boiler too
+const ESP_GB: Partial<Record<Key, string[]>> = {
+  gb_conn: ["Połączenie BMS", "BMS connection"], gb_req: ["Żądanie grzania (CO)", "Heat request (CH)"], gb_reset: ["Reset usterki", "Fault reset"],
+  mode: ["Tryb pracy", "Operating mode"], ot_ch_set: ["Nastawa zasilania CO", "CH flow setpoint"], dhw_set: ["Nastawa CWU", "DHW setpoint"],
+  err_code: ["Kod usterki", "Fault code"], err_desc: ["Usterka", "Fault"],
+  ot_chb_max: ["Maks. temperatura CO", "CH max. temperature"], ot_chb_min: ["Min. temperatura CO", "CH min. temperature"],
+  ot_dhwb_max: ["Maks. temperatura CWU", "DHW max. temperature"], ot_dhwb_min: ["Min. temperatura CWU", "DHW min. temperature"],
+  ot_flame: ["Płomień", "Flame"], dom_ch_demand: ["Pompa CO", "Pump CH"], dom_dhw_request: ["Pompa CWU", "Pump DHW"],
+  ot_flow: ["Temperatura zasilania", "Flow temperature"], ot_ret: ["Temperatura powrotu", "Return temperature"],
+  tank: ["Temperatura CWU", "DHW temperature"], outdoor: ["Temperatura zewnętrzna", "Outdoor temperature"], ot_mod: ["Modulacja", "Modulation"],
+  ot_exhaust: ["Temperatura spalin", "Flue gas temperature"], gb_dhw_flow: ["Przepływ CWU", "DHW flow"], ot_fan: ["Obroty wentylatora", "Fan speed"],
+  ot_hours_total: ["Godziny pracy palnika", "Burner hours"], ot_press: ["Ciśnienie w instalacji", "System pressure"],
+  ot_flame_i: ["Prąd jonizacji", "Ionisation current"], gb_curve: ["Krzywa pogodowa w hubie", "Weather curve in the hub"],
+};
+
+/** the ESP gas boiler hub: its "BMS connection" switch, then the entities with the same name prefix */
+function buildEspGb(hass: any): HubIndex | null {
+  const r = findPkg<Key>(hass.states ?? {}, ESP_GB.gb_conn!, /^(switch|input_boolean)\./, ESP_GB);
+  if (!r || Object.keys(r.ids).length < 5) return null;
+  const ids: Partial<Record<Key, string>> = { ...r.ids, gb_conn: r.anchorId };
+  const lang = hass.states[r.anchorId]?.attributes?.friendly_name?.endsWith("BMS connection") ? "en" : "pl";
+  const deviceId = hass.entities?.[r.anchorId]?.device_id ?? "";
+  return { deviceId, lang, ids, source: "dominus", ot: true, esp: true, gb: true };
+}
+
 let cache: { index: HubIndex | null; count: number; at: number } | null = null;
 let pending: Promise<void> | null = null;
 let registry: Record<string, string> | null = null; // entity_id -> original_name (admin users only)
@@ -228,7 +256,7 @@ function build(hass: any): HubIndex | null {
       break;
     }
   }
-  if (!deviceId) return buildEspOt(hass) ?? buildDominus(hass);
+  if (!deviceId) return buildEspOt(hass) ?? buildEspGb(hass) ?? buildDominus(hass);
   const dev = hass.devices?.[deviceId];
   const dn = dev?.name_by_user || dev?.name || "";
   // tail -> [entity_id, full name] of every entity of the hub device
@@ -273,6 +301,7 @@ function buildDominus(hass: any): HubIndex | null {
 
 let dominusCache: { index: HubIndex | null; count: number; at: number } | null = null;
 let espCache: { index: HubIndex | null; count: number; at: number } | null = null;
+let gbCache: { index: HubIndex | null; count: number; at: number } | null = null;
 
 /** Returns the hub index (null until found). Rebuilds when the entity count changes. `source: "dominus"` (card option,
  *  set by the Dominus strategy) uses the Dominus integration even when a hub is present too. */
@@ -280,10 +309,15 @@ export function hubIndex(hass: any, onReady: () => void, source?: string): HubIn
   if (registry === null) {
     if (!pending) pending = loadRegistry(hass).then(() => { cache = null; dominusCache = null; onReady(); });
     // Dominus: translation keys are enough to start; the registry (entity keys) refines it when it arrives
-    if (source !== "dominus" && source !== "ot") return null;
+    if (source !== "dominus" && source !== "ot" && source !== "gb") return null;
   }
   const count = Object.keys(hass.entities ?? {}).length;
   // source: "ot" = the ESP OpenTherm hub even when a Magis hub / Dominus is present too
+  if (source === "gb") {
+    if (!gbCache || gbCache.count !== count || (!gbCache.index && Date.now() - gbCache.at > 10000))
+      gbCache = { index: buildEspGb(hass), count, at: Date.now() };
+    return gbCache.index;
+  }
   if (source === "ot") {
     if (!espCache || espCache.count !== count || (!espCache.index && Date.now() - espCache.at > 10000))
       espCache = { index: buildEspOt(hass), count, at: Date.now() };

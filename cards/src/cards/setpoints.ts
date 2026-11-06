@@ -132,7 +132,9 @@ class ImmergasSetpointsCard extends HubCard {
     }) : this.ot ? this.tileView({
       k: "ot_ch_set", meas: "ot_flow", icon: "mdi:radiator", col: "peach", title: this.t("Ogrzewanie", "Heating"), sub: this.t("CO · temperatura zasilania", "CH · flow temperature"),
       temp: this.n("ot_flow"), status: chRun ? this.t("grzeje", "heating") : this.t("czuwa", "standby"), active: chRun, profiles: [],
-      hint: this.esp ? (this.on("ot_regulator") ? this.t("nastawę liczy regulator hubu (krzywa pogodowa + korekta pokojowa)", "the hub regulator computes the setpoint (weather curve + room correction)")
+      hint: this.gbx ? (this.on("gb_curve") ? this.t("nastawę liczy krzywa pogodowa hubu z sondy kotła (zapis 514 co minutę)", "the hub weather curve computes it from the boiler probe (514 every minute)")
+          : this.t("nastawa zasilania zapisywana do kotła (BMS 514)", "the flow setpoint is written to the boiler (BMS 514)"))
+        : this.esp ? (this.on("ot_regulator") ? this.t("nastawę liczy regulator hubu (krzywa pogodowa + korekta pokojowa)", "the hub regulator computes the setpoint (weather curve + room correction)")
           : this.espRelay ? this.t("bramka: nastawę wysyła pilot (nadpiszesz ją w hubie)", "gateway: the room unit sends the setpoint (the hub can override it)")
           : this.t("hub wysyła nastawę zasilania co cykl", "the hub sends the flow setpoint every cycle"))
         : this.t("nastawa = maks. temperatura zasilania; z pilotem CAR V2 pilot prowadzi krzywą grzewczą", "setpoint = max flow temperature; with a CAR V2 remote the remote runs the heating curve"),
@@ -155,6 +157,7 @@ class ImmergasSetpointsCard extends HubCard {
       status: dhwRun ? this.t("grzeje", "heating") : this.t("czuwa", "standby"), active: dhwRun,
       profiles: this.eid("dhw_comfort_dd") ? [["eco", this.t("EKO", "ECO"), this.n("dhw_eco_dd")], ["comfort", this.t("KOMFORT", "COMFORT"), this.n("dhw_comfort_dd")]] : [],
       hint: this.on("dhw_sched") ? this.t("Komfort / Eko wg kalendarza CWU", "Comfort / Eco by the DHW calendar")
+        : this.gbx ? this.t("nastawa CWU zapisywana do kotła (BMS 515)", "the DHW setpoint is written to the boiler (BMS 515)")
         : this.esp ? (this.espRelay ? this.t("bramka: nastawę CWU wysyła pilot (nadpiszesz ją w hubie)", "gateway: the room unit sends the DHW setpoint (the hub can override it)")
           : this.t("hub wysyła nastawę CWU co 30 s", "the hub sends the DHW setpoint every 30 s"))
         : this.t("z pilotem CAR V2 nastawę CWU ustawia pokrętło pilota", "with a CAR V2 remote its dial sets the DHW setpoint"),

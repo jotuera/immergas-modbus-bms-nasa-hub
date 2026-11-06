@@ -116,7 +116,7 @@ class ImmergasDiagramCard extends HubCard {
       ${this.label(34, 396, (this.bad("mode") ? "–" : this.txt("mode") ?? "–") + (auto ? " (auto)" : ""), "", 15, "start")}
       ${ot ? svg`${this.label(34, 424, this.t("modulacja ", "modulation ") + (flameOn && !isNaN(mod) ? Math.round(mod) + " %" : "–"), flameOn ? "peach" : "", 10.5, "start", 600)}
         ${isNaN(press) ? nothing : this.label(34, 446, this.t("ciśnienie ", "pressure ") + this.f(press, 1, 1) + " bar", press < 1 || press > 2.5 ? "red" : "", 10.5, "start", 600)}
-        ${this.label(34, 468, "OpenTherm", "", 10.5, "start", 600)}`
+        ${this.label(34, 468, this.gbx ? "Modbus BMS" : "OpenTherm", "", 10.5, "start", 600)}`
       : svg`${this.label(34, 424, "offset U03 " + this.val("u03", 1, ""), "", 10.5, "start", 600)}
       ${this.label(34, 446, vac ? this.t("wyjazd: włączony", "vacation: on") : this.t("wyjazd: wył.", "vacation: off"), vac ? "teal" : "", 10.5, "start", 600)}
       ${this.label(34, 468, alarm ? this.t("alarm!", "alert!") : this.t("alarmy: brak", "alerts: none"), alarm ? "red" : "", 10.5, "start", 600)}`}</g>`);

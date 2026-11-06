@@ -110,6 +110,10 @@ export abstract class HubCard extends LitElement {
   protected so(k: Key) { const i = this.eid(k); return i ? this.hass.states[i] : undefined; }
   protected s(k: Key): string | undefined {
     if (k === "mode" && this.esp && !this.eid("mode")) return this.espMode();
+    if (k === "mode" && this.gbx) {
+      const st = this.so("mode")?.state, o: string[] = this.so("mode")?.attributes?.options ?? [], i = st ? o.indexOf(st) : -1;
+      return i >= 0 ? this.gbModeKeys()[i] : st;
+    }
     return this.so(k)?.state;
   }
   /** ESP OpenTherm hub: no mode select - the mode is the pair CH enable + DHW enable (Data-ID 0 master flags) */
@@ -123,6 +127,7 @@ export abstract class HubCard extends LitElement {
   protected bad(k: Key) { const v = this.s(k); return v === undefined || v === "unavailable" || v === "unknown"; }
   protected attr(k: Key, a: string) {
     if (k === "mode" && a === "options" && this.esp && !this.eid("mode")) return ["off", "water", "heating_water", "heating"];
+    if (k === "mode" && a === "options" && this.gbx) return this.gbModeKeys();
     if (this.esp && k === "zone1_phase" && a === "anti_legionella_running") return this.on("ot_leg_run");
     if (this.esp && k === "dom_auto_season" && a === "outdoor_mean_24h") return this.s("ot_out_mean");
     if (this.esp && k === "ot_maint_due" && (a === "next_service" || a === "days_left")) {
@@ -159,6 +164,14 @@ export abstract class HubCard extends LitElement {
   protected get ot() { return !!this.idx?.ot; }
   /** the ESP OpenTherm hub (immergas_ot): OpenTherm cards, the hub instead of the Dominus module */
   protected get esp() { return !!this.idx?.esp; }
+  /** the ESP gas boiler hub over Modbus BMS (gb_) */
+  protected get gbx() { return !!this.idx?.gb; }
+  /** gb_ mode select: its options -> the OpenTherm mode keys (by name when they already are keys, else by position) */
+  protected gbModeKeys(): string[] {
+    const o: string[] = this.so("mode")?.attributes?.options ?? [], keys = ["off", "water", "heating_water", "heating"];
+    if (o.every((x) => keys.includes(x))) return o;
+    return o.length === 4 ? ["off", "water", "heating", "heating_water"] : o;
+  }
   /** ESP hub in the gateway mode with the room unit relayed (not standalone) */
   protected get espRelay() {
     const st = this.s("ot_standalone") ?? "";
@@ -284,6 +297,11 @@ export abstract class HubCard extends LitElement {
     this.dispatchEvent(new CustomEvent("hass-more-info", { detail: { entityId }, bubbles: true, composed: true }));
   }
   protected call(domain: string, service: string, k: Key, data: Record<string, unknown> = {}) {
+    // gb_ hub: the mode key -> the select option of the package
+    if (k === "mode" && this.gbx && service === "select_option") {
+      const o: string[] = this.so("mode")?.attributes?.options ?? [], i = this.gbModeKeys().indexOf(String(data.option));
+      if (i >= 0 && o[i] !== undefined) data = { ...data, option: o[i] };
+    }
     // ESP hub: a mode change sets CH enable + DHW enable
     if (k === "mode" && this.esp && !this.eid("mode") && service === "select_option") {
       const o = String(data.option), sw = (kk: Key, on: boolean) => { const id = this.eid(kk); if (id) this.hass.callService(id.split(".")[0], on ? "turn_on" : "turn_off", { entity_id: id }); };

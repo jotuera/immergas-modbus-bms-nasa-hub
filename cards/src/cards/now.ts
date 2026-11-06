@@ -403,7 +403,7 @@ class ImmergasNowCard extends HubCard {
         @click=${() => this.moreInfo("mode")}>
         <ha-icon class="hi" icon=${ot && flame ? "mdi:fire" : dhw ? "mdi:water-boiler" : ch ? "mdi:radiator" : "mdi:water-boiler-off"} style="color:${c(col)}"></ha-icon>
         <div class="hm">
-          <div class="hn">${this.config.title ?? (ot ? (this.esp ? "Immergas · hub · OpenTherm" : "Immergas · Dominus · OpenTherm") : "Immergas · Dominus")}</div>
+          <div class="hn">${this.config.title ?? (ot ? (this.gbx ? "Immergas · hub · Modbus BMS" : this.esp ? "Immergas · hub · OpenTherm" : "Immergas · Dominus · OpenTherm") : "Immergas · Dominus")}</div>
           <div class="mode" style="color:${c(col)}">${state}</div>
           <div class="sub">${sub}</div></div>
         <div class="flow">
