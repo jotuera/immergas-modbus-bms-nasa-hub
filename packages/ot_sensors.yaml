@@ -23,6 +23,9 @@ binary_sensor:
 sensor:
   # Immergas fault code (E..) in the low byte of Data-ID 5; OEM diagnostic code in 115
   - { platform: immergas_ot, data_id: 5, value_type: u8_lb, name: "${n_ot_fault_code}", id: ot_fault_code, icon: "mdi:alert-circle-outline", accuracy_decimals: 0 }
+  # Data-ID 15: max. boiler capacity (kW, high byte) and min. modulation (%, low byte)
+  - { platform: immergas_ot, data_id: 15, value_type: u8_hb, poll: true, name: "${n_ot_max_capacity}", id: ot_max_capacity, unit_of_measurement: "kW", entity_category: diagnostic, accuracy_decimals: 0 }
+  - { platform: immergas_ot, data_id: 15, value_type: u8_lb, poll: false, name: "${n_ot_min_modulation}", id: ot_min_modulation, unit_of_measurement: "%", entity_category: diagnostic, accuracy_decimals: 0 }
   - { platform: immergas_ot, data_id: 115, value_type: u16, name: "${n_ot_oem_code}", id: ot_oem_code, entity_category: diagnostic, accuracy_decimals: 0 }
   - platform: immergas_ot
     data_id: 25

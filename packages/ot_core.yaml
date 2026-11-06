@@ -36,6 +36,11 @@ immergas_ot:
     in_pin: ${ot_boiler_in_pin}
     out_pin: ${ot_boiler_out_pin}
 
+text_sensor:
+  # Data-ID map for the cards: 64 hex characters = 256 bits (which IDs the boiler answers / does not know)
+  - { platform: immergas_ot, type: ids_supported, name: "${n_ot_ids_supported}", id: ot_ids_supported, entity_category: diagnostic, icon: "mdi:format-list-checks" }
+  - { platform: immergas_ot, type: ids_unknown, name: "${n_ot_ids_unknown}", id: ot_ids_unknown, entity_category: diagnostic, icon: "mdi:help-rhombus-outline" }
+
 binary_sensor:
   - platform: immergas_ot
     type: state

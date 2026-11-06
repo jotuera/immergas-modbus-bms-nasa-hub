@@ -87,8 +87,9 @@ najpierw ustaw M3 P33 = ON – kocioł grzeje wtedy nawet po utracie OpenTherm.
 
 | Pakiet | Co daje |
 |---|---|
-| `ot_core` | komponent (master), połączenie z kotłem, liczniki ramek / błędów / braku odpowiedzi, `ot_status_low_byte` (domyślnie **0xCA**, „poprawka Immergas”), `ot_max_ch_follows_setpoint` (domyślnie **true**: 57 = nastawa CO), `ot_ch_off_setpoint` (domyślnie **10** °C, 0 = wył.) |
-| `ot_sensors` | status (usterka, CO, CWU, płomień, diagnostyka), flagi i kod usterki (5), kod OEM (115), zasilanie, powrót, CWU, temp. zewnętrzna, spaliny, modulacja, ciśnienie, przepływ CWU, nastawy używane przez kocioł (56 / 57), zakresy (48 / 49), starty / godziny palnika |
+| `ot_core` | komponent (master), połączenie z kotłem, liczniki ramek / błędów / braku odpowiedzi, `ot_status_low_byte` (domyślnie **0xCA**, „poprawka Immergas”), `ot_max_ch_follows_setpoint` (domyślnie **true**: 57 = nastawa CO), `ot_ch_off_setpoint` (domyślnie **10** °C, 0 = wył.), **mapa Data-ID** (które ID kocioł zna / nie zna, po 64 znaki hex) |
+| `ot_sensors` | status (usterka, CO, CWU, płomień, diagnostyka), flagi i kod usterki (5), kod OEM (115), zasilanie, powrót, CWU, temp. zewnętrzna, spaliny, modulacja, ciśnienie, przepływ CWU, moc maks. / min. modulacja (15), nastawy używane przez kocioł (56 / 57), zakresy (48 / 49), starty / godziny palnika |
+| `ot_stats` (opcjonalny) | starty palnika dziś, starty w ostatniej godzinie (taktowanie), czas palnika dziś – liczone w hubie z bitu płomienia każdej ramki statusu, zerowane o północy |
 | `ot_control` | zezwolenie CO / CWU, nastawa zasilania CO, nastawa CWU, maks. nastawa CO, maks. modulacja |
 | `ot_regulator` (master) | krzywa pogodowa (dwa punkty) + powolna korekta pokojowa z temperatury z Home Assistant, CO wł. / wył. z histerezą – regulator, którym byłby pilot / Dominus |
 | `ot_gateway` | tryb bramki: połączenie z pilotem, standalone, co zapisuje pilot (nastawa CO, zadana i temperatura pokoju, nastawa CWU, jego zezwolenia CO / CWU), przełączniki nadpisywania |

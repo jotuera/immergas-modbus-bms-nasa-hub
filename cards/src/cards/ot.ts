@@ -13,6 +13,36 @@ const FLAGS: [Key, string, [string, string]][] = [
   ["ot_f_service", "mdi:wrench-clock", ["Wymagany serwis", "Service request"]],
 ];
 
+/** OpenTherm 2.2 Data-ID names (PL, EN) for the ESP hub map */
+const ID_NAMES: Record<number, [string, string]> = {
+  0: ["Status", "Status"], 1: ["Nastawa zasilania CO", "CH flow setpoint"], 2: ["Konfiguracja mastera", "Master configuration"],
+  3: ["Konfiguracja kotła", "Slave configuration"], 4: ["Polecenie zdalne", "Remote command"], 5: ["Flagi i kod usterki", "Fault flags / code"],
+  6: ["Parametry zdalne", "Remote parameters"], 7: ["Sygnał chłodzenia", "Cooling control"], 8: ["Nastawa CO2", "CH2 flow setpoint"],
+  9: ["Nadpisanie nastawy pokoju", "Room setpoint override"], 10: ["Liczba TSP", "TSP count"], 11: ["Parametr TSP", "TSP entry"],
+  12: ["Liczba wpisów historii błędów", "Fault buffer size"], 13: ["Historia błędów", "Fault buffer entry"], 14: ["Maks. modulacja", "Max. modulation"],
+  15: ["Moc maks. / min. modulacja", "Max. capacity / min. modulation"], 16: ["Zadana pokoju", "Room setpoint"], 17: ["Modulacja", "Modulation"],
+  18: ["Ciśnienie wody", "Water pressure"], 19: ["Przepływ CWU", "DHW flow"], 20: ["Dzień i godzina", "Day and time"], 21: ["Data", "Date"],
+  22: ["Rok", "Year"], 23: ["Zadana pokoju CO2", "Room setpoint CH2"], 24: ["Temperatura pokoju", "Room temperature"], 25: ["Zasilanie", "Flow"],
+  26: ["CWU", "DHW"], 27: ["Temp. zewnętrzna", "Outdoor"], 28: ["Powrót", "Return"], 29: ["Zasobnik solarny", "Solar storage"],
+  30: ["Kolektor solarny", "Solar collector"], 31: ["Zasilanie CO2", "Flow CH2"], 32: ["CWU 2", "DHW 2"], 33: ["Spaliny", "Exhaust"],
+  34: ["Wymiennik", "Heat exchanger"], 35: ["Wentylator", "Fan speed"], 36: ["Prąd płomienia", "Flame current"], 37: ["Pokój CO2", "Room CH2"],
+  38: ["Wilgotność", "Humidity"], 48: ["Zakres CWU", "DHW bounds"], 49: ["Zakres CO", "CH bounds"], 50: ["Zakres krzywej OTC", "OTC bounds"],
+  56: ["Nastawa CWU", "DHW setpoint"], 57: ["Maks. nastawa CO", "Max. CH setpoint"], 58: ["Krzywa OTC", "OTC ratio"],
+  70: ["Status wentylacji", "Ventilation status"], 99: ["Tryb pracy", "Operating mode"], 100: ["Nadpisanie pilota", "Remote override"],
+  113: ["Nieudane starty", "Unsuccessful starts"], 114: ["Zaniki płomienia", "Flame lost"], 115: ["Kod diagnostyczny OEM", "OEM diagnostic code"],
+  116: ["Starty palnika", "Burner starts"], 117: ["Starty pompy CO", "CH pump starts"], 118: ["Starty pompy CWU", "DHW pump starts"],
+  119: ["Starty palnika CWU", "DHW burner starts"], 120: ["Godziny palnika", "Burner hours"], 121: ["Godziny pompy CO", "CH pump hours"],
+  122: ["Godziny pompy CWU", "DHW pump hours"], 123: ["Godziny palnika CWU", "DHW burner hours"], 124: ["Wersja OT mastera", "Master OT version"],
+  125: ["Wersja OT kotła", "Slave OT version"], 126: ["Wersja mastera", "Master version"], 127: ["Wersja kotła", "Slave version"],
+};
+/** 64 hex characters -> the set Data-IDs (byte 0 = IDs 0-7, bit 0 = the lowest) */
+const bits = (s: string | undefined): number[] => {
+  if (!s || !/^[0-9A-F]{64}$/i.test(s)) return [];
+  const out: number[] = [];
+  for (let b = 0; b < 32; b++) { const v = parseInt(s.slice(b * 2, b * 2 + 2), 16); for (let i = 0; i < 8; i++) if (v & (1 << i)) out.push(b * 8 + i); }
+  return out;
+};
+
 /** "0x091B" -> number (the Data-ID scan values) */
 const hex = (v: unknown) => (typeof v === "string" && /^0x[0-9a-f]+$/i.test(v) ? parseInt(v, 16) : NaN);
 
@@ -58,7 +88,7 @@ class ImmergasOtBoilerCard extends HubCard {
           ${this.chip("ot_burn_today", "mdi:fire-circle", "peach", this.t("Starty dziś", "Starts today"), this.f(st, 0) + (isNaN(bh) ? "" : ` · ${this.f(bh, 1, 1)} h`))}
           ${this.chip("ot_burn_h", "mdi:fire-alert", shCol, this.t("Starty / ostatnia godzina", "Starts / last hour"), this.f(sh, 0) + (sh > 6 ? this.t(" · taktowanie", " · short cycling") : ""), sh > 6)}
         </div>
-        <div class="hint">${this.t("Liczone z płomienia co cykl odczytu (~45 s) – bardzo krótkie zapłony mogą umknąć.", "Counted from the flame flag every polling cycle (~45 s) – very short burns may be missed.")}</div>` : nothing}
+        <div class="hint">${this.esp ? this.t("Liczone w hubie z bitu płomienia każdej ramki statusu (~1 s) – żaden zapłon nie umyka.", "Counted in the hub from the flame bit of every status frame (~1 s) – no burn is missed.") : this.t("Liczone z płomienia co cykl odczytu (~45 s) – bardzo krótkie zapłony mogą umknąć.", "Counted from the flame flag every polling cycle (~45 s) – very short burns may be missed.")}</div>` : nothing}
       <div class="sec">${this.t("Błędy", "Faults")}</div>
       ${this.on("ot_maint_due") ? html`<div class="grid1">${this.chip("ot_maint_due", "mdi:wrench-clock", "peach", this.t("Przegląd kotła", "Boiler service"),
         this.t("termin minął – po przeglądzie naciśnij „Przegląd wykonany”", "due – after the service press “Service done”"), true)}</div>` : nothing}
@@ -102,6 +132,7 @@ class ImmergasOtMapCard extends HubCard {
   private open: boolean | null = null;
 
   protected body() {
+    if (this.esp) return this.espMap();
     if (!this.ot || !this.eid("ot_ids")) return html`${this.head("mdi:radar", this.t("Mapa Data-ID", "Data-ID map"))}
       <div class="hint">${this.t("Ta karta jest dla integracji Immergas Dominus w trybie OpenTherm (1.6.1+).", "This card is for the Immergas Dominus integration in the OpenTherm mode (1.6.1+).")}</div>`;
     const running = !!this.attr("ot_ids", "running"), sup = this.n("ot_ids");
@@ -141,8 +172,59 @@ class ImmergasOtMapCard extends HubCard {
         "The scan reads every standard Data-ID once and the boiler parameters (polling pauses meanwhile). Report: a link in the HA notifications opens GitHub with the map and the model filled in – nothing is sent until you press Create.")}</div>`}`;
   }
 
+  /** ESP hub: the map comes from every frame - no scan; supported / unknown / asked by the room unit, a 128-cell grid */
+  private espMap() {
+    const sup = bits(this.s("ot_ids_sup")), unk = bits(this.s("ot_ids_unk")), room = bits(this.s("ot_ids_room"));
+    const open = this.open ?? !!this.config.expanded, nm = (id: number) => (ID_NAMES[id] ? this.t(ID_NAMES[id][0], ID_NAMES[id][1]) : "");
+    const has = !!this.eid("ot_ids_sup");
+    const sum = !has ? this.t("dodaj pakiet ot_core ≥ 1.3", "add the ot_core package ≥ 1.3")
+      : `${sup.length} / 128 Data-ID` + (unk.length ? this.t(` · ${unk.length} nieznanych`, ` · ${unk.length} unknown`) : "")
+        + (room.length ? this.t(` · pilot ${room.length}`, ` · room unit ${room.length}`) : "");
+    const cell = (id: number) => {
+      const s = sup.includes(id), u = unk.includes(id), r = room.includes(id);
+      const col = s ? "green" : u ? "red" : "overlay1";
+      return html`<div class="cell" title=${`${id}${nm(id) ? " · " + nm(id) : ""}${s ? this.t(" · kocioł odpowiada", " · the boiler answers") : u ? this.t(" · kocioł nie zna", " · unknown to the boiler") : ""}${r ? this.t(" · pyta pilot", " · asked by the room unit") : ""}`}
+        style="background:${s || u ? ca(col, s ? 0.45 : 0.3) : "rgba(255,255,255,.04)"};${r ? `outline:1.5px solid ${c("sky")};outline-offset:-1.5px` : ""}">${id}</div>`;
+    };
+    const list = (ids: number[], col: string) => html`<div class="ids">${ids.map((id) => html`<span class="idc" style=${box(col, false)}><b>${id}</b>${nm(id) ? " " + nm(id) : ""}</span>`)}</div>`;
+    const report = () => {
+      const body = [`Boiler model: `, ``, `Supported: ${sup.join(", ")}`, `Unknown to the boiler: ${unk.join(", ")}`, room.length ? `Asked by the room unit: ${room.join(", ")}` : "",
+        ``, `(immergas_ot hub, Data-ID map)`].filter((x) => x !== null).join("\n");
+      window.open("https://github.com/jotuera/immergas-modbus-bms-nasa-opentherm-hub/issues/new?title=" + encodeURIComponent("OpenTherm Data-ID map: <boiler model>")
+        + "&body=" + encodeURIComponent(body), "_blank");
+    };
+    return html`
+      <div class="sh" @click=${() => { this.open = !open; this.requestUpdate(); }}>
+        <ha-icon icon="mdi:radar"></ha-icon><span class="ttl">${this.t("Mapa Data-ID", "Data-ID map")}</span>
+        <span class="sum">${open ? "" : sum}</span>
+        <ha-icon class="chev" icon=${open ? "mdi:chevron-up" : "mdi:chevron-down"}></ha-icon></div>
+      ${!open ? nothing : !has ? html`<div class="hint">${sum}</div>` : html`
+      <div class="grid">
+        ${this.chip("ot_ids_sup", "mdi:format-list-checks", "green", this.t("Kocioł odpowiada", "The boiler answers"), `${sup.length} / 128`)}
+        ${this.chip("ot_ids_unk", "mdi:help-rhombus-outline", unk.length ? "red" : "overlay2", this.t("Nieznane kotłowi", "Unknown to the boiler"), String(unk.length))}
+        ${this.eid("ot_ids_room") ? this.chip("ot_ids_room", "mdi:remote", "sky", this.t("Pyta pilot", "Asked by the room unit"), String(room.length)) : nothing}
+      </div>
+      <div class="cells">${Array.from({ length: 128 }, (_, i) => cell(i))}</div>
+      <div class="legend"><span><i style="background:${ca("green", 0.45)}"></i>${this.t("kocioł odpowiada", "answers")}</span>
+        <span><i style="background:${ca("red", 0.3)}"></i>${this.t("kocioł nie zna", "unknown")}</span>
+        <span><i style="background:rgba(255,255,255,.04)"></i>${this.t("nie pytano", "not asked")}</span>
+        ${room.length ? html`<span><i style="outline:1.5px solid ${c("sky")};outline-offset:-1.5px"></i>${this.t("pyta pilot", "room unit")}</span>` : nothing}</div>
+      <div class="sec2">${this.t("Kocioł odpowiada", "The boiler answers")}</div>${list(sup, "green")}
+      ${unk.length ? html`<div class="sec2">${this.t("Kocioł nie zna (hub pyta raz na godzinę)", "Unknown to the boiler (asked again hourly)")}</div>${list(unk, "red")}` : nothing}
+      <div class="row"><button class="go" ?disabled=${!sup.length} @click=${report}><ha-icon icon="mdi:github"></ha-icon>${this.t("Zgłoś mapę na GitHubie", "Report the map on GitHub")}</button></div>
+      <div class="hint">${this.t("Hub buduje mapę z każdej ramki (bez osobnego skanu) – pokazuje Data-ID, o które pytają pakiety huba i pilot. Zgłoszenie otwiera GitHub z gotową mapą; nic nie jest wysyłane, dopóki nie naciśniesz Create.",
+        "The hub builds the map from every frame (no separate scan) – the Data-IDs the hub packages and the room unit ask for. The report opens GitHub with the map filled in; nothing is sent until you press Create.")}</div>`}`;
+  }
+
   static styles = [HubCard.styles, css`
     ha-card { padding: 8px 12px; }
+    .cells { display: grid; grid-template-columns: repeat(16, 1fr); gap: 2px; margin-top: 10px; }
+    .cell { font-size: 8.5px; font-weight: 700; text-align: center; padding: 3px 0; border-radius: 4px; opacity: .9; font-variant-numeric: tabular-nums; }
+    .legend { display: flex; gap: 10px; flex-wrap: wrap; font-size: 10px; opacity: .65; margin-top: 6px; }
+    .legend i { display: inline-block; width: 12px; height: 10px; border-radius: 3px; vertical-align: middle; margin-right: 4px; }
+    .sec2 { font-size: 10px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; opacity: .55; margin: 10px 0 4px; }
+    .ids { display: flex; flex-wrap: wrap; gap: 4px; }
+    .idc { font-size: 10.5px; padding: 2px 7px; border-radius: 8px; }
     .sh { cursor: pointer; display: flex; align-items: center; gap: 8px; }
     .sh > ha-icon { --mdc-icon-size: 17px; opacity: .55; }
     .ttl { font-size: 10.5px; font-weight: 800; opacity: .55; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }

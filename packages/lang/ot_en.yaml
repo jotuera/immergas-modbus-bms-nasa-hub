@@ -4,6 +4,14 @@
 
 substitutions:
   n_ot_boiler_online: "${ot_name_prefix} - Boiler connection"
+  n_ot_ids_supported: "${ot_name_prefix} - Data-IDs supported"
+  n_ot_ids_unknown: "${ot_name_prefix} - Data-IDs unknown to the boiler"
+  n_ot_ids_room: "${ot_name_prefix} - Data-IDs of the room unit"
+  n_ot_max_capacity: "${ot_name_prefix} - Boiler max. capacity"
+  n_ot_min_modulation: "${ot_name_prefix} - Boiler min. modulation"
+  n_ot_starts_today: "${ot_name_prefix} - Burner starts today"
+  n_ot_starts_hour: "${ot_name_prefix} - Burner starts / last hour"
+  n_ot_burn_today: "${ot_name_prefix} - Burner time today"
   n_ot_frames: "${ot_name_prefix} - Frames OK"
   n_ot_errors: "${ot_name_prefix} - Frame errors"
   n_ot_timeouts: "${ot_name_prefix} - No answer"

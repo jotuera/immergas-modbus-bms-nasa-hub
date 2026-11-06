@@ -4,6 +4,14 @@
 
 substitutions:
   n_ot_boiler_online: "${ot_name_prefix} - Połączenie z kotłem"
+  n_ot_ids_supported: "${ot_name_prefix} - Data-ID obsługiwane"
+  n_ot_ids_unknown: "${ot_name_prefix} - Data-ID nieznane kotłowi"
+  n_ot_ids_room: "${ot_name_prefix} - Data-ID pilota"
+  n_ot_max_capacity: "${ot_name_prefix} - Moc maks. kotła"
+  n_ot_min_modulation: "${ot_name_prefix} - Min. modulacja kotła"
+  n_ot_starts_today: "${ot_name_prefix} - Starty palnika dziś"
+  n_ot_starts_hour: "${ot_name_prefix} - Starty palnika / ostatnia godzina"
+  n_ot_burn_today: "${ot_name_prefix} - Czas palnika dziś"
   n_ot_frames: "${ot_name_prefix} - Ramki poprawne"
   n_ot_errors: "${ot_name_prefix} - Błędy ramek"
   n_ot_timeouts: "${ot_name_prefix} - Brak odpowiedzi"

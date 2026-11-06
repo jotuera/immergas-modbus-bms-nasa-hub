@@ -56,7 +56,8 @@ class ImmergasLinksCard extends HubCard {
 
     // Dominus in the OpenTherm mode: the module, the boiler behind it and the remote (CAR V2 / Super Amico) instead of
     // the zone 1 panel - with the switch that blocks writes from Home Assistant
-    if (this.dominus && this.ot) this.otLinks(out);
+    if (this.esp) this.espLinks(out);
+    else if (this.dominus && this.ot) this.otLinks(out);
 
     // Immergas Dominus integration: the Wi-Fi module answers local TCP polls (last good poll, failed polls since HA start)
     if (this.eid("dom_last_read") && !this.ot) {
@@ -98,7 +99,7 @@ class ImmergasLinksCard extends HubCard {
     // photovoltaics / dehumidifier
     // Dominus (two columns): boiler + thermostat on the left, Dominus + zone 1 panel / CAR V2 on the right
     if (this.dominus) {
-      const DOM = ["Boiler", "Dominus", "Thermostat", "Zone 1 panel", "CAR V2 remote"];
+      const DOM = ["Boiler", "Dominus", "OpenTherm hub", "Thermostat", "Room unit", "Regulator", "Zone 1 panel", "CAR V2 remote"];
       return out.sort((a, b) => DOM.indexOf(a.name[1]) - DOM.indexOf(b.name[1]));
     }
     const ORDER = ["Hub", "Dominus", "Modbus", "Zone 1 panel", "BMS", "System controller", "NASA", "EHS panel", "Photovoltaics", "Dehumidifier"];
@@ -146,6 +147,49 @@ class ImmergasLinksCard extends HubCard {
           <div class="kn" style="left:${ro ? 23 : 3}px;background:${ro ? c("sky") : c("overlay1")}"></div></div></div>
         ${ro ? html`<div class="ld">${this.t("HA tylko czyta. Po włączeniu raz odłącz zasilanie modułu Dominus – zapomni ostatnią nastawę z HA.",
           "HA only reads. After switching it on, power-cycle the Dominus once – it forgets the last setpoint from HA.")}</div>` : nothing}` : undefined });
+  }
+
+  /** ESP OpenTherm hub: the boiler on the OpenTherm line, the hub itself (frame counters), the room unit (gateway:
+   *  connected, relayed, who sets the CH / DHW enable flags) and the hub regulator */
+  private espLinks(out: Link[]) {
+    const on = this.on("ot_link"), frames = this.n("ot_frames"), errs = this.n("ot_errors"), tos = this.n("ot_timeouts");
+    const flame = this.on("ot_flame"), mod = this.n("ot_mod");
+    out.push({ k: "ot_link", icon: "mdi:water-boiler", name: ["Kocioł", "Boiler"], bus: "OpenTherm",
+      st: this.bad("ot_link") ? "na" : on ? "ok" : "bad",
+      detail: on ? [this.bad("mode") ? "" : this.t("tryb ", "mode ") + this.txt("mode"), flame ? this.t("płomień", "flame") + (isNaN(mod) ? "" : ` ${Math.round(mod)} %`) : ""].filter(Boolean).join(" · ")
+        : this.t("kocioł nie odpowiada – sprawdź adapter master i zaciski pilota", "the boiler does not answer – check the master adapter and the remote terminals") });
+    const all = (frames || 0) + (errs || 0) + (tos || 0), bad = all > 0 ? ((errs || 0) + (tos || 0)) / all * 100 : NaN;
+    out.push({ k: "ot_frames", icon: "mdi:chip", name: ["Hub OpenTherm", "OpenTherm hub"], bus: "ESP · Wi-Fi",
+      st: isNaN(frames) ? "na" : this.age("ot_frames") < 120 ? (bad > 5 ? "bad" : "ok") : "bad",
+      detail: isNaN(frames) ? "" : this.t("ramki ", "frames ") + Math.round(frames) + this.t(" · błędne ", " · bad ") + Math.round(errs || 0)
+        + this.t(" · bez odp. ", " · no answer ") + Math.round(tos || 0) + (isNaN(bad) ? "" : ` · ${this.f(bad, 1)} %`) });
+    // the room unit: only with the gateway package (slave adapter); without it the hub is the master
+    if (this.eid("ot_room_link")) {
+      const rOn = this.on("ot_room_link"), alone = this.on("ot_standalone") || this.s("ot_standalone") === "tak" || this.s("ot_standalone") === "yes";
+      const ov = this.on("ot_ov_flags"), room = this.n("zone1"), tag = "lk_ovf", armed = this.isArmed(tag);
+      out.push({ k: "ot_room_link", icon: "mdi:remote", name: ["Pilot", "Room unit"], bus: this.t("OpenTherm · bramka", "OpenTherm · gateway"),
+        st: rOn && !alone ? "ok" : "emu",
+        label: rOn && !alone ? this.t("Pilot połączony – hub przekazuje", "Room unit connected – the hub relays") : this.t("Pilot milczy – hub prowadzi kocioł", "Room unit silent – the hub runs the boiler"),
+        detail: (rOn && !alone ? (ov ? this.t("zezwolenia CO / CWU nadpisuje hub", "the hub overrides CH / DHW enable") : this.t("zezwolenia CO / CWU ustawia pilot", "the room unit sets CH / DHW enable"))
+          : this.t("brak ramek pilota – hub wysyła swoje wartości", "no frames from the room unit – the hub sends its own values"))
+          + (isNaN(room) ? "" : ` · ${this.f(room, 1, 1)} °C`),
+        extra: this.eid("ot_ov_flags") ? html`<div class="ro" @click=${(e: Event) => e.stopPropagation()}>
+          <span>${armed ? this.t("Potwierdź – dotknij ponownie", "Confirm – tap again") : this.t("Zezwolenia z huba", "Enable flags from the hub")}</span>
+          <div class="tgl" style="background:${ov ? ca("green", 0.35) : "rgba(255,255,255,.08)"}${armed ? `;outline:2px solid ${c("green")}` : ""}"
+            @click=${() => { const id = this.eid("ot_ov_flags")!; this.confirm(tag, () => this.hass.callService(id.split(".")[0], ov ? "turn_off" : "turn_on", { entity_id: id })); }}>
+            <div class="kn" style="left:${ov ? 23 : 3}px;background:${ov ? c("green") : c("overlay1")}"></div></div></div>` : undefined });
+    } else {
+      out.push({ k: "ot_link", icon: "mdi:remote-off", name: ["Pilot", "Room unit"], bus: this.t("OpenTherm · master", "OpenTherm · master"), st: "emu",
+        label: this.t("Hub zamiast pilota", "The hub instead of the remote"),
+        detail: this.t("tryb master – pilot odłączony, zworka X40 na 40-41; pakiet ot_gateway zostawia pilota", "master mode – the remote removed, jumper X40 on 40-41; the ot_gateway package keeps the remote") });
+    }
+    if (this.eid("ot_regulator")) {
+      const r = this.on("ot_regulator");
+      out.push({ k: "ot_regulator", icon: "mdi:chart-bell-curve-cumulative", name: ["Regulator", "Regulator"], bus: this.t("hub", "hub"), st: r ? "ok" : "off",
+        label: r ? this.t("Regulator hubu działa", "Hub regulator running") : this.t("Regulator wyłączony", "Regulator off"),
+        detail: r ? this.t("krzywa pogodowa + korekta pokojowa, CO wł. / wył. z histerezą", "weather curve + room correction, CH on / off with a hysteresis")
+          : this.t("nastawę zasilania ustawiasz ręcznie albo automatyzacją", "set the flow setpoint by hand or by an automation") });
+    }
   }
 
   /** Modbus Dominus: the Thermostat tile from the declared A31 room control (Boiler parameters, offline) - RP: the zone

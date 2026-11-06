@@ -17,6 +17,9 @@
 #ifdef USE_SWITCH
 #include "esphome/components/switch/switch.h"
 #endif
+#ifdef USE_TEXT_SENSOR
+#include "esphome/components/text_sensor/text_sensor.h"
+#endif
 
 #include <cmath>
 
@@ -209,6 +212,36 @@ class OtSwitch : public switch_::Switch, public esphome::Component {
   OtHub *hub_{nullptr};
   uint8_t kind_{0};
   uint8_t id_{0};
+};
+#endif
+
+#ifdef USE_TEXT_SENSOR
+// Data-ID map: 256 bits as 64 hex characters (byte 0 = Data-IDs 0-7, bit 0 = the lowest ID), published every update
+//   kind 0 = the boiler answered (READ-ACK / WRITE-ACK), 1 = the boiler does not know it (UNKNOWN-DATAID / DATA-INVALID),
+//   2 = the room unit asked for it (gateway)
+class OtMapTextSensor : public text_sensor::TextSensor, public esphome::PollingComponent {
+ public:
+  void set_hub(OtHub *hub) { this->hub_ = hub; }
+  void set_kind(uint8_t k) { this->kind_ = k; }
+  void update() override {
+    static const char HEX_DIGITS[] = "0123456789ABCDEF";
+    std::string s(64, '0');
+    for (int b = 0; b < 32; b++) {
+      uint8_t v = 0;
+      for (int i = 0; i < 8; i++) {
+        const IdState &st = this->hub_->state(uint8_t(b * 8 + i));
+        bool on = this->kind_ == 0 ? (st.seen && !st.unknown) : this->kind_ == 1 ? st.unknown : st.room_seen;
+        if (on) v |= uint8_t(1 << i);
+      }
+      s[b * 2] = HEX_DIGITS[v >> 4];
+      s[b * 2 + 1] = HEX_DIGITS[v & 0x0F];
+    }
+    if (s != this->get_state()) this->publish_state(s);
+  }
+
+ protected:
+  OtHub *hub_{nullptr};
+  uint8_t kind_{0};
 };
 #endif
 

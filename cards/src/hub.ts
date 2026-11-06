@@ -93,6 +93,10 @@ const ESP_OT: Partial<Record<Key, string[]>> = {
   ot_ov_flags: ["Nadpisz zezwolenia CO i CWU", "Override CH and DHW enable"], ot_regulator: ["Regulator w hubie", "Regulator in the hub"],
   ot_starts_total: ["Starty palnika", "Burner starts"], ot_hours_total: ["Godziny palnika", "Burner hours"],
   ot_chb_min: ["CO min.", "CH min."], ot_chb_max: ["CO maks.", "CH max."], ot_dhwb_min: ["CWU min.", "DHW min."], ot_dhwb_max: ["CWU maks.", "DHW max."],
+  ot_ids_sup: ["Data-ID obsługiwane", "Data-IDs supported"], ot_ids_unk: ["Data-ID nieznane kotłowi", "Data-IDs unknown to the boiler"],
+  ot_ids_room: ["Data-ID pilota", "Data-IDs of the room unit"], ot_cap: ["Moc maks. kotła", "Boiler max. capacity"],
+  ot_minmod: ["Min. modulacja kotła", "Boiler min. modulation"], ot_burn_today: ["Starty palnika dziś", "Burner starts today"],
+  ot_burn_h: ["Starty palnika / ostatnia godzina", "Burner starts / last hour"], ot_burn_hours: ["Czas palnika dziś", "Burner time today"],
 };
 
 /** the ESP OpenTherm hub: its "Boiler connection" binary sensor, then the entities with the same name prefix */

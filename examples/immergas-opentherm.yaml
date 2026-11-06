@@ -60,6 +60,7 @@ packages:
       - packages/lang/ot_en.yaml        # or ot_pl.yaml
       - packages/ot_core.yaml
       - packages/ot_sensors.yaml
+      - packages/ot_stats.yaml         # optional: burner starts today / last hour, burner time today
       - packages/ot_control.yaml
       - packages/ot_regulator.yaml      # master: weather curve + room correction in the hub
       # - packages/ot_gateway.yaml      # gateway: the room unit stays (needs the slave adapter)

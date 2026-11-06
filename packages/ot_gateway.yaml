@@ -19,6 +19,10 @@ immergas_ot:
     in_pin: ${ot_room_in_pin}
     out_pin: ${ot_room_out_pin}
 
+text_sensor:
+  # the Data-IDs the room unit asks for (64 hex characters = 256 bits)
+  - { platform: immergas_ot, type: ids_room, name: "${n_ot_ids_room}", id: ot_ids_room, entity_category: diagnostic, icon: "mdi:remote" }
+
 binary_sensor:
   - platform: immergas_ot
     type: state

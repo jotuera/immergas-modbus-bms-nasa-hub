@@ -1,0 +1,53 @@
+# Immergas OpenTherm - package "ot_stats" (optional)
+# Burner statistics counted in the hub from the flame bit of every status frame (about once a second, so no burn is
+# missed): starts today, starts in the last hour (short cycling), burner time today. Reset at midnight (Home Assistant
+# time, SNTP as a fallback); the day's values survive a restart.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+time:
+  - platform: homeassistant
+    id: ot_time
+    on_time:
+      - seconds: 0
+        minutes: 0
+        hours: 0
+        then:
+          - lambda: |-
+              id(ot_starts_day) = 0;
+              id(ot_burn_s_day) = 0;
+
+globals:
+  - { id: ot_starts_day, type: int, restore_value: true, initial_value: "0" }
+  - { id: ot_burn_s_day, type: float, restore_value: true, initial_value: "0" }
+  - { id: ot_stats_doy, type: int, restore_value: true, initial_value: "-1" }
+  - { id: ot_flame_was, type: bool, initial_value: "false" }
+  - { id: ot_start_ms, type: "std::vector<uint32_t>" }
+
+interval:
+  - interval: 1s
+    then:
+      - lambda: |-
+          bool f = id(ot_flame).has_state() && id(ot_flame).state;
+          if (f && !id(ot_flame_was)) { id(ot_starts_day)++; id(ot_start_ms).push_back(millis()); }
+          if (f) id(ot_burn_s_day) += 1.0f;
+          id(ot_flame_was) = f;
+  - interval: 30s
+    then:
+      - lambda: |-
+          // a restart on another day: start the day's counters from zero
+          auto now = id(ot_time).now();
+          if (now.is_valid()) {
+            if (id(ot_stats_doy) != now.day_of_year && id(ot_stats_doy) != -1) { id(ot_starts_day) = 0; id(ot_burn_s_day) = 0; }
+            id(ot_stats_doy) = now.day_of_year;
+          }
+          auto &v = id(ot_start_ms);
+          uint32_t t = millis();
+          while (!v.empty() && t - v.front() > 3600000UL) v.erase(v.begin());
+          id(ot_starts_today).publish_state(id(ot_starts_day));
+          id(ot_starts_hour).publish_state(v.size());
+          id(ot_burn_today).publish_state(id(ot_burn_s_day) / 3600.0f);
+
+sensor:
+  - { platform: template, name: "${n_ot_starts_today}", id: ot_starts_today, icon: "mdi:fire-circle", accuracy_decimals: 0, state_class: measurement }
+  - { platform: template, name: "${n_ot_starts_hour}", id: ot_starts_hour, icon: "mdi:fire-alert", accuracy_decimals: 0, state_class: measurement }
+  - { platform: template, name: "${n_ot_burn_today}", id: ot_burn_today, icon: "mdi:timer-fire", unit_of_measurement: "h", accuracy_decimals: 2, state_class: measurement }

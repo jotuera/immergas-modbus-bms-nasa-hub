@@ -85,8 +85,9 @@ family set M3 P33 = ON first – the boiler then keeps heating even if OpenTherm
 
 | Package | What it gives |
 |---|---|
-| `ot_core` | the component (master), boiler connection, frame / error / timeout counters, `ot_status_low_byte` (default **0xCA**, the "Immergas fix"), `ot_max_ch_follows_setpoint` (default **true**: 57 = CH setpoint), `ot_ch_off_setpoint` (default **10** °C, 0 = off) |
-| `ot_sensors` | status (fault, CH, DHW, flame, diagnostic), fault flags and code (5), OEM code (115), flow, return, DHW, outdoor, exhaust, modulation, pressure, DHW flow, the setpoints the boiler uses (56 / 57), bounds (48 / 49), burner starts / hours |
+| `ot_core` | the component (master), boiler connection, frame / error / timeout counters, `ot_status_low_byte` (default **0xCA**, the "Immergas fix"), `ot_max_ch_follows_setpoint` (default **true**: 57 = CH setpoint), `ot_ch_off_setpoint` (default **10** °C, 0 = off), the **Data-ID map** (which IDs the boiler answers / does not know, 64 hex characters each) |
+| `ot_sensors` | status (fault, CH, DHW, flame, diagnostic), fault flags and code (5), OEM code (115), flow, return, DHW, outdoor, exhaust, modulation, pressure, DHW flow, max. capacity / min. modulation (15), the setpoints the boiler uses (56 / 57), bounds (48 / 49), burner starts / hours |
+| `ot_stats` (optional) | burner starts today, starts in the last hour (short cycling), burner time today – counted in the hub from the flame bit of every status frame, reset at midnight |
 | `ot_control` | CH / DHW enable, CH flow setpoint, DHW setpoint, max. CH setpoint, max. modulation |
 | `ot_regulator` (master) | weather curve (two points) + a slow room correction from a Home Assistant room temperature, CH on / off with a hysteresis – the regulator the room unit / Dominus would be |
 | `ot_gateway` | gateway mode: room unit connection, standalone, what the room unit writes (CH setpoint, room setpoint and temperature, DHW setpoint, its CH / DHW enable), the override switches |
