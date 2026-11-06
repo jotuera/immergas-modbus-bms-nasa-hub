@@ -61,3 +61,4 @@ packages:
                                         # / gb_iu23.yaml (IMG-BUS boiler + IU23 interface, hypothesis)
       - packages/gb_curve.yaml          # optional: weather curve in the hub
       - packages/gb_programs.yaml       # optional: CH / DHW programs, anti-legionella, vacation, summer / winter (needs gb_curve)
+      - packages/gb_boiler_params.yaml  # optional: boiler model / interface (setup hints) + service reminder

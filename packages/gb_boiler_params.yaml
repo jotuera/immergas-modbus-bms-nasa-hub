@@ -1,0 +1,40 @@
+# Immergas Modbus BMS - package "gb_boiler_params" (optional)
+# What the BMS does not carry: which boiler / interface this is (the cards show its BMS setup steps and hints) and the
+# service reminder (last service, interval, "service done", due). Nothing is sent to the boiler.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+select:
+  - { platform: template, name: "${n_gb_model}", id: gb_model, icon: "mdi:water-boiler", options: ["superior", "extra", "pro", "mtop", "iu23", "other"], initial_option: "superior", restore_value: true, optimistic: true, entity_category: config }
+  - { platform: template, name: "${n_gb_maint}", id: gb_maint, icon: "mdi:wrench-clock", options: ["off", "6", "12", "18", "24"], initial_option: "12", restore_value: true, optimistic: true, entity_category: config }
+
+datetime:
+  - { platform: template, type: date, name: "${n_gb_last_srv}", id: gb_last_srv, icon: "mdi:calendar-check", optimistic: true, restore_value: true, entity_category: config }
+
+button:
+  - platform: template
+    name: "${n_gb_srv_done}"
+    id: gb_srv_done
+    icon: mdi:wrench-check
+    on_press:
+      - lambda: |-
+          auto now = id(gb_time).now();
+          if (!now.is_valid()) return;
+          auto c = id(gb_last_srv).make_call();
+          c.set_date(now.year, now.month, now.day_of_month);
+          c.perform();
+
+binary_sensor:
+  - platform: template
+    name: "${n_gb_maint_due}"
+    id: gb_maint_due
+    icon: mdi:wrench-clock
+    device_class: problem
+    lambda: |-
+      std::string m = id(gb_maint).current_option();
+      auto now = id(gb_time).now();
+      if (m == "off" || !id(gb_last_srv).has_state() || !now.is_valid()) return false;
+      int months = atoi(m.c_str());
+      int y = id(gb_last_srv).year, mo = id(gb_last_srv).month - 1 + months, d = std::min((int) id(gb_last_srv).day, 28);
+      y += mo / 12; mo = mo % 12 + 1;
+      long due = (long) y * 10000 + mo * 100 + d, today = (long) now.year * 10000 + now.month * 100 + now.day_of_month;
+      return today >= due;

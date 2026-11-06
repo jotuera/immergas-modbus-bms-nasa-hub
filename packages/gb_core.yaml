@@ -51,6 +51,11 @@ modbus_controller:
     modbus_id: gb_modbus
     update_interval: ${gb_diag_interval}
 
+# wall clock for gb_programs / gb_boiler_params: Home Assistant time
+time:
+  - platform: homeassistant
+    id: gb_time
+
 globals:
   - { id: gb_eco_shift, type: float, initial_value: "0" }   # K added to the flow by gb_programs (Eco)
   # word written to 512 while the heat request is on: 0x0055; PRO only: 0x0155 = request without the DHW priority

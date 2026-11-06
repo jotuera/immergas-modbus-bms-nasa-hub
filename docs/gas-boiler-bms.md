@@ -70,6 +70,7 @@ is one. **Heating** then needs the *Heat request (CH)* switch on – drive it fr
      - packages/gb_superior.yaml       # or gb_extra / gb_pro / gb_mtop / gb_iu23
      - packages/gb_curve.yaml          # optional: weather curve in the hub
      - packages/gb_programs.yaml       # optional: CH / DHW programs, anti-legionella, vacation, summer / winter
+     - packages/gb_boiler_params.yaml  # optional: boiler model / interface + service reminder
    ```
 
    - **Exactly one model package:** `gb_superior` (VICTRIX SUPERIOR 2021 / ZEUS Superior 25–35), `gb_extra`
@@ -93,6 +94,7 @@ is one. **Heating** then needs the *Heat request (CH)* switch on – drive it fr
 | `gb_superior` / `gb_extra` / `gb_pro` / `gb_mtop` / `gb_iu23` | the model extras below – load exactly one |
 | `gb_curve` (optional) | weather curve in the hub: every minute the CH flow setpoint from the boiler's outdoor probe, between two points, clamped to the boiler limits |
 | `gb_programs` (optional, with `gb_curve`) | the programs of a room unit run in the hub: CH program AUTO (4 calendars × 4 ranges, a calendar per weekday; Eco lowers the flow – the curve or the setpoint – or drops the heat request), DHW program (Comfort / Eco DHW setpoint), anti-legionella (weekly / daily at 02:00, held 20 min), vacation (Standby / DHW only until a date), automatic Summer / Winter by the 24 h outdoor mean |
+| `gb_boiler_params` (optional) | the boiler model / interface (the cards show how to switch BMS on at the boiler) and the service reminder (last service, interval, service done, due) |
 | `lang/gb_en`, `lang/gb_pl` | entity names (`gb_name_prefix`, default "Immergas Gas") |
 
 The configuration file and the steps are in [Installation](#installation).

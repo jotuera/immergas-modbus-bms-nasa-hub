@@ -145,3 +145,9 @@ substitutions:
   n_gb_win_below: "${gb_name_prefix} - Winter below"
   n_gb_sum_above: "${gb_name_prefix} - Summer above"
   n_gb_out_mean: "${gb_name_prefix} - Outdoor mean 24 h"
+  # gb_boiler_params
+  n_gb_model: "${gb_name_prefix} - Boiler model / interface"
+  n_gb_maint: "${gb_name_prefix} - Service reminder"
+  n_gb_last_srv: "${gb_name_prefix} - Last service"
+  n_gb_srv_done: "${gb_name_prefix} - Service done"
+  n_gb_maint_due: "${gb_name_prefix} - Boiler service due"

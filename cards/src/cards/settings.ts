@@ -6,7 +6,7 @@ import { HubCard, html, css, nothing, c, register, Prof, PROFS } from "../base";
 import { Key } from "../names";
 
 // the ESP hub selects carry keys as options (no HA translation): their labels, PL / EN
-const ESP_OPTS: Record<string, Record<string, [string, string]>> = {"ot_t2": {"0": ["0: nastawa CWU + 25 °C", "0: DHW setpoint + 25 °C"], "1": ["1: wg mocy kotła", "1: by the boiler output"], "2": ["2: 1,1 × nastawa CWU + 6 °C", "2: 1.1 × DHW setpoint + 6 °C"], "3": ["3: 85 °C", "3: 85 °C"]}, "ot_p6": {"intermittent": ["Przerywana (wg termostatu)", "Intermittent (by the thermostat)"], "continuous": ["Ciągła", "Continuous"], "flow_probe": ["Wg termostatu i sondy zasilania", "By the thermostat and the flow probe"]}, "ot_menu_profile": {"zeus25": ["VICTRIX ZEUS 25 / EXA 28 / OMNIA (menu G / P / t / A)", "VICTRIX ZEUS 25 / EXA 28 / OMNIA (menu G / P / t / A)"], "tera": ["VICTRIX TERA V2 / V3 (menu P / t / A / S)", "VICTRIX TERA V2 / V3 (menu P / t / A / S)"], "classic": ["VICTRIX EXA 24 X / NIKE 24 ECO (menu S / P / t)", "VICTRIX EXA 24 X / NIKE 24 ECO (menu S / P / t)"], "superior": ["VICTRIX ZEUS Superior 26 / 32 (menu M1 / M3 / M5)", "VICTRIX ZEUS Superior 26 / 32 (menu M1 / M3 / M5)"], "hercules": ["HERCULES Condensing / Solar 26 (menu M1 / M3 / M5)", "HERCULES Condensing / Solar 26 (menu M1 / M3 / M5)"], "generic": ["Inny / ogólny", "Other / generic"]}, "ot_sup_pump_speed": {"auto": ["AUTO (ΔT)", "AUTO (ΔT)"]}, "ot_sup_dhw_restart": {"3": ["3 °C poniżej", "3 °C below"], "5": ["5 °C poniżej (solar)", "5 °C below (solar)"], "10": ["10 °C poniżej (solar)", "10 °C below (solar)"]}, "ot_remote_protocol": {"img_bus": ["IMG BUS (CAR V2)", "IMG BUS (CAR V2)"], "commercial": ["Pilot innej firmy (OpenTherm)", "Third-party remote (OpenTherm)"]}, "ot_her_pump": {"auto": ["AUTO (ΔT)", "AUTO (ΔT)"], "fix": ["FIX (stała prędkość)", "FIX (constant speed)"]}, "ot_ch_no_remote": {"off": ["Wyłączone", "Off"], "on": ["Włączone", "On"]}, "ot_maint": {"off": ["Wyłączone", "Off"], "6": ["co 6 miesięcy", "every 6 months"], "12": ["co 12 miesięcy", "every 12 months"], "18": ["co 18 miesięcy", "every 18 months"], "24": ["co 24 miesiące", "every 24 months"]}, "ot_leg": {"off": ["Wyłączona", "Off"], "weekly": ["Co tydzień (pon. 02:00)", "Weekly (Mon 02:00)"], "daily": ["Codziennie 02:00", "Daily 02:00"]}};
+const ESP_OPTS: Record<string, Record<string, [string, string]>> = {"ot_t2": {"0": ["0: nastawa CWU + 25 °C", "0: DHW setpoint + 25 °C"], "1": ["1: wg mocy kotła", "1: by the boiler output"], "2": ["2: 1,1 × nastawa CWU + 6 °C", "2: 1.1 × DHW setpoint + 6 °C"], "3": ["3: 85 °C", "3: 85 °C"]}, "ot_p6": {"intermittent": ["Przerywana (wg termostatu)", "Intermittent (by the thermostat)"], "continuous": ["Ciągła", "Continuous"], "flow_probe": ["Wg termostatu i sondy zasilania", "By the thermostat and the flow probe"]}, "ot_menu_profile": {"zeus25": ["VICTRIX ZEUS 25 / EXA 28 / OMNIA (menu G / P / t / A)", "VICTRIX ZEUS 25 / EXA 28 / OMNIA (menu G / P / t / A)"], "tera": ["VICTRIX TERA V2 / V3 (menu P / t / A / S)", "VICTRIX TERA V2 / V3 (menu P / t / A / S)"], "classic": ["VICTRIX EXA 24 X / NIKE 24 ECO (menu S / P / t)", "VICTRIX EXA 24 X / NIKE 24 ECO (menu S / P / t)"], "superior": ["VICTRIX ZEUS Superior 26 / 32 (menu M1 / M3 / M5)", "VICTRIX ZEUS Superior 26 / 32 (menu M1 / M3 / M5)"], "hercules": ["HERCULES Condensing / Solar 26 (menu M1 / M3 / M5)", "HERCULES Condensing / Solar 26 (menu M1 / M3 / M5)"], "generic": ["Inny / ogólny", "Other / generic"]}, "ot_sup_pump_speed": {"auto": ["AUTO (ΔT)", "AUTO (ΔT)"]}, "ot_sup_dhw_restart": {"3": ["3 °C poniżej", "3 °C below"], "5": ["5 °C poniżej (solar)", "5 °C below (solar)"], "10": ["10 °C poniżej (solar)", "10 °C below (solar)"]}, "ot_remote_protocol": {"img_bus": ["IMG BUS (CAR V2)", "IMG BUS (CAR V2)"], "commercial": ["Pilot innej firmy (OpenTherm)", "Third-party remote (OpenTherm)"]}, "ot_her_pump": {"auto": ["AUTO (ΔT)", "AUTO (ΔT)"], "fix": ["FIX (stała prędkość)", "FIX (constant speed)"]}, "ot_ch_no_remote": {"off": ["Wyłączone", "Off"], "on": ["Włączone", "On"]}, "ot_maint": {"off": ["Wyłączone", "Off"], "6": ["co 6 miesięcy", "every 6 months"], "12": ["co 12 miesięcy", "every 12 months"], "18": ["co 18 miesięcy", "every 18 months"], "24": ["co 24 miesiące", "every 24 months"]}, "ot_leg": {"off": ["Wyłączona", "Off"], "weekly": ["Co tydzień (pon. 02:00)", "Weekly (Mon 02:00)"], "daily": ["Codziennie 02:00", "Daily 02:00"]}, "gb_model": {"superior": ["VICTRIX ZEUS Superior 25 / 30 / 35", "VICTRIX ZEUS Superior 25 / 30 / 35"], "extra": ["VICTRIX EXTRA / EXTRA PLUS", "VICTRIX EXTRA / EXTRA PLUS"], "pro": ["VICTRIX PRO V2 EU", "VICTRIX PRO V2 EU"], "mtop": ["MAGIS M TOP (pompa ciepła)", "MAGIS M TOP (heat pump)"], "iu23": ["Kocioł IMG-BUS + interfejs IU23", "IMG-BUS boiler + IU23 interface"], "other": ["Inny", "Other"]}, "ot_eco_action": {"reduce_flow": ["Obniż zasilanie", "Lower the flow"], "no_request": ["Bez żądania grzania (CO stoi)", "No heat request (CH stands)"]}};
 
 class ImmergasSettingsCard extends HubCard {
   private open: boolean | null = null;
@@ -238,6 +238,63 @@ class ImmergasSettingsCard extends HubCard {
         ${this.numRow("ot_frost_t", "mdi:snowflake-thermometer", this.t("Próg ochrony przed zamarzaniem", "Frost protection threshold"), 1)}` : nothing}`;
   }
 
+  /** gas boiler over BMS, online: what the hub needs, the curve, Eco, limits, DHW program, anti-legionella, service */
+  private gbRows() {
+    const code = this.n("err_code"), conn = this.on("gb_conn");
+    type Row = [boolean | null, string, string];
+    const rows: Row[] = [
+      [this.eid("gb_conn") ? conn : null, this.t("Hub odpytuje kocioł (Połączenie BMS)", "The hub polls the boiler (BMS connection)"), this.t("RS485 A / B, 9600, adres slave z menu kotła", "RS485 A / B, 9600, slave address from the boiler menu")],
+      [conn ? code !== 144 : null, this.t("Kocioł widzi mastera (brak E144)", "The boiler sees the master (no E144)"), this.t("E144 = brak odpytywania przez 30 s", "E144 = no polling for 30 s")],
+      [this.eid("mode") ? !this.bad("mode") : null, this.t("Kocioł w trybie BMS", "The boiler in the BMS mode"), this.t("menu Modbus → Typ = BMS (SUPERIOR / EXTRA: P.18 = 2) – Dominus i BMS wykluczają się", "Modbus menu → Type = BMS (SUPERIOR / EXTRA: P.18 = 2) – Dominus and BMS exclude each other")],
+      [this.eid("gb_req") ? this.on("gb_req") : null, this.t("Żądanie grzania CO", "CH heat request"), this.t("bez niego kocioł nie grzeje CO (albo termostat na 40-41)", "without it the boiler does not heat CH (or a thermostat on 40-41)")],
+      [this.eid("gb_curve") ? this.on("gb_curve") : null, this.t("Krzywa pogodowa hubu", "Hub weather curve"), this.t("nastawa zasilania z sondy zewnętrznej kotła", "flow setpoint from the boiler's outdoor probe")],
+      [this.eid("prog_mode") ? this.s("prog_mode") === "auto" : null, this.t("Program CO AUTO", "CH program AUTO"), this.t("kalendarze w karcie Harmonogram", "calendars in the Schedule card")],
+    ];
+    const ok = rows.filter(([v]) => v === true).length, need = rows.filter(([v]) => v !== null).length;
+    const icon = (v: boolean | null) => v === null ? { ic: "mdi:information-outline", col: "overlay2" } : v ? { ic: "mdi:check-circle", col: "green" } : { ic: "mdi:close-circle-outline", col: "peach" };
+    return html`<div class="grp">${this.t("Praca z hubem (Modbus BMS)", "Running with the hub (Modbus BMS)")} · ${ok} / ${need}</div>
+      <div class="ready">${rows.map(([v, lbl, sub]) => { const { ic, col } = icon(v); return html`<div class="rr">
+        <ha-icon icon=${ic} style="color:var(--ih-${col})"></ha-icon><div><div class="rl">${lbl}</div>${sub ? html`<div class="rs">${sub}</div>` : nothing}</div></div>`; })}</div>
+      ${this.eid("gb_curve") ? html`<div class="grp">${this.t("Krzywa pogodowa hubu", "Hub weather curve")}</div>
+        ${this.switchRow("gb_curve", "mdi:chart-bell-curve-cumulative", "peach", this.t("Krzywa pogodowa w hubie", "Weather curve in the hub"), this.t("nastawa zasilania (514) z sondy kotła (772) co minutę", "flow setpoint (514) from the boiler probe (772) every minute"))}
+        ${this.numRow("ot_c_oc", "mdi:snowflake-thermometer", this.t("Krzywa: punkt mrozu (temp. zewn.)", "Curve: cold point (outdoor)"), 0)}
+        ${this.numRow("ot_c_fc", "mdi:thermometer-high", this.t("Krzywa: zasilanie przy mrozie", "Curve: flow when cold"), 0)}
+        ${this.numRow("ot_c_ow", "mdi:sun-thermometer", this.t("Krzywa: punkt ciepła (temp. zewn.)", "Curve: warm point (outdoor)"), 0)}
+        ${this.numRow("ot_c_fw", "mdi:thermometer-low", this.t("Krzywa: zasilanie przy cieple", "Curve: flow when warm"), 0)}` : nothing}
+      ${this.eid("ot_eco_action") ? html`<div class="grp">${this.t("Faza Eko (program CO)", "Eco phase (CH program)")}</div>
+        ${this.selRow(this.eid("ot_eco_action"), this.t("W fazie Eko", "In the Eco phase"), "mdi:leaf")}
+        ${this.s("ot_eco_action") !== "no_request" ? this.numRow("ot_eco_red", "mdi:thermometer-minus", this.t("Obniżenie zasilania w Eko", "Eco flow reduction"), 0) : nothing}` : nothing}
+      ${this.eid("gb_power") ? html`<div class="grp">${this.t("Limity", "Limits")}</div>${this.numRow("gb_power", "mdi:speedometer-medium", this.t("Górny limit mocy (BMS 513)", "Upper power limit (BMS 513)"), 0)}` : nothing}
+      ${this.eid("dhw_comfort_dd") ? html`<div class="grp">${this.t("Program CWU i anty-legionella (hub)", "DHW program and anti-legionella (hub)")}</div>
+        ${this.numRow("dhw_comfort_dd", "mdi:sofa-outline", this.t("CWU · Komfort", "DHW · Comfort"), 0)}
+        ${this.numRow("dhw_eco_dd", "mdi:leaf", this.t("CWU · Eko", "DHW · Eco"), 0)}
+        ${this.selRow(this.eid("ot_leg"), this.t("Anty-legionella", "Anti-legionella"), "mdi:bacteria-outline")}
+        ${this.numRow("ot_leg_t", "mdi:thermometer-high", this.t("Temperatura anty-legionella", "Anti-legionella temperature"), 0)}
+        ${!isNaN(this.n("ot_dhwb_max")) ? html`<div class="note">${this.t("Maks. ", "Max. ")}${this.f(this.n("ot_dhwb_max"), 0)} °C – ${this.t("tyle przyjmuje kocioł", "what the boiler accepts")}</div>` : nothing}` : nothing}
+      ${this.eid("ot_maint") ? this.maintRows() : nothing}`;
+  }
+
+  /** gas boiler over BMS, offline: the model / interface and how to switch BMS on at the boiler */
+  private gbOffline() {
+    const m = this.s("gb_model") ?? "", addr = this.n("gb_addr");
+    const steps: Record<string, [string, string]> = {
+      superior: ["Menu tekstowe: Pomoc techniczna → Modbus → Typ = BMS; adres slave 21 (kotły na D+ / D-).", "Text menu: Service → Modbus → Type = BMS; slave address 21 (boilers on D+ / D-)."],
+      extra: ["Menu kodowe: P.18 = 2 (BMS); adres 21; połączenie na D+ / D-.", "Code menu: P.18 = 2 (BMS); address 21; wired on D+ / D-."],
+      pro: ["VICTRIX PRO V2: BMS na zaciskach T+ / T- (A38); bez mastera błąd 100.", "VICTRIX PRO V2: BMS on the T+ / T- terminals (A38); without a master fault 100."],
+      mtop: ["MAGIS M TOP: BMS generatora – adres 21, 9600 8N2; tryb chłodzenia przez Rodzaj żądania.", "MAGIS M TOP: the generator BMS – address 21, 9600 8N2; cooling through the Request type."],
+      iu23: ["IU23 (kit 3.029912) na zaciskach pilota 44 / 41 zamiast CAR V2; adres dipswitchami 21–36; 9600 8N2. Hipoteza – niepotwierdzone.", "IU23 (kit 3.029912) on the remote terminals 44 / 41 instead of the CAR V2; address by dip switches 21–36; 9600 8N2. Hypothesis – not confirmed."],
+      other: ["Sprawdź w instrukcji kotła, jak włączyć Modbus BMS i jaki jest adres slave.", "Check the boiler manual for how to switch Modbus BMS on and the slave address."],
+    };
+    const st = steps[m];
+    return html`<div class="grp">${this.t("Model kotła / interfejs", "Boiler model / interface")}</div>
+      ${this.selRow(this.eid("gb_model"), this.t("Model", "Model"), "mdi:water-boiler")}
+      ${st ? html`<div class="note">${this.t(st[0], st[1])}</div>` : nothing}
+      ${!isNaN(addr) ? html`<div class="nr"><ha-icon icon="mdi:numeric"></ha-icon><span class="nl" @click=${() => this.moreInfo("gb_addr")}>${this.t("Adres Modbus (odczyt z kotła)", "Modbus address (read from the boiler)")}</span>
+        <span class="nv" style="min-width:auto">${this.f(addr, 0)}</span></div>` : nothing}
+      ${!isNaN(this.n("ot_chb_min")) ? html`<div class="note">${this.t(`kocioł podaje zakres CO ${this.f(this.n("ot_chb_min"), 0)}–${this.f(this.n("ot_chb_max"), 0)} °C`,
+        `the boiler reports the CH range ${this.f(this.n("ot_chb_min"), 0)}–${this.f(this.n("ot_chb_max"), 0)} °C`)}</div>` : nothing}`;
+  }
+
   /** ESP hub: the regulator of ot_regulator and the OpenTherm limits the hub writes */
   private espRegRows() {
     return html`${this.eid("ot_regulator") ? html`<div class="grp">${this.t("Regulator hubu", "Hub regulator")}</div>
@@ -262,7 +319,7 @@ class ImmergasSettingsCard extends HubCard {
     const last = this.s("ot_last_srv"), fmt = (s: string | null | undefined) => s && !["unknown", "unavailable", ""].includes(s)
       ? new Date(s).toLocaleDateString(this.loc, { dateStyle: "medium" }) : "–";
     const tag = "srv_done", armed = this.isArmed(tag);
-    return html`<div class="grp">${this.t("Przegląd kotła (MANUTZ)", "Boiler service (MANUTZ)")}</div>
+    return html`<div class="grp">${this.gbx ? this.t("Przegląd kotła", "Boiler service") : this.t("Przegląd kotła (MANUTZ)", "Boiler service (MANUTZ)")}</div>
       ${this.selRow(this.eid("ot_maint"), this.t("Przypomnienie", "Reminder"), "mdi:wrench-clock")}
       <div class="nr"><ha-icon icon="mdi:calendar-check"></ha-icon><span class="nl" @click=${() => this.moreInfo("ot_last_srv")}>${this.t("Ostatni przegląd", "Last service")}</span>
         <span class="nv" style="min-width:auto">${fmt(last)}</span></div>
@@ -308,18 +365,24 @@ class ImmergasSettingsCard extends HubCard {
     const sum = !this.dominus ? (part === "online" ? this.t("ceny, zasobnik, szacowanie gazu, posadzka, powierzchnia, język błędów", "prices, cylinder, gas estimate, screed, floor area, fault language")
         : part === "offline" ? this.t("U12/U13, P16/P17/P13, limit podłogi, tania taryfa, R02/R03, R10/R11, P07", "U12/U13, P16/P17/P13, floor limit, cheap tariff, R02/R03, R10/R11, P07")
         : this.t("ceny, zasobnik, tryb nocny, legionella…", "prices, cylinder, night mode, legionella…"))
-      : part === "online" ? (this.esp ? this.t("praca bez CAR V2, regulator hubu, limity OpenTherm, programy CO / CWU, przegląd", "running without the CAR V2, hub regulator, OpenTherm limits, CH / DHW programs, service")
+      : part === "online" ? (this.gbx ? this.t("praca z hubem (BMS), krzywa, Eko, limity, programy CWU, przegląd", "running with the hub (BMS), curve, Eco, limits, DHW programs, service")
+        : this.esp ? this.t("praca bez CAR V2, regulator hubu, limity OpenTherm, programy CO / CWU, przegląd", "running without the CAR V2, hub regulator, OpenTherm limits, CH / DHW programs, service")
         : this.ot ? this.t("praca bez CAR V2, programy CO / CWU, regulator Dominusa, przegląd, Lato/Zima, alarmy", "running without the CAR V2, CH / DHW programs, Dominus regulator, service, summer/winter, alerts")
         : this.t("zasilanie, wilgotność, posadzka, powierzchnia, Lato/Zima, alarmy, język błędów", "flow, humidity, screed, floor area, summer/winter, alerts, fault language"))
-      : part === "offline" ? (this.ot ? this.t("termostat, menu kotła wg modelu: zasilanie, zapłon, moc, pompa, sonda", "thermostat, boiler menu by model: flow, ignition, output, pump, probe")
+      : part === "offline" ? (this.gbx ? this.t("model kotła / interfejs, ustawienie BMS na kotle, adres", "boiler model / interface, BMS setup on the boiler, address")
+        : this.ot ? this.t("termostat, menu kotła wg modelu: zasilanie, zapłon, moc, pompa, sonda", "thermostat, boiler menu by model: flow, ignition, output, pump, probe")
         : this.t("U11, P15, krzywe R, T02/T05, integracja I, A31, P07", "U11, P15, R curves, T02/T05, I integration, A31, P07"))
       : this.t("parametry pieca, tryb nocny, legionella, wyjazd, Lato/Zima, alarmy, język błędów", "boiler parameters, night mode, legionella, vacation, summer/winter, alerts, fault language");
     const note = !this.dominus ? (part === "offline" ? this.t("Hub nie czyta tych ustawień z magistral – przepisz je raz z menu pieca; służą paskom czasu, krzywej i kalibracji.",
         "The hub cannot read these from the buses – copy them once from the boiler menu; they drive the timer bars, the curve and the calibration.") : "")
+      : part === "online" && this.gbx ? this.t("Działają od razu: hub liczy krzywą i programy sam (bez Home Assistant – tylko jego czas) i zapisuje nastawy do kotła po Modbus BMS.",
+        "Work right away: the hub runs the curve and the programs itself (without Home Assistant – only its time) and writes the setpoints to the boiler over Modbus BMS.")
       : part === "online" && this.esp ? this.t("Działają od razu: hub liczy regulator i programy sam (bez Home Assistant – tylko jego czas) i wysyła nastawy do kotła po OpenTherm.",
         "Work right away: the hub runs the regulator and the programs itself (without Home Assistant – only its time) and sends the setpoints to the boiler over OpenTherm.")
       : part === "online" ? this.t("Działają od razu: nastawy strefy, wyjazd i Lato/Zima zapisują do kotła przez Dominusa, alarmy i język liczy Home Assistant.",
         "Work right away: zone setpoints, vacation and summer/winter write to the boiler through Dominus, alerts and language run in Home Assistant.")
+      : part === "offline" && this.gbx ? this.t("BMS nie podaje modelu kotła – wybierz go raz; karta pokaże, jak włączyć BMS na kotle. Nic nie trafia do kotła.",
+        "The BMS does not report the boiler model – pick it once; the card shows how to switch BMS on at the boiler. Nothing is sent to the boiler.")
       : part === "offline" && this.esp ? this.t("OpenTherm nie przenosi menu kotła – przepisz je raz z kotła (pakiet ot_boiler_params). Nic nie trafia do kotła; służą kodom i podpowiedziom.",
         "OpenTherm does not carry the boiler menu – copy it once from the boiler (ot_boiler_params package). Nothing is sent to the boiler; they drive the codes and the hints.")
       : part === "offline" ? this.t("Dominus nie czyta tych ustawień – przepisz je raz z menu pieca. Nic nie trafia do kotła; służą paskom czasu, krzywej i podpowiedziom.",
@@ -366,8 +429,8 @@ class ImmergasSettingsCard extends HubCard {
         ${this.eid("hub_p07") ? html`<div class="grp">${this.t("Instalacja", "Installation")}</div>
           ${this.numRow("hub_p07", "mdi:thermometer-plus", this.t("P07 · korekta sondy zewnętrznej", "P07 · outdoor probe correction"), 0)}` : nothing}
       ` : nothing}
-      ${open && this.dominus && off ? (this.ot ? this.otOffline() : this.domOffline()) : nothing}
-      ${open && this.dominus && on ? html`${this.otRows()}${this.domRows()}` : nothing}
+      ${open && this.dominus && off ? (this.gbx ? this.gbOffline() : this.ot ? this.otOffline() : this.domOffline()) : nothing}
+      ${open && this.dominus && on ? (this.gbx ? this.gbRows() : html`${this.otRows()}${this.domRows()}`) : nothing}
       ${open && lang && on ? html`<div class="grp">${this.t("Opisy błędów", "Fault descriptions")}</div>
           <div class="nr"><ha-icon icon="mdi:translate"></ha-icon><span class="nl">${this.t("Język", "Language")}</span>
             <select class="langs" .value=${lang.state} @change=${(e: Event) => { const o = (e.target as HTMLSelectElement).value; if (o !== lang.state) this.call("select", "select_option", "err_lang", { option: o }); }}>

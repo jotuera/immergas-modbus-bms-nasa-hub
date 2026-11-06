@@ -145,3 +145,9 @@ substitutions:
   n_gb_win_below: "${gb_name_prefix} - Zima poniżej"
   n_gb_sum_above: "${gb_name_prefix} - Lato powyżej"
   n_gb_out_mean: "${gb_name_prefix} - Średnia zewnętrzna 24 h"
+  # gb_boiler_params
+  n_gb_model: "${gb_name_prefix} - Model kotła / interfejs"
+  n_gb_maint: "${gb_name_prefix} - Przypomnienie o przeglądzie"
+  n_gb_last_srv: "${gb_name_prefix} - Ostatni przegląd"
+  n_gb_srv_done: "${gb_name_prefix} - Przegląd wykonany"
+  n_gb_maint_due: "${gb_name_prefix} - Przegląd kotła"

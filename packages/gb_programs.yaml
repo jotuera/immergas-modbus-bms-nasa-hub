@@ -11,10 +11,6 @@
 # Needs gb_core, gb_control, gb_status, gb_sensors and gb_curve (it may stay off; with it on, Eco shifts the curve).
 # Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
 
-time:
-  - platform: homeassistant
-    id: gb_time
-
 globals:
   - { id: gb_phase_last, type: int, initial_value: "-1" }       # CH program: 1 Comfort, 0 Eco
   - { id: gb_flow_before, type: float, initial_value: "NAN" }   # flow setpoint before Eco (curve off)

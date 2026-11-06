@@ -227,6 +227,9 @@ for (const k of Object.keys(ESP_OT) as Key[]) {
 }
 ESP_GB.ot_eco_action = ["W fazie Eko", "In the Eco phase"];
 ESP_GB.ot_eco_red = ["Obniżenie zasilania w Eko", "Eco flow reduction"];
+// the hub curve (same names as ot_regulator), gb_boiler_params: model / interface and the service reminder
+for (const k of ["ot_c_oc", "ot_c_fc", "ot_c_ow", "ot_c_fw", "ot_maint", "ot_last_srv", "ot_srv_done", "ot_maint_due"] as Key[]) ESP_GB[k] = ESP_OT[k];
+ESP_GB.gb_model = ["Model kotła / interfejs", "Boiler model / interface"];
 
 /** the ESP gas boiler hub: its "BMS connection" switch, then the entities with the same name prefix */
 function buildEspGb(hass: any): HubIndex | null {
