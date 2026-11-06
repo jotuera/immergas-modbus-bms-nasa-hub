@@ -181,12 +181,19 @@ class ImmergasLinksCard extends HubCard {
     const v = parseFloat(src?.state ?? ""), sent = a.room_sent_at ? Date.parse(a.room_sent_at) : NaN, res = a.write_result as string | undefined;
     // no room temperature (Data-ID 24 unanswered / unsupported) while something needs it: emulated, or room control (AMB) on
     const noRoom = (this.bad("zone1") || this.otMissing(24)) && (mode === "emulated" || this.on("ot_room_sensor"));
-    const st: State = noRoom ? "bad" : mode === "physical" ? "ok" : mode === "emulated" ? (!src || isNaN(v) || res === "not_taken" ? "bad" : "emu") : "na";
-    const label = noRoom ? this.t("Brak temperatury pokoju", "No room temperature")
+    // failsafe (Dominus 1.6.12): no fresh source reading for 60 min - Data-ID 24 is no longer sent
+    const lost = mode === "emulated" && (a.source_lost === true || res === "source_lost");
+    const st: State = noRoom || lost ? "bad" : mode === "physical" ? "ok" : mode === "emulated" ? (!src || isNaN(v) || res === "not_taken" ? "bad" : "emu") : "na";
+    const label = lost ? this.t("Brak źródła temperatury", "No room temperature source")
+      : noRoom ? this.t("Brak temperatury pokoju", "No room temperature")
       : mode === "physical" ? this.t("Termostat fizyczny", "Physical thermostat")
       : mode === "emulated" ? (res === "not_taken" ? this.t("Emulacja nie działa", "Emulation does not work") : this.t("Termostat emulowany", "Emulated thermostat"))
       : this.t("Nie ustawiono", "Not set");
-    const detail = noRoom ? this.t("kocioł nie podaje Data-ID 24 – sprawdź sondę Dominusa (zaciski 1-2, „Sonda Dominusa mierzy” = pokój)",
+    const age = typeof a.source_age_min === "number" ? a.source_age_min : NaN;
+    const detail = lost ? this.t(`${src?.attributes?.friendly_name ?? (srcId || "encja")} nie podaje świeżej temperatury`, `${src?.attributes?.friendly_name ?? (srcId || "the entity")} reports no fresh temperature`)
+        + (!isNaN(age) ? this.t(` od ${this.f(age, 0)} min`, ` for ${this.f(age, 0)} min`) : "")
+        + this.t(" – Data-ID 24 wstrzymany, wróci sam po odczycie", " – Data-ID 24 paused, resumes on the next reading")
+      : noRoom ? this.t("kocioł nie podaje Data-ID 24 – sprawdź sondę Dominusa (zaciski 1-2, „Sonda Dominusa mierzy” = pokój)",
         "the boiler does not report Data-ID 24 – check the Dominus probe (terminals 1-2, “Dominus probe use” = room)")
         + (this.on("ot_room_sensor") ? this.t(" · regulacja wg pokoju (AMB) włączona", " · room control (AMB) on") : "")
       : mode === "physical" ? this.t("zaciski 40-41 kotła – OpenTherm nie podaje jego stanu; grzanie widać po żądaniu CO",

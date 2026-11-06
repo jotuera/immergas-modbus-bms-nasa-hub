@@ -6278,6 +6278,13 @@
   ]
  },
  {
+  "en": "No room temperature source",
+  "pl": "Brak źródła temperatury",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
   "en": "No room temperature",
   "pl": "Brak temperatury pokoju",
   "files": [
@@ -6308,6 +6315,27 @@
  {
   "en": "Not set",
   "pl": "Nie ustawiono",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": "{0} reports no fresh temperature",
+  "pl": "{0} nie podaje świeżej temperatury",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": " for {0} min",
+  "pl": " od {0} min",
+  "files": [
+   "links.ts"
+  ]
+ },
+ {
+  "en": " – Data-ID 24 paused, resumes on the next reading",
+  "pl": " – Data-ID 24 wstrzymany, wróci sam po odczycie",
   "files": [
    "links.ts"
   ]
