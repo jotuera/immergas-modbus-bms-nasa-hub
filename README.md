@@ -206,6 +206,10 @@ can be run by the hub as a Modbus BMS master – the experimental `gb_` packages
 **MAGIS M heat pumps** (Midea M-Thermal, R32) have their own experimental `mt_` packages for the Modbus port of the
 wired controller (H1 / H2) – see **[MAGIS M heat pumps (Midea M-Thermal)](docs/magis-m-midea.md)**.
 
+**OpenTherm boilers** (VICTRIX ZEUS, EXA, TERA, OMNIA, HERCULES Condensing …): the experimental `immergas_ot` component
+makes the hub the OpenTherm master instead of the CAR V2 / Dominus, or a gateway between the room unit and the boiler –
+see **[OpenTherm boilers in the hub](docs/opentherm-hub.md)**.
+
 ## Support
 
 If you find this hub useful, please consider supporting me by buying me a coffee. Thank you!

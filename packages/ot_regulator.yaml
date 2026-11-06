@@ -1,0 +1,72 @@
+# Immergas OpenTherm - package "ot_regulator" (master mode, optional)
+# The regulator the room unit / Dominus module would be: every minute the CH flow setpoint (Data-ID 1) from a weather
+# curve (two points, like the Immergas P66 / R curves) plus a slow room correction, and CH on / off by the room
+# temperature with a hysteresis. Changes are slow on purpose: a fast PID overshoots on these boilers (full output, then
+# the room stays too warm for hours).
+# Room temperature: a Home Assistant sensor (substitution ot_room_entity, e.g. sensor.living_room_temperature).
+# Without a room temperature the regulator runs on the curve only (like a boiler with P66 and no thermostat).
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+substitutions:
+  ot_room_entity: sensor.ot_room_temperature_not_set
+
+sensor:
+  - platform: homeassistant
+    id: ot_room_temp
+    entity_id: ${ot_room_entity}
+    internal: true
+
+switch:
+  - platform: template
+    name: "${n_ot_regulator}"
+    id: ot_regulator
+    icon: mdi:chart-bell-curve-cumulative
+    restore_mode: RESTORE_DEFAULT_OFF
+    optimistic: true
+
+number:
+  - { platform: template, name: "${n_ot_room_target}", id: ot_room_target, icon: "mdi:home-thermometer", unit_of_measurement: "°C", min_value: 10, max_value: 28, step: 0.5, initial_value: 21, restore_value: true, optimistic: true, mode: box }
+  - { platform: template, name: "${n_ot_curve_outdoor_cold}", id: ot_curve_outdoor_cold, entity_category: config, unit_of_measurement: "°C", min_value: -25, max_value: 0, step: 1, initial_value: -15, restore_value: true, optimistic: true, mode: box }
+  - { platform: template, name: "${n_ot_curve_flow_cold}", id: ot_curve_flow_cold, entity_category: config, unit_of_measurement: "°C", min_value: 25, max_value: 85, step: 1, initial_value: 60, restore_value: true, optimistic: true, mode: box }
+  - { platform: template, name: "${n_ot_curve_outdoor_warm}", id: ot_curve_outdoor_warm, entity_category: config, unit_of_measurement: "°C", min_value: 5, max_value: 25, step: 1, initial_value: 18, restore_value: true, optimistic: true, mode: box }
+  - { platform: template, name: "${n_ot_curve_flow_warm}", id: ot_curve_flow_warm, entity_category: config, unit_of_measurement: "°C", min_value: 20, max_value: 60, step: 1, initial_value: 30, restore_value: true, optimistic: true, mode: box }
+  # flow °C per °C of room error (0 = curve only)
+  - { platform: template, name: "${n_ot_room_gain}", id: ot_room_gain, entity_category: config, min_value: 0, max_value: 10, step: 0.5, initial_value: 3, restore_value: true, optimistic: true, mode: box }
+  - { platform: template, name: "${n_ot_room_hysteresis}", id: ot_room_hysteresis, entity_category: config, unit_of_measurement: "K", min_value: 0.1, max_value: 2, step: 0.1, initial_value: 0.3, restore_value: true, optimistic: true, mode: box }
+
+interval:
+  - interval: 60s
+    then:
+      - lambda: |-
+          if (!id(ot_regulator).state) return;
+          float out = id(ot_outdoor_temp).state;
+          float oc = id(ot_curve_outdoor_cold).state, ow = id(ot_curve_outdoor_warm).state;
+          float fc = id(ot_curve_flow_cold).state, fw = id(ot_curve_flow_warm).state;
+          float flow;
+          if (isnan(out)) {
+            flow = (fc + fw) / 2;  // no outdoor probe: the middle of the curve
+          } else {
+            float t = ow > oc ? (out - oc) / (ow - oc) : 0;
+            t = t < 0 ? 0 : (t > 1 ? 1 : t);
+            flow = fc + (fw - fc) * t;
+          }
+          float room = id(ot_room_temp).state, target = id(ot_room_target).state, hyst = id(ot_room_hysteresis).state;
+          bool ch = id(ot_ch_enable).state;
+          if (!isnan(room)) {
+            flow += id(ot_room_gain).state * (target - room);
+            if (room >= target + hyst) ch = false;        // warm enough: CH off
+            else if (room <= target - hyst) ch = true;    // too cold: CH on
+          }
+          float lo = isnan(id(ot_ch_min).state) ? 20 : id(ot_ch_min).state;
+          float hi = isnan(id(ot_ch_max).state) ? 80 : id(ot_ch_max).state;
+          flow = flow < lo ? lo : (flow > hi ? hi : flow);
+          flow = roundf(flow * 2) / 2;
+          if (ch != id(ot_ch_enable).state) {
+            if (ch) id(ot_ch_enable).turn_on(); else id(ot_ch_enable).turn_off();
+          }
+          if (fabsf(id(ot_ch_setpoint).state - flow) >= 0.5f) {
+            auto call = id(ot_ch_setpoint).make_call();
+            call.set_value(flow);
+            call.perform();
+          }
+          ESP_LOGD("ot_regulator", "outdoor %.1f room %.1f / %.1f -> CH %s, flow %.1f", out, room, target, ch ? "on" : "off", flow);

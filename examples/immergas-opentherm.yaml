@@ -1,0 +1,65 @@
+# Immergas OpenTherm boiler - example configuration (VICTRIX ZEUS / EXA / TERA / OMNIA / HERCULES Condensing ...)
+# One AtomS3 (Lite) + ATOMIC PortABC with OpenTherm adapters (NOT the RS485 units):
+#   MASTER  (default): one master adapter on Port C -> boiler OpenTherm terminals. The hub replaces the CAR V2 /
+#                      Super Amico / Dominus: remove the room unit, put jumper X40 back on 40-41, power-cycle the boiler.
+#   GATEWAY: also a slave adapter on Port B -> the room unit, which stays and is relayed (uncomment ot_gateway).
+# Experimental: written from the OpenTherm specification and the Immergas findings of the Dominus integration, not
+# tested on a boiler yet.
+# Copy to your ESPHome folder, set the secrets and flash. Loaded packages come straight from GitHub (pin `ref`).
+
+substitutions:
+  device_name: immergas-opentherm
+  friendly_name: Immergas OpenTherm
+  ot_name_prefix: "Immergas OT"
+  ot_boiler_in_pin: GPIO6
+  ot_boiler_out_pin: GPIO5
+  # gateway only: the slave adapter towards the room unit
+  # ot_room_in_pin: GPIO8
+  # ot_room_out_pin: GPIO7
+  # regulator: a Home Assistant room temperature (optional)
+  ot_room_entity: sensor.living_room_temperature
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+  name_add_mac_suffix: false
+  min_version: 2026.9.0
+
+esp32:
+  board: m5stack-atoms3
+  framework:
+    type: esp-idf
+
+logger:
+  level: INFO
+  hardware_uart: USB_SERIAL_JTAG
+
+api:
+  encryption:
+    key: !secret immergas_ot_api_key
+  reboot_timeout: 0s   # the boiler must keep getting its OpenTherm frames while Home Assistant is down
+
+ota:
+  - platform: esphome
+    password: !secret immergas_ot_ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  reboot_timeout: 0s
+  ap:
+
+captive_portal:
+
+packages:
+  opentherm:
+    url: https://github.com/jotuera/immergas-modbus-bms-nasa-hub
+    ref: main
+    refresh: 1d
+    files:
+      - packages/lang/ot_en.yaml        # or ot_pl.yaml
+      - packages/ot_core.yaml
+      - packages/ot_sensors.yaml
+      - packages/ot_control.yaml
+      - packages/ot_regulator.yaml      # master: weather curve + room correction in the hub
+      # - packages/ot_gateway.yaml      # gateway: the room unit stays (needs the slave adapter)

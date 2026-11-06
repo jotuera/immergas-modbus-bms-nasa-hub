@@ -1,0 +1,59 @@
+# Immergas OpenTherm - package "ot_core"
+# The immergas_ot component in the MASTER mode: the hub replaces the room unit (CAR V2 / Super Amico / Dominus) on the
+# boiler's OpenTherm terminals. For the GATEWAY mode (room unit -> hub -> boiler) add ot_gateway.
+# Hardware: an OpenTherm MASTER adapter (e.g. OpenTherm Adapter, DIYLess Master OpenTherm Shield) on two GPIOs. NOT the
+# RS485 unit: OpenTherm is a 2-wire current / voltage loop.
+# Boiler terminals (see the Dominus knowledge base): 41 / 44 (VICTRIX ZEUS 25, EXA, TERA, OMNIA), 42 / 43 (HERCULES
+# Condensing, ZEUS Superior 26 / 32). Without the CAR V2 the jumper X40 goes back on 40-41.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+substitutions:
+  ot_project_version: "1.0.0"
+  ot_name_prefix: "Immergas OT"
+  # master adapter (towards the boiler): default AtomS3 + ATOMIC PortABC Port C
+  ot_boiler_in_pin: GPIO6
+  ot_boiler_out_pin: GPIO5
+  # 0xCA = the "Immergas fix" in the status request (without it some boilers ignore Data-ID 1 / 57); 0x00 = plain
+  ot_status_low_byte: "0xCA"
+
+external_components:
+  - source: github://jotuera/immergas-modbus-bms-nasa-hub@main
+    components: [immergas_ot]
+
+immergas_ot:
+  id: ot_hub
+  mode: master
+  status_low_byte: ${ot_status_low_byte}
+  boiler:
+    in_pin: ${ot_boiler_in_pin}
+    out_pin: ${ot_boiler_out_pin}
+
+binary_sensor:
+  - platform: immergas_ot
+    type: state
+    state: boiler_online
+    name: "${n_ot_boiler_online}"
+    id: ot_boiler_online
+    device_class: connectivity
+    entity_category: diagnostic
+
+sensor:
+  - platform: immergas_ot
+    type: stat
+    stat: frames
+    name: "${n_ot_frames}"
+    id: ot_frames
+    entity_category: diagnostic
+    disabled_by_default: true
+  - platform: immergas_ot
+    type: stat
+    stat: errors
+    name: "${n_ot_errors}"
+    id: ot_errors
+    entity_category: diagnostic
+  - platform: immergas_ot
+    type: stat
+    stat: timeouts
+    name: "${n_ot_timeouts}"
+    id: ot_timeouts
+    entity_category: diagnostic

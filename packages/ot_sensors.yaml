@@ -1,0 +1,106 @@
+# Immergas OpenTherm - package "ot_sensors"
+# What the boiler reports: status (Data-ID 0), faults (5, 115), temperatures (25 flow, 26 DHW, 27 outdoor, 28 return,
+# 33 exhaust), modulation (17), pressure (18), DHW flow (19), the setpoint bounds (48 / 49), the setpoints the boiler
+# uses (56 / 57) and the counters (116-123). An ID the boiler answers with UNKNOWN-DATAID is asked again once an hour
+# and its sensor shows "unknown" (many Immergas boilers have no pressure / DHW flow / exhaust sensor).
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+binary_sensor:
+  # Data-ID 0, low byte of the answer: slave status
+  - { platform: immergas_ot, data_id: 0, bit: 0, name: "${n_ot_fault}", id: ot_fault, device_class: problem }
+  - { platform: immergas_ot, data_id: 0, bit: 1, name: "${n_ot_ch_active}", id: ot_ch_active, icon: "mdi:radiator" }
+  - { platform: immergas_ot, data_id: 0, bit: 2, name: "${n_ot_dhw_active}", id: ot_dhw_active, icon: "mdi:water-boiler" }
+  - { platform: immergas_ot, data_id: 0, bit: 3, name: "${n_ot_flame}", id: ot_flame, device_class: heat, icon: "mdi:fire" }
+  - { platform: immergas_ot, data_id: 0, bit: 6, name: "${n_ot_diagnostic}", id: ot_diagnostic, entity_category: diagnostic }
+  # Data-ID 5, high byte: application fault flags
+  - { platform: immergas_ot, data_id: 5, bit: 8, name: "${n_ot_service_request}", id: ot_service_request, entity_category: diagnostic }
+  - { platform: immergas_ot, data_id: 5, bit: 9, name: "${n_ot_lockout_reset}", id: ot_lockout_reset, entity_category: diagnostic }
+  - { platform: immergas_ot, data_id: 5, bit: 10, name: "${n_ot_low_water_pressure}", id: ot_low_water_pressure, device_class: problem }
+  - { platform: immergas_ot, data_id: 5, bit: 11, name: "${n_ot_gas_flame_fault}", id: ot_gas_flame_fault, device_class: problem }
+  - { platform: immergas_ot, data_id: 5, bit: 12, name: "${n_ot_air_pressure_fault}", id: ot_air_pressure_fault, device_class: problem }
+  - { platform: immergas_ot, data_id: 5, bit: 13, name: "${n_ot_water_overtemp}", id: ot_water_overtemp, device_class: problem }
+
+sensor:
+  # Immergas fault code (E..) in the low byte of Data-ID 5; OEM diagnostic code in 115
+  - { platform: immergas_ot, data_id: 5, value_type: u8_lb, name: "${n_ot_fault_code}", id: ot_fault_code, icon: "mdi:alert-circle-outline", accuracy_decimals: 0 }
+  - { platform: immergas_ot, data_id: 115, value_type: u16, name: "${n_ot_oem_code}", id: ot_oem_code, entity_category: diagnostic, accuracy_decimals: 0 }
+  - platform: immergas_ot
+    data_id: 25
+    name: "${n_ot_flow_temp}"
+    id: ot_flow_temp
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+  - platform: immergas_ot
+    data_id: 28
+    name: "${n_ot_return_temp}"
+    id: ot_return_temp
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+  - platform: immergas_ot
+    data_id: 26
+    name: "${n_ot_dhw_temp}"
+    id: ot_dhw_temp
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+  - platform: immergas_ot
+    data_id: 27
+    name: "${n_ot_outdoor_temp}"
+    id: ot_outdoor_temp
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+  - platform: immergas_ot
+    data_id: 33
+    value_type: s16
+    name: "${n_ot_exhaust_temp}"
+    id: ot_exhaust_temp
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 0
+    disabled_by_default: true
+  - platform: immergas_ot
+    data_id: 17
+    name: "${n_ot_modulation}"
+    id: ot_modulation
+    icon: mdi:fire-circle
+    unit_of_measurement: "%"
+    state_class: measurement
+    accuracy_decimals: 0
+  - platform: immergas_ot
+    data_id: 18
+    name: "${n_ot_pressure}"
+    id: ot_pressure
+    unit_of_measurement: "bar"
+    device_class: pressure
+    state_class: measurement
+    accuracy_decimals: 1
+  - platform: immergas_ot
+    data_id: 19
+    name: "${n_ot_dhw_flow}"
+    id: ot_dhw_flow
+    icon: mdi:water
+    unit_of_measurement: "L/min"
+    state_class: measurement
+    accuracy_decimals: 1
+    disabled_by_default: true
+  # the setpoints the boiler works with (written by the hub or, gateway, by the room unit)
+  - { platform: immergas_ot, data_id: 56, name: "${n_ot_dhw_setpoint_used}", id: ot_dhw_setpoint_used, unit_of_measurement: "°C", device_class: temperature, accuracy_decimals: 0 }
+  - { platform: immergas_ot, data_id: 57, name: "${n_ot_max_ch_used}", id: ot_max_ch_used, unit_of_measurement: "°C", device_class: temperature, accuracy_decimals: 0, entity_category: diagnostic }
+  # bounds: 48 DHW, 49 CH (high byte max, low byte min)
+  - { platform: immergas_ot, data_id: 48, value_type: s8_hb, name: "${n_ot_dhw_max}", id: ot_dhw_max, unit_of_measurement: "°C", entity_category: diagnostic, accuracy_decimals: 0 }
+  - { platform: immergas_ot, data_id: 48, value_type: s8_lb, poll: false, name: "${n_ot_dhw_min}", id: ot_dhw_min, unit_of_measurement: "°C", entity_category: diagnostic, accuracy_decimals: 0 }
+  - { platform: immergas_ot, data_id: 49, value_type: s8_hb, name: "${n_ot_ch_max}", id: ot_ch_max, unit_of_measurement: "°C", entity_category: diagnostic, accuracy_decimals: 0 }
+  - { platform: immergas_ot, data_id: 49, value_type: s8_lb, poll: false, name: "${n_ot_ch_min}", id: ot_ch_min, unit_of_measurement: "°C", entity_category: diagnostic, accuracy_decimals: 0 }
+  # counters
+  - { platform: immergas_ot, data_id: 116, value_type: u16, name: "${n_ot_burner_starts}", id: ot_burner_starts, icon: "mdi:counter", state_class: total_increasing, accuracy_decimals: 0, entity_category: diagnostic }
+  - { platform: immergas_ot, data_id: 120, value_type: u16, name: "${n_ot_burner_hours}", id: ot_burner_hours, unit_of_measurement: "h", state_class: total_increasing, accuracy_decimals: 0, entity_category: diagnostic }
+  - { platform: immergas_ot, data_id: 119, value_type: u16, name: "${n_ot_dhw_burner_starts}", id: ot_dhw_burner_starts, state_class: total_increasing, accuracy_decimals: 0, entity_category: diagnostic, disabled_by_default: true }
+  - { platform: immergas_ot, data_id: 123, value_type: u16, name: "${n_ot_dhw_burner_hours}", id: ot_dhw_burner_hours, unit_of_measurement: "h", state_class: total_increasing, accuracy_decimals: 0, entity_category: diagnostic, disabled_by_default: true }

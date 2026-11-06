@@ -1,0 +1,53 @@
+# Immergas OpenTherm - package "ot_gateway" (switches the hub to the GATEWAY mode)
+# The room unit (CAR V2, Super Amico, a third-party OpenTherm thermostat) stays: it talks to the hub, the hub to the
+# boiler. Every request is passed on and every answer passed back; the hub sees all of it (the room unit's own setpoints
+# below) and may replace selected writes (the override switches use the values of ot_control). A read of a Data-ID the
+# boiler does not know is answered by the hub and the free slot used for the hub's own reads. When the room unit is
+# silent for 8 s the hub runs the boiler itself with the ot_control values (no E31, no cold house) until it is back.
+# Hardware: a MASTER adapter towards the boiler (ot_core) and a SLAVE adapter towards the room unit (e.g. DIYLess
+# Slave OpenTherm Shield / OpenTherm Slave Adapter).
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+substitutions:
+  # slave adapter (towards the room unit): default AtomS3 + ATOMIC PortABC Port B
+  ot_room_in_pin: GPIO8
+  ot_room_out_pin: GPIO7
+
+immergas_ot:
+  mode: gateway
+  room:
+    in_pin: ${ot_room_in_pin}
+    out_pin: ${ot_room_out_pin}
+
+binary_sensor:
+  - platform: immergas_ot
+    type: state
+    state: room_online
+    name: "${n_ot_room_online}"
+    id: ot_room_online
+    device_class: connectivity
+    entity_category: diagnostic
+  - platform: immergas_ot
+    type: state
+    state: standalone
+    name: "${n_ot_standalone}"
+    id: ot_standalone
+    icon: mdi:account-off-outline
+  # the room unit's own master flags (Data-ID 0 request, high byte)
+  - { platform: immergas_ot, data_id: 0, bit: 8, source: room, name: "${n_ot_room_ch_enable}", id: ot_room_ch_enable, icon: "mdi:radiator" }
+  - { platform: immergas_ot, data_id: 0, bit: 9, source: room, name: "${n_ot_room_dhw_enable}", id: ot_room_dhw_enable, icon: "mdi:water-boiler" }
+
+sensor:
+  # what the room unit writes
+  - { platform: immergas_ot, data_id: 1, source: room, name: "${n_ot_room_ch_setpoint}", id: ot_room_ch_setpoint, unit_of_measurement: "°C", device_class: temperature, accuracy_decimals: 1 }
+  - { platform: immergas_ot, data_id: 16, source: room, name: "${n_ot_room_room_setpoint}", id: ot_room_room_setpoint, unit_of_measurement: "°C", device_class: temperature, accuracy_decimals: 1 }
+  - { platform: immergas_ot, data_id: 24, source: room, name: "${n_ot_room_room_temp}", id: ot_room_room_temp, unit_of_measurement: "°C", device_class: temperature, state_class: measurement, accuracy_decimals: 1 }
+  - { platform: immergas_ot, data_id: 56, source: room, name: "${n_ot_room_dhw_setpoint}", id: ot_room_dhw_setpoint, unit_of_measurement: "°C", device_class: temperature, accuracy_decimals: 0 }
+
+switch:
+  # the hub's value replaces the room unit's write (off = pass through)
+  - { platform: immergas_ot, type: override, data_id: 1, name: "${n_ot_override_ch_setpoint}", id: ot_override_ch_setpoint, icon: "mdi:swap-horizontal", restore_mode: RESTORE_DEFAULT_OFF }
+  - { platform: immergas_ot, type: override, data_id: 56, name: "${n_ot_override_dhw_setpoint}", id: ot_override_dhw_setpoint, icon: "mdi:swap-horizontal", restore_mode: RESTORE_DEFAULT_OFF }
+  - { platform: immergas_ot, type: override, data_id: 14, name: "${n_ot_override_max_modulation}", id: ot_override_max_modulation, icon: "mdi:swap-horizontal", restore_mode: RESTORE_DEFAULT_OFF, entity_category: config }
+  # the hub's CH / DHW enable replace the room unit's flags (Data-ID 0)
+  - { platform: immergas_ot, type: override, data_id: 0, name: "${n_ot_override_flags}", id: ot_override_flags, icon: "mdi:swap-horizontal", restore_mode: RESTORE_DEFAULT_OFF }

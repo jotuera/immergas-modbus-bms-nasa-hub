@@ -208,6 +208,10 @@ hub może prowadzić jako master Modbus BMS – eksperymentalne pakiety `gb_`, p
 **Pompy ciepła MAGIS M** (Midea M-Thermal, R32) mają własne eksperymentalne pakiety `mt_` dla portu Modbus panelu
 przewodowego (H1 / H2) – patrz **[Pompy ciepła MAGIS M (Midea M-Thermal)](docs/magis-m-midea.pl.md)**.
 
+**Kotły OpenTherm** (VICTRIX ZEUS, EXA, TERA, OMNIA, HERCULES Condensing …): eksperymentalny komponent `immergas_ot`
+robi z huba mastera OpenTherm zamiast CAR V2 / Dominusa albo bramkę między pilotem a kotłem – patrz **[Kotły OpenTherm
+w hubie](docs/opentherm-hub.pl.md)**.
+
 ## Wsparcie
 
 Jeśli hub ci się przydaje, rozważ wsparcie – postaw mi kawę. Dziękuję!
