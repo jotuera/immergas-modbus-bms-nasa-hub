@@ -31,6 +31,14 @@ działającego odwrotnie zmień je.
 
 ## Podłączenie
 
+> ⚠️ **Najpierw sprawdź protokół – nie każda magistrala pilota Immergas to OpenTherm.** CAR V2 zna dwa protokoły i
+> pokazuje w menu informacji, którego używa: **VER PI** = **IMG-BUS** (OpenTherm z drobnymi zmianami – działa) albo
+> **VER PC** = **CAR-BUS** (starszy protokół Immergasa – **żaden master OpenTherm się z nim nie dogada**, niezależnie od
+> adaptera i bajtu 0xCA). Bez CAR V2 zmierz zaciski pilota bez niczego podłączonego: **do ok. 18 V DC = IMG-BUS**,
+> **ok. 24–35 V DC (np. 28 V) = CAR-BUS**. Zgłoszony kocioł z CAR-BUS: VICTRIX TT. W TERA kocioł może też czekać na CAR V2,
+> dopóki nie ustawisz **P7 = 2** (pilot innej firmy) i nie wyłączysz i włączysz zasilania – jeszcze niepotwierdzone.
+> Źródło: [OTGateway #284](https://github.com/Laxilef/OTGateway/issues/284), instrukcja CAR V2 1.038958 (dane techniczne).
+
 OpenTherm nie ma polaryzacji. Adapter master idzie na zaciski OpenTherm kotła (tam, gdzie był CAR V2 / Dominus),
 adapter slave (bramka) na dwa przewody pilota.
 
