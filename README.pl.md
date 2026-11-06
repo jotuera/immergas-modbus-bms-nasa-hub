@@ -205,6 +205,9 @@ jeszcze nie rozszyfrowano. Mapy rejestrów i PDU, lista FSV, kody błędów i wy
 hub może prowadzić jako master Modbus BMS – eksperymentalne pakiety `gb_`, patrz
 **[Kotły gazowe po Modbus BMS](docs/gas-boiler-bms.pl.md)**.
 
+**Pompy ciepła MAGIS M** (Midea M-Thermal, R32) mają własne eksperymentalne pakiety `mt_` dla portu Modbus panelu
+przewodowego (H1 / H2) – patrz **[Pompy ciepła MAGIS M (Midea M-Thermal)](docs/magis-m-midea.pl.md)**.
+
 ## Wsparcie
 
 Jeśli hub ci się przydaje, rozważ wsparcie – postaw mi kawę. Dziękuję!

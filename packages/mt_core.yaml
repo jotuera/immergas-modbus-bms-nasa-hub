@@ -1,0 +1,124 @@
+# Immergas MAGIS M (Midea M-Thermal) Modbus - package "mt_core"
+# Base: RS485 UART (9600 8N1), Modbus, the polling controllers, the "Modbus connection" switch, the sensor resolution
+# flag (register 189 bit8) and the protocol version (187). Load mt_status, mt_sensors, mt_energy and mt_control with it;
+# mt_params is optional (installer parameters, read only).
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+# File and id names start with mt_ so this package can be combined with the other buses on one device.
+#
+# Wiring: the Modbus port is on the back of the wired controller (HMI): H1 / H2 and E (reference). The hub is the
+# master, the controller the slave (address 1, menu FOR SERVICEMAN - 17 HMI ADDRESS). Sources disagree on which of H1 /
+# H2 is A+: no answer -> swap them. A 120 ohm resistor between H1 and H2 may be needed. NEVER use A / B (the 13.5 V AC
+# supply of the controller) or X / Y (the internal controller <-> hydro module bus). Only one master on H1 / H2.
+# The controller must stay connected - the registers are served by it.
+
+substitutions:
+  mt_project_version: "1.0.0"
+  mt_name_prefix: "Immergas M"
+  # RS485 pins - default: AtomS3 + ATOMIC PortABC Port C + M5Stack Isolated RS485 Unit (auto direction, no DE pin).
+  mt_uart_tx_pin: GPIO5
+  mt_uart_rx_pin: GPIO6
+  mt_modbus_address: "1"
+  mt_fast_interval: 10s      # control registers 0-12 and the key readings
+  mt_slow_interval: 60s      # the other readings, energy
+  mt_params_interval: 600s   # installer parameters 200-290 (read one by one)
+
+uart:
+  - id: mt_uart
+    tx_pin: ${mt_uart_tx_pin}
+    rx_pin: ${mt_uart_rx_pin}
+    baud_rate: 9600
+    data_bits: 8
+    parity: NONE
+    stop_bits: 1
+
+modbus:
+  - id: mt_modbus
+    uart_id: mt_uart
+    send_wait_time: 200ms
+    turnaround_time: 100ms
+
+modbus_controller:
+  - id: mt_hp
+    address: ${mt_modbus_address}
+    modbus_id: mt_modbus
+    update_interval: ${mt_fast_interval}
+  - id: mt_hp_slow
+    address: ${mt_modbus_address}
+    modbus_id: mt_modbus
+    update_interval: ${mt_slow_interval}
+  - id: mt_hp_params
+    address: ${mt_modbus_address}
+    modbus_id: mt_modbus
+    update_interval: ${mt_params_interval}
+
+globals:
+  # register 189 bit8: 1 = the temperatures come in 0.1 °C and the water setpoints of register 2 in 0.5 °C steps (x2)
+  - id: mt_hires
+    type: bool
+    restore_value: true
+    initial_value: "false"
+
+sensor:
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_protocol_version}"
+    id: mt_protocol_version
+    icon: mdi:numeric
+    entity_category: diagnostic
+    register_type: holding
+    address: 187
+    value_type: U_WORD
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_status2_raw}"
+    id: mt_status2_raw
+    internal: true
+    register_type: holding
+    address: 189
+    value_type: U_WORD
+    accuracy_decimals: 0
+    on_value:
+      - lambda: |-
+          bool hires = ((int) x & 0x0100) != 0;
+          if (hires != id(mt_hires)) {
+            id(mt_hires) = hires;
+            ESP_LOGI("mt_hp", "sensor resolution: %s", hires ? "0.1 °C" : "1 °C");
+          }
+
+switch:
+  - platform: template
+    name: "${n_mt_connection}"
+    id: mt_connection
+    icon: mdi:lan-connect
+    entity_category: config
+    restore_mode: RESTORE_DEFAULT_ON
+    optimistic: true
+    turn_on_action:
+      - lambda: |-
+          id(mt_hp).start_poller();
+          id(mt_hp_slow).start_poller();
+          id(mt_hp_params).start_poller();
+          ESP_LOGI("mt_hp", "Modbus connection ON - polling resumed");
+    turn_off_action:
+      - lambda: |-
+          id(mt_hp).stop_poller();
+          id(mt_hp_slow).stop_poller();
+          id(mt_hp_params).stop_poller();
+          ESP_LOGW("mt_hp", "Modbus connection OFF - polling paused");
+
+# Helpers for the other mt_ packages: write one register / change some bits of a bit-field register (read-modify-write
+# from the last value read, then the new value is shown at once).
+script:
+  - id: mt_write
+    mode: queued
+    max_runs: 10
+    parameters:
+      reg: int
+      value: int
+    then:
+      - lambda: |-
+          if (!id(mt_connection).state) { ESP_LOGW("mt_hp", "write %d skipped - connection off", reg); return; }
+          auto cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_command(id(mt_hp), reg, (uint16_t) value);
+          id(mt_hp)->queue_command(cmd);
+          ESP_LOGI("mt_hp", "write %d = %d (0x%04X)", reg, value, value);

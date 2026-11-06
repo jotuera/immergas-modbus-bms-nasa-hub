@@ -1,0 +1,78 @@
+# Pompy ciepła MAGIS M (Midea M-Thermal) – pakiety mt_
+
+[English](magis-m-midea.md) · **Polski**
+
+> **Eksperymentalne – jeszcze nie testowane na MAGIS M.** Pakiety implementują protokół Modbus Midea M-Thermal, na
+> którym zbudowany jest MAGIS M. Masz taką pompę – zgłoś, co widzisz (patrz [Zbieranie logów](collecting-logs.pl.md)).
+
+Immergas **MAGIS M** (M4 – M30, R32) to pompa Midea M-Thermal: panel przewodowy z portem Modbus H1 / H2, w menu nazwy
+T1S / T4 / T5 / IBH / TBH. Nie ma nic wspólnego z MAGIS PRO / COMBO V2 na Samsungu, które obsługuje reszta huba.
+**MAGIS M TOP** (R290, E-BOX TOP) to jeszcze co innego: jego port BMS mówi protokołem BMS generatora Immergasa – patrz
+[Kotły gazowe po Modbus BMS](gas-boiler-bms.pl.md).
+
+## Podłączenie
+
+| Hub (RS485) | Panel przewodowy | Uwagi |
+|---|---|---|
+| A / B | **H1 / H2** | źródła różnią się, który to A+ – brak odpowiedzi: zamień; może być potrzebny rezystor 120 Ω między H1 i H2 |
+| GND | **E** | odniesienie |
+| – | ~~A / B~~ | **nigdy**: zasilanie panelu 13,5 V AC |
+| – | ~~X / Y~~ | **nigdy**: wewnętrzna magistrala panel ↔ moduł hydrauliczny |
+
+Hub jest masterem, panel slave'em: **9600 bodów, 8N1, adres 1** (menu panelu *FOR SERVICEMAN → 17 HMI ADDRESS*).
+Na H1 / H2 tylko jeden master, a panel musi zostać podłączony – to on podaje rejestry.
+
+## Pakiety
+
+| Pakiet | Co daje |
+|---|---|
+| `mt_core` | UART / Modbus, przełącznik *Połączenie Modbus*, wersja protokołu (187), flaga rozdzielczości czujników (189 bit8: 1 °C albo 0,1 °C), pomocnik zapisu |
+| `mt_status` | bieżący tryb, bieżący i trzy ostatnie błędy, odszranianie / ochrona przed zamarzaniem / powrót oleju / termostat / SG / EVU, grzałki IBH1 / IBH2 / TBH, pompy, zawór 3-drogowy, alarm, praca, wersje oprogramowania |
+| `mt_sensors` | częstotliwość i docelowa częstotliwość sprężarki, wentylator, zawór rozprężny, woda wlot / wylot / całkowita, temp. zewnętrzna, pokoju, zasobnika CWU, temperatury czynnika, ciśnienia, prąd i napięcie jednostki zewn., bufor, godziny sprężarki, zasilanie z krzywej, przepływ wody, moc cieplna |
+| `mt_energy` | liczniki energii elektrycznej i cieplnej, moc grzewcza i pobór, COP jednostki i własny COP huba |
+| `mt_control` | wł. / wył. strefa 1 / strefa 2 / CWU / wg pokoju, tryb pracy (auto / chłodzenie / grzanie), nastawy wody strefy 1 / 2, nastawa pokoju i CWU, krzywa pogodowa wł. / numer, tryb cichy, ECO, dezynfekcja, wymuszona CWU / grzałka zasobnika / grzałka IBH |
+| `mt_params` (opcjonalny) | tylko odczyt: limity nastaw, limity temp. zewn. dla grzania, krzywa własna |
+| `lang/mt_en`, `lang/mt_pl` | nazwy encji (`mt_name_prefix`, domyślnie „Immergas M”) |
+
+Przykład: [`examples/immergas-magis-m.yaml`](../examples/immergas-magis-m.yaml).
+
+## Mapa rejestrów (holding, funkcja 0x03 / 0x06)
+
+| Rejestr | Znaczenie | Uwagi |
+|---|---|---|
+| 0 | wł. / wył.: bit0 wg pokoju, bit1 strefa 1, bit2 CWU, bit3 strefa 2 | pole bitowe – hub zmienia tylko swój bit |
+| 1 | tryb: 1 auto, 2 chłodzenie, 3 grzanie | |
+| 2 | nastawa wody: młodszy bajt strefa 1, starszy strefa 2 | °C albo °C × 2 przy rozdzielczości 0,1 °C |
+| 3 | nastawa pokoju | °C × 2 |
+| 4 | nastawa CWU | °C |
+| 5 | funkcje: bit4 dezynfekcja, bit6 tryb cichy, bit10 ECO, bit12 / bit13 krzywa strefa 1 / 2 | pole bitowe |
+| 6 | numer krzywej: młodszy bajt strefa 1, starszy strefa 2 | 1–9 (9 = własna) |
+| 7 / 8 / 9 | wymuszona CWU / grzałka zasobnika TBH / grzałka IBH | 0 wg programu, 1 wł., 2 wył. |
+| 100 / 132 | częstotliwość / docelowa częstotliwość sprężarki | Hz |
+| 101 / 199 | bieżący tryb | 199: 0 wył., 2 chłodzenie, 3 grzanie, 5 CWU |
+| 102 / 103 | obroty wentylatora / zawór rozprężny | rpm / kroki |
+| 104 / 105 / 110 / 111 | woda wlot / wylot / całkowita / strefa 2 | flaga rozdzielczości |
+| 106 / 108 / 109 / 112 / 113 | T3 wymiennik, tłoczenie, ssanie, T2 ciecz, T2B gaz | flaga rozdzielczości |
+| 107 / 114 / 115 | zewnętrzna (T4) / pokój / zasobnik CWU (T5) | flaga rozdzielczości |
+| 116 / 117 | ciśnienie wysokie / niskie | kPa (starszy protokół × 10) |
+| 118 / 119 | prąd / napięcie jednostki zewnętrznej | A / V |
+| 120 / 121 | bufor góra / dół | |
+| 122 / 123 | godziny sprężarki / moc jednostki | h / kW |
+| 124–127 | bieżący błąd, trzy ostatnie | kod |
+| 128 | bity stanu: 1 odszranianie, 2 ochrona przed zamarzaniem, 3 powrót oleju, 4 zdalne, 6 / 7 termostat grzanie / chłodzenie, 10 SG, 11 EVU | |
+| 129 | wyjścia: 0 IBH1, 1 IBH2, 2 TBH, 3 pompa wewn., 4 SV1, 6 pompa zewn., 12 alarm, 13 praca | |
+| 130 / 131 | oprogramowanie jednostki wewn. / panelu | |
+| 135 | temperatura modułu inwertera | °C |
+| 136 / 137 | zasilanie z krzywej strefa 1 / 2 | |
+| 138 | przepływ wody | 0,01 m³/h (pokazywany w l/min) |
+| 140 | moc cieplna | 0,01 kW |
+| 143–144 / 145–146 | energia elektryczna / cieplna (słowo starsze, młodsze) | domyślnie 0,01 kWh (`mt_energy_multiply`) |
+| 148 / 150 / 151 | moc grzewcza / pobór / COP | 0,01 (protokół V4.6+) |
+| 187 / 189 | wersja protokołu / status 2 (bit8 = rozdzielczość 0,1 °C) | |
+| 201–208 | limity nastaw (chłodzenie, grzanie, CWU) | czytane pojedynczo |
+| 231 / 232 | grzanie – maks. / min. temp. zewn. | |
+| 265–268 | krzywa własna: zasilanie zimny / ciepły punkt, temp. zewn. zimny / ciepły punkt | |
+
+**Do potwierdzenia na MAGIS M:** polaryzacja H1 / H2, jednostka liczników energii, skala ciśnień w danej wersji
+protokołu, czy nastawy rejestru 2 idą za flagą rozdzielczości i numeracja kodów błędów (pokazywana jako liczba).
+Parametrów instalatora od 209 w górę celowo się nie zapisuje.

@@ -1,0 +1,382 @@
+# Immergas MAGIS M (Midea M-Thermal) Modbus - package "mt_sensors"
+# Running values (holding 100-142): compressor, fan, expansion valve, water / refrigerant / outdoor / room / DHW
+# temperatures, pressures, current and voltage, flow and heat output. Temperatures follow the resolution flag of
+# mt_core (1 °C or 0.1 °C); 0x7F / 0x7FFF / 0xFF / 0xFFFF and -32768 = no probe.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+sensor:
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_compressor_freq}"
+    id: mt_compressor_freq
+    icon: mdi:sine-wave
+    register_type: holding
+    address: 100
+    value_type: U_WORD
+    unit_of_measurement: "Hz"
+    state_class: measurement
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_fan_speed}"
+    id: mt_fan_speed
+    icon: mdi:fan
+    register_type: holding
+    address: 102
+    value_type: U_WORD
+    unit_of_measurement: "rpm"
+    state_class: measurement
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_eev}"
+    id: mt_eev
+    icon: mdi:valve
+    entity_category: diagnostic
+    register_type: holding
+    address: 103
+    value_type: U_WORD
+    unit_of_measurement: "steps"
+    state_class: measurement
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_water_in}"
+    id: mt_water_in
+    register_type: holding
+    address: 104
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: &mt_temp |-
+          int v = (int) x;
+          if (v == 0x7F || v == 0x7FFF || v == 0xFF || v == -32768 || v == -1) return NAN;
+          return id(mt_hires) ? x * 0.1f : x;
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_water_out}"
+    id: mt_water_out
+    register_type: holding
+    address: 105
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: *mt_temp
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_t3_condenser}"
+    id: mt_t3_condenser
+    entity_category: diagnostic
+    register_type: holding
+    address: 106
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: *mt_temp
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_outdoor_temp}"
+    id: mt_outdoor_temp
+    register_type: holding
+    address: 107
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: *mt_temp
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_discharge_temp}"
+    id: mt_discharge_temp
+    entity_category: diagnostic
+    register_type: holding
+    address: 108
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: *mt_temp
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_suction_temp}"
+    id: mt_suction_temp
+    entity_category: diagnostic
+    register_type: holding
+    address: 109
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: *mt_temp
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_t1_total_out}"
+    id: mt_t1_total_out
+    register_type: holding
+    address: 110
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: *mt_temp
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_t1b_zone2}"
+    id: mt_t1b_zone2
+    disabled_by_default: true
+    register_type: holding
+    address: 111
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: *mt_temp
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_t2_liquid}"
+    id: mt_t2_liquid
+    entity_category: diagnostic
+    register_type: holding
+    address: 112
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: *mt_temp
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_t2b_gas}"
+    id: mt_t2b_gas
+    entity_category: diagnostic
+    register_type: holding
+    address: 113
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: *mt_temp
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_room_temp}"
+    id: mt_room_temp
+    register_type: holding
+    address: 114
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: *mt_temp
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_dhw_temp}"
+    id: mt_dhw_temp
+    register_type: holding
+    address: 115
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: *mt_temp
+  # pressures in kPa (protocol before V4.6 reported x10 kPa - compare with the controller display)
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_pressure_high}"
+    id: mt_pressure_high
+    entity_category: diagnostic
+    register_type: holding
+    address: 116
+    value_type: U_WORD
+    unit_of_measurement: "kPa"
+    device_class: pressure
+    state_class: measurement
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_pressure_low}"
+    id: mt_pressure_low
+    entity_category: diagnostic
+    register_type: holding
+    address: 117
+    value_type: U_WORD
+    unit_of_measurement: "kPa"
+    device_class: pressure
+    state_class: measurement
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_odu_current}"
+    id: mt_odu_current
+    register_type: holding
+    address: 118
+    value_type: U_WORD
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_odu_voltage}"
+    id: mt_odu_voltage
+    register_type: holding
+    address: 119
+    value_type: U_WORD
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_buffer_top}"
+    id: mt_buffer_top
+    disabled_by_default: true
+    register_type: holding
+    address: 120
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: *mt_temp
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_buffer_bottom}"
+    id: mt_buffer_bottom
+    disabled_by_default: true
+    register_type: holding
+    address: 121
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: *mt_temp
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_compressor_hours}"
+    id: mt_compressor_hours
+    icon: mdi:timer-outline
+    entity_category: diagnostic
+    register_type: holding
+    address: 122
+    value_type: U_WORD
+    unit_of_measurement: "h"
+    state_class: total_increasing
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_unit_capacity}"
+    id: mt_unit_capacity
+    entity_category: diagnostic
+    register_type: holding
+    address: 123
+    value_type: U_WORD
+    unit_of_measurement: "kW"
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_target_freq}"
+    id: mt_target_freq
+    icon: mdi:sine-wave
+    entity_category: diagnostic
+    register_type: holding
+    address: 132
+    value_type: U_WORD
+    unit_of_measurement: "Hz"
+    state_class: measurement
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_inverter_temp}"
+    id: mt_inverter_temp
+    entity_category: diagnostic
+    register_type: holding
+    address: 135
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_curve_target_z1}"
+    id: mt_curve_target_z1
+    register_type: holding
+    address: 136
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: *mt_temp
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_curve_target_z2}"
+    id: mt_curve_target_z2
+    disabled_by_default: true
+    register_type: holding
+    address: 137
+    value_type: S_WORD
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - lambda: *mt_temp
+  # water flow in 0.01 m³/h, shown in l/min
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_water_flow}"
+    id: mt_water_flow
+    icon: mdi:water-pump
+    register_type: holding
+    address: 138
+    value_type: U_WORD
+    unit_of_measurement: "L/min"
+    state_class: measurement
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.16667   # 0.01 m³/h = 10 l / 60 min
+  # heat output of the hydro module, 0.01 kW
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_heat_output}"
+    id: mt_heat_output
+    register_type: holding
+    address: 140
+    value_type: U_WORD
+    unit_of_measurement: "kW"
+    device_class: power
+    state_class: measurement
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01

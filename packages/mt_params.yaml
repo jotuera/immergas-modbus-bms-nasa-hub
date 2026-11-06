@@ -1,0 +1,154 @@
+# Immergas MAGIS M (Midea M-Thermal) Modbus - package "mt_params" (optional, read only)
+# Installer parameters: setpoint limits (201-208), the heating-mode outdoor limits (231 / 232) and the custom heating
+# curve (265-268). Some firmware answers these registers only one at a time, so every one is its own request. Nothing
+# is written - the parameters stay a job for the controller menu.
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+sensor:
+  # 201-204: water setpoint limits, low byte = zone 1
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_params
+    name: "${n_mt_lim_cool_max}"
+    id: mt_lim_cool_max
+    entity_category: diagnostic
+    register_type: holding
+    address: 201
+    value_type: U_WORD
+    reuse_previous_range: false
+    unit_of_measurement: "°C"
+    accuracy_decimals: 0
+    filters:
+      - lambda: |-
+          return (float) ((int) x & 0xFF);
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_params
+    name: "${n_mt_lim_cool_min}"
+    id: mt_lim_cool_min
+    entity_category: diagnostic
+    register_type: holding
+    address: 202
+    value_type: U_WORD
+    reuse_previous_range: false
+    unit_of_measurement: "°C"
+    accuracy_decimals: 0
+    filters:
+      - lambda: |-
+          return (float) ((int) x & 0xFF);
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_params
+    name: "${n_mt_lim_heat_max}"
+    id: mt_lim_heat_max
+    entity_category: diagnostic
+    register_type: holding
+    address: 203
+    value_type: U_WORD
+    reuse_previous_range: false
+    unit_of_measurement: "°C"
+    accuracy_decimals: 0
+    filters:
+      - lambda: |-
+          return (float) ((int) x & 0xFF);
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_params
+    name: "${n_mt_lim_heat_min}"
+    id: mt_lim_heat_min
+    entity_category: diagnostic
+    register_type: holding
+    address: 204
+    value_type: U_WORD
+    reuse_previous_range: false
+    unit_of_measurement: "°C"
+    accuracy_decimals: 0
+    filters:
+      - lambda: |-
+          return (float) ((int) x & 0xFF);
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_params
+    name: "${n_mt_lim_dhw_max}"
+    id: mt_lim_dhw_max
+    entity_category: diagnostic
+    register_type: holding
+    address: 207
+    value_type: U_WORD
+    reuse_previous_range: false
+    unit_of_measurement: "°C"
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_params
+    name: "${n_mt_lim_dhw_min}"
+    id: mt_lim_dhw_min
+    entity_category: diagnostic
+    register_type: holding
+    address: 208
+    value_type: U_WORD
+    reuse_previous_range: false
+    unit_of_measurement: "°C"
+    accuracy_decimals: 0
+  # 231 / 232: highest / lowest outdoor temperature for heating (T4HMAX / T4HMIN)
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_params
+    name: "${n_mt_t4h_max}"
+    id: mt_t4h_max
+    entity_category: diagnostic
+    register_type: holding
+    address: 231
+    value_type: S_WORD
+    reuse_previous_range: false
+    unit_of_measurement: "°C"
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_params
+    name: "${n_mt_t4h_min}"
+    id: mt_t4h_min
+    entity_category: diagnostic
+    register_type: holding
+    address: 232
+    value_type: S_WORD
+    reuse_previous_range: false
+    unit_of_measurement: "°C"
+    accuracy_decimals: 0
+  # 265-268: custom heating curve (curve 9): flow at the cold / warm point, outdoor cold / warm point
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_params
+    name: "${n_mt_curve9_flow_cold}"
+    id: mt_curve9_flow_cold
+    entity_category: diagnostic
+    register_type: holding
+    address: 265
+    value_type: S_WORD
+    reuse_previous_range: false
+    unit_of_measurement: "°C"
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_params
+    name: "${n_mt_curve9_flow_warm}"
+    id: mt_curve9_flow_warm
+    entity_category: diagnostic
+    register_type: holding
+    address: 266
+    value_type: S_WORD
+    reuse_previous_range: false
+    unit_of_measurement: "°C"
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_params
+    name: "${n_mt_curve9_out_cold}"
+    id: mt_curve9_out_cold
+    entity_category: diagnostic
+    register_type: holding
+    address: 267
+    value_type: S_WORD
+    reuse_previous_range: false
+    unit_of_measurement: "°C"
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_params
+    name: "${n_mt_curve9_out_warm}"
+    id: mt_curve9_out_warm
+    entity_category: diagnostic
+    register_type: holding
+    address: 268
+    value_type: S_WORD
+    reuse_previous_range: false
+    unit_of_measurement: "°C"
+    accuracy_decimals: 0

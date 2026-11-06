@@ -1,0 +1,233 @@
+# Immergas MAGIS M (Midea M-Thermal) Modbus - package "mt_status"
+# State: running mode (101 / 199), current and last three faults (124-127), status bits (128), load outputs (129),
+# software versions (130 / 131).
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+sensor:
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_run_mode_raw}"
+    id: mt_run_mode_raw
+    internal: true
+    register_type: holding
+    address: 199
+    value_type: U_WORD
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_fault_code}"
+    id: mt_fault_code
+    icon: mdi:alert-circle-outline
+    register_type: holding
+    address: 124
+    value_type: U_WORD
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_fault_last1}"
+    id: mt_fault_last1
+    entity_category: diagnostic
+    register_type: holding
+    address: 125
+    value_type: U_WORD
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_fault_last2}"
+    id: mt_fault_last2
+    entity_category: diagnostic
+    register_type: holding
+    address: 126
+    value_type: U_WORD
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_fault_last3}"
+    id: mt_fault_last3
+    entity_category: diagnostic
+    register_type: holding
+    address: 127
+    value_type: U_WORD
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_sw_idu}"
+    id: mt_sw_idu
+    entity_category: diagnostic
+    register_type: holding
+    address: 130
+    value_type: U_WORD
+    accuracy_decimals: 0
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_sw_hmi}"
+    id: mt_sw_hmi
+    entity_category: diagnostic
+    register_type: holding
+    address: 131
+    value_type: U_WORD
+    accuracy_decimals: 0
+
+binary_sensor:
+  # 128 status bits
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_defrost}"
+    id: mt_defrost
+    icon: mdi:snowflake-melt
+    register_type: holding
+    address: 128
+    bitmask: 0x0002
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_antifreeze}"
+    id: mt_antifreeze
+    icon: mdi:snowflake-alert
+    register_type: holding
+    address: 128
+    bitmask: 0x0004
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_oil_return}"
+    id: mt_oil_return
+    icon: mdi:oil
+    entity_category: diagnostic
+    register_type: holding
+    address: 128
+    bitmask: 0x0008
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_remote_onoff}"
+    id: mt_remote_onoff
+    entity_category: diagnostic
+    register_type: holding
+    address: 128
+    bitmask: 0x0010
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_thermostat_heat}"
+    id: mt_thermostat_heat
+    icon: mdi:thermostat
+    register_type: holding
+    address: 128
+    bitmask: 0x0040
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_thermostat_cool}"
+    id: mt_thermostat_cool
+    icon: mdi:thermostat
+    register_type: holding
+    address: 128
+    bitmask: 0x0080
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_sg_signal}"
+    id: mt_sg_signal
+    entity_category: diagnostic
+    register_type: holding
+    address: 128
+    bitmask: 0x0400
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_evu_signal}"
+    id: mt_evu_signal
+    entity_category: diagnostic
+    register_type: holding
+    address: 128
+    bitmask: 0x0800
+  # 129 load outputs
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_ibh1}"
+    id: mt_ibh1
+    icon: mdi:heating-coil
+    register_type: holding
+    address: 129
+    bitmask: 0x0001
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_ibh2}"
+    id: mt_ibh2
+    icon: mdi:heating-coil
+    disabled_by_default: true
+    register_type: holding
+    address: 129
+    bitmask: 0x0002
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_tbh}"
+    id: mt_tbh
+    icon: mdi:water-boiler
+    register_type: holding
+    address: 129
+    bitmask: 0x0004
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_pump_i}"
+    id: mt_pump_i
+    icon: mdi:pump
+    device_class: running
+    register_type: holding
+    address: 129
+    bitmask: 0x0008
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_sv1}"
+    id: mt_sv1
+    icon: mdi:valve
+    entity_category: diagnostic
+    register_type: holding
+    address: 129
+    bitmask: 0x0010
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_pump_o}"
+    id: mt_pump_o
+    icon: mdi:pump
+    device_class: running
+    disabled_by_default: true
+    register_type: holding
+    address: 129
+    bitmask: 0x0040
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_alarm}"
+    id: mt_alarm
+    device_class: problem
+    register_type: holding
+    address: 129
+    bitmask: 0x1000
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_running}"
+    id: mt_running
+    device_class: running
+    register_type: holding
+    address: 129
+    bitmask: 0x2000
+
+text_sensor:
+  - platform: template
+    name: "${n_mt_run_mode}"
+    id: mt_run_mode
+    icon: mdi:heat-pump
+    update_interval: 10s
+    lambda: |-
+      if (isnan(id(mt_run_mode_raw).state)) return {};
+      switch ((int) id(mt_run_mode_raw).state) {
+        case 0: return std::string("${t_mt_run_off}");
+        case 2: return std::string("${t_mt_run_cool}");
+        case 3: return std::string("${t_mt_run_heat}");
+        case 5: return std::string("${t_mt_run_dhw}");
+        default: return std::string("${t_mt_code}") + to_string((int) id(mt_run_mode_raw).state);
+      }
+  - platform: template
+    name: "${n_mt_fault}"
+    id: mt_fault
+    icon: mdi:alert-circle-outline
+    update_interval: 10s
+    lambda: |-
+      if (isnan(id(mt_fault_code).state)) return {};
+      int code = (int) id(mt_fault_code).state;
+      if (code == 0) return std::string("${t_mt_no_fault}");
+      return std::string("${t_mt_code}") + to_string(code);

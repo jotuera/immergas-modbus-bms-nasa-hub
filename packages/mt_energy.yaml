@@ -1,0 +1,88 @@
+# Immergas MAGIS M (Midea M-Thermal) Modbus - package "mt_energy"
+# Energy counters (143-146, 32-bit high / low word), electric input and heat output in heating (148-150) and the COP
+# the unit computes itself (151, protocol V4.6+). The counter unit differs between firmware versions: the default reads
+# them in 0.01 kWh - if the value is 100x too small for your unit, set mt_energy_multiply: "1".
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+substitutions:
+  mt_energy_multiply: "0.01"
+
+sensor:
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_energy_electric}"
+    id: mt_energy_electric
+    register_type: holding
+    address: 143
+    value_type: U_DWORD
+    unit_of_measurement: "kWh"
+    device_class: energy
+    state_class: total_increasing
+    accuracy_decimals: 2
+    filters:
+      - multiply: ${mt_energy_multiply}
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp_slow
+    name: "${n_mt_energy_heat}"
+    id: mt_energy_heat
+    register_type: holding
+    address: 145
+    value_type: U_DWORD
+    unit_of_measurement: "kWh"
+    device_class: energy
+    state_class: total_increasing
+    accuracy_decimals: 2
+    filters:
+      - multiply: ${mt_energy_multiply}
+  # V4.6+: powers in heating (0.01 kW) and the COP of the unit (0.01)
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_heating_power}"
+    id: mt_heating_power
+    register_type: holding
+    address: 148
+    value_type: U_WORD
+    unit_of_measurement: "kW"
+    device_class: power
+    state_class: measurement
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_electric_power}"
+    id: mt_electric_power
+    register_type: holding
+    address: 150
+    value_type: U_WORD
+    unit_of_measurement: "kW"
+    device_class: power
+    state_class: measurement
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+  - platform: modbus_controller
+    modbus_controller_id: mt_hp
+    name: "${n_mt_cop_unit}"
+    id: mt_cop_unit
+    icon: mdi:gauge
+    register_type: holding
+    address: 151
+    value_type: U_WORD
+    state_class: measurement
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+  # COP from the hub: heat output (140) / electric input (150), only while the compressor runs
+  - platform: template
+    name: "${n_mt_cop_now}"
+    id: mt_cop_now
+    icon: mdi:gauge
+    state_class: measurement
+    accuracy_decimals: 2
+    update_interval: 30s
+    lambda: |-
+      float q = id(mt_heat_output).state, p = id(mt_electric_power).state, hz = id(mt_compressor_freq).state;
+      if (isnan(q) || isnan(p) || isnan(hz) || hz <= 0 || p < 0.05f) return NAN;
+      float cop = q / p;
+      return cop > 0 && cop < 12 ? cop : NAN;

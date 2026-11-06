@@ -1,0 +1,331 @@
+# Immergas MAGIS M (Midea M-Thermal) Modbus - package "mt_control"
+# Control registers 0-9: on / off per circuit (0, bits), operating mode (1), water setpoints zone 1 / 2 (2, low / high
+# byte), room setpoint (3), DHW setpoint (4), functions (5, bits: disinfection, silent, ECO, weather curves), weather
+# curve number zone 1 / 2 (6), forced DHW / tank heater / backup heater (7-9). Registers 0, 2, 5 and 6 hold several
+# values: a change writes the register again with only its own bits / byte changed (read-modify-write from the last
+# read, so wait for the first reading after a start before changing anything).
+# Part of jotuera/immergas-modbus-bms-nasa-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+sensor:
+  - { platform: modbus_controller, modbus_controller_id: mt_hp, id: mt_r0, name: "${n_mt_r0}", internal: true, register_type: holding, address: 0, value_type: U_WORD, accuracy_decimals: 0 }
+  - { platform: modbus_controller, modbus_controller_id: mt_hp, id: mt_r1, name: "${n_mt_r1}", internal: true, register_type: holding, address: 1, value_type: U_WORD, accuracy_decimals: 0 }
+  - { platform: modbus_controller, modbus_controller_id: mt_hp, id: mt_r2, name: "${n_mt_r2}", internal: true, register_type: holding, address: 2, value_type: U_WORD, accuracy_decimals: 0 }
+  - { platform: modbus_controller, modbus_controller_id: mt_hp, id: mt_r3, name: "${n_mt_r3}", internal: true, register_type: holding, address: 3, value_type: U_WORD, accuracy_decimals: 0 }
+  - { platform: modbus_controller, modbus_controller_id: mt_hp, id: mt_r4, name: "${n_mt_r4}", internal: true, register_type: holding, address: 4, value_type: U_WORD, accuracy_decimals: 0 }
+  - { platform: modbus_controller, modbus_controller_id: mt_hp, id: mt_r5, name: "${n_mt_r5}", internal: true, register_type: holding, address: 5, value_type: U_WORD, accuracy_decimals: 0 }
+  - { platform: modbus_controller, modbus_controller_id: mt_hp, id: mt_r6, name: "${n_mt_r6}", internal: true, register_type: holding, address: 6, value_type: U_WORD, accuracy_decimals: 0 }
+  - { platform: modbus_controller, modbus_controller_id: mt_hp, id: mt_r7, name: "${n_mt_r7}", internal: true, register_type: holding, address: 7, value_type: U_WORD, accuracy_decimals: 0 }
+  - { platform: modbus_controller, modbus_controller_id: mt_hp, id: mt_r8, name: "${n_mt_r8}", internal: true, register_type: holding, address: 8, value_type: U_WORD, accuracy_decimals: 0 }
+  - { platform: modbus_controller, modbus_controller_id: mt_hp, id: mt_r9, name: "${n_mt_r9}", internal: true, register_type: holding, address: 9, value_type: U_WORD, accuracy_decimals: 0 }
+
+script:
+  # set (on = true) or clear the bits of `mask` in bit-field register 0 or 5
+  - id: mt_set_bits
+    mode: queued
+    max_runs: 10
+    parameters:
+      reg: int
+      mask: int
+      enable: bool
+    then:
+      - lambda: |-
+          auto *src = reg == 0 ? id(mt_r0) : id(mt_r5);
+          if (isnan(src->state)) { ESP_LOGW("mt_hp", "register %d not read yet - change skipped", reg); return; }
+          int v = (int) src->state;
+          v = enable ? (v | mask) : (v & ~mask);
+          src->publish_state(v);
+          id(mt_write).execute(reg, v);
+  # write the low (zone 1) or the high (zone 2) byte of register 2 or 6
+  - id: mt_set_byte
+    mode: queued
+    max_runs: 10
+    parameters:
+      reg: int
+      high: bool
+      value: int
+    then:
+      - lambda: |-
+          auto *src = reg == 2 ? id(mt_r2) : id(mt_r6);
+          if (isnan(src->state)) { ESP_LOGW("mt_hp", "register %d not read yet - change skipped", reg); return; }
+          int v = (int) src->state;
+          v = high ? ((v & 0x00FF) | ((value & 0xFF) << 8)) : ((v & 0xFF00) | (value & 0xFF));
+          src->publish_state(v);
+          id(mt_write).execute(reg, v);
+
+switch:
+  - platform: template
+    name: "${n_mt_power_zone1}"
+    id: mt_power_zone1
+    icon: mdi:radiator
+    lambda: |-
+      if (isnan(id(mt_r0).state)) return {};
+      return ((int) id(mt_r0).state & 0x0002) != 0;
+    turn_on_action:
+      - script.execute: { id: mt_set_bits, reg: 0, mask: 0x0002, enable: true }
+    turn_off_action:
+      - script.execute: { id: mt_set_bits, reg: 0, mask: 0x0002, enable: false }
+  - platform: template
+    name: "${n_mt_power_dhw}"
+    id: mt_power_dhw
+    icon: mdi:water-boiler
+    lambda: |-
+      if (isnan(id(mt_r0).state)) return {};
+      return ((int) id(mt_r0).state & 0x0004) != 0;
+    turn_on_action:
+      - script.execute: { id: mt_set_bits, reg: 0, mask: 0x0004, enable: true }
+    turn_off_action:
+      - script.execute: { id: mt_set_bits, reg: 0, mask: 0x0004, enable: false }
+  - platform: template
+    name: "${n_mt_power_room}"
+    id: mt_power_room
+    icon: mdi:home-thermometer
+    disabled_by_default: true
+    lambda: |-
+      if (isnan(id(mt_r0).state)) return {};
+      return ((int) id(mt_r0).state & 0x0001) != 0;
+    turn_on_action:
+      - script.execute: { id: mt_set_bits, reg: 0, mask: 0x0001, enable: true }
+    turn_off_action:
+      - script.execute: { id: mt_set_bits, reg: 0, mask: 0x0001, enable: false }
+  - platform: template
+    name: "${n_mt_power_zone2}"
+    id: mt_power_zone2
+    icon: mdi:radiator
+    disabled_by_default: true
+    lambda: |-
+      if (isnan(id(mt_r0).state)) return {};
+      return ((int) id(mt_r0).state & 0x0008) != 0;
+    turn_on_action:
+      - script.execute: { id: mt_set_bits, reg: 0, mask: 0x0008, enable: true }
+    turn_off_action:
+      - script.execute: { id: mt_set_bits, reg: 0, mask: 0x0008, enable: false }
+  - platform: template
+    name: "${n_mt_silent}"
+    id: mt_silent
+    icon: mdi:volume-low
+    lambda: |-
+      if (isnan(id(mt_r5).state)) return {};
+      return ((int) id(mt_r5).state & 0x0040) != 0;
+    turn_on_action:
+      - script.execute: { id: mt_set_bits, reg: 5, mask: 0x0040, enable: true }
+    turn_off_action:
+      - script.execute: { id: mt_set_bits, reg: 5, mask: 0x0040, enable: false }
+  - platform: template
+    name: "${n_mt_eco}"
+    id: mt_eco
+    icon: mdi:leaf
+    lambda: |-
+      if (isnan(id(mt_r5).state)) return {};
+      return ((int) id(mt_r5).state & 0x0400) != 0;
+    turn_on_action:
+      - script.execute: { id: mt_set_bits, reg: 5, mask: 0x0400, enable: true }
+    turn_off_action:
+      - script.execute: { id: mt_set_bits, reg: 5, mask: 0x0400, enable: false }
+  - platform: template
+    name: "${n_mt_disinfection}"
+    id: mt_disinfection
+    icon: mdi:bacteria-outline
+    lambda: |-
+      if (isnan(id(mt_r5).state)) return {};
+      return ((int) id(mt_r5).state & 0x0010) != 0;
+    turn_on_action:
+      - script.execute: { id: mt_set_bits, reg: 5, mask: 0x0010, enable: true }
+    turn_off_action:
+      - script.execute: { id: mt_set_bits, reg: 5, mask: 0x0010, enable: false }
+  - platform: template
+    name: "${n_mt_curve_on_z1}"
+    id: mt_curve_on_z1
+    icon: mdi:chart-bell-curve-cumulative
+    lambda: |-
+      if (isnan(id(mt_r5).state)) return {};
+      return ((int) id(mt_r5).state & 0x1000) != 0;
+    turn_on_action:
+      - script.execute: { id: mt_set_bits, reg: 5, mask: 0x1000, enable: true }
+    turn_off_action:
+      - script.execute: { id: mt_set_bits, reg: 5, mask: 0x1000, enable: false }
+  - platform: template
+    name: "${n_mt_curve_on_z2}"
+    id: mt_curve_on_z2
+    icon: mdi:chart-bell-curve-cumulative
+    disabled_by_default: true
+    lambda: |-
+      if (isnan(id(mt_r5).state)) return {};
+      return ((int) id(mt_r5).state & 0x2000) != 0;
+    turn_on_action:
+      - script.execute: { id: mt_set_bits, reg: 5, mask: 0x2000, enable: true }
+    turn_off_action:
+      - script.execute: { id: mt_set_bits, reg: 5, mask: 0x2000, enable: false }
+
+select:
+  - platform: template
+    name: "${n_mt_mode}"
+    update_interval: 10s
+    id: mt_mode
+    icon: mdi:heat-pump
+    options: ["${t_mt_mode_auto}", "${t_mt_mode_cool}", "${t_mt_mode_heat}"]
+    lambda: |-
+      if (isnan(id(mt_r1).state)) return {};
+      switch ((int) id(mt_r1).state) {
+        case 1: return std::string("${t_mt_mode_auto}");
+        case 2: return std::string("${t_mt_mode_cool}");
+        case 3: return std::string("${t_mt_mode_heat}");
+        default: return {};
+      }
+    set_action:
+      - lambda: |-
+          int v = x == "${t_mt_mode_auto}" ? 1 : x == "${t_mt_mode_cool}" ? 2 : 3;
+          id(mt_r1).publish_state(v);
+          id(mt_write).execute(1, v);
+  - platform: template
+    name: "${n_mt_curve_z1}"
+    update_interval: 10s
+    id: mt_curve_z1
+    icon: mdi:chart-bell-curve-cumulative
+    options: ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    lambda: |-
+      if (isnan(id(mt_r6).state)) return {};
+      int v = (int) id(mt_r6).state & 0xFF;
+      if (v < 1 || v > 9) return {};
+      return to_string(v);
+    set_action:
+      - script.execute: { id: mt_set_byte, reg: 6, high: false, value: !lambda "return atoi(x.c_str());" }
+  - platform: template
+    name: "${n_mt_curve_z2}"
+    update_interval: 10s
+    id: mt_curve_z2
+    icon: mdi:chart-bell-curve-cumulative
+    disabled_by_default: true
+    options: ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    lambda: |-
+      if (isnan(id(mt_r6).state)) return {};
+      int v = ((int) id(mt_r6).state >> 8) & 0xFF;
+      if (v < 1 || v > 9) return {};
+      return to_string(v);
+    set_action:
+      - script.execute: { id: mt_set_byte, reg: 6, high: true, value: !lambda "return atoi(x.c_str());" }
+  # 7 / 8 / 9: 0 = as programmed, 1 = forced on, 2 = forced off
+  - platform: template
+    name: "${n_mt_force_dhw}"
+    update_interval: 10s
+    id: mt_force_dhw
+    icon: mdi:water-boiler-alert
+    options: ["${t_mt_force_normal}", "${t_mt_force_on}", "${t_mt_force_off}"]
+    lambda: |-
+      if (isnan(id(mt_r7).state)) return {};
+      int v = (int) id(mt_r7).state;
+      return std::string(v == 1 ? "${t_mt_force_on}" : v == 2 ? "${t_mt_force_off}" : "${t_mt_force_normal}");
+    set_action:
+      - lambda: |-
+          int v = x == "${t_mt_force_on}" ? 1 : x == "${t_mt_force_off}" ? 2 : 0;
+          id(mt_r7).publish_state(v);
+          id(mt_write).execute(7, v);
+  - platform: template
+    name: "${n_mt_force_tbh}"
+    update_interval: 10s
+    id: mt_force_tbh
+    icon: mdi:heating-coil
+    entity_category: config
+    options: ["${t_mt_force_normal}", "${t_mt_force_on}", "${t_mt_force_off}"]
+    lambda: |-
+      if (isnan(id(mt_r8).state)) return {};
+      int v = (int) id(mt_r8).state;
+      return std::string(v == 1 ? "${t_mt_force_on}" : v == 2 ? "${t_mt_force_off}" : "${t_mt_force_normal}");
+    set_action:
+      - lambda: |-
+          int v = x == "${t_mt_force_on}" ? 1 : x == "${t_mt_force_off}" ? 2 : 0;
+          id(mt_r8).publish_state(v);
+          id(mt_write).execute(8, v);
+  - platform: template
+    name: "${n_mt_force_ibh}"
+    update_interval: 10s
+    id: mt_force_ibh
+    icon: mdi:heating-coil
+    entity_category: config
+    options: ["${t_mt_force_normal}", "${t_mt_force_on}", "${t_mt_force_off}"]
+    lambda: |-
+      if (isnan(id(mt_r9).state)) return {};
+      int v = (int) id(mt_r9).state;
+      return std::string(v == 1 ? "${t_mt_force_on}" : v == 2 ? "${t_mt_force_off}" : "${t_mt_force_normal}");
+    set_action:
+      - lambda: |-
+          int v = x == "${t_mt_force_on}" ? 1 : x == "${t_mt_force_off}" ? 2 : 0;
+          id(mt_r9).publish_state(v);
+          id(mt_write).execute(9, v);
+
+number:
+  # 2 low byte: water setpoint zone 1 (with 0.1 °C resolution the byte holds °C x 2)
+  - platform: template
+    name: "${n_mt_water_set_z1}"
+    update_interval: 10s
+    id: mt_water_set_z1
+    icon: mdi:thermometer-water
+    unit_of_measurement: "°C"
+    device_class: temperature
+    min_value: 5
+    max_value: 65
+    step: 1
+    mode: box
+    lambda: |-
+      if (isnan(id(mt_r2).state)) return {};
+      int b = (int) id(mt_r2).state & 0xFF;
+      return id(mt_hires) ? b * 0.5f : (float) b;
+    set_action:
+      - script.execute: { id: mt_set_byte, reg: 2, high: false, value: !lambda "return (int) roundf(id(mt_hires) ? x * 2.0f : x);" }
+  - platform: template
+    name: "${n_mt_water_set_z2}"
+    update_interval: 10s
+    id: mt_water_set_z2
+    icon: mdi:thermometer-water
+    disabled_by_default: true
+    unit_of_measurement: "°C"
+    device_class: temperature
+    min_value: 5
+    max_value: 65
+    step: 1
+    mode: box
+    lambda: |-
+      if (isnan(id(mt_r2).state)) return {};
+      int b = ((int) id(mt_r2).state >> 8) & 0xFF;
+      return id(mt_hires) ? b * 0.5f : (float) b;
+    set_action:
+      - script.execute: { id: mt_set_byte, reg: 2, high: true, value: !lambda "return (int) roundf(id(mt_hires) ? x * 2.0f : x);" }
+  # 3: room setpoint, value = °C x 2
+  - platform: template
+    name: "${n_mt_room_set}"
+    update_interval: 10s
+    id: mt_room_set
+    icon: mdi:home-thermometer
+    unit_of_measurement: "°C"
+    device_class: temperature
+    min_value: 17
+    max_value: 30
+    step: 0.5
+    mode: box
+    lambda: |-
+      if (isnan(id(mt_r3).state)) return {};
+      return id(mt_r3).state * 0.5f;
+    set_action:
+      - lambda: |-
+          int v = (int) roundf(x * 2.0f);
+          id(mt_r3).publish_state(v);
+          id(mt_write).execute(3, v);
+  # 4: DHW setpoint
+  - platform: template
+    name: "${n_mt_dhw_set}"
+    update_interval: 10s
+    id: mt_dhw_set
+    icon: mdi:water-thermometer
+    unit_of_measurement: "°C"
+    device_class: temperature
+    min_value: 20
+    max_value: 65
+    step: 1
+    mode: box
+    lambda: |-
+      if (isnan(id(mt_r4).state)) return {};
+      return id(mt_r4).state;
+    set_action:
+      - lambda: |-
+          int v = (int) roundf(x);
+          id(mt_r4).publish_state(v);
+          id(mt_write).execute(4, v);

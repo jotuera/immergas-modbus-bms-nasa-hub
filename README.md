@@ -203,6 +203,9 @@ maps, the FSV list, error codes and test results are in [docs/](docs/).
 can be run by the hub as a Modbus BMS master – the experimental `gb_` packages, see
 **[Gas boilers over Modbus BMS](docs/gas-boiler-bms.md)**.
 
+**MAGIS M heat pumps** (Midea M-Thermal, R32) have their own experimental `mt_` packages for the Modbus port of the
+wired controller (H1 / H2) – see **[MAGIS M heat pumps (Midea M-Thermal)](docs/magis-m-midea.md)**.
+
 ## Support
 
 If you find this hub useful, please consider supporting me by buying me a coffee. Thank you!
