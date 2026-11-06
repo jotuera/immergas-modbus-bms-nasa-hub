@@ -259,6 +259,7 @@ const ESP_MT: Partial<Record<Key, string[]>> = {
   err_code: ["Kod błędu", "Fault code"], err_desc: ["Błąd", "Fault"], f_pump: ["Pompa wewnętrzna", "Internal pump"],
   fan_real: ["Obroty wentylatora", "Fan speed"], d73: ["Temperatura tłoczenia", "Discharge temperature"],
   d74: ["Temperatura wymiennika zewn. (T3)", "Outdoor coil temperature (T3)"], ff_hz_target: ["Docelowa częstotliwość sprężarki", "Target compressor frequency"],
+  d77: ["Zawór rozprężny", "Expansion valve"], d24: ["Temperatura czynnika – ciecz (T2)", "Refrigerant liquid temperature (T2)"],
   d04: ["Zasilanie z krzywej strefa 1", "Curve flow target zone 1"], cop_today: ["COP dziś", "COP today"],
   starts: ["Starty sprężarki dziś", "Compressor starts today"], runtime: ["Czas pracy sprężarki dziś", "Compressor runtime today"],
   mt_silent: ["Tryb cichy", "Silent mode"],
