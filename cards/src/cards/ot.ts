@@ -89,6 +89,22 @@ class ImmergasOtBoilerCard extends HubCard {
           ${this.chip("ot_burn_h", "mdi:fire-alert", shCol, this.t("Starty / ostatnia godzina", "Starts / last hour"), this.f(sh, 0) + (sh > 6 ? this.t(" · taktowanie", " · short cycling") : ""), sh > 6)}
         </div>
         <div class="hint">${this.esp ? this.t("Liczone w hubie z bitu płomienia każdej ramki statusu (~1 s) – żaden zapłon nie umyka.", "Counted in the hub from the flame bit of every status frame (~1 s) – no burn is missed.") : this.t("Liczone z płomienia co cykl odczytu (~45 s) – bardzo krótkie zapłony mogą umknąć.", "Counted from the flame flag every polling cycle (~45 s) – very short burns may be missed.")}</div>` : nothing}
+      ${this.esp && (this.eid("ot_starts_total") || this.eid("ot_hours_total")) ? html`${this.eid("ot_burn_today") ? nothing : html`<div class="sec">${this.t("Palnik", "Burner")}</div>`}
+        <div class="grid">
+          ${this.eid("ot_starts_total") ? this.chip("ot_starts_total", "mdi:counter", "overlay2", this.t("Starty palnika (od początku)", "Burner starts (total)"), this.f(this.n("ot_starts_total"), 0)) : nothing}
+          ${this.eid("ot_hours_total") ? this.chip("ot_hours_total", "mdi:timer-outline", "overlay2", this.t("Godziny palnika (od początku)", "Burner hours (total)"), this.f(this.n("ot_hours_total"), 0) + " h") : nothing}
+        </div>` : nothing}
+      ${this.esp && this.eid("ot_frames") ? (() => {
+        const fr = this.n("ot_frames"), er = this.n("ot_errors"), to = this.n("ot_timeouts"), all = (fr || 0) + (er || 0) + (to || 0);
+        const bad = all > 0 ? ((er || 0) + (to || 0)) / all * 100 : NaN, col = isNaN(bad) ? "overlay2" : bad > 5 ? "red" : bad > 1 ? "peach" : "green";
+        return html`<div class="sec">${this.t("Komunikacja OpenTherm", "OpenTherm link")}</div>
+          <div class="grid">
+            ${this.chip("ot_frames", "mdi:check-network-outline", "green", this.t("Ramki poprawne", "Frames OK"), this.f(fr, 0))}
+            ${this.chip("ot_errors", "mdi:alert-outline", er > 0 ? "peach" : "overlay2", this.t("Błędy ramek", "Frame errors"), this.f(er, 0))}
+            ${this.chip("ot_timeouts", "mdi:timer-alert-outline", to > 0 ? "peach" : "overlay2", this.t("Brak odpowiedzi", "No answer"), this.f(to, 0))}
+            ${this.chip("ot_frames", "mdi:percent-outline", col, this.t("Udział błędów", "Error share"), isNaN(bad) ? "–" : this.f(bad, 2) + " %")}
+          </div>`;
+      })() : nothing}
       <div class="sec">${this.t("Błędy", "Faults")}</div>
       ${this.on("ot_maint_due") ? html`<div class="grid1">${this.chip("ot_maint_due", "mdi:wrench-clock", "peach", this.t("Przegląd kotła", "Boiler service"),
         this.t("termin minął – po przeglądzie naciśnij „Przegląd wykonany”", "due – after the service press “Service done”"), true)}</div>` : nothing}
