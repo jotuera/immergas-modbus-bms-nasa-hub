@@ -118,38 +118,67 @@ class ImmergasSettingsCard extends HubCard {
 
   /** OpenTherm: the boiler's P / t / A menu copied once from the boiler (Immergas does not publish which Data-ID 11
    *  parameter is which, so they are not read yet) - with hints from what the boiler does report */
+  /** the boiler menu profile: chosen in "Boiler menu profile", else guessed from the boiler model text */
+  private get otProfile(): "zeus25" | "superior" | "generic" {
+    const p = this.s("ot_menu_profile");
+    if (p === "zeus25" || p === "superior" || p === "generic") return p;
+    const m = (this.s("dom_model") ?? "").toLowerCase();
+    return /superior/.test(m) ? "superior" : /zeus\s*25/.test(m) ? "zeus25" : "generic";
+  }
+
   private otOffline() {
+    const prof = this.otProfile, sup = prof === "superior", gen = prof === "generic";
+    // the code of a parameter in this profile ("" in the generic profile)
+    const code = (z: string, s: string) => (gen ? "" : (sup ? s : z) + " · ");
     const r = (k: Key, icon: string, label: string, d = 0) => this.numRow(k, icon, label, d, undefined, true);
     const sh = this.n("ot_burn_h"), t5 = this.n("ot_t5");
     const ch = this.so("ot_ch_set")?.attributes, mm = this.n("ot_minmod");
     const tsp = (this.attr("ot_ids", "boiler_parameters") ?? {}) as Record<string, unknown>, tsp12 = tsp["12"];
     const hint = (txt: string, col = "overlay2") => html`<div class="note" style="color:${c(col)}">${txt}</div>`;
+    const guessed = !["zeus25", "superior", "generic"].includes(this.s("ot_menu_profile") ?? "");
     return html`
       ${this.otThermoRows()}
-      <div class="grp">${this.t("Ogrzewanie (menu t)", "Central heating (menu t)")}</div>
-      ${r("ot_t0", "mdi:thermometer-low", this.t("t0 · min. temperatura zasilania CO", "t0 · CH min. flow temperature"))}
-      ${r("ot_t1", "mdi:thermometer-high", this.t("t1 · maks. temperatura zasilania CO", "t1 · CH max. flow temperature"))}
+      <div class="grp">${this.t("Profil menu kotła", "Boiler menu profile")}</div>
+      ${this.selRow(this.eid("ot_menu_profile"), this.t("Model / menu", "Model / menu"), "mdi:book-cog-outline")}
+      ${guessed ? hint(this.t("profil dobrany z modelu kotła – ustaw go, jeśli się nie zgadza", "profile guessed from the boiler model – set it if it does not match")) : nothing}
+      <div class="grp">${sup ? this.t("Zasilanie i krzywa (M5 · P66)", "Flow and curve (M5 · P66)") : this.t("Ogrzewanie (menu t)", "Central heating (menu t)")}</div>
+      ${r("ot_t0", "mdi:thermometer-low", code("t0", "P66/A") + this.t("min. temperatura zasilania CO", "CH min. flow temperature"))}
+      ${r("ot_t1", "mdi:thermometer-high", code("t1", "P66/B") + this.t("maks. temperatura zasilania CO", "CH max. flow temperature"))}
+      ${sup ? html`${r("ot_sup_out_min", "mdi:snowflake-thermometer", "P66/C · " + this.t("temp. zewnętrzna przy maks. zasilaniu", "outdoor temp. at max. flow"))}
+        ${r("ot_sup_out_max", "mdi:sun-thermometer", "P66/D · " + this.t("temp. zewnętrzna przy min. zasilaniu", "outdoor temp. at min. flow"))}` : nothing}
       ${ch?.min !== undefined && ch?.max !== undefined ? hint(this.t(`kocioł podaje zakres CO ${this.f(ch.min, 0)}–${this.f(ch.max, 0)} °C (Data-ID 49)`,
         `the boiler reports the CH range ${this.f(ch.min, 0)}–${this.f(ch.max, 0)} °C (Data-ID 49)`)) : nothing}
-      ${r("ot_t5", "mdi:timer-lock-outline", this.t("t5 · blokada ponownego zapłonu CO", "t5 · CH ignitions timer"))}
+      ${sup ? html`<div class="grp">${this.t("Zapłon CO (M5)", "CH ignition (M5)")}</div>` : nothing}
+      ${r("ot_t5", "mdi:timer-lock-outline", code("t5", "P69") + this.t("blokada ponownego zapłonu CO", "CH ignitions timer") + (sup ? " (0–255 s)" : ""))}
       ${sh > 6 ? hint(this.t(`taktowanie: ${this.f(sh, 0)} startów w ostatniej godzinie`, `short cycling: ${this.f(sh, 0)} starts in the last hour`)
-        + (isNaN(t5) || t5 < 300 ? this.t(" – wydłuż t5 na kotle (np. 300–600 s)", " – lengthen t5 on the boiler (e.g. 300–600 s)") : ""), "peach") : nothing}
-      ${r("ot_t6", "mdi:chart-line-variant", this.t("t6 · rampa mocy CO", "t6 · CH ramp timer"))}
-      ${r("ot_t7", "mdi:timer-play-outline", this.t("t7 · opóźnienie zapłonu CO", "t7 · CH ignition delay"))}
-      ${r("ot_t4", "mdi:timer-sand", this.t("t4 · czekanie po CWU przed CO", "t4 · wait after DHW before CH"))}
-      ${this.selRow(this.eid("ot_t2"), this.t("t2 · zasilanie przy grzaniu zasobnika", "t2 · flow while heating the cylinder"), "mdi:water-thermometer")}
-      <div class="grp">${this.t("Moc (menu P)", "Output (menu P)")}</div>
-      ${r("ot_p2", "mdi:fire", this.t("P2 · maks. moc CO", "P2 · CH max. output"))}
-      ${tsp12 !== undefined ? hint(this.t(`parametr kotła 12 ze skanu = ${tsp12} (najpewniej P2)`, `boiler parameter 12 from the scan = ${tsp12} (probably P2)`)) : nothing}
-      ${r("ot_p1", "mdi:fire-circle", this.t("P1 · min. moc", "P1 · min. output"))}
-      ${!isNaN(mm) ? hint(this.t(`kocioł podaje min. modulację ${this.f(mm, 0)} % (Data-ID 15)`, `the boiler reports ${this.f(mm, 0)} % min. modulation (Data-ID 15)`)) : nothing}
-      ${r("ot_p0", "mdi:water-boiler", this.t("P0 · maks. moc CWU", "P0 · DHW max. output"))}
+        + (isNaN(t5) || t5 < (sup ? 200 : 300) ? (sup ? this.t(" – wydłuż P69 na kotle (np. 200–255 s)", " – lengthen P69 on the boiler (e.g. 200–255 s)")
+          : this.t(" – wydłuż t5 na kotle (np. 300–600 s)", " – lengthen t5 on the boiler (e.g. 300–600 s)")) : ""), "peach") : nothing}
+      ${r("ot_t6", "mdi:chart-line-variant", code("t6", "P70") + this.t("rampa mocy CO", "CH ramp timer"))}
+      ${r("ot_t7", "mdi:timer-play-outline", code("t7", "P68") + this.t("opóźnienie zapłonu CO", "CH ignition delay"))}
+      ${sup ? nothing : r("ot_t4", "mdi:timer-sand", code("t4", "") + this.t("czekanie po CWU przed CO", "wait after DHW before CH"))}
+      ${sup ? this.selRow(this.eid("ot_sup_dhw_restart"), "P71 · " + this.t("start CWU poniżej nastawy", "DHW restart below the setpoint"), "mdi:water-thermometer")
+        : this.selRow(this.eid("ot_t2"), code("t2", "") + this.t("zasilanie przy grzaniu zasobnika", "flow while heating the cylinder"), "mdi:water-thermometer")}
+      <div class="grp">${sup ? this.t("Moc (M5 · obroty wentylatora)", "Output (M5 · fan speed)") : this.t("Moc (menu P)", "Output (menu P)")}</div>
+      ${sup ? html`${r("ot_sup_ch_max_rpm", "mdi:fan-plus", "P64 · " + this.t("maks. moc CO", "CH max. output"))}
+        ${r("ot_sup_ch_min_rpm", "mdi:fan-minus", "P65 · " + this.t("min. moc CO", "CH min. output"))}
+        ${r("ot_sup_dhw_max_rpm", "mdi:fan-chevron-up", "P57 · " + this.t("maks. moc CWU", "DHW max. output"))}
+        ${r("ot_sup_dhw_min_rpm", "mdi:fan-chevron-down", "P62 · " + this.t("min. moc CWU", "DHW min. output"))}`
+      : html`${r("ot_p2", "mdi:fire", code("P2", "") + this.t("maks. moc CO", "CH max. output"))}
+        ${tsp12 !== undefined ? hint(this.t(`parametr kotła 12 ze skanu = ${tsp12} (najpewniej P2)`, `boiler parameter 12 from the scan = ${tsp12} (probably P2)`)) : nothing}
+        ${r("ot_p1", "mdi:fire-circle", code("P1", "") + this.t("min. moc", "min. output"))}
+        ${!isNaN(mm) ? hint(this.t(`kocioł podaje min. modulację ${this.f(mm, 0)} % (Data-ID 15)`, `the boiler reports ${this.f(mm, 0)} % min. modulation (Data-ID 15)`)) : nothing}
+        ${r("ot_p0", "mdi:water-boiler", code("P0", "") + this.t("maks. moc CWU", "DHW max. output"))}`}
       <div class="grp">${this.t("Pompa i sonda", "Pump and probe")}</div>
-      ${this.selRow(this.eid("ot_p6"), this.t("P6 · praca pompy", "P6 · pump operation"), "mdi:pump")}
-      ${r("ot_a3", "mdi:pump", this.t("A3 · maks. prędkość pompy", "A3 · pump max. speed"))}
-      ${r("ot_a4", "mdi:pump-off", this.t("A4 · min. prędkość pompy", "A4 · pump min. speed"))}
-      ${r("ot_a5", "mdi:delta", this.t("A5 · tryb pompy (0 = proporcjonalny, 5–25 = stała ΔT)", "A5 · pump mode (0 = proportional head, 5–25 = constant ΔT)"))}
-      ${r("ot_p7", "mdi:thermometer-plus", this.t("P7 · korekta sondy zewnętrznej", "P7 · outdoor probe correction"))}`;
+      ${this.selRow(this.eid("ot_p6"), code("P6", "P67") + this.t("praca pompy", "pump operation"), "mdi:pump")}
+      ${sup ? this.selRow(this.eid("ot_sup_pump_speed"), "P55 · " + this.t("prędkość pompy", "pump speed"), "mdi:pump")
+        : html`${r("ot_a3", "mdi:pump", code("A3", "") + this.t("maks. prędkość pompy", "pump max. speed"))}
+          ${r("ot_a4", "mdi:pump-off", code("A4", "") + this.t("min. prędkość pompy", "pump min. speed"))}`}
+      ${r("ot_a5", "mdi:delta", code("A5", "P55") + this.t("ΔT pompy (0 = proporcjonalny, 5–25 K)", "pump ΔT (0 = proportional head, 5–25 K)"))}
+      ${r("ot_p7", "mdi:thermometer-plus", code("P7", "P76") + this.t("korekta sondy zewnętrznej", "outdoor probe correction"))}
+      ${sup ? html`<div class="grp">${this.t("Informacje (menu M1)", "Information (menu M1)")}</div>
+        ${r("ot_sup_hours", "mdi:timer-outline", this.t("godziny pracy kotła", "boiler operating hours"))}
+        ${r("ot_sup_ignitions", "mdi:fire-circle", this.t("zapłony palnika", "burner ignitions"))}
+        ${hint(this.t("Numery P68–P76 odczytane z instrukcji VICTRIX ZEUS Superior – sprawdź je na swoim kotle.", "Codes P68–P76 read from the VICTRIX ZEUS Superior manual – check them on your boiler."))}` : nothing}`;
   }
 
   /** Dominus in the OpenTherm mode: the programs kept in Home Assistant and the regulator of the module (Data-ID 89) */
@@ -240,7 +269,7 @@ class ImmergasSettingsCard extends HubCard {
         : this.t("ceny, zasobnik, tryb nocny, legionella…", "prices, cylinder, night mode, legionella…"))
       : part === "online" ? (this.ot ? this.t("praca bez CAR V2, programy CO / CWU, regulator Dominusa, przegląd, Lato/Zima, alarmy", "running without the CAR V2, CH / DHW programs, Dominus regulator, service, summer/winter, alerts")
         : this.t("zasilanie, wilgotność, posadzka, powierzchnia, Lato/Zima, alarmy, język błędów", "flow, humidity, screed, floor area, summer/winter, alerts, fault language"))
-      : part === "offline" ? (this.ot ? this.t("menu kotła: t0/t1, t5 taktowanie, moc P0–P2, pompa, P7", "boiler menu: t0/t1, t5 cycling, output P0–P2, pump, P7")
+      : part === "offline" ? (this.ot ? this.t("termostat, menu kotła wg modelu: zasilanie, zapłon, moc, pompa, sonda", "thermostat, boiler menu by model: flow, ignition, output, pump, probe")
         : this.t("U11, P15, krzywe R, T02/T05, integracja I, A31, P07", "U11, P15, R curves, T02/T05, I integration, A31, P07"))
       : this.t("parametry pieca, tryb nocny, legionella, wyjazd, Lato/Zima, alarmy, język błędów", "boiler parameters, night mode, legionella, vacation, summer/winter, alerts, fault language");
     const note = !this.dominus ? (part === "offline" ? this.t("Hub nie czyta tych ustawień z magistral – przepisz je raz z menu pieca; służą paskom czasu, krzywej i kalibracji.",

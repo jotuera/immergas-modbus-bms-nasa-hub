@@ -256,5 +256,5 @@ export type Key = keyof typeof NAMES | "dom_ch_demand" | "dom_dhw_request" | "do
   | "ot_exhaust" | "ot_fan" | "ot_fan_set" | "ot_flame_i" | "ot_fhist" | "ot_ro" | "ot_lastw" | "ot_ids" | "ot_scan" | "ot_report"
   | "dom_model" | "ot_reset" | "ot_cap" | "ot_minmod" | "ot_f_service" | "ot_f_water" | "ot_f_flame" | "ot_f_air" | "ot_f_hot"
   | "ot_burn_today" | "ot_burn_h" | "ot_burn_hours"
-  | "ot_thermo" | "ot_room_src" | "ot_vac_action" | "ot_maint" | "ot_eco_red" | "ot_self_learn" | "ot_last_srv" | "ot_srv_done" | "ot_maint_due"
+  | "ot_thermo" | "ot_room_src" | "ot_sup_out_min" | "ot_sup_out_max" | "ot_sup_dhw_max_rpm" | "ot_sup_dhw_min_rpm" | "ot_sup_ch_max_rpm" | "ot_sup_ch_min_rpm" | "ot_sup_hours" | "ot_sup_ignitions" | "ot_menu_profile" | "ot_sup_pump_speed" | "ot_sup_dhw_restart" | "ot_vac_action" | "ot_maint" | "ot_eco_red" | "ot_self_learn" | "ot_last_srv" | "ot_srv_done" | "ot_maint_due"
   | "ot_t0" | "ot_t1" | "ot_t2" | "ot_t4" | "ot_t5" | "ot_t6" | "ot_t7" | "ot_p0" | "ot_p1" | "ot_p2" | "ot_p6" | "ot_p7" | "ot_a3" | "ot_a4" | "ot_a5";

@@ -8500,6 +8500,34 @@
   ]
  },
  {
+  "en": "Boiler menu profile",
+  "pl": "Profil menu kotła",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Model / menu",
+  "pl": "Model / menu",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "profile guessed from the boiler model – set it if it does not match",
+  "pl": "profil dobrany z modelu kotła – ustaw go, jeśli się nie zgadza",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Flow and curve (M5 · P66)",
+  "pl": "Zasilanie i krzywa (M5 · P66)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
   "en": "Central heating (menu t)",
   "pl": "Ogrzewanie (menu t)",
   "files": [
@@ -8507,15 +8535,29 @@
   ]
  },
  {
-  "en": "t0 · CH min. flow temperature",
-  "pl": "t0 · min. temperatura zasilania CO",
+  "en": "CH min. flow temperature",
+  "pl": "min. temperatura zasilania CO",
   "files": [
    "settings.ts"
   ]
  },
  {
-  "en": "t1 · CH max. flow temperature",
-  "pl": "t1 · maks. temperatura zasilania CO",
+  "en": "CH max. flow temperature",
+  "pl": "maks. temperatura zasilania CO",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "outdoor temp. at max. flow",
+  "pl": "temp. zewnętrzna przy maks. zasilaniu",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "outdoor temp. at min. flow",
+  "pl": "temp. zewnętrzna przy min. zasilaniu",
   "files": [
    "settings.ts"
   ]
@@ -8528,8 +8570,15 @@
   ]
  },
  {
-  "en": "t5 · CH ignitions timer",
-  "pl": "t5 · blokada ponownego zapłonu CO",
+  "en": "CH ignition (M5)",
+  "pl": "Zapłon CO (M5)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "CH ignitions timer",
+  "pl": "blokada ponownego zapłonu CO",
   "files": [
    "settings.ts"
   ]
@@ -8542,6 +8591,13 @@
   ]
  },
  {
+  "en": " – lengthen P69 on the boiler (e.g. 200–255 s)",
+  "pl": " – wydłuż P69 na kotle (np. 200–255 s)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
   "en": " – lengthen t5 on the boiler (e.g. 300–600 s)",
   "pl": " – wydłuż t5 na kotle (np. 300–600 s)",
   "files": [
@@ -8549,29 +8605,43 @@
   ]
  },
  {
-  "en": "t6 · CH ramp timer",
-  "pl": "t6 · rampa mocy CO",
+  "en": "CH ramp timer",
+  "pl": "rampa mocy CO",
   "files": [
    "settings.ts"
   ]
  },
  {
-  "en": "t7 · CH ignition delay",
-  "pl": "t7 · opóźnienie zapłonu CO",
+  "en": "CH ignition delay",
+  "pl": "opóźnienie zapłonu CO",
   "files": [
    "settings.ts"
   ]
  },
  {
-  "en": "t4 · wait after DHW before CH",
-  "pl": "t4 · czekanie po CWU przed CO",
+  "en": "wait after DHW before CH",
+  "pl": "czekanie po CWU przed CO",
   "files": [
    "settings.ts"
   ]
  },
  {
-  "en": "t2 · flow while heating the cylinder",
-  "pl": "t2 · zasilanie przy grzaniu zasobnika",
+  "en": "DHW restart below the setpoint",
+  "pl": "start CWU poniżej nastawy",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "flow while heating the cylinder",
+  "pl": "zasilanie przy grzaniu zasobnika",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Output (M5 · fan speed)",
+  "pl": "Moc (M5 · obroty wentylatora)",
   "files": [
    "settings.ts"
   ]
@@ -8584,8 +8654,29 @@
   ]
  },
  {
-  "en": "P2 · CH max. output",
-  "pl": "P2 · maks. moc CO",
+  "en": "CH max. output",
+  "pl": "maks. moc CO",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "CH min. output",
+  "pl": "min. moc CO",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "DHW max. output",
+  "pl": "maks. moc CWU",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "DHW min. output",
+  "pl": "min. moc CWU",
   "files": [
    "settings.ts"
   ]
@@ -8598,8 +8689,8 @@
   ]
  },
  {
-  "en": "P1 · min. output",
-  "pl": "P1 · min. moc",
+  "en": "min. output",
+  "pl": "min. moc",
   "files": [
    "settings.ts"
   ]
@@ -8612,13 +8703,6 @@
   ]
  },
  {
-  "en": "P0 · DHW max. output",
-  "pl": "P0 · maks. moc CWU",
-  "files": [
-   "settings.ts"
-  ]
- },
- {
   "en": "Pump and probe",
   "pl": "Pompa i sonda",
   "files": [
@@ -8626,36 +8710,71 @@
   ]
  },
  {
-  "en": "P6 · pump operation",
-  "pl": "P6 · praca pompy",
+  "en": "pump operation",
+  "pl": "praca pompy",
   "files": [
    "settings.ts"
   ]
  },
  {
-  "en": "A3 · pump max. speed",
-  "pl": "A3 · maks. prędkość pompy",
+  "en": "pump speed",
+  "pl": "prędkość pompy",
   "files": [
    "settings.ts"
   ]
  },
  {
-  "en": "A4 · pump min. speed",
-  "pl": "A4 · min. prędkość pompy",
+  "en": "pump max. speed",
+  "pl": "maks. prędkość pompy",
   "files": [
    "settings.ts"
   ]
  },
  {
-  "en": "A5 · pump mode (0 = proportional head, 5–25 = constant ΔT)",
-  "pl": "A5 · tryb pompy (0 = proporcjonalny, 5–25 = stała ΔT)",
+  "en": "pump min. speed",
+  "pl": "min. prędkość pompy",
   "files": [
    "settings.ts"
   ]
  },
  {
-  "en": "P7 · outdoor probe correction",
-  "pl": "P7 · korekta sondy zewnętrznej",
+  "en": "pump ΔT (0 = proportional head, 5–25 K)",
+  "pl": "ΔT pompy (0 = proporcjonalny, 5–25 K)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "outdoor probe correction",
+  "pl": "korekta sondy zewnętrznej",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Information (menu M1)",
+  "pl": "Informacje (menu M1)",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "boiler operating hours",
+  "pl": "godziny pracy kotła",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "burner ignitions",
+  "pl": "zapłony palnika",
+  "files": [
+   "settings.ts"
+  ]
+ },
+ {
+  "en": "Codes P68–P76 read from the VICTRIX ZEUS Superior manual – check them on your boiler.",
+  "pl": "Numery P68–P76 odczytane z instrukcji VICTRIX ZEUS Superior – sprawdź je na swoim kotle.",
   "files": [
    "settings.ts"
   ]
@@ -9018,8 +9137,8 @@
   ]
  },
  {
-  "en": "boiler menu: t0/t1, t5 cycling, output P0–P2, pump, P7",
-  "pl": "menu kotła: t0/t1, t5 taktowanie, moc P0–P2, pompa, P7",
+  "en": "thermostat, boiler menu by model: flow, ignition, output, pump, probe",
+  "pl": "termostat, menu kotła wg modelu: zasilanie, zapłon, moc, pompa, sonda",
   "files": [
    "settings.ts"
   ]
