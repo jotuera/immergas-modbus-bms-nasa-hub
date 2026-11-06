@@ -458,7 +458,7 @@ class ImmergasNowCard extends HubCard {
     // unit name: the system model the boiler reports (TT D61, without the "(MCP)" code) and the outdoor-unit size
     const model = (this.s("d61") ?? "").replace(/\s*\([^)]*\)\s*$/, "").trim();
     const kw = [this.n("a11"), this.n("odu_cap")].find((v) => v > 0);
-    const unit = this.config.title ?? ((model && !this.bad("d61") ? model : "Immergas") + (kw ? ` · ${this.f(kw, 0)} kW` : ""));
+    const unit = this.config.title ?? ((model && !this.bad("d61") ? model : this.mtx ? "Immergas · MAGIS M" : "Immergas") + (kw ? ` · ${this.f(kw, 0)} kW` : ""));
 
     const sub: string[] = [run ? this.t("sprężarka ", "compressor ") + Math.round(hz) + " Hz" : this.t("sprężarka stoi", "compressor stopped")];
     // electricity in -> heat out while running, so the COP below is readable at a glance

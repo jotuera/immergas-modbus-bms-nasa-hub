@@ -264,4 +264,6 @@ export type Key = keyof typeof NAMES | "dom_ch_demand" | "dom_dhw_request" | "do
   | "ot_c_oc" | "ot_c_fc" | "ot_c_ow" | "ot_c_fw" | "ot_gain" | "ot_max_mod"
   // the ESP gas boiler hub (gb_ packages)
   | "gb_conn" | "gb_req" | "gb_reset" | "gb_dhw_flow" | "gb_curve" | "gb_model"
+  // the ESP MAGIS M hub (mt_ packages)
+  | "mt_conn" | "mt_zone1" | "mt_dhw_on" | "mt_mode" | "mt_fault"
   | "gb_boost" | "gb_eco" | "gb_power" | "gb_nodhwprio" | "gb_hp" | "gb_defrost" | "gb_sflow" | "gb_reqtype" | "gb_cool_en" | "gb_ch_prio" | "gb_silent" | "gb_cool_ok" | "gb_antifreeze" | "gb_hvdt" | "gb_dhw_in" | "gb_pump_flow" | "gb_hours_dhw" | "gb_hours_ch" | "gb_fault_res" | "gb_fault_lock" | "gb_special" | "gb_calc" | "gb_ch_ok" | "gb_dhw_ok" | "gb_addr" | "gb_cool_max" | "gb_cool_min";

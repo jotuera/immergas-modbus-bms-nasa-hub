@@ -71,7 +71,7 @@ class ImmergasChartsCard extends HubCard {
         const ids = keys.map((k) => this.eid(k)).filter(Boolean) as string[];
         const t0 = week ? end.getTime() - 7 * DAY : new Date(end.getFullYear(), end.getMonth(), end.getDate() - 29).getTime();
         const r = await this.hass.callWS({ type: "recorder/statistics_during_period", start_time: new Date(t0).toISOString(), end_time: end.toISOString(),
-          statistic_ids: ids, period: week ? "hour" : "day", types: week ? ["mean"] : ["change"], units: {} });
+          statistic_ids: ids, period: week ? "hour" : "day", types: week ? ["mean"] : ["change"], units: week ? { power: "W" } : {} });
         const get = (k: Key): Pt[] => (r[this.eid(k) ?? ""] ?? []).map((x: any) => [typeof x.start === "number" ? x.start : Date.parse(x.start), week ? x.mean : x.change] as Pt)
           .filter((p: Pt) => p[1] !== null && !isNaN(p[1]));
         this.data[tab] = week ? { at: Date.now(), t0, t1: end.getTime(), heat: get("heat_power"), elec: get("elec_power") }

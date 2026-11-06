@@ -51,6 +51,8 @@ strategy:
 Nastawy, Tryb pracy, Harmonogram i Łączność. Integracja ma te karty w sobie; karty znajdują jej encje po kluczach (bez
 danych pompy ciepła, COP i sprężarki – do tego potrzebny jest hub).
 
+**Hub MAGIS M (ESP, pakiety `mt_`):** znajdowany po nazwach encji (przełącznik „Połączenie Modbus” i encje z tym samym prefiksem) – karty pompy ciepła huba (Diagram, Teraz, Nastawy, Tryb pracy, Wykresy) pokazują jednostkę Midea; tryb = strefa 1, CWU i tryb jednostki (grzanie / chłodzenie); moc w kW pokazywana w W; sam bez huba Magis, inaczej `source: mt`.
+
 **Hub kotła gazowego (ESP, pakiety `gb_`):** znajdowany po nazwach encji (przełącznik „Połączenie BMS” i encje z tym samym prefiksem) – karty w stylu OpenTherm (Teraz, Nastawy, Kocioł z danymi modelu, Łączność, Tryb pracy, Harmonogram z `gb_programs`, Ustawienia online, Parametry pieca z `gb_boiler_params`, Wykresy, Diagram) pokazują kocioł BMS; sam bez huba Magis, inaczej `source: gb`.
 
 **Hub OpenTherm (ESP, `immergas_ot`):** działają Ustawienia online (praca bez CAR V2, regulator hubu, limity OpenTherm, programy, przegląd) i Parametry pieca offline (z `ot_boiler_params`). Z `ot_programs` działają też karty Tryb pracy (wyjazd, auto Lato / Zima, anty-legionella, zamarzanie, program CO / CWU) i Harmonogram – jak z Dominusem.  urządzenie z pakietami `ot_` jest znajdowane po nazwach encji (czujnik

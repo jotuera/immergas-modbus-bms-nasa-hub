@@ -110,6 +110,7 @@ export abstract class HubCard extends LitElement {
   protected so(k: Key) { const i = this.eid(k); return i ? this.hass.states[i] : undefined; }
   protected s(k: Key): string | undefined {
     if (k === "mode" && this.esp && !this.eid("mode")) return this.espMode();
+    if (k === "mode" && this.mtx) return this.mtMode();
     if (k === "mode" && this.gbx) {
       const st = this.so("mode")?.state, o: string[] = this.so("mode")?.attributes?.options ?? [], i = st ? o.indexOf(st) : -1;
       return i >= 0 ? this.gbModeKeys()[i] : st;
@@ -122,12 +123,17 @@ export abstract class HubCard extends LitElement {
     if (!ch || !dhw || ch === "unavailable" || dhw === "unavailable") return undefined;
     return ch === "on" ? (dhw === "on" ? "heating_water" : "heating") : dhw === "on" ? "water" : "off";
   }
-  protected n(k: Key): number { return parseFloat(this.s(k) ?? ""); }
+  protected n(k: Key): number {
+    const v = parseFloat(this.s(k) ?? "");
+    // the cards count power in W; a kW sensor (MAGIS M) is scaled
+    return (k === "heat_power" || k === "elec_power") && this.so(k)?.attributes?.unit_of_measurement === "kW" ? v * 1000 : v;
+  }
   protected on(k: Key) { return this.s(k) === "on"; }
   protected bad(k: Key) { const v = this.s(k); return v === undefined || v === "unavailable" || v === "unknown"; }
   protected attr(k: Key, a: string) {
     if (k === "mode" && a === "options" && this.esp && !this.eid("mode")) return ["off", "water", "heating_water", "heating"];
     if (k === "mode" && a === "options" && this.gbx) return this.gbModeKeys();
+    if (k === "mode" && a === "options" && this.mtx) return ["standby", "summer", "cooling", "winter"];
     if (this.esp && k === "zone1_phase" && a === "anti_legionella_running") return this.on("ot_leg_run");
     if (this.esp && k === "dom_auto_season" && a === "outdoor_mean_24h") return this.s("ot_out_mean");
     if (this.esp && k === "ot_maint_due" && (a === "next_service" || a === "days_left")) {
@@ -140,6 +146,11 @@ export abstract class HubCard extends LitElement {
   }
   /** state as Home Assistant shows it (translated enum / select option), e.g. Dominus "economy" -> "Eko" */
   protected txt(k: Key): string | undefined {
+    if (k === "mode" && this.mtx) {
+      const m: Record<string, [string, string]> = { standby: ["Standby", "Standby"], summer: ["Lato", "Summer"], cooling: ["Chłodzenie", "Cooling"], winter: ["Zima", "Winter"] };
+      const v = this.mtMode();
+      return v ? this.t(m[v][0], m[v][1]) : undefined;
+    }
     if (this.esp && (k === "zone1_phase" || k === "dhw_phase")) {
       const p: Record<string, [string, string]> = { comfort: ["Komfort", "Comfort"], economy: ["Eko", "Eco"], manual: ["Ręczny", "Manual"], legionella: ["Anty-legionella", "Anti-legionella"] };
       const v = this.so(k)?.state ?? "";
@@ -166,6 +177,15 @@ export abstract class HubCard extends LitElement {
   protected get esp() { return !!this.idx?.esp; }
   /** the ESP gas boiler hub over Modbus BMS (gb_) */
   protected get gbx() { return !!this.idx?.gb; }
+  /** the ESP MAGIS M hub (mt_) */
+  protected get mtx() { return !!this.idx?.mt; }
+  /** MAGIS M: the hub mode keys (standby / summer / cooling / winter) from zone 1, DHW and the unit mode (index 1 = cool) */
+  protected mtMode(): string | undefined {
+    const z = this.so("mt_zone1")?.state, d = this.so("mt_dhw_on")?.state, m = this.so("mt_mode");
+    if (!z || !d || z === "unavailable") return undefined;
+    const cool = !!m && (m.attributes?.options ?? []).indexOf(m.state) === 1;
+    return z !== "on" ? (d === "on" ? "summer" : "standby") : cool ? "cooling" : "winter";
+  }
   /** gb_ mode select: its options -> the OpenTherm mode keys (by name when they already are keys, else by position) */
   protected gbModeKeys(): string[] {
     const o: string[] = this.so("mode")?.attributes?.options ?? [], keys = ["off", "water", "heating_water", "heating"];
@@ -297,6 +317,15 @@ export abstract class HubCard extends LitElement {
     this.dispatchEvent(new CustomEvent("hass-more-info", { detail: { entityId }, bubbles: true, composed: true }));
   }
   protected call(domain: string, service: string, k: Key, data: Record<string, unknown> = {}) {
+    // MAGIS M: a mode = zone 1 on / off, DHW on / off and the unit mode heat / cool
+    if (k === "mode" && this.mtx && service === "select_option") {
+      const o = String(data.option), sw = (kk: Key, on: boolean) => { const id = this.eid(kk); if (id) this.hass.callService(id.split(".")[0], on ? "turn_on" : "turn_off", { entity_id: id }); };
+      sw("mt_zone1", o === "winter" || o === "cooling");
+      sw("mt_dhw_on", o !== "standby");
+      const mid = this.eid("mt_mode"), mo: string[] = this.so("mt_mode")?.attributes?.options ?? [];
+      if (mid && (o === "winter" || o === "cooling") && mo.length >= 3) this.hass.callService(mid.split(".")[0], "select_option", { entity_id: mid, option: mo[o === "cooling" ? 1 : 2] });
+      return;
+    }
     // gb_ hub: the mode key -> the select option of the package
     if (k === "mode" && this.gbx && service === "select_option") {
       const o: string[] = this.so("mode")?.attributes?.options ?? [], i = this.gbModeKeys().indexOf(String(data.option));
