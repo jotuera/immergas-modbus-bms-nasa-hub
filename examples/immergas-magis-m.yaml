@@ -53,5 +53,6 @@ packages:
       - packages/mt_status.yaml
       - packages/mt_sensors.yaml
       - packages/mt_energy.yaml
+      - packages/mt_stats.yaml          # optional: energy / COP / compressor starts and runtime today
       - packages/mt_control.yaml
       - packages/mt_params.yaml         # optional: installer parameters, read only

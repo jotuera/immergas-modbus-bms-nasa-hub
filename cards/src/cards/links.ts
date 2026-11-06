@@ -56,6 +56,7 @@ class ImmergasLinksCard extends HubCard {
 
     // Dominus in the OpenTherm mode: the module, the boiler behind it and the remote (CAR V2 / Super Amico) instead of
     // the zone 1 panel - with the switch that blocks writes from Home Assistant
+    if (this.mtx) this.mtLinks(out);
     if (this.gbx) this.gbLinks(out);
     else if (this.esp) this.espLinks(out);
     else if (this.dominus && this.ot) this.otLinks(out);
@@ -103,7 +104,7 @@ class ImmergasLinksCard extends HubCard {
       const DOM = ["Boiler", "BMS master", "Heat request", "Dominus", "OpenTherm hub", "Thermostat", "Room unit", "Regulator", "Zone 1 panel", "CAR V2 remote"];
       return out.sort((a, b) => DOM.indexOf(a.name[1]) - DOM.indexOf(b.name[1]));
     }
-    const ORDER = ["Hub", "Dominus", "Modbus", "Zone 1 panel", "BMS", "System controller", "NASA", "EHS panel", "Photovoltaics", "Dehumidifier"];
+    const ORDER = ["MAGIS M", "Modbus master", "Heaters", "Signals", "Hub", "Dominus", "Modbus", "Zone 1 panel", "BMS", "System controller", "NASA", "EHS panel", "Photovoltaics", "Dehumidifier"];
     return out.sort((a, b) => ORDER.indexOf(a.name[1]) - ORDER.indexOf(b.name[1]));
   }
 
@@ -148,6 +149,36 @@ class ImmergasLinksCard extends HubCard {
           <div class="kn" style="left:${ro ? 23 : 3}px;background:${ro ? c("sky") : c("overlay1")}"></div></div></div>
         ${ro ? html`<div class="ld">${this.t("HA tylko czyta. Po włączeniu raz odłącz zasilanie modułu Dominus – zapomni ostatnią nastawę z HA.",
           "HA only reads. After switching it on, power-cycle the Dominus once – it forgets the last setpoint from HA.")}</div>` : nothing}` : undefined });
+  }
+
+  /** ESP MAGIS M hub: the Midea unit (readings, running mode, fault), the hub as the Modbus master (polling switch),
+   *  the electric heaters (IBH / TBH) and the SG / EVU signals */
+  private mtLinks(out: Link[]) {
+    const conn = this.on("mt_conn"), fresh = !this.bad("tw2") || !this.bad("hz") || !this.bad("state"), code = this.n("err_code");
+    out.push({ k: "state", icon: "mdi:heat-pump", name: ["MAGIS M", "MAGIS M"], bus: "Modbus RTU",
+      st: !conn ? "off" : code > 0 ? "bad" : fresh ? "ok" : "bad",
+      detail: !conn ? this.t("odpytywanie wyłączone", "polling off") : code > 0 ? (this.s("err_desc") ?? this.t("błąd jednostki", "unit fault"))
+        : [this.s("state") ?? "", !isNaN(this.n("hz")) && this.n("hz") > 0 ? this.f(this.n("hz"), 0) + " Hz" : "", this.s("mt_sw") ? "SW " + this.s("mt_sw") : ""].filter(Boolean).join(" · ") });
+    const tag = "lk_mt", armed = this.isArmed(tag);
+    out.push({ k: "mt_conn", icon: "mdi:lan-connect", name: ["Master Modbus", "Modbus master"], bus: "RS485 H1 / H2",
+      st: conn ? "ok" : "off", label: conn ? this.t("Hub odpytuje jednostkę", "The hub polls the unit") : this.t("Odpytywanie wyłączone", "Polling off"),
+      detail: this.s("mt_proto") ? this.t("protokół ", "protocol ") + this.s("mt_proto") : "",
+      extra: html`<div class="ro" @click=${(e: Event) => e.stopPropagation()}>
+        <span>${armed ? this.t("Potwierdź – dotknij ponownie", "Confirm – tap again") : this.t("Połączenie Modbus", "Modbus connection")}</span>
+        <div class="tgl" style="background:${conn ? ca("green", 0.35) : "rgba(255,255,255,.08)"}${armed ? `;outline:2px solid ${c("green")}` : ""}"
+          @click=${() => { const id = this.eid("mt_conn")!; this.confirm(tag, () => this.hass.callService(id.split(".")[0], conn ? "turn_off" : "turn_on", { entity_id: id })); }}>
+          <div class="kn" style="left:${conn ? 23 : 3}px;background:${conn ? c("green") : c("overlay1")}"></div></div></div>` });
+    const heaters: [Key, string][] = [["backup_heater", "IBH1"], ["mt_ibh2", "IBH2"], ["dhw_heater", "TBH"]];
+    const hs = heaters.filter(([k]) => this.eid(k)), hon = hs.filter(([k]) => this.on(k));
+    if (hs.length) out.push({ k: hs[0][0], icon: "mdi:heating-coil", name: ["Grzałki", "Heaters"], bus: this.t("elektryczne", "electric"),
+      st: hon.length ? "emu" : "ok", label: hon.length ? this.t("Grzeje: ", "Heating: ") + hon.map(([, l]) => l).join(", ") : this.t("Wyłączone", "Off"),
+      detail: hs.map(([, l]) => l).join(" · ") });
+    if (this.eid("mt_sg") || this.eid("mt_evu")) {
+      const sg = this.on("mt_sg"), evu = this.on("mt_evu");
+      out.push({ k: this.eid("mt_sg") ? "mt_sg" : "mt_evu", icon: "mdi:transmission-tower", name: ["Sygnały", "Signals"], bus: "SG / EVU",
+        st: sg || evu ? "emu" : "ok", label: sg || evu ? [sg ? "SG" : "", evu ? "EVU" : ""].filter(Boolean).join(" + ") + this.t(" aktywne", " active") : this.t("Brak sygnałów", "No signals"),
+        detail: this.t("SG = tania energia / nadwyżka PV, EVU = blokada przez dostawcę", "SG = cheap energy / PV surplus, EVU = utility lock") });
+    }
   }
 
   /** ESP gas boiler hub: the boiler on the Modbus BMS (fresh readings), the hub as the BMS master (polling switch,
@@ -294,7 +325,7 @@ class ImmergasLinksCard extends HubCard {
     // controller, NASA / EHS panel); a pair wraps as a whole on a narrow card
     const by = (n: string) => L.find((l) => l.name[1] === n);
     // Dominus integration: the module and the boiler side by side
-    const pairs = this.dominus ? L.map((l) => [l])
+    const pairs = this.dominus || this.mtx ? L.map((l) => [l])
       : [["Hub", "Dominus"], ["Modbus", "Zone 1 panel"], ["BMS", "System controller"], ["NASA", "EHS panel"]]
         .map((p) => p.map(by).filter((l): l is Link => !!l)).filter((p) => p.length);
     const meta: Record<State, [string, string, string]> = {
@@ -308,7 +339,7 @@ class ImmergasLinksCard extends HubCard {
     return html`
       ${this.head("mdi:lan", this.t("Łączność", "Connectivity"), nBad ? html`<span style="color:${c("red")}">${this.t("problemy: ", "problems: ")}${nBad}</span>`
         : this.t("wszystko połączone", "all connected"))}
-      <div class="links" style=${this.dominus ? "grid-template-columns:repeat(2, minmax(0, 1fr));grid-auto-rows:auto" : ""}>${pairs.map((pair) => html`<div class=${pair.length > 1 ? "pair" : "pair one"}>${pair.map((l) => {
+      <div class="links" style=${this.dominus || this.mtx ? "grid-template-columns:repeat(2, minmax(0, 1fr));grid-auto-rows:auto" : ""}>${pairs.map((pair) => html`<div class=${pair.length > 1 ? "pair" : "pair one"}>${pair.map((l) => {
         const [col, txt0, icon] = meta[l.st], txt = l.label ?? txt0;
         return html`<div class="lk" style=${box(col, l.st === "bad")} @click=${() => this.moreInfo(l.k)}>
           <ha-icon icon=${l.icon} style="color:${c(col)}"></ha-icon>

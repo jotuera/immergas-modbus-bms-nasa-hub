@@ -9,8 +9,8 @@ import { svg, SVGTemplateResult } from "lit";
 import { HubCard, html, css, nothing, c, ca, box, register } from "../base";
 import { findPkg } from "../hubpkg";
 
-type K = "on" | "oc" | "fc" | "ow" | "fw" | "out" | "set" | "flow" | "min" | "max" | "target" | "gain" | "hyst" | "room";
-type Fam = "gb" | "ot";
+type K = "on" | "oc" | "fc" | "ow" | "fw" | "out" | "set" | "flow" | "min" | "max" | "target" | "gain" | "hyst" | "room" | "num";
+type Fam = "gb" | "ot" | "mt";
 const W = 340, H = 196, x0 = 30, x1 = 332, y0 = 10, y1 = 166;
 
 // entity names of the packages without the prefix, PL + EN (packages/lang/gb_*.yaml, ot_*.yaml)
@@ -29,6 +29,12 @@ const FAM: Record<Fam, Partial<Record<K, string[]>>> = {
   ot: { ...COMMON, on: ["Regulator w hubie", "Regulator in the hub"], max: ["CO maks.", "CH max."], min: ["CO min.", "CH min."],
     target: ["Zadana pokoju", "Room target"], gain: ["Korekta pokojowa (°C zasilania na °C)", "Room correction (°C flow per °C)"],
     hyst: ["Histereza pokoju", "Room hysteresis"] },
+  // MAGIS M (Midea): the unit's own curves 1-8 and the custom curve 9 (installer parameters, read only over Modbus)
+  mt: { on: ["Krzywa pogodowa strefa 1", "Weather curve zone 1"], num: ["Numer krzywej strefa 1", "Curve number zone 1"],
+    oc: ["Krzywa własna: punkt zimny", "Custom curve: outdoor cold point"], fc: ["Krzywa własna: zasilanie przy mrozie", "Custom curve: flow at cold"],
+    ow: ["Krzywa własna: punkt ciepły", "Custom curve: outdoor warm point"], fw: ["Krzywa własna: zasilanie przy cieple", "Custom curve: flow at warm"],
+    out: ["Temperatura zewnętrzna", "Outdoor temperature"], set: ["Zasilanie z krzywej strefa 1", "Curve flow target zone 1"],
+    flow: ["Temperatura wody na wylocie", "Water outlet temperature"], max: ["Grzanie – maks. woda", "Heating water max."], min: ["Grzanie – min. woda", "Heating water min."] },
 };
 
 class ImmergasHubCurveCard extends HubCard {
@@ -49,9 +55,11 @@ class ImmergasHubCurveCard extends HubCard {
     const entityId = this.m[k];
     if (entityId) this.dispatchEvent(new CustomEvent("hass-more-info", { detail: { entityId }, bubbles: true, composed: true }));
   }
+  /** a value the card may change (a number); the Midea installer parameters are read-only sensors */
+  private writable(k: K) { const id = this.m[k] ?? ""; return id.startsWith("number.") || id.startsWith("input_number."); }
   private setNum(k: K, value: number) {
     const id = this.m[k];
-    if (!id) return;
+    if (!id || !this.writable(k)) return;
     const dom = id.split(".")[0];
     this.hass.callService(dom === "input_number" ? "input_number" : "number", "set_value", { entity_id: id, value });
   }
@@ -91,6 +99,9 @@ class ImmergasHubCurveCard extends HubCard {
   private handle(k: "c" | "w", x: number, y: number, lbl: string, col: string) {
     const d = this.drag?.k === k ? this.drag : null, cx = d ? d.x : x, cy = d ? d.y : y;
     const [kx, ky]: [K, K] = k === "c" ? ["oc", "fc"] : ["ow", "fw"];
+    if (!this.writable(kx) && !this.writable(ky))
+      return svg`<circle cx=${this.px(cx)} cy=${this.py(cy)} r="6" fill=${c(col)} stroke="var(--ha-card-background, #1e1e2e)" stroke-width="2"/>
+        <text x=${this.px(cx)} y=${this.py(cy) - 12} font-size="11" font-weight="800" text-anchor="middle" fill=${c(col)}>${lbl} ${cy}°</text>`;
     return svg`<circle cx=${this.px(cx)} cy=${this.py(cy)} r="8" fill=${c(col)} stroke="var(--ha-card-background, #1e1e2e)" stroke-width="3" style="filter:drop-shadow(0 0 6px ${c(col)})"/>
       <circle cx=${this.px(cx)} cy=${this.py(cy)} r="20" fill="transparent" style="cursor:move;touch-action:none"
         @pointerdown=${(e: PointerEvent) => { e.preventDefault(); (e.target as Element).setPointerCapture(e.pointerId); this.drag = { k, x, y }; }}
@@ -104,6 +115,9 @@ class ImmergasHubCurveCard extends HubCard {
   private ctl(k: K, name: string, sub: string, col: string) {
     const v = this.v(k), mn = this.a(k, "min", -100), mx = this.a(k, "max", 100), step = this.a(k, "step", 1);
     if (!this.m[k]) return nothing;
+    if (!this.writable(k)) return html`<div class="ctl" style="background:${ca(col, 0.05)};border:1px dashed ${ca(col, 0.25)}">
+      <div class="cx" @click=${() => this.more(k)} style="cursor:pointer"><div class="cn">${name}</div><div class="cs">${sub} · ${this.t("tylko odczyt", "read only")}</div></div>
+      <div class="cvv" style="color:${c(col)}">${isNaN(v) ? "–" : this.f(v) + "°"}</div></div>`;
     const st = (d: number, icon: string) => {
       const nv = Math.round(Math.max(mn, Math.min(mx, v + d)) * 100) / 100, dis = isNaN(v) || nv === v;
       return html`<div class="btn ${dis ? "off" : ""}" @click=${() => !dis && this.setNum(k, nv)}><ha-icon icon=${icon}></ha-icon></div>`;
@@ -157,7 +171,9 @@ class ImmergasHubCurveCard extends HubCard {
       const [txt, cc] = Math.abs(dr) <= hy ? [this.t("komfort ✓", "comfort ✓"), "green"] : dr > 0 ? [this.t("za ciepło", "too warm"), "peach"] : [this.t("za zimno", "too cold"), "sky"];
       roomTxt = html`<span @click=${() => this.more("target")} style="cursor:pointer">${this.t("pokój", "room")} <b>${this.f(room)}°</b>/${this.f(target)}° <b style="color:${c(cc)}">${txt}</b></span>`;
     }
-    const sub = ot ? this.t("Regulator OpenTherm w hubie · nastawa CO (Data-ID 1) co minutę", "OpenTherm regulator in the hub · CH setpoint (Data-ID 1) every minute")
+    const mt = this.fam === "mt", num = this.m.num ? this.hass.states[this.m.num] : undefined, nopts: string[] = num?.attributes?.options ?? [];
+    const sub = mt ? this.t("Midea · krzywa jednostki dla strefy 1 (nastawa wody liczy jednostka)", "Midea · the unit's curve for zone 1 (the unit computes the water setpoint)")
+      : ot ? this.t("Regulator OpenTherm w hubie · nastawa CO (Data-ID 1) co minutę", "OpenTherm regulator in the hub · CH setpoint (Data-ID 1) every minute")
       : this.t("Hub · nastawa zasilania (514) z sondy kotła (772) co minutę", "Hub · CH flow setpoint (514) from the boiler probe (772) every minute");
     return html`
       <div class="top">
@@ -170,6 +186,10 @@ class ImmergasHubCurveCard extends HubCard {
         <span>${this.t("z krzywej", "from the curve")} <b style="color:${c("yellow")}">${this.f(tgt)} °C</b></span>
         <span @click=${() => this.more("set")} style="cursor:pointer">${this.t("nastawa", "setpoint")} <b style="color:${c("yellow")}">${this.f(set)} °C</b></span>
         <span @click=${() => this.more("flow")} style="cursor:pointer">${this.t("zasilanie", "flow")} <b style="color:${c("red")}">${this.f(flow)} °C</b></span></div>
+      ${mt && nopts.length ? html`<div class="nums">${nopts.map((o) => html`<div class="numc" style=${o === num.state ? box("peach", true) : ""}
+          @click=${() => o !== num.state && this.hass.callService(this.m.num!.split(".")[0], "select_option", { entity_id: this.m.num, option: o })}>${o}</div>`)}</div>
+        ${num.state !== nopts[nopts.length - 1] ? html`<div class="note">${this.t(`Krzywa fabryczna nr ${num.state} – na wykresie krzywa własna (9) i zasilanie, które liczy jednostka.`,
+          `Factory curve no. ${num.state} – the chart shows the custom curve (9) and the flow the unit computes.`)}</div>` : nothing}` : nothing}
       <svg viewBox="0 0 ${W} ${H}">${g}</svg>
       <div class="row">
         ${this.ctl("fc", this.t("Zasilanie przy mrozie", "Flow when cold"), this.t(`przy ${this.f(oc)} °C i zimniej`, `at ${this.f(oc)} °C and colder`), col)}
@@ -179,11 +199,13 @@ class ImmergasHubCurveCard extends HubCard {
         ${ot ? this.ctl("target", this.t("Zadana pokoju", "Room target"), this.t("korekta i CO wł. / wył.", "correction and CH on / off"), "green") : nothing}
         ${ot ? this.ctl("gain", this.t("Korekta pokojowa", "Room correction"), this.t("°C zasilania na 1 °C błędu", "°C flow per 1 °C error"), "yellow") : nothing}
       </div>
-      <div class="legend"><span><i style="background:${c(col)}"></i>${this.t("krzywa hubu", "hub curve")}</span>
+      <div class="legend"><span><i style="background:${c(col)}"></i>${mt ? this.t("krzywa własna (9)", "custom curve (9)") : this.t("krzywa hubu", "hub curve")}</span>
         ${corr ? html`<span><i style="border-top:2px dashed ${c("yellow")};height:0"></i>${this.t(`z korektą pokojową ${corr > 0 ? "+" : ""}${this.f(corr)} °C`, `with the room correction ${corr > 0 ? "+" : ""}${this.f(corr)} °C`)}</span>` : nothing}
         <span>${this.t("● nastawa · ○ faktyczne zasilanie", "● setpoint · ○ actual flow")}</span></div>
-      <div class="note">${this.t("Przeciągnij punkt (góra / dół = zasilanie, lewo / prawo = temp. zewnętrzna) albo użyj −/+.", "Drag a point (up / down = flow, left / right = outdoor temperature) or use −/+.")}
-        ${ot ? this.t(" Regulator dodaje korektę pokojową i włącza / wyłącza CO z histerezą; nastawa zostaje w granicach CO min. / maks. kotła (Data-ID 49).",
+      <div class="note">${mt ? this.t("Krzywą (1–9) wybierasz tutaj; punkty krzywej własnej (9) ustawia się w menu instalatora jednostki – hub je tylko czyta.",
+          "Pick the curve (1–9) here; the custom curve (9) points are set in the unit's installer menu – the hub only reads them.")
+        : this.t("Przeciągnij punkt (góra / dół = zasilanie, lewo / prawo = temp. zewnętrzna) albo użyj −/+.", "Drag a point (up / down = flow, left / right = outdoor temperature) or use −/+.")}
+        ${mt ? "" : ot ? this.t(" Regulator dodaje korektę pokojową i włącza / wyłącza CO z histerezą; nastawa zostaje w granicach CO min. / maks. kotła (Data-ID 49).",
           " The regulator adds the room correction and switches CH on / off with a hysteresis; the setpoint stays within the boiler's CH min. / max. (Data-ID 49).")
         : this.t(" Nastawa zostaje w granicach CO min. / maks. kotła. Wyłączona = nastawa zasilania zostaje taka, jak ją ustawisz.",
           " The setpoint stays within the boiler's CH min. / max. Off = the flow setpoint stays as you set it.")}</div>`;
@@ -193,7 +215,7 @@ class ImmergasHubCurveCard extends HubCard {
     if (!this.hass) return nothing;
     const want = this.config.family as Fam | undefined;
     let m: Partial<Record<K, string>> | null = null;
-    for (const f of (want ? [want] : ["gb", "ot"]) as Fam[]) { m = this.find(f); if (m) { this.fam = f; break; } }
+    for (const f of (want ? [want] : ["gb", "ot", "mt"]) as Fam[]) { m = this.find(f); if (m) { this.fam = f; break; } }
     if (!m && want) this.fam = want;
     this.m = { ...(m ?? {}), ...(this.config.entities ?? {}) };
     if (!this.m.fc && !this.m.fw) return html`<ha-card><div class="empty">${this.t("Szukam krzywej pogodowej huba… (pakiet gb_curve albo ot_regulator)",
@@ -209,6 +231,9 @@ class ImmergasHubCurveCard extends HubCard {
     .tsub { font-size: 10.5px; opacity: .55; }
     .state { cursor: pointer; display: flex; align-items: center; gap: 5px; padding: 5px 11px; border-radius: 10px; font-size: 11px; font-weight: 800; }
     .state ha-icon { --mdc-icon-size: 15px; }
+    .nums { display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap; }
+    .numc { cursor: pointer; min-width: 28px; text-align: center; padding: 4px 6px; border-radius: 8px; font-size: 12px; font-weight: 800;
+      background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); }
     .tr { display: flex; gap: 10px; flex-wrap: wrap; font-size: 11.5px; }
     svg { width: 100%; height: auto; display: block; margin-top: 6px; touch-action: pan-y; }
     .ctl { flex: 1 1 210px; display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 14px; }

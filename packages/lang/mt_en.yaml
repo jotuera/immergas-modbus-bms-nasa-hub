@@ -121,3 +121,9 @@ substitutions:
   n_mt_curve9_flow_warm: "${mt_name_prefix} - Custom curve: flow at warm"
   n_mt_curve9_out_cold: "${mt_name_prefix} - Custom curve: outdoor cold point"
   n_mt_curve9_out_warm: "${mt_name_prefix} - Custom curve: outdoor warm point"
+  # mt_stats
+  n_mt_heat_today: "${mt_name_prefix} - Heat energy today"
+  n_mt_elec_today: "${mt_name_prefix} - Electric energy today"
+  n_mt_cop_today: "${mt_name_prefix} - COP today"
+  n_mt_starts_today: "${mt_name_prefix} - Compressor starts today"
+  n_mt_runtime_today: "${mt_name_prefix} - Compressor runtime today"

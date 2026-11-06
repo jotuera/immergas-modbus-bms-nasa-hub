@@ -254,6 +254,21 @@ class ImmergasModeCard extends HubCard {
         <div class="kn" style="left:${on ? 23 : 3}px;background:${on ? c("lavender") : c("overlay1")}"></div></div></div>`;
   }
 
+  /** MAGIS M: forced DHW / tank heater / backup heater - three-way selects (by the program / forced on / forced off) */
+  private mtForce() {
+    const rows: [Key, string, string, string][] = [["mt_force_dhw", "mdi:water-boiler-alert", "yellow", this.t("Wymuszona CWU", "Forced DHW")],
+      ["mt_force_tbh", "mdi:heating-coil", "peach", this.t("Grzałka zasobnika (TBH)", "Tank heater (TBH)")], ["mt_force_ibh", "mdi:heating-coil", "red", this.t("Grzałka IBH", "Backup heater (IBH)")]];
+    const lab = [this.t("wg programu", "program"), this.t("wł.", "on"), this.t("wył.", "off")];
+    return rows.filter(([k]) => this.eid(k)).map(([k, icon, col, name]) => {
+      const opts: string[] = this.attr(k, "options") ?? [], cur = opts.indexOf(this.s(k) ?? "");
+      return html`<div class="night" style=${box(cur === 1 ? col : "overlay2", cur === 1)}>
+        <ha-icon icon=${icon} style="color:${c(cur === 1 ? col : "overlay2")}"></ha-icon>
+        <div class="cx"><div class="nt">${name}</div><div class="ns" style="color:${c(cur === 1 ? col : "overlay2")}">${cur >= 0 ? lab[cur] ?? this.s(k) : "–"}</div></div>
+        <div class="tcs">${opts.slice(0, 3).map((o, i) => html`<div class="tc" style="background:${ca(i === cur ? col : "overlay1", i === cur ? 0.25 : 0.06)};border:1px solid ${ca(i === cur ? col : "overlay1", 0.3)}"
+          @click=${() => i !== cur && this.call("select", "select_option", k, { option: o })}><span class="tt" style="font-size:11px">${lab[i] ?? o}</span></div>`)}</div></div>`;
+    });
+  }
+
   /** calendar p (1-4) covers the whole day with its ranges (null = not read yet) */
   private calWhole(p: number): boolean | null {
     const m = (s?: string) => { if (!s || !/^\d\d:\d\d/.test(s)) return null; const v = +s.slice(0, 2) * 60 + +s.slice(3, 5); return v >= 1439 ? 1440 : v; };
@@ -397,6 +412,7 @@ class ImmergasModeCard extends HubCard {
       ${this.config.show_f1f2 === false ? nothing : this.f1f2Rows()}
       ${this.progRow()}
       ${this.dhwProgRow()}
+      ${this.mtx ? this.mtForce() : nothing}
       ${this.config.show_toggles === false ? nothing : this.toggles([
         ["room_mod", "mdi:home-thermometer-outline", "green", this.t("Modulacja z sondą pokojową", "Room probe modulation"),
           html`${this.t("zasilanie korygowane wg temp. w pokoju", "flow corrected by the room temperature")}
@@ -406,6 +422,10 @@ class ImmergasModeCard extends HubCard {
           this.eid("hum_src") ? html`${this.selPick("hum_src", this.t("wilgotność", "humidity"))}` : undefined, true],
         ["boost", "mdi:water-boiler-alert", "yellow", this.t("Wymuszenie CWU", "DHW boost"), undefined, true],
         ["a12", "mdi:air-filter", "teal", this.t("Auto-odpowietrzanie (A12)", "Auto venting (A12)"), this.t("ustawienie: przy każdym włączeniu pieca", "setting: at every boiler power-up"), true],
+        ["mt_silent", "mdi:volume-low", "lavender", this.t("Tryb cichy", "Silent mode"), this.t("niższe obroty sprężarki i wentylatora", "lower compressor and fan speed"), true],
+        ["mt_eco", "mdi:leaf", "green", this.t("ECO", "ECO"), this.t("tryb ekonomiczny jednostki", "the unit's economy mode"), true],
+        ["mt_dis", "mdi:bacteria-outline", "red", this.t("Dezynfekcja (anty-legionella)", "Disinfection (anti-legionella)"), this.t("program jednostki – dzień i godzina w jej menu", "the unit's program – day and time in its menu"), true],
+        ["mt_curve_on", "mdi:chart-bell-curve-cumulative", "peach", this.t("Krzywa pogodowa strefy 1", "Zone 1 weather curve"), this.t("nastawa wody z krzywej nr ", "water setpoint from curve no. ") + (this.s("mt_curve_n") ?? "–"), true],
         ["vent_start", "mdi:pipe-valve", "peach", this.on("vent_start") ? this.t("Odpowietrzanie trwa · ", "Venting running · ") + this.ago("vent_start") : this.t("Odpowietrz instalację teraz", "Vent the system now"),
           this.t("jednorazowy cykl AP99 – piec w tym czasie nie grzeje; wyłącz, aby przerwać", "one-off AP99 cycle – the boiler does not heat meanwhile; switch off to stop"), true],
       ])}`;

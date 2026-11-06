@@ -1,0 +1,53 @@
+# Immergas MAGIS M (Midea M-Thermal) Modbus - package "mt_stats" (optional, with mt_energy)
+# Today's numbers counted in the hub: heat and electric energy today (from the unit's counters), COP today, compressor
+# starts today and the compressor runtime today (from the compressor frequency, checked every 10 s). Reset at midnight
+# (Home Assistant time); the day's values survive a restart.
+# Part of jotuera/immergas-modbus-bms-nasa-opentherm-hub (PolyForm Noncommercial 1.0.0). Loaded by the main YAML through `packages:`.
+
+time:
+  - platform: homeassistant
+    id: mt_time
+
+globals:
+  - { id: mt_day_heat0, type: float, restore_value: true, initial_value: "NAN" }   # heat counter at the start of the day
+  - { id: mt_day_elec0, type: float, restore_value: true, initial_value: "NAN" }
+  - { id: mt_day_starts, type: int, restore_value: true, initial_value: "0" }
+  - { id: mt_day_run_s, type: float, restore_value: true, initial_value: "0" }
+  - { id: mt_day_doy, type: int, restore_value: true, initial_value: "-1" }
+  - { id: mt_comp_was, type: bool, initial_value: "false" }
+
+interval:
+  - interval: 10s
+    then:
+      - lambda: |-
+          bool run = id(mt_compressor_freq).has_state() && id(mt_compressor_freq).state > 0;
+          if (run && !id(mt_comp_was)) id(mt_day_starts)++;
+          if (run) id(mt_day_run_s) += 10.0f;
+          id(mt_comp_was) = run;
+  - interval: 60s
+    then:
+      - lambda: |-
+          auto now = id(mt_time).now();
+          float h = id(mt_energy_heat).state, e = id(mt_energy_electric).state;
+          if (now.is_valid() && id(mt_day_doy) != now.day_of_year) {
+            // a new day (midnight, or a restart on another day): the counters at the start of the day, the rest from zero
+            id(mt_day_doy) = now.day_of_year;
+            id(mt_day_heat0) = h; id(mt_day_elec0) = e;
+            id(mt_day_starts) = 0; id(mt_day_run_s) = 0;
+          }
+          if (std::isnan(id(mt_day_heat0)) && !std::isnan(h)) id(mt_day_heat0) = h;
+          if (std::isnan(id(mt_day_elec0)) && !std::isnan(e)) id(mt_day_elec0) = e;
+          float dh = std::isnan(h) || std::isnan(id(mt_day_heat0)) ? NAN : h - id(mt_day_heat0);
+          float de = std::isnan(e) || std::isnan(id(mt_day_elec0)) ? NAN : e - id(mt_day_elec0);
+          if (!std::isnan(dh)) id(mt_heat_today).publish_state(dh);
+          if (!std::isnan(de)) id(mt_elec_today).publish_state(de);
+          if (!std::isnan(dh) && !std::isnan(de) && de > 0.05f) id(mt_cop_today).publish_state(dh / de);
+          id(mt_starts_today).publish_state(id(mt_day_starts));
+          id(mt_runtime_today).publish_state(id(mt_day_run_s) / 3600.0f);
+
+sensor:
+  - { platform: template, name: "${n_mt_heat_today}", id: mt_heat_today, icon: "mdi:fire", unit_of_measurement: "kWh", device_class: energy, accuracy_decimals: 2 }
+  - { platform: template, name: "${n_mt_elec_today}", id: mt_elec_today, icon: "mdi:flash", unit_of_measurement: "kWh", device_class: energy, accuracy_decimals: 2 }
+  - { platform: template, name: "${n_mt_cop_today}", id: mt_cop_today, icon: "mdi:gauge", state_class: measurement, accuracy_decimals: 2 }
+  - { platform: template, name: "${n_mt_starts_today}", id: mt_starts_today, icon: "mdi:counter", state_class: measurement, accuracy_decimals: 0 }
+  - { platform: template, name: "${n_mt_runtime_today}", id: mt_runtime_today, icon: "mdi:timer-outline", unit_of_measurement: "h", state_class: measurement, accuracy_decimals: 2 }

@@ -72,6 +72,7 @@ shared registers and use the last value read.
 | `mt_status` | running mode, current and last three faults, defrost / antifreeze / oil return / thermostat / SG / EVU, heaters IBH1 / IBH2 / TBH, pumps, 3-way valve, alarm, running, software versions |
 | `mt_sensors` | compressor and target frequency, fan, expansion valve, water in / out / total, outdoor, room, DHW tank, refrigerant temperatures, pressures, outdoor unit current and voltage, buffer tank, compressor hours, curve flow targets, water flow, heat output |
 | `mt_energy` | electric and heat energy counters, heating and electric power, the unit's COP and the hub's own COP now |
+| `mt_stats` (optional) | today's heat and electric energy, COP today, compressor starts and runtime today – counted in the hub, reset at midnight (Home Assistant time) |
 | `mt_control` | on / off zone 1 / zone 2 / DHW / room control, operating mode (auto / cooling / heating), water setpoints zone 1 / 2, room and DHW setpoints, weather curve on / number, silent, ECO, disinfection, forced DHW / tank heater / backup heater |
 | `mt_params` (optional) | read only: setpoint limits, heating outdoor limits, the custom heating curve |
 | `lang/mt_en`, `lang/mt_pl` | entity names (`mt_name_prefix`, default "Immergas M") |
